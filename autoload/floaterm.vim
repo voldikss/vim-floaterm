@@ -57,12 +57,12 @@ function! s:openTermFloating(found_bufnr, height, width) abort
     \ 'style': 'minimal'
   \ }
 
-  if a:found_bufnr == 0
+  if a:found_bufnr > 0
+    call nvim_open_win(a:found_bufnr, 1, opts)
+  else
     let bufnr = nvim_create_buf(v:false, v:true)
     call nvim_open_win(bufnr, 1, opts)
     terminal
-  else
-    call nvim_open_win(a:found_bufnr, 1, opts)
   endif
 endfunction
 
@@ -126,7 +126,7 @@ endfunction
 function! s:onOpenTerm() abort
     augroup NvimCloseTermWin
       autocmd!
-      autocmd TermClose <buffer> if &buftype=='terminal' | wincmd c | endif
+      autocmd TermClose <buffer> if &buftype=='terminal' | bdelete! | endif
     augroup END
 
     setlocal winblend=30

@@ -46,6 +46,15 @@ noremap! <silent> <F12>           <Esc>:call util#toggleWindows('terminal')<CR>i
 tnoremap <silent> <F12>           <C-\><C-n>:call util#toggleWindows('terminal')<CR>
 ```
 
+## Q & A
+
+- **This plguin leaves an empty window on startify window**
+
+    Put this code in `vimrc`
+    ```vim
+    autocmd User Startified setlocal buflisted
+    ```
+
 ## Todo
 
 - [ ] add doc
