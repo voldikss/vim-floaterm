@@ -31,7 +31,7 @@ Plug 'voldikss/vim-floaterm'
 ## Command
 
 ```
-:ToggleTerminal
+:FloatermToggle
 ```
 
 ## Configuration

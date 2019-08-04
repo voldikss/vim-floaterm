@@ -94,46 +94,46 @@ function! s:openTermNormal(found_bufnr, height, width) abort
 endfunction
 
 function! s:getWinPos(width, height) abort
-    let bottom_line = line('w0') + winheight(0) - 1
-    let curr_pos = getpos('.')
-    let rownr = curr_pos[1]
-    let colnr = curr_pos[2]
-    " a long wrap line
-    if colnr > &columns
-        let colnr = colnr % &columns
-        let rownr += colnr / &columns
-    endif
+  let bottom_line = line('w0') + winheight(0) - 1
+  let curr_pos = getpos('.')
+  let rownr = curr_pos[1]
+  let colnr = curr_pos[2]
+  " a long wrap line
+  if colnr > &columns
+    let colnr = colnr % &columns
+    let rownr += colnr / &columns
+  endif
 
-    if rownr + a:height <= bottom_line
-        let vert = 'N'
-        let row = 1
-    else
-        let vert = 'S'
-        let row = 0
-    endif
+  if rownr + a:height <= bottom_line
+    let vert = 'N'
+    let row = 1
+  else
+    let vert = 'S'
+    let row = 0
+  endif
 
-    if colnr + a:width <= &columns
-        let hor = 'W'
-        let col = 0
-    else
-        let hor = 'E'
-        let col = 1
-    endif
+  if colnr + a:width <= &columns
+    let hor = 'W'
+    let col = 0
+  else
+    let hor = 'E'
+    let col = 1
+  endif
 
-    return [row, col, vert, hor]
+  return [row, col, vert, hor]
 endfunction
 
 function! s:onOpenTerm() abort
-    augroup NvimCloseTermWin
-      autocmd!
-      autocmd TermClose <buffer> if &buftype=='terminal' | bdelete! | endif
-    augroup END
+  augroup NvimCloseTermWin
+    autocmd!
+    autocmd TermClose <buffer> if &buftype=='terminal' | bdelete! | endif
+  augroup END
 
-    setlocal winblend=30
-    setlocal bufhidden=hide
-    setlocal signcolumn=no
-    setlocal nobuflisted
-    setlocal nocursorline
-    setlocal nonumber
-    setlocal norelativenumber
+  setlocal winblend=30
+  setlocal bufhidden=hide
+  setlocal signcolumn=no
+  setlocal nobuflisted
+  setlocal nocursorline
+  setlocal nonumber
+  setlocal norelativenumber
 endfunction
