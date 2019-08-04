@@ -1,6 +1,6 @@
 # vim-floaterm
 
-This plugin help toggle (floating) terminal quickly, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
+This plugin helps open the terminal in the floating window and toggle it quickly, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
 
 ## Installation
 
@@ -49,3 +49,7 @@ tnoremap <silent> <F12>           <C-\><C-n>:call util#toggleWindows('terminal')
 ## Todo
 
 - [ ] add doc
+
+## Screenshot
+
+![](https://user-images.githubusercontent.com/20282795/62412186-8c006680-b631-11e9-842b-1fffda64d926.gif)
