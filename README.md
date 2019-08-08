@@ -4,8 +4,16 @@ This plugin helps open the terminal in the floating window and toggle it quickly
 
 ## Installation
 
+- vim-plug
+
 ```vim
 Plug 'voldikss/vim-floaterm'
+```
+
+- dein.nvim
+
+```vim
+call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 ```
 
 ## Variables
@@ -27,6 +35,12 @@ Plug 'voldikss/vim-floaterm'
 - Type: number
 
 - Default: value of `winheight(0)/2`
+
+#### **`g:floaterm_winblend`**
+
+- Type: number(0-100)
+
+- Default: 0
 
 ## Command
 
@@ -50,10 +64,11 @@ tnoremap <silent> <F12>           <C-\><C-n>:call util#toggleWindows('terminal')
 
 - **This plguin leaves an empty window on startify window**
 
-    Put this code in `vimrc`
-    ```vim
-    autocmd User Startified setlocal buflisted
-    ```
+  Put this code in `vimrc`
+
+  ```vim
+  autocmd User Startified setlocal buflisted
+  ```
 
 ## Todo
 
