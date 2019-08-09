@@ -53,8 +53,7 @@ function! s:openTermFloating(found_bufnr, height, width) abort
     \ 'height': a:height,
     \ 'col': col,
     \ 'row': row,
-    \ 'anchor': vert . hor,
-    \ 'style': 'minimal'
+    \ 'anchor': vert . hor
   \ }
 
   if a:found_bufnr > 0
