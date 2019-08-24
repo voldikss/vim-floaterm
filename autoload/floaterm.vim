@@ -128,7 +128,6 @@ function! s:onOpenTerm() abort
     autocmd TermClose <buffer> if &buftype=='terminal' | bdelete! | endif
   augroup END
 
-  let g:floaterm_winblend = get(g:, 'floaterm_winblend', 0)
   execute 'setlocal winblend=' . g:floaterm_winblend
   setlocal bufhidden=hide
   setlocal signcolumn=no
