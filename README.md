@@ -53,11 +53,9 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 Recommended configuration
 
 ```vim
-noremap  <silent> <expr><F12>     &buftype =='terminal' ?
-                                  \ "\<C-\><C-n>:call util#toggleWindows('terminal')\<CR>" :
-                                  \ "\<Esc>:call util#toggleWindows('terminal')\<CR>i<C-u>"
-noremap! <silent> <F12>           <Esc>:call util#toggleWindows('terminal')<CR>i
-tnoremap <silent> <F12>           <C-\><C-n>:call util#toggleWindows('terminal')<CR>
+noremap  <silent> <F12>           :FloatermToggle<CR>i
+noremap! <silent> <F12>           <Esc>:FloatermToggle<CR>i
+tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
 ```
 
 ## Q & A
