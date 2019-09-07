@@ -2,6 +2,8 @@
 
 This plugin helps open the terminal in the floating window and toggle it quickly, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
 
+**Note:** Only available in NeoVim.
+
 ## Installation
 
 - vim-plug
