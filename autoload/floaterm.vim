@@ -46,9 +46,9 @@ function! floaterm#toggleTerminal(height, width) abort
 endfunction
 
 function! s:openTermFloating(found_bufnr, height, width) abort
-  let [row, col, vert, hor] = s:getWinPos(a:width, a:height)
+  let [relative, row, col, vert, hor] = s:getWinPos(a:width, a:height)
   let opts = {
-    \ 'relative': 'cursor',
+    \ 'relative': relative,
     \ 'width': a:width,
     \ 'height': a:height,
     \ 'col': col,
@@ -94,32 +94,68 @@ endfunction
 
 function! s:getWinPos(width, height) abort
   let bottom_line = line('w0') + winheight(0) - 1
-  let curr_pos = getpos('.')
-  let rownr = curr_pos[1]
-  let colnr = curr_pos[2]
-  " a long wrap line
-  if colnr > &columns
-    let colnr = colnr % &columns
-    let rownr += colnr / &columns
-  endif
-
-  if rownr + a:height <= bottom_line
-    let vert = 'N'
-    let row = 1
-  else
-    let vert = 'S'
+  let relative = 'win'
+  if g:floaterm_position == 'topright'
     let row = 0
-  endif
-
-  if colnr + a:width <= &columns
-    let hor = 'W'
-    let col = 0
-  else
+    let col = winwidth(0)
+    let vert = 'N'
     let hor = 'E'
-    let col = 1
+  elseif g:floaterm_position == 'topleft'
+    let row = 0
+    let col = 0
+    let vert = 'N'
+    let hor = 'W'
+  elseif g:floaterm_position == 'bottomright'
+    let row = winheight(0)
+    let col = winwidth(0)
+    let vert = 'S'
+    let hor = 'E'
+  elseif g:floaterm_position == 'bottomleft'
+    let row = winheight(0)
+    let col = 0
+    let vert = 'S'
+    let hor = 'W'
+  elseif g:floaterm_position == 'center'
+    let row = (winheight(0) - a:height)/2
+    let col = (winwidth(0) - a:width)/2
+    let vert = 'N'
+    let hor = 'W'
+
+    if row < 0
+      let row = 0
+    endif
+    if col < 0
+      let col = 0
+    endif
+  else
+    let relative = 'cursor'
+    let curr_pos = getpos('.')
+    let rownr = curr_pos[1]
+    let colnr = curr_pos[2]
+    " a long wrap line
+    if colnr > &columns
+      let colnr = colnr % &columns
+      let rownr += colnr / &columns
+    endif
+
+    if rownr + a:height <= bottom_line
+      let vert = 'N'
+      let row = 1
+    else
+      let vert = 'S'
+      let row = 0
+    endif
+
+    if colnr + a:width <= &columns
+      let hor = 'W'
+      let col = 0
+    else
+      let hor = 'E'
+      let col = 1
+    endif
   endif
 
-  return [row, col, vert, hor]
+  return [relative, row, col, vert, hor]
 endfunction
 
 function! s:onOpenTerm() abort
