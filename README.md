@@ -46,7 +46,7 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 #### **`g:floaterm_position`**
 
-- Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`
+- Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`
 
 - Default: `'auto'`
 
