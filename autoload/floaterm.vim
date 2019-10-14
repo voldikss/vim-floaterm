@@ -6,7 +6,7 @@
 " ========================================================================
 
 if has('nvim') && exists('*nvim_win_set_config')
-  let vtm_window_type = 'floating'
+  let g:floaterm_type = 'floating'
 else
   let g:floaterm_type = 'normal'
 endif
