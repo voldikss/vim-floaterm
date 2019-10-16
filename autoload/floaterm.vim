@@ -37,16 +37,16 @@ function! floaterm#toggleTerminal(height, width) abort
     endfor
 
     if g:floaterm_type == 'floating'
-      call s:openTermFloating(found_bufnr, a:height, a:width)
+      call s:openTerminalFloating(found_bufnr, a:height, a:width)
     else
-      call s:openTermNormal(found_bufnr, a:height, a:width)
+      call s:openTerminalNormal(found_bufnr, a:height, a:width)
     endif
-    call s:onOpenTerm()
+    call s:onOpenTerminal()
   endif
 endfunction
 
-function! s:openTermFloating(found_bufnr, height, width) abort
-  let [relative, row, col, vert, hor] = s:getWinPos(a:width, a:height)
+function! s:openTerminalFloating(found_bufnr, height, width) abort
+  let [relative, row, col, vert, hor] = s:getWindowPosition(a:width, a:height)
   let opts = {
     \ 'relative': relative,
     \ 'width': a:width,
@@ -65,7 +65,7 @@ function! s:openTermFloating(found_bufnr, height, width) abort
   endif
 endfunction
 
-function! s:openTermNormal(found_bufnr, height, width) abort
+function! s:openTerminalNormal(found_bufnr, height, width) abort
   if a:found_bufnr > 0
     if &lines > 30
       execute 'botright ' . a:height . 'split'
@@ -92,7 +92,7 @@ function! s:openTermNormal(found_bufnr, height, width) abort
   endif
 endfunction
 
-function! s:getWinPos(width, height) abort
+function! s:getWindowPosition(width, height) abort
   let bottom_line = line('w0') + winheight(0) - 1
   let relative = 'win'
   if g:floaterm_position == 'topright'
@@ -158,7 +158,7 @@ function! s:getWinPos(width, height) abort
   return [relative, row, col, vert, hor]
 endfunction
 
-function! s:onOpenTerm() abort
+function! s:onOpenTerminal() abort
   augroup NvimCloseTermWin
     autocmd!
     autocmd TermClose <buffer> if &buftype=='terminal' | bdelete! | endif
