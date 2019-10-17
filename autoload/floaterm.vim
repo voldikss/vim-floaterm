@@ -172,8 +172,8 @@ function! s:onOpenTerminal() abort
 
   augroup NvimCloseTermWin
     autocmd!
-    autocmd TermClose <buffer> |
-      \ if &buftype=='terminal' && getbufvar(bufnr(), 'floaterm_window') == 1 |
+    autocmd TermClose <buffer> if &buftype=='terminal'
+      \ && getbufvar(bufnr(), 'floaterm_window') == 1 |
       \ bdelete! |
       \ endif
   augroup END
