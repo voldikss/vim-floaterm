@@ -6,8 +6,8 @@
 " ========================================================================
 
 let g:floaterm_type = get(g:, 'floaterm_type', 'floating')
-let g:floaterm_width = get(g:, 'floaterm_width', &columns)
-let g:floaterm_height = get(g:, 'floaterm_height', winheight(0)/2)
+let g:floaterm_width = get(g:, 'floaterm_width', v:null)
+let g:floaterm_height = get(g:, 'floaterm_height', v:null)
 let g:floaterm_winblend = get(g:, 'floaterm_winblend', 0)
 let g:floaterm_position = get(g:, 'floaterm_position', 'auto')
 let g:floaterm_background = get(g:, 'floaterm_background', v:null)

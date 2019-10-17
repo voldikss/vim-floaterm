@@ -37,10 +37,13 @@ function! floaterm#toggleTerminal(height, width) abort
       endif
     endfor
 
+    let height = a:height == v:null ? float2nr(0.7*winheight(0)) : a:height
+    let width = a:width == v:null ? float2nr(0.7*winwidth(0)) : a:width
+
     if g:floaterm_type == 'floating'
-      call s:openTerminalFloating(found_bufnr, a:height, a:width)
+      call s:openTerminalFloating(found_bufnr, height, width)
     else
-      call s:openTerminalNormal(found_bufnr, a:height, a:width)
+      call s:openTerminalNormal(found_bufnr, height, width)
     endif
     call s:onOpenTerminal()
   endif

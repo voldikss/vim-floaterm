@@ -32,13 +32,13 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 - Type: number
 
-- Default: value of `&columns`
+- Default: `0.7*winwidth(0)`
 
 #### **`g:floaterm_height`**
 
 - Type: number
 
-- Default: value of `winheight(0)/2`
+- Default: `0.7*winheight(0)`
 
 #### **`g:floaterm_winblend`**
 
@@ -54,7 +54,7 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 #### **`g:floaterm_background`**
 
-- Type: string(e.g. '#000000')
+- Type: string(e.g. `'#000000'`)
 
 - Default: depends on your colorscheme
 
