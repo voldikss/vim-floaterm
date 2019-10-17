@@ -84,12 +84,12 @@ tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
   autocmd User Startified setlocal buflisted
   ```
 
-- #### I want to default shell in the terminal. (e.g. Use fish instead of bash/zsh)
+- #### I want to use another shell in the terminal. (e.g. Use fish instead of bash/zsh)
 
-  Set `spell` option in your `vimrc`:
+  Set `shell` option in your `vimrc`:
 
   ```vim
-  set spell=/path/to/shell
+  set shell=/path/to/shell
   ```
 
 - #### I would like to customize the floating window behavior
