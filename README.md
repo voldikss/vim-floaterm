@@ -52,6 +52,12 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 - Default: `'auto'`
 
+#### **`g:floaterm_background`**
+
+- Type: string(e.g. '#000000')
+
+- Default: depends on your colorscheme
+
 ## Commands
 
 ```

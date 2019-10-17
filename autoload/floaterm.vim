@@ -172,6 +172,11 @@ function! s:onOpenTerminal() abort
   setlocal foldcolumn=2
   setlocal filetype=terminal
 
+  if g:floaterm_background != v:null
+    execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
+    call setwinvar(bufnr(), '&winhl', 'Normal:FloatTermNormal')
+  endif
+
   augroup NvimCloseTermWin
     autocmd!
     autocmd TermClose <buffer> if &buftype=='terminal'
