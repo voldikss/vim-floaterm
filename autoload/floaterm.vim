@@ -169,6 +169,8 @@ function! s:onOpenTerminal() abort
   setlocal nocursorline
   setlocal nonumber
   setlocal norelativenumber
+  setlocal foldcolumn=2
+  setlocal filetype=terminal
 
   augroup NvimCloseTermWin
     autocmd!

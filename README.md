@@ -2,7 +2,9 @@
 
 This plugin helps open the terminal in the floating window and toggle it quickly, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
 
-**Note:** Only available in NeoVim.
+**Note: Only available in NeoVim.**
+
+![](https://user-images.githubusercontent.com/20282795/62412186-8c006680-b631-11e9-842b-1fffda64d926.gif)
 
 ## Installation
 
@@ -18,7 +20,7 @@ Plug 'voldikss/vim-floaterm'
 call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 ```
 
-## Variables
+## Configurations
 
 #### **`g:floaterm_type`**
 
@@ -50,13 +52,13 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 - Default: `'auto'`
 
-## Command
+## Commands
 
 ```
 :FloatermToggle
 ```
 
-## Configuration
+## Keymaps
 
 Recommended configuration
 
@@ -68,7 +70,7 @@ tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
 
 ## Q & A
 
-- **This plguin leaves an empty window on startify window**
+- #### This plguin leaves an empty window on startify window
 
   Put this code in `vimrc`
 
@@ -76,10 +78,26 @@ tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
   autocmd User Startified setlocal buflisted
   ```
 
+- #### I want to default shell in the terminal. (e.g. Use fish instead of bash/zsh)
+
+  Set `spell` option in your `vimrc`:
+
+  ```vim
+  set spell=/path/to/shell
+  ```
+
+- #### I would like to customize the floating window behavior
+
+  Use `autocmd`. For example
+
+  ```vim
+  function s:floatermSettings()
+      setlocal number
+  endfunction
+
+  autocmd FileType terminal call s:floatermSettings()
+  ```
+
 ## Todo
 
 - [ ] add doc
-
-## Screenshot
-
-![](https://user-images.githubusercontent.com/20282795/62412186-8c006680-b631-11e9-842b-1fffda64d926.gif)
