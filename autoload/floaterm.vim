@@ -163,7 +163,7 @@ function! s:getWindowPosition(width, height) abort
 endfunction
 
 function! s:onOpenTerminal() abort
-  call setbufvar(bufnr(), 'floaterm_window', 1)
+  call setbufvar(bufnr('%'), 'floaterm_window', 1)
 
   execute 'setlocal winblend=' . g:floaterm_winblend
   setlocal bufhidden=hide
@@ -177,13 +177,13 @@ function! s:onOpenTerminal() abort
 
   if g:floaterm_background != v:null
     execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
-    call setwinvar(bufnr(), '&winhl', 'Normal:FloatTermNormal')
+    call setwinvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal')
   endif
 
   augroup NvimCloseTermWin
     autocmd!
     autocmd TermClose <buffer> if &buftype=='terminal'
-      \ && getbufvar(bufnr(), 'floaterm_window') == 1 |
+      \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
       \ bdelete! |
       \ endif
   augroup END
