@@ -15,6 +15,7 @@ function! floaterm#toggleTerminal(height, width) abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
     if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
+      \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
       let found_winnr = winnr
     endif
   endfor
@@ -31,7 +32,7 @@ function! floaterm#toggleTerminal(height, width) abort
     let found_bufnr = 0
     for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
       let buftype = getbufvar(bufnr, '&buftype')
-      if buftype == 'terminal'
+      if buftype == 'terminal' && getbufvar(bufnr, 'floaterm_window') == 1
         let found_bufnr = bufnr
       endif
     endfor
@@ -159,10 +160,7 @@ function! s:getWindowPosition(width, height) abort
 endfunction
 
 function! s:onOpenTerminal() abort
-  augroup NvimCloseTermWin
-    autocmd!
-    autocmd TermClose <buffer> if &buftype=='terminal' | bdelete! | endif
-  augroup END
+  call setbufvar(bufnr(), 'floaterm_window', 1)
 
   execute 'setlocal winblend=' . g:floaterm_winblend
   setlocal bufhidden=hide
@@ -171,4 +169,12 @@ function! s:onOpenTerminal() abort
   setlocal nocursorline
   setlocal nonumber
   setlocal norelativenumber
+
+  augroup NvimCloseTermWin
+    autocmd!
+    autocmd TermClose <buffer> |
+      \ if &buftype=='terminal' && getbufvar(bufnr(), 'floaterm_window') == 1 |
+      \ bdelete! |
+      \ endif
+  augroup END
 endfunction
