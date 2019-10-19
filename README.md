@@ -1,6 +1,6 @@
 # vim-floaterm
 
-This plugin helps open the terminal in the floating window and toggle it quickly, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
+Open the terminal in the neovim's floating window, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
 
 **Note: Only available in NeoVim.**
 
@@ -32,15 +32,17 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 - Type: number
 
-- Default: `0.7*winwidth(0)`
+- Default: `0.7 * &columns`
 
 #### **`g:floaterm_height`**
 
 - Type: number
 
-- Default: `0.7*winheight(0)`
+- Default: `0.7 * &lines`
 
-#### **`g:floaterm_winblend`**
+#### `g:floaterm_winblend`
+
+- Description: The opacity of the floating terminal
 
 - Type: number(0-100)
 
@@ -50,7 +52,7 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 - Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`
 
-- Default: `'auto'`
+- Default: `'auto'`(at the cursor position)
 
 #### **`g:floaterm_background`**
 
@@ -99,6 +101,7 @@ tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
   ```vim
   function s:floatermSettings()
       setlocal number
+      " more settings
   endfunction
 
   autocmd FileType terminal call s:floatermSettings()

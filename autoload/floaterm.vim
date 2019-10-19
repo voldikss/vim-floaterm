@@ -37,8 +37,8 @@ function! floaterm#toggleTerminal(height, width) abort
       endif
     endfor
 
-    let height = a:height == v:null ? float2nr(0.7*winheight(0)) : a:height
-    let width = a:width == v:null ? float2nr(0.7*winwidth(0)) : a:width
+    let height = a:height == v:null ? float2nr(0.7*&lines) : a:height
+    let width = a:width == v:null ? float2nr(0.7*&columns) : a:width
 
     if g:floaterm_type == 'floating'
       call s:openTerminalFloating(found_bufnr, height, width)
@@ -97,11 +97,11 @@ function! s:openTerminalNormal(found_bufnr, height, width) abort
 endfunction
 
 function! s:getWindowPosition(width, height) abort
-  let bottom_line = line('w0') + winheight(0) - 1
+  let bottom_line = line('w0') + &lines - 1
   let relative = 'win'
   if g:floaterm_position == 'topright'
     let row = 0
-    let col = winwidth(0)
+    let col = &columns
     let vert = 'N'
     let hor = 'E'
   elseif g:floaterm_position == 'topleft'
@@ -110,18 +110,18 @@ function! s:getWindowPosition(width, height) abort
     let vert = 'N'
     let hor = 'W'
   elseif g:floaterm_position == 'bottomright'
-    let row = winheight(0)
-    let col = winwidth(0)
+    let row = &lines
+    let col = &columns
     let vert = 'S'
     let hor = 'E'
   elseif g:floaterm_position == 'bottomleft'
-    let row = winheight(0)
+    let row = &lines
     let col = 0
     let vert = 'S'
     let hor = 'W'
   elseif g:floaterm_position == 'center'
-    let row = (winheight(0) - a:height)/2
-    let col = (winwidth(0) - a:width)/2
+    let row = (&lines - a:height)/2
+    let col = (&columns - a:width)/2
     let vert = 'N'
     let hor = 'W'
 
