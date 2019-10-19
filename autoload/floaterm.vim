@@ -177,7 +177,7 @@ function! s:onOpenTerminal() abort
 
   if g:floaterm_background != v:null
     execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
-    call setwinvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal')
+    call setbufvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal')
   endif
 
   augroup NvimCloseTermWin
