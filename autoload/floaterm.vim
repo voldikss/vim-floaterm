@@ -98,7 +98,7 @@ endfunction
 
 function! s:getWindowPosition(width, height) abort
   let bottom_line = line('w0') + &lines - 1
-  let relative = 'win'
+  let relative = 'editor'
   if g:floaterm_position == 'topright'
     let row = 0
     let col = &columns
