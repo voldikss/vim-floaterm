@@ -172,12 +172,24 @@ function! s:onOpenTerminal() abort
   setlocal nocursorline
   setlocal nonumber
   setlocal norelativenumber
-  setlocal foldcolumn=2
+  setlocal foldcolumn=1
   setlocal filetype=terminal
 
-  if g:floaterm_background != v:null
+  " iterate to find the background for floating
+  if g:floaterm_background == v:null
+    let hiGroup = 'NormalFloat'
+    while 1
+      let hiInfo = execute('hi ' . hiGroup)
+      let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
+      let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
+      if g:floaterm_background != '' || hiGroup == ''
+        break
+      endif
+    endwhile
+  endif
+  if g:floaterm_background != ''
     execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
-    call setbufvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal')
+    call setbufvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal,FoldColumn:FloatTermNormal')
   endif
 
   augroup NvimCloseTermWin
