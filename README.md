@@ -1,8 +1,6 @@
 # vim-floaterm
 
-Open the terminal in the neovim's floating window, detached from my [dotfiles](https://github.com/voldikss/dotfiles)
-
-**Note: Only available in NeoVim.**
+Open the terminal in the neovim's floating window. Detached from my [dotfiles](https://github.com/voldikss/dotfiles)
 
 ![](https://user-images.githubusercontent.com/20282795/62412186-8c006680-b631-11e9-842b-1fffda64d926.gif)
 
@@ -24,7 +22,7 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 #### **`g:floaterm_type`**
 
-- Available: `'floating'`, `'normal'`
+- Available: `'floating'`(neovim only), `'normal'`(vim8 or neovim)
 
 - Default: `'floating'`
 
@@ -56,7 +54,7 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 #### **`g:floaterm_background`**
 
-- Type: string(e.g. `'#000000'`)
+- Type: string(e.g. `'#000000'`, `'black'`)
 
 - Default: depends on your colorscheme
 
