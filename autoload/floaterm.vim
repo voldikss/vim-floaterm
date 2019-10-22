@@ -199,4 +199,5 @@ function! s:onOpenTerminal() abort
       \ bdelete! |
       \ endif
   augroup END
+  startinsert
 endfunction

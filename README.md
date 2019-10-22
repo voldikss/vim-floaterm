@@ -69,8 +69,8 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 Recommended configuration
 
 ```vim
-noremap  <silent> <F12>           :FloatermToggle<CR>i
-noremap! <silent> <F12>           <Esc>:FloatermToggle<CR>i
+noremap  <silent> <F12>           :FloatermToggle<CR>
+noremap! <silent> <F12>           <Esc>:FloatermToggle<CR>
 tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
 ```
 
