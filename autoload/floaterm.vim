@@ -37,8 +37,8 @@ function! floaterm#toggleTerminal(height, width) abort
       endif
     endfor
 
-    let height = a:height == v:null ? float2nr(0.7*&lines) : a:height
-    let width = a:width == v:null ? float2nr(0.7*&columns) : a:width
+    let height = a:height == v:null ? float2nr(0.7*&lines) : float2nr(a:height)
+    let width = a:width == v:null ? float2nr(0.7*&columns) : float2nr(a:width)
 
     if g:floaterm_type == 'floating'
       call s:openTerminalFloating(found_bufnr, height, width)
