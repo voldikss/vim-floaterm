@@ -76,7 +76,7 @@ tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
 
 ## Q & A
 
-- #### This plguin leaves an empty window on startify window
+- #### This plugin leaves an empty window on startify window
 
   Put this code in `vimrc`
 
@@ -92,7 +92,7 @@ tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
   set shell=/path/to/shell
   ```
 
-- #### I would like to customize the floating window behavior
+- #### I would like to customize the floating window behaviour
 
   Use `autocmd`. For example
 
