@@ -5,48 +5,122 @@
 " GitHub: https://github.com/voldikss/vim-floaterm
 " ========================================================================
 
-if has('nvim') && exists('*nvim_win_set_config')
-  let g:floaterm_type = 'floating'
-else
-  let g:floaterm_type = 'normal'
-endif
+let g:floaterm_buflist = []
+let g:floaterm_bufindex = -1
 
-function! floaterm#toggleTerminal(height, width) abort
-  let found_winnr = 0
-  for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
-      \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
-      let found_winnr = winnr
-    endif
-  endfor
-
+function! floaterm#toggleTerminal() abort
+  if !s:checkValid()
+    return
+  endif
+  let found_winnr = s:findTerminalWindow()
   if found_winnr > 0
     if &buftype == 'terminal'
-      " if current window is the terminal window, close it
       execute found_winnr . ' wincmd q'
     else
-      " if current window is not terminal, go to the terminal window
       execute found_winnr . ' wincmd w'
     endif
   else
-    let found_bufnr = 0
-    for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
-      let buftype = getbufvar(bufnr, '&buftype')
-      if buftype == 'terminal' && getbufvar(bufnr, 'floaterm_window') == 1
-        let found_bufnr = bufnr
+    while 1
+      if s:sum(g:floaterm_buflist) == 0
+        call s:openTerminal(0)
+        return
       endif
-    endfor
-
-    let height = a:height == v:null ? float2nr(0.7*&lines) : float2nr(a:height)
-    let width = a:width == v:null ? float2nr(0.7*&columns) : float2nr(a:width)
-
-    if g:floaterm_type == 'floating'
-      call s:openTerminalFloating(found_bufnr, height, width)
-    else
-      call s:openTerminalNormal(found_bufnr, height, width)
-    endif
-    call s:onOpenTerminal()
+      let found_bufnr = g:floaterm_buflist[g:floaterm_bufindex]
+      if found_bufnr != 0 && bufexists(found_bufnr)
+        call s:openTerminal(found_bufnr)
+        return
+      else
+        let g:floaterm_buflist[g:floaterm_bufindex] = 0
+        let buf_cnt = len(g:floaterm_buflist)
+        let g:floaterm_bufindex = (g:floaterm_bufindex-1+buf_cnt)%buf_cnt
+      endif
+    endwhile
   endif
+endfunction
+
+function! floaterm#newTerminal() abort
+  if !s:checkValid()
+    return
+  endif
+  call s:hidePrevTerminals()
+  call s:openTerminal(0)
+endfunction
+
+function! floaterm#nextTerminal()
+  if !s:checkValid()
+    return
+  endif
+  call s:hidePrevTerminals()
+  while 1
+    if s:sum(g:floaterm_buflist) == 0
+      call s:showMessage('No more terminal buffers', 'warning')
+      return
+    endif
+    let buf_cnt = len(g:floaterm_buflist)
+    let g:floaterm_bufindex = (g:floaterm_bufindex+1)%buf_cnt
+    let next_bufnr = g:floaterm_buflist[g:floaterm_bufindex]
+    if next_bufnr != 0 && bufexists(next_bufnr)
+      call s:openTerminal(next_bufnr)
+      return
+    else
+      let g:floaterm_buflist[g:floaterm_bufindex] = 0
+    endif
+  endwhile
+endfunction
+
+function! floaterm#prevTerminal()
+  if !s:checkValid()
+    return
+  endif
+  call s:hidePrevTerminals()
+  while 1
+    if s:sum(g:floaterm_buflist) == 0
+      call s:showMessage('No more terminal buffers', 'warning')
+      return
+    endif
+    let buf_cnt = len(g:floaterm_buflist)
+    let g:floaterm_bufindex = (g:floaterm_bufindex-1+buf_cnt)%buf_cnt
+    let prev_bufnr = g:floaterm_buflist[g:floaterm_bufindex]
+    if prev_bufnr != 0 && bufexists(prev_bufnr)
+      call s:openTerminal(prev_bufnr)
+      return
+    else
+      let g:floaterm_buflist[g:floaterm_bufindex] = 0
+    endif
+  endwhile
+endfunction
+
+function! s:hidePrevTerminals()
+  while 1
+    let found_winnr = s:findTerminalWindow()
+    if found_winnr > 0
+      execute found_winnr . ' wincmd q'
+    else
+      break
+    endif
+  endwhile
+endfunction
+
+function! s:openTerminal(found_bufnr)
+  let height =
+    \ g:floaterm_height == v:null
+    \ ? float2nr(0.7*&lines)
+    \ : float2nr(g:floaterm_height)
+  let width =
+    \ g:floaterm_width == v:null
+    \ ? float2nr(0.7*&columns)
+    \ : float2nr(g:floaterm_width)
+
+  if g:floaterm_type == 'floating'
+    let bufnr = s:openTerminalFloating(a:found_bufnr, height, width)
+  else
+    let bufnr = s:openTerminalNormal(a:found_bufnr, height, width)
+  endif
+  if bufnr
+    call add(g:floaterm_buflist, bufnr)
+    let g:floaterm_bufindex = len(g:floaterm_buflist) - 1
+  endif
+  call s:onOpenTerminal()
 endfunction
 
 function! s:openTerminalFloating(found_bufnr, height, width) abort
@@ -62,10 +136,12 @@ function! s:openTerminalFloating(found_bufnr, height, width) abort
 
   if a:found_bufnr > 0
     call nvim_open_win(a:found_bufnr, 1, opts)
+    return
   else
     let bufnr = nvim_create_buf(v:false, v:true)
     call nvim_open_win(bufnr, 1, opts)
     terminal
+    return bufnr
   endif
 endfunction
 
@@ -78,6 +154,7 @@ function! s:openTerminalNormal(found_bufnr, height, width) abort
       botright split
       execute 'buffer ' . a:found_bufnr
     endif
+    return
   else
     if &lines > 30
       if has('nvim')
@@ -93,7 +170,72 @@ function! s:openTerminalNormal(found_bufnr, height, width) abort
         botright terminal
       endif
     endif
+    return bufnr('%')
   endif
+endfunction
+
+function! s:onOpenTerminal() abort
+  call setbufvar(bufnr('%'), 'floaterm_window', 1)
+  setlocal signcolumn=no
+  setlocal nobuflisted
+  setlocal nocursorline
+  setlocal nonumber
+  setlocal norelativenumber
+  setlocal foldcolumn=1
+  setlocal filetype=terminal
+
+  " iterate to find the background for floating
+  if has('nvim')
+    execute 'setlocal winblend=' . g:floaterm_winblend
+
+    if g:floaterm_background == v:null
+      let hiGroup = 'NormalFloat'
+      while 1
+        let hiInfo = execute('hi ' . hiGroup)
+        let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
+        let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
+        if g:floaterm_background != '' || hiGroup == ''
+          break
+        endif
+      endwhile
+    endif
+    if g:floaterm_background != ''
+      execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
+      call setbufvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal,FoldColumn:FloatTermNormal')
+    endif
+
+    augroup NvimCloseTermWin
+      autocmd!
+      autocmd TermClose <buffer> if &buftype=='terminal'
+        \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
+        \ bdelete! |
+        \ endif
+    augroup END
+  endif
+
+  startinsert
+endfunction
+
+function! s:findTerminalWindow()
+  let found_winnr = 0
+  for winnr in range(1, winnr('$'))
+    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
+      \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
+      let found_winnr = winnr
+    endif
+  endfor
+  return found_winnr
+endfunction
+
+function! s:findTerminalBuffer() " NOTE: unused
+  let found_bufnr = 0
+  for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
+    let buftype = getbufvar(bufnr, '&buftype')
+    if buftype == 'terminal' && getbufvar(bufnr, 'floaterm_window') == 1
+      let found_bufnr = bufnr
+    endif
+  endfor
+  return found_bufnr
 endfunction
 
 function! s:getWindowPosition(width, height) abort
@@ -162,42 +304,50 @@ function! s:getWindowPosition(width, height) abort
   return [relative, row, col, vert, hor]
 endfunction
 
-function! s:onOpenTerminal() abort
-  call setbufvar(bufnr('%'), 'floaterm_window', 1)
-
-  execute 'setlocal winblend=' . g:floaterm_winblend
-  setlocal bufhidden=hide
-  setlocal signcolumn=no
-  setlocal nobuflisted
-  setlocal nocursorline
-  setlocal nonumber
-  setlocal norelativenumber
-  setlocal foldcolumn=1
-  setlocal filetype=terminal
-
-  " iterate to find the background for floating
-  if g:floaterm_background == v:null
-    let hiGroup = 'NormalFloat'
-    while 1
-      let hiInfo = execute('hi ' . hiGroup)
-      let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
-      let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
-      if g:floaterm_background != '' || hiGroup == ''
-        break
-      endif
-    endwhile
+function! s:checkValid()
+  if exists('*nvim_win_set_config')
+    if g:floaterm_type == v:null
+      let g:floaterm_type = 'floating'
+    endif
+  elseif has('terminal')
+    let g:floaterm_type = 'normal'
+  else
+    let message = 'Terminal feature is required, please upgrade your vim/nvim'
+    call s:showMessage(message, 'error')
+    return v:false
   endif
-  if g:floaterm_background != ''
-    execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
-    call setbufvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal,FoldColumn:FloatTermNormal')
+  return v:true
+endfunction
+
+function! s:sum(lst)
+  let res = 0
+  for i in a:lst
+    let res += i
+  endfor
+  return res
+endfunction
+
+function! s:showMessage(message, ...) abort
+  if a:0 == 0
+    let msgType = 'info'
+  else
+    let msgType = a:1
   endif
 
-  augroup NvimCloseTermWin
-    autocmd!
-    autocmd TermClose <buffer> if &buftype=='terminal'
-      \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
-      \ bdelete! |
-      \ endif
-  augroup END
-  startinsert
+  if type(a:message) != 1
+    let message = string(a:message)
+  else
+    let message = a:message
+  endif
+
+  if msgType == 'info'
+    echohl String
+  elseif msgType == 'warning'
+    echohl WarningMsg
+  elseif msgType == 'error'
+    echohl ErrorMsg
+  endif
+
+  echomsg '[vim-floaterm] ' . message
+  echohl None
 endfunction

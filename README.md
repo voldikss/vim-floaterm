@@ -14,8 +14,10 @@ Plug 'voldikss/vim-floaterm'
 
 - dein.nvim
 
+Don't use ondemand mode
+
 ```vim
-call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
+call dein#add('voldikss/vim-floaterm')
 ```
 
 ## Configurations
@@ -60,18 +62,23 @@ call dein#add('voldikss/vim-floaterm', {'on_cmd': 'FloatermToggle'})
 
 ## Commands
 
-```
-:FloatermToggle
-```
+- `:FloatermNew`
+
+- `:FloatermToggle`
+
+- `:FloatermPrev`
+
+- `:FloatermNext`
 
 ## Keymaps
 
-Recommended configuration
+Configuration example
 
 ```vim
-noremap  <silent> <F12>           :FloatermToggle<CR>
-noremap! <silent> <F12>           <Esc>:FloatermToggle<CR>
-tnoremap <silent> <F12>           <C-\><C-n>:FloatermToggle<CR>
+let g:floaterm_keymap_new    = '<F7>'
+let g:floaterm_keymap_prev   = '<F8>'
+let g:floaterm_keymap_next   = '<F9>'
+let g:floaterm_keymap_toggle = '<F12>'
 ```
 
 ## Q & A
