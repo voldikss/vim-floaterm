@@ -8,10 +8,23 @@
 let g:floaterm_buflist = []
 let g:floaterm_bufindex = -1
 
-function! floaterm#toggleTerminal() abort
+function! floaterm#doAction(action)
   if !s:checkValid()
     return
   endif
+
+  if a:action == 'new'
+    call s:newTerminal()
+  elseif a:action == 'next'
+    call s:nextTerminal()
+  elseif a:action == 'prev'
+    call s:prevTerminal()
+  elseif a:action == 'toggle'
+    call s:toggleTerminal()
+  endif
+endfunction
+
+function! s:toggleTerminal() abort
   let found_winnr = s:findTerminalWindow()
   if found_winnr > 0
     if &buftype == 'terminal'
@@ -38,18 +51,12 @@ function! floaterm#toggleTerminal() abort
   endif
 endfunction
 
-function! floaterm#newTerminal() abort
-  if !s:checkValid()
-    return
-  endif
+function! s:newTerminal() abort
   call s:hidePrevTerminals()
   call s:openTerminal(0)
 endfunction
 
-function! floaterm#nextTerminal()
-  if !s:checkValid()
-    return
-  endif
+function! s:nextTerminal()
   call s:hidePrevTerminals()
   while 1
     if s:sum(g:floaterm_buflist) == 0
@@ -68,10 +75,7 @@ function! floaterm#nextTerminal()
   endwhile
 endfunction
 
-function! floaterm#prevTerminal()
-  if !s:checkValid()
-    return
-  endif
+function! s:prevTerminal()
   call s:hidePrevTerminals()
   while 1
     if s:sum(g:floaterm_buflist) == 0
