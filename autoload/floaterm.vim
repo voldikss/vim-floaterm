@@ -204,8 +204,8 @@ function! s:onOpenTerminal() abort
       endwhile
     endif
     if g:floaterm_background != ''
-      execute 'hi FloatTermNormal term=None guibg='. g:floaterm_background
-      call setbufvar(bufnr('%'), '&winhl', 'Normal:FloatTermNormal,FoldColumn:FloatTermNormal')
+      execute 'hi FloatTermNormal term=NONE guibg='. g:floaterm_background
+      setlocal winhighlight=NormalFloat:FloatTermNormal,FoldColumn:FloatTermNormal
     endif
 
     augroup NvimCloseTermWin
