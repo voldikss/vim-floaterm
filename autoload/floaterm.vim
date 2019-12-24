@@ -5,6 +5,8 @@
 " GitHub: https://github.com/voldikss/vim-floaterm
 " ========================================================================
 
+set hidden
+
 let g:floaterm_buflist = []
 let g:floaterm_bufindex = -1
 
