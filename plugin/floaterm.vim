@@ -23,13 +23,21 @@ command! -nargs=0 FloatermPrev   call floaterm#doAction('prev')
 command! -nargs=0 FloatermNext   call floaterm#doAction('next')
 
 function! s:installKeymap()
-  exe printf('nnoremap  <silent> %s :FloatermNew<CR>', g:floaterm_keymap_new)
-  exe printf('nnoremap  <silent> %s :FloatermPrev<CR>', g:floaterm_keymap_prev)
-  exe printf('nnoremap  <silent> %s :FloatermNext<CR>', g:floaterm_keymap_next)
-  exe printf('nnoremap  <silent> %s :FloatermToggle<CR>', g:floaterm_keymap_toggle)
-  exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNew<CR>', g:floaterm_keymap_new)
-  exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermPrev<CR>', g:floaterm_keymap_prev)
-  exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNext<CR>', g:floaterm_keymap_next)
-  exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermToggle<CR>', g:floaterm_keymap_toggle)
+  if g:floaterm_keymap_new
+    exe printf('nnoremap  <silent> %s :FloatermNew<CR>', g:floaterm_keymap_new)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNew<CR>', g:floaterm_keymap_new)
+  endif
+  if g:floaterm_keymap_prev
+    exe printf('nnoremap  <silent> %s :FloatermPrev<CR>', g:floaterm_keymap_prev)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermPrev<CR>', g:floaterm_keymap_prev)
+  endif
+  if g:floaterm_keymap_next
+    exe printf('nnoremap  <silent> %s :FloatermNext<CR>', g:floaterm_keymap_next)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNext<CR>', g:floaterm_keymap_next)
+  endif
+  if g:floaterm_keymap_toggle
+    exe printf('nnoremap  <silent> %s :FloatermToggle<CR>', g:floaterm_keymap_toggle)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermToggle<CR>', g:floaterm_keymap_toggle)
+  endif
 endfunction
 call s:installKeymap()
