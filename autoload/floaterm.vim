@@ -1,104 +1,131 @@
-" vim:fdm=indent
-" ========================================================================
-" Description: autoload/floaterm.vim
-" Author: voldikss
-" GitHub: https://github.com/voldikss/vim-floaterm
-" ========================================================================
+" ============================================================================
+" FileName: autocmd/floaterm.vim
+" Description:
+" Author: voldikss <dyzplus@gmail.com>
+" GitHub: https://github.com/voldikss
+" ============================================================================
 
+" `hidden` option must be set, otherwise the floating terminal would be wiped
+" out, see #17
 set hidden
 
-let g:floaterm_buflist = []
-let g:floaterm_bufindex = -1
+" Note:
+" The data structure of the floaterm chain is a double circular linkedlist
+" s:floaterm.count is the count of the terminal node
+" s:floaterm.index is the pointer
+" s:floaterm.head is the HEAD node which only have 'prev' and 'next'
+" s:floaterm_node is the node prototype to create a terminal node
+let s:floaterm = {}
+let s:floaterm.count = 0
+let s:floaterm.head = {}
+let s:floaterm.head.next = s:floaterm.head
+let s:floaterm.head.prev = s:floaterm.head
+let s:floaterm.index = s:floaterm.head
 
-function! floaterm#doAction(action)
-  if !s:checkValid()
-    return
-  endif
+let s:floaterm_node = {
+  \ 'bufnr': 0,
+  \ 'border_bufnr': 0,
+  \ 'next': v:null,
+  \ 'prev': v:null
+  \ }
 
-  if a:action == 'new'
-    call s:newTerminal()
-  elseif a:action == 'next'
-    call s:nextTerminal()
-  elseif a:action == 'prev'
-    call s:prevTerminal()
-  elseif a:action == 'toggle'
-    call s:toggleTerminal()
-  endif
+" Remove a node if it was closed(the buffer doesn't exist)
+function! s:floaterm.kickout() dict abort
+  if self.count == 0 | return | endif
+  let self.index.prev.next = self.index.next
+  let self.index.next.prev = self.index.prev
+  let self.count -= 1
 endfunction
 
-function! s:toggleTerminal() abort
-  let found_winnr = s:findTerminalWindow()
+function! s:floaterm.toggle() dict abort
+  let found_winnr = self.find_term_win()
   if found_winnr > 0
     if &buftype == 'terminal'
       execute found_winnr . ' wincmd q'
     else
-      execute found_winnr . ' wincmd w'
+      execute found_winnr . ' wincmd w | startinsert'
     endif
   else
-    while 1
-      if s:sum(g:floaterm_buflist) == 0
-        call s:openTerminal(0)
+    while v:true
+      if self.count == 0
+        call self.open(0)
         return
       endif
-      let found_bufnr = g:floaterm_buflist[g:floaterm_bufindex]
+      " If the current node is HEAD(which doesn't have 'bufnr' key),
+      " skip and point to the node after HEAD
+      if self.index == self.head
+        let self.index = self.head.next
+      endif
+      let found_bufnr = self.index.bufnr
       if found_bufnr != 0 && bufexists(found_bufnr)
-        call s:openTerminal(found_bufnr)
+        call self.open(found_bufnr)
         return
       else
-        let g:floaterm_buflist[g:floaterm_bufindex] = 0
-        let buf_cnt = len(g:floaterm_buflist)
-        let g:floaterm_bufindex = (g:floaterm_bufindex-1+buf_cnt)%buf_cnt
+        call self.kickout()
+        let self.index = self.index.next
       endif
     endwhile
   endif
 endfunction
 
-function! s:newTerminal() abort
-  call s:hidePrevTerminals()
-  call s:openTerminal(0)
+function! s:floaterm.new() dict abort
+  call self.hide()
+  call self.open(0)
 endfunction
 
-function! s:nextTerminal()
-  call s:hidePrevTerminals()
-  while 1
-    if s:sum(g:floaterm_buflist) == 0
-      call s:showMessage('No more terminal buffers', 'warning')
+function! s:floaterm.next() dict abort
+  call self.hide()
+  while v:true
+    if self.count == 0
+      call floaterm#util#show_msg('No more terminal buffers', 'warning')
       return
     endif
-    let buf_cnt = len(g:floaterm_buflist)
-    let g:floaterm_bufindex = (g:floaterm_bufindex+1)%buf_cnt
-    let next_bufnr = g:floaterm_buflist[g:floaterm_bufindex]
+    " If the current node is the end node(whose next node is HEAD),
+    " skip and point to the HEAD's next node
+    if self.index.next == self.head
+      let self.index = self.head.next
+    else
+      let self.index = self.index.next
+    endif
+    let next_bufnr = self.index.bufnr
     if next_bufnr != 0 && bufexists(next_bufnr)
-      call s:openTerminal(next_bufnr)
+      call self.open(next_bufnr)
       return
     else
-      let g:floaterm_buflist[g:floaterm_bufindex] = 0
+      call self.kickout()
     endif
   endwhile
 endfunction
 
-function! s:prevTerminal()
-  call s:hidePrevTerminals()
-  while 1
-    if s:sum(g:floaterm_buflist) == 0
-      call s:showMessage('No more terminal buffers', 'warning')
+function! s:floaterm.prev() dict abort
+  call self.hide()
+  while v:true
+    if self.count == 0
+      call floaterm#util#show_msg('No more terminal buffers', 'warning')
       return
     endif
-    let buf_cnt = len(g:floaterm_buflist)
-    let g:floaterm_bufindex = (g:floaterm_bufindex-1+buf_cnt)%buf_cnt
-    let prev_bufnr = g:floaterm_buflist[g:floaterm_bufindex]
+    " If the current node is the node after HEAD(whose previous node is HEAD),
+    " skip and point to the HEAD's prev node(the end node)
+    if self.index.prev == self.head
+      let self.index = self.head.prev
+    else
+      let self.index = self.index.prev
+    endif
+    let prev_bufnr = self.index.bufnr
     if prev_bufnr != 0 && bufexists(prev_bufnr)
-      call s:openTerminal(prev_bufnr)
+      call self.open(prev_bufnr)
       return
     else
-      let g:floaterm_buflist[g:floaterm_bufindex] = 0
+      call self.kickout()
     endif
   endwhile
 endfunction
 
-function! s:hidePrevTerminals()
-  while 1
-    let found_winnr = s:findTerminalWindow()
+" Hide the current terminal before opening another terminal window
+" Therefore, you cannot have two terminals displayed at once
+function! s:floaterm.hide() dict abort
+  while v:true
+    let found_winnr = self.find_term_win()
     if found_winnr > 0
       execute found_winnr . ' wincmd q'
     else
@@ -107,51 +134,152 @@ function! s:hidePrevTerminals()
   endwhile
 endfunction
 
-function! s:openTerminal(found_bufnr)
+" Find if there is a terminal among all opened windows
+" If found, hide it or jump into it
+function! s:floaterm.find_term_win() abort
+  let found_winnr = 0
+  for winnr in range(1, winnr('$'))
+    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
+      \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
+      let found_winnr = winnr
+    endif
+  endfor
+  return found_winnr
+endfunction
+
+function! s:floaterm.open(found_bufnr) dict abort
   let height =
     \ g:floaterm_height == v:null
-    \ ? float2nr(0.7*&lines)
+    \ ? float2nr(0.6*&lines)
     \ : float2nr(g:floaterm_height)
   let width =
     \ g:floaterm_width == v:null
-    \ ? float2nr(0.7*&columns)
+    \ ? float2nr(0.6*&columns)
     \ : float2nr(g:floaterm_width)
 
   if g:floaterm_type == 'floating'
-    let bufnr = s:openTerminalFloating(a:found_bufnr, height, width)
+    let [bufnr, border_bufnr] = s:open_floating_terminal(a:found_bufnr, height, width)
+    if bufnr != 0
+      " Build a terminal node
+      let node = deepcopy(s:floaterm_node)
+      let node.bufnr = bufnr
+      let node.prev = self.index
+      let node.next = self.index.next
+      " If current node is the end node, let HEAD's prev point to the new node
+      if self.index.next == self.head
+        let self.head.prev = node
+      endif
+      let self.index.next = node
+      let self.index = self.index.next
+      let self.count += 1
+    endif
+    if border_bufnr != 0
+      let self.index.border_bufnr = border_bufnr
+    endif
   else
-    let bufnr = s:openTerminalNormal(a:found_bufnr, height, width)
+    let bufnr = s:open_floating_normaml(a:found_bufnr, height, width)
+    let self.index.bufnr = bufnr
   endif
-  if bufnr
-    call add(g:floaterm_buflist, bufnr)
-    let g:floaterm_bufindex = len(g:floaterm_buflist) - 1
-  endif
-  call s:onOpenTerminal()
+  call s:on_open()
 endfunction
 
-function! s:openTerminalFloating(found_bufnr, height, width) abort
-  let [relative, row, col, vert, hor] = s:getWindowPosition(a:width, a:height)
+function! s:on_open() abort
+  call setbufvar(bufnr('%'), 'floaterm_window', 1)
+  setlocal cursorline
+  setlocal filetype=terminal
+
+  " Find the true background(not 'hi link') for floating
+  if has('nvim')
+    execute 'setlocal winblend=' . g:floaterm_winblend
+
+    if g:floaterm_background == v:null
+      let hiGroup = 'NormalFloat'
+      while v:true
+        let hiInfo = execute('hi ' . hiGroup)
+        let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
+        let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
+        if g:floaterm_background != '' || hiGroup == ''
+          break
+        endif
+      endwhile
+    endif
+    if g:floaterm_background != ''
+      execute 'hi FloatTermNormal term=NONE guibg='. g:floaterm_background
+      setlocal winhighlight=NormalFloat:FloatTermNormal,FoldColumn:FloatTermNormal
+    endif
+
+    augroup close_floaterm_window
+      autocmd!
+      autocmd TermClose <buffer> if &buftype=='terminal'
+        \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
+        \ bdelete! |
+        \ endif
+      autocmd TermClose,BufHidden <buffer> if bufexists(s:floaterm.index.border_bufnr) |
+        \ execute 'bw ' . s:floaterm.index.border_bufnr |
+        \ endif
+    augroup END
+  endif
+
+  startinsert
+endfunction
+
+function! s:open_floating_terminal(found_bufnr, height, width) abort
+  let [row, col, vert, hor] = floaterm#util#floating_win_pos(a:width, a:height)
+
+  let border_opts = {
+    \ 'relative': 'win',
+    \ 'bufpos': [0,0],
+    \ 'anchor': vert . hor,
+    \ 'row': row,
+    \ 'col': col,
+    \ 'width': a:width + 2,
+    \ 'height': a:height + 2,
+    \ 'style':'minimal'
+    \ }
+  let top = g:floaterm_borderchars[4] .
+          \ repeat(g:floaterm_borderchars[0], a:width) .
+          \ g:floaterm_borderchars[5]
+  let mid = g:floaterm_borderchars[3] .
+          \ repeat(" ", a:width) .
+          \ g:floaterm_borderchars[1]
+  let bot = g:floaterm_borderchars[7] .
+          \ repeat(g:floaterm_borderchars[2], a:width) .
+          \ g:floaterm_borderchars[6]
+  let lines = [top] + repeat([mid], a:height) + [bot]
+  let border_bufnr = nvim_create_buf(v:false, v:true)
+  call nvim_buf_set_lines(border_bufnr, 0, -1, v:true, lines)
+  call nvim_open_win(border_bufnr, v:false, border_opts)
+  " Floating window border highlight
+  autocmd FileType floaterm_border ++once execute 'syn match Border /.*/ | hi def link Border ' . g:floaterm_border_highlight
+  call nvim_buf_set_option(border_bufnr, 'filetype', 'floaterm_border')
+
+  ""
+  " TODO:
+  " Use 'relative': 'cursor' for the border window
+  " Use 'relative':'win'(which behaviors not as expected...) for content window
   let opts = {
-    \ 'relative': relative,
+    \ 'relative': 'win',
+    \ 'bufpos': [0,0],
+    \ 'anchor': vert . hor,
+    \ 'row': row + (vert == 'N' ? 1 : -1),
+    \ 'col': col + (hor == 'W' ? 1 : -1),
     \ 'width': a:width,
     \ 'height': a:height,
-    \ 'col': col,
-    \ 'row': row,
-    \ 'anchor': vert . hor
-  \ }
+    \ 'style':'minimal'
+    \ }
 
   if a:found_bufnr > 0
-    call nvim_open_win(a:found_bufnr, 1, opts)
-    return
+    call nvim_open_win(a:found_bufnr, v:true, opts)
+    return [0, border_bufnr]
   else
     let bufnr = nvim_create_buf(v:false, v:true)
-    call nvim_open_win(bufnr, 1, opts)
+    call nvim_open_win(bufnr, v:true, opts)
     terminal
-    return bufnr
+    return [bufnr, border_bufnr]
   endif
 endfunction
 
-function! s:openTerminalNormal(found_bufnr, height, width) abort
+function! s:open_floating_normaml(found_bufnr, height, width) abort
   if a:found_bufnr > 0
     if &lines > 30
       execute 'botright ' . a:height . 'split'
@@ -180,180 +308,18 @@ function! s:openTerminalNormal(found_bufnr, height, width) abort
   endif
 endfunction
 
-function! s:onOpenTerminal() abort
-  call setbufvar(bufnr('%'), 'floaterm_window', 1)
-  setlocal signcolumn=no
-  setlocal nobuflisted
-  setlocal nocursorline
-  setlocal nonumber
-  setlocal norelativenumber
-  setlocal foldcolumn=1
-  setlocal filetype=terminal
-
-  " iterate to find the background for floating
-  if has('nvim')
-    execute 'setlocal winblend=' . g:floaterm_winblend
-
-    if g:floaterm_background == v:null
-      let hiGroup = 'NormalFloat'
-      while 1
-        let hiInfo = execute('hi ' . hiGroup)
-        let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
-        let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
-        if g:floaterm_background != '' || hiGroup == ''
-          break
-        endif
-      endwhile
-    endif
-    if g:floaterm_background != ''
-      execute 'hi FloatTermNormal term=NONE guibg='. g:floaterm_background
-      setlocal winhighlight=NormalFloat:FloatTermNormal,FoldColumn:FloatTermNormal
-    endif
-
-    augroup NvimCloseTermWin
-      autocmd!
-      autocmd TermClose <buffer> if &buftype=='terminal'
-        \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
-        \ bdelete! |
-        \ endif
-    augroup END
+function! floaterm#start(action) abort
+  if !floaterm#util#is_floaterm_available()
+    return
   endif
 
-  startinsert
-endfunction
-
-function! s:findTerminalWindow()
-  let found_winnr = 0
-  for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
-      \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
-      let found_winnr = winnr
-    endif
-  endfor
-  return found_winnr
-endfunction
-
-function! s:findTerminalBuffer() " NOTE: unused
-  let found_bufnr = 0
-  for bufnr in filter(range(1, bufnr('$')), 'bufexists(v:val)')
-    let buftype = getbufvar(bufnr, '&buftype')
-    if buftype == 'terminal' && getbufvar(bufnr, 'floaterm_window') == 1
-      let found_bufnr = bufnr
-    endif
-  endfor
-  return found_bufnr
-endfunction
-
-function! s:getWindowPosition(width, height) abort
-  let bottom_line = line('w0') + &lines - 1
-  let relative = 'editor'
-  if g:floaterm_position == 'topright'
-    let row = 0
-    let col = &columns
-    let vert = 'N'
-    let hor = 'E'
-  elseif g:floaterm_position == 'topleft'
-    let row = 0
-    let col = 0
-    let vert = 'N'
-    let hor = 'W'
-  elseif g:floaterm_position == 'bottomright'
-    let row = &lines
-    let col = &columns
-    let vert = 'S'
-    let hor = 'E'
-  elseif g:floaterm_position == 'bottomleft'
-    let row = &lines
-    let col = 0
-    let vert = 'S'
-    let hor = 'W'
-  elseif g:floaterm_position == 'center'
-    let row = (&lines - a:height)/2
-    let col = (&columns - a:width)/2
-    let vert = 'N'
-    let hor = 'W'
-
-    if row < 0
-      let row = 0
-    endif
-    if col < 0
-      let col = 0
-    endif
-  else
-    let relative = 'cursor'
-    let curr_pos = getpos('.')
-    let rownr = curr_pos[1]
-    let colnr = curr_pos[2]
-    " a long wrap line
-    if colnr > &columns
-      let colnr = colnr % &columns
-      let rownr += colnr / &columns
-    endif
-
-    if rownr + a:height <= bottom_line
-      let vert = 'N'
-      let row = 1
-    else
-      let vert = 'S'
-      let row = 0
-    endif
-
-    if colnr + a:width <= &columns
-      let hor = 'W'
-      let col = 0
-    else
-      let hor = 'E'
-      let col = 1
-    endif
+  if a:action == 'new'
+    call s:floaterm.new()
+  elseif a:action == 'next'
+    call s:floaterm.next()
+  elseif a:action == 'prev'
+    call s:floaterm.prev()
+  elseif a:action == 'toggle'
+    call s:floaterm.toggle()
   endif
-
-  return [relative, row, col, vert, hor]
-endfunction
-
-function! s:checkValid()
-  if exists('*nvim_win_set_config')
-    if g:floaterm_type == v:null
-      let g:floaterm_type = 'floating'
-    endif
-  elseif has('terminal')
-    let g:floaterm_type = 'normal'
-  else
-    let message = 'Terminal feature is required, please upgrade your vim/nvim'
-    call s:showMessage(message, 'error')
-    return v:false
-  endif
-  return v:true
-endfunction
-
-function! s:sum(lst)
-  let res = 0
-  for i in a:lst
-    let res += i
-  endfor
-  return res
-endfunction
-
-function! s:showMessage(message, ...) abort
-  if a:0 == 0
-    let msgType = 'info'
-  else
-    let msgType = a:1
-  endif
-
-  if type(a:message) != 1
-    let message = string(a:message)
-  else
-    let message = a:message
-  endif
-
-  if msgType == 'info'
-    echohl String
-  elseif msgType == 'warning'
-    echohl WarningMsg
-  elseif msgType == 'error'
-    echohl ErrorMsg
-  endif
-
-  echomsg '[vim-floaterm] ' . message
-  echohl None
 endfunction

@@ -1,8 +1,8 @@
 # vim-floaterm
 
-Open the terminal in the neovim's floating window. Detached from my [dotfiles](https://github.com/voldikss/dotfiles)
+Open the built-in terminal in neovim's floating window.
 
-![](https://user-images.githubusercontent.com/20282795/62412186-8c006680-b631-11e9-842b-1fffda64d926.gif)
+![](https://user-images.githubusercontent.com/20282795/71539980-39786b80-297f-11ea-9c19-a61f77f853b0.gif)
 
 ## Installation
 
@@ -14,8 +14,6 @@ Plug 'voldikss/vim-floaterm'
 
 - dein.nvim
 
-Don't use ondemand mode
-
 ```vim
 call dein#add('voldikss/vim-floaterm')
 ```
@@ -24,41 +22,45 @@ call dein#add('voldikss/vim-floaterm')
 
 #### **`g:floaterm_type`**
 
-- Available: `'floating'`(neovim only), `'normal'`(vim8 or neovim)
+- Available: `'floating'`(neovim only), `'normal'`(vim8 and neovim)
 
 - Default: `'floating'`
 
 #### **`g:floaterm_width`**
 
-- Type: number
-
-- Default: `0.7 * &columns`
+- Default: `0.6 * &columns`
 
 #### **`g:floaterm_height`**
 
-- Type: number
-
-- Default: `0.7 * &lines`
+- Default: `0.6 * &lines`
 
 #### `g:floaterm_winblend`
 
 - Description: The opacity of the floating terminal
 
-- Type: number(0-100)
-
-- Default: 0
+- Default: `0`
 
 #### **`g:floaterm_position`**
 
 - Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`
 
-- Default: `'auto'`(at the cursor position)
+- Default: `'auto'`(at the cursor place)
 
 #### **`g:floaterm_background`**
 
 - Type: string(e.g. `'#000000'`, `'black'`)
 
-- Default: depends on your colorscheme
+- Default: depends on your `colorscheme`
+
+#### **`g:floaterm_borderchars`**
+
+- Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
+
+#### **`g:translator_window_border_highlight`**
+
+- Available: see `:help group-name` and `:help highlight-groups`
+
+- Default: `'NormalFloat'`
 
 ## Commands
 
@@ -72,18 +74,19 @@ call dein#add('voldikss/vim-floaterm')
 
 ## Keymaps
 
-Configuration example
+This plugin doesn't supply any default mappings.
 
 ```vim
+""" Example configuration
 let g:floaterm_keymap_new    = '<F7>'
 let g:floaterm_keymap_prev   = '<F8>'
 let g:floaterm_keymap_next   = '<F9>'
-let g:floaterm_keymap_toggle = '<F12>'
+let g:floaterm_keymap_toggle = '<F10>'
 ```
 
 ## Q & A
 
-- #### This plugin leaves an empty window on startify window
+- #### This plugin leaves an empty buffer on startify window
 
   Put this code in `vimrc`
 
@@ -91,7 +94,7 @@ let g:floaterm_keymap_toggle = '<F12>'
   autocmd User Startified setlocal buflisted
   ```
 
-- #### I want to use another shell in the terminal. (e.g. Use fish instead of bash/zsh)
+- #### I want to use another shell in the terminal. (e.g. Use fish instead of bash)
 
   Set `shell` option in your `vimrc`:
 
@@ -99,7 +102,7 @@ let g:floaterm_keymap_toggle = '<F12>'
   set shell=/path/to/shell
   ```
 
-- #### I would like to customize the floating window behaviour
+- #### I would like to customize the style of the floating terminal window
 
   Use `autocmd`. For example
 
