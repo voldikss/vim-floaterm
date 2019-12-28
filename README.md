@@ -1,6 +1,6 @@
 # vim-floaterm
 
-Open the built-in terminal in neovim's floating window.
+Use neovim terminal in the floating window.
 
 ![](https://user-images.githubusercontent.com/20282795/71539980-39786b80-297f-11ea-9c19-a61f77f853b0.gif)
 
@@ -17,6 +17,12 @@ Plug 'voldikss/vim-floaterm'
 ```vim
 call dein#add('voldikss/vim-floaterm')
 ```
+
+## Features
+
+- Toggle terminal window quickly
+- Multiple terminal instances
+- Customizable floating terminal style
 
 ## Configurations
 
@@ -56,7 +62,7 @@ call dein#add('voldikss/vim-floaterm')
 
 - Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
-#### **`g:translator_window_border_highlight`**
+#### **`g:floaterm_border_highlight`**
 
 - Available: see `:help group-name` and `:help highlight-groups`
 
@@ -114,7 +120,3 @@ let g:floaterm_keymap_toggle = '<F10>'
 
   autocmd FileType terminal call s:floatermSettings()
   ```
-
-## Todo
-
-- [ ] add doc

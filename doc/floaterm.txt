@@ -1,0 +1,141 @@
+*floaterm.txt*  Neovim's floating terminal plugin     Last change: 2019-12-28
+
+Author : voldikss <https://github.com/voldikss>
+License: MIT license
+==============================================================================
+CONTENTS                                               *floaterm-contents*
+
+    Introduction                                       |floaterm-introduction|
+    Install                                            |floaterm-install|
+    Variables                                          |floaterm-variables|
+    Keymappings                                        |floaterm-key-mappings|
+    Commands                                           |floaterm-commands|
+    Q-A                                                |floaterm-q&a|
+    Repository                                         |floaterm-repository|
+
+
+==============================================================================
+INTRODUCTION                                        *floaterm-introduction*
+
+	Use neovim terminal in the floating window.
+
+
+==============================================================================
+INSTALL                                                 *floaterm-install*
+
+	With vim-plug:
+    >
+	    Plug 'voldikss/vim-floaterm'
+<
+
+==============================================================================
+VARIABLES                                            *floaterm-variables*
+
+g:floaterm_type                             *g:floaterm_type*
+
+			    Available:`'floating'`(neovim only), `'normal'`(vim8 and neovim)
+
+			    Default: `'floating'`
+
+g:floaterm_width                            *g:floaterm_width*
+
+			    Default: `0.6 * &columns`
+
+g:floaterm_height                           *g:floaterm_height*
+
+			    Default: `0.6 * &lines`
+
+g:floaterm_winblend                         *g:floaterm_winblend*
+
+			    Description: The opacity of the floating terminal
+
+			    Default: `0`
+
+g:floaterm_position                         *g:floaterm_position*
+
+			    Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`,
+					`'bottomright'`, `'center'`
+
+			    Default: `'auto'`(at the cursor place)
+
+g:floaterm_background                       *g:floaterm_background*
+
+			    Type: string(e.g. `'#000000'`, `'black'`)
+
+			    Default: depends on your `colorscheme`
+
+g:floaterm_borderchars                      *g:floaterm_borderchars*
+
+			    Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
+
+g:floaterm_border_highlight                 *g:floaterm_border_highlight*
+
+			    Available: see `:help group-name` and `:help highlight-groups`
+
+			    Default: `'NormalFloat'`
+
+==============================================================================
+
+MAPPINGS                                       *floaterm-key-mappings*
+
+This plugin doesn't supply any default mappings.
+ >
+		    """ Example configuration
+		    let g:floaterm_keymap_new    = '<F7>'
+		    let g:floaterm_keymap_prev   = '<F8>'
+		    let g:floaterm_keymap_next   = '<F9>'
+		    let g:floaterm_keymap_toggle = '<F10>'
+<
+
+
+==============================================================================
+COMMANDS                                                *floaterm-commands*
+
+:FloatermNew                                            *:FloatermNew*
+
+
+:FloatermNext                                           *:FloatermNext*
+
+
+:FloatermPrev                                           *:FloatermPrev*
+
+
+:FloatermToggle                                         *:FloatermToggle*
+
+
+==============================================================================
+Q-A                                                        *floaterm-q&a*
+
+- This plugin leaves an empty buffer on startify window
+
+  Put this code in `vimrc`
+    >
+  autocmd User Startified setlocal buflisted
+    <
+- I want to use another shell in the terminal. (e.g. Use fish instead of bash)
+
+  Set `shell` option in your `vimrc`:
+ >
+  set shell=/path/to/shell
+
+- I would like to customize the style of the floating terminal window
+
+  Use `autocmd`. For example
+ >
+  function s:floatermSettings()
+      setlocal number
+      " more settings
+  endfunction
+
+  autocmd FileType terminal call s:floatermSettings()
+
+==============================================================================
+REPOSITORY                                          *floaterm-repository-page*
+
+    |vim-floaterm| is developed on GitHub.
+
+    https://github.com/voldikss/vim-floaterm
+
+
+==============================================================================
+vim:tw=78:nosta:noet:ts=8:sts=0:ft=help:noet:fen:fdm=marker:
