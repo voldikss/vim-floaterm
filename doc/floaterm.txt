@@ -7,6 +7,7 @@ CONTENTS                                               *floaterm-contents*
 
     Introduction                                       |floaterm-introduction|
     Install                                            |floaterm-install|
+    Features                                           |floaterm-features|
     Variables                                          |floaterm-variables|
     Keymappings                                        |floaterm-key-mappings|
     Commands                                           |floaterm-commands|
@@ -27,6 +28,18 @@ INSTALL                                                 *floaterm-install*
     >
 	    Plug 'voldikss/vim-floaterm'
 <
+
+==============================================================================
+FEATURES                                                 *floaterm-features*
+
+- Toggle terminal window quickly
+
+- Multiple terminal instances
+
+- Customizable floating terminal style
+
+- Switch/Preview floating terminal buffer using [vim-clap](https://github.com/liuchengxu/vim-clap)(try `:Clap floaterm`)
+
 
 ==============================================================================
 VARIABLES                                            *floaterm-variables*

@@ -2,7 +2,7 @@
 
 Use neovim terminal in the floating window.
 
-![](https://user-images.githubusercontent.com/20282795/71539980-39786b80-297f-11ea-9c19-a61f77f853b0.gif)
+![](https://user-images.githubusercontent.com/20282795/71553203-f59c6980-2a45-11ea-88f2-747e938f7f49.gif)
 
 ## Installation
 
@@ -18,11 +18,24 @@ Plug 'voldikss/vim-floaterm'
 call dein#add('voldikss/vim-floaterm')
 ```
 
+## Keymaps
+
+This plugin doesn't supply any default mappings.
+
+```vim
+""" Example configuration
+let g:floaterm_keymap_new    = '<F7>'
+let g:floaterm_keymap_prev   = '<F8>'
+let g:floaterm_keymap_next   = '<F9>'
+let g:floaterm_keymap_toggle = '<F10>'
+```
+
 ## Features
 
 - Toggle terminal window quickly
 - Multiple terminal instances
 - Customizable floating terminal style
+- Switch/Preview floating terminal buffer using [vim-clap](https://github.com/liuchengxu/vim-clap)(try `:Clap floaterm`)
 
 ## Configurations
 
@@ -77,18 +90,6 @@ call dein#add('voldikss/vim-floaterm')
 - `:FloatermPrev`
 
 - `:FloatermNext`
-
-## Keymaps
-
-This plugin doesn't supply any default mappings.
-
-```vim
-""" Example configuration
-let g:floaterm_keymap_new    = '<F7>'
-let g:floaterm_keymap_prev   = '<F8>'
-let g:floaterm_keymap_next   = '<F9>'
-let g:floaterm_keymap_toggle = '<F10>'
-```
 
 ## Q & A
 

@@ -11,18 +11,18 @@ set hidden
 
 " Note:
 " The data structure of the floaterm chain is a double circular linkedlist
-" s:floaterm.count is the count of the terminal node
-" s:floaterm.index is the pointer
-" s:floaterm.head is the HEAD node which only have 'prev' and 'next'
-" s:floaterm_node is the node prototype to create a terminal node
-let s:floaterm = {}
-let s:floaterm.count = 0
-let s:floaterm.head = {}
-let s:floaterm.head.next = s:floaterm.head
-let s:floaterm.head.prev = s:floaterm.head
-let s:floaterm.index = s:floaterm.head
+" g:floaterm.count is the count of the terminal node
+" g:floaterm.index is the pointer
+" g:floaterm.head is the HEAD node which only have 'prev' and 'next'
+" g:floaterm_node is the node prototype to create a terminal node
+let g:floaterm = {}
+let g:floaterm.count = 0
+let g:floaterm.head = {}
+let g:floaterm.head.next = g:floaterm.head
+let g:floaterm.head.prev = g:floaterm.head
+let g:floaterm.index = g:floaterm.head
 
-let s:floaterm_node = {
+let g:floaterm_node = {
   \ 'bufnr': 0,
   \ 'border_bufnr': 0,
   \ 'next': v:null,
@@ -30,14 +30,14 @@ let s:floaterm_node = {
   \ }
 
 " Remove a node if it was closed(the buffer doesn't exist)
-function! s:floaterm.kickout() dict abort
+function! g:floaterm.kickout() dict abort
   if self.count == 0 | return | endif
   let self.index.prev.next = self.index.next
   let self.index.next.prev = self.index.prev
   let self.count -= 1
 endfunction
 
-function! s:floaterm.toggle() dict abort
+function! g:floaterm.toggle() dict abort
   let found_winnr = self.find_term_win()
   if found_winnr > 0
     if &buftype == 'terminal'
@@ -68,12 +68,12 @@ function! s:floaterm.toggle() dict abort
   endif
 endfunction
 
-function! s:floaterm.new() dict abort
+function! g:floaterm.new() dict abort
   call self.hide()
   call self.open(0)
 endfunction
 
-function! s:floaterm.next() dict abort
+function! g:floaterm.next() dict abort
   call self.hide()
   while v:true
     if self.count == 0
@@ -97,7 +97,7 @@ function! s:floaterm.next() dict abort
   endwhile
 endfunction
 
-function! s:floaterm.prev() dict abort
+function! g:floaterm.prev() dict abort
   call self.hide()
   while v:true
     if self.count == 0
@@ -123,7 +123,7 @@ endfunction
 
 " Hide the current terminal before opening another terminal window
 " Therefore, you cannot have two terminals displayed at once
-function! s:floaterm.hide() dict abort
+function! g:floaterm.hide() dict abort
   while v:true
     let found_winnr = self.find_term_win()
     if found_winnr > 0
@@ -134,9 +134,37 @@ function! s:floaterm.hide() dict abort
   endwhile
 endfunction
 
+" Gather active floaterm for vim-clap
+function! g:floaterm.gather() dict abort
+  let lst = []
+  let self.index = self.head.next
+  while self.index != self.head
+    let bufnr = self.index.bufnr
+    if bufnr != 0 && bufexists(bufnr)
+      call add(lst, bufnr)
+    else
+      call self.kickout()
+    endif
+    let self.index = self.index.next
+  endwhile
+  return lst
+endfunction
+
+" Jump to terminal buffer bufnr, for vim-clap
+function! g:floaterm.jump(bufnr) dict abort
+  let self.index = self.head.next
+  while self.index != self.head
+    if a:bufnr == self.index.bufnr
+      call self.open(a:bufnr)
+      return
+    endif
+    let self.index = self.index.next
+  endwhile
+endfunction
+
 " Find if there is a terminal among all opened windows
 " If found, hide it or jump into it
-function! s:floaterm.find_term_win() abort
+function! g:floaterm.find_term_win() abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
     if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
@@ -147,7 +175,7 @@ function! s:floaterm.find_term_win() abort
   return found_winnr
 endfunction
 
-function! s:floaterm.open(found_bufnr) dict abort
+function! g:floaterm.open(found_bufnr) dict abort
   let height =
     \ g:floaterm_height == v:null
     \ ? float2nr(0.6*&lines)
@@ -161,7 +189,7 @@ function! s:floaterm.open(found_bufnr) dict abort
     let [bufnr, border_bufnr] = s:open_floating_terminal(a:found_bufnr, height, width)
     if bufnr != 0
       " Build a terminal node
-      let node = deepcopy(s:floaterm_node)
+      let node = deepcopy(g:floaterm_node)
       let node.bufnr = bufnr
       let node.prev = self.index
       let node.next = self.index.next
@@ -214,8 +242,9 @@ function! s:on_open() abort
         \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
         \ bdelete! |
         \ endif
-      autocmd TermClose,BufHidden <buffer> if bufexists(s:floaterm.index.border_bufnr) |
-        \ execute 'bw ' . s:floaterm.index.border_bufnr |
+      autocmd TermClose,BufHidden <buffer> if exists('g:floaterm.index.border_bufnr')
+        \ && bufexists(g:floaterm.index.border_bufnr) |
+        \ execute 'bw ' . g:floaterm.index.border_bufnr |
         \ endif
     augroup END
   endif
@@ -314,12 +343,12 @@ function! floaterm#start(action) abort
   endif
 
   if a:action == 'new'
-    call s:floaterm.new()
+    call g:floaterm.new()
   elseif a:action == 'next'
-    call s:floaterm.next()
+    call g:floaterm.next()
   elseif a:action == 'prev'
-    call s:floaterm.prev()
+    call g:floaterm.prev()
   elseif a:action == 'toggle'
-    call s:floaterm.toggle()
+    call g:floaterm.toggle()
   endif
 endfunction
