@@ -8,4 +8,4 @@ matrix:
 
 install: pip3 install vim-vint
 
-script: vint --color --style ./autoload ./plugin ./syntax
+script: vint --color --style ./autoload ./plugin
