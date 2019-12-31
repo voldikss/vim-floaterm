@@ -187,26 +187,26 @@ function! g:floaterm.open(found_bufnr) dict abort
 
   if g:floaterm_type == 'floating'
     let [bufnr, border_bufnr] = s:open_floating_terminal(a:found_bufnr, height, width)
-    if bufnr != 0
-      " Build a terminal node
-      let node = deepcopy(g:floaterm_node)
-      let node.bufnr = bufnr
-      let node.prev = self.index
-      let node.next = self.index.next
-      " If current node is the end node, let HEAD's prev point to the new node
-      if self.index.next == self.head
-        let self.head.prev = node
-      endif
-      let self.index.next = node
-      let self.index = self.index.next
-      let self.count += 1
-    endif
-    if border_bufnr != 0
-      let self.index.border_bufnr = border_bufnr
-    endif
   else
     let bufnr = s:open_floating_normaml(a:found_bufnr, height, width)
-    let self.index.bufnr = bufnr
+    let border_bufnr = 0
+  endif
+  if bufnr != 0
+    " Build a terminal node
+    let node = deepcopy(g:floaterm_node)
+    let node.bufnr = bufnr
+    let node.prev = self.index
+    let node.next = self.index.next
+    " If current node is the end node, let HEAD's prev point to the new node
+    if self.index.next == self.head
+      let self.head.prev = node
+    endif
+    let self.index.next = node
+    let self.index = self.index.next
+    let self.count += 1
+  endif
+  if border_bufnr != 0
+    let self.index.border_bufnr = border_bufnr
   endif
   call s:on_open()
 endfunction
@@ -243,7 +243,8 @@ function! s:on_open() abort
         \ bdelete! |
         \ endif
       autocmd TermClose,BufHidden <buffer> if exists('g:floaterm.index.border_bufnr')
-        \ && bufexists(g:floaterm.index.border_bufnr) |
+        \ && bufexists(g:floaterm.index.border_bufnr)
+        \ && g:floaterm.index.border_bufnr != 0 |
         \ execute 'bw ' . g:floaterm.index.border_bufnr |
         \ endif
     augroup END
