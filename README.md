@@ -1,5 +1,7 @@
 # vim-floaterm
 
+[![Build Status](https://travis-ci.org/voldikss/vim-floaterm.svg?branch=master)](https://travis-ci.org/voldikss/vim-floaterm)
+
 Use neovim terminal in the floating window.
 
 ![](https://user-images.githubusercontent.com/20282795/71553203-f59c6980-2a45-11ea-88f2-747e938f7f49.gif)

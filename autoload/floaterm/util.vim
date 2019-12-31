@@ -6,27 +6,27 @@
 " ============================================================================
 
 function! floaterm#util#floating_win_pos(width, height) abort
-  if g:floaterm_position == 'topright'
+  if g:floaterm_position ==# 'topright'
     let row = 0
     let col = &columns
     let vert = 'N'
     let hor = 'E'
-  elseif g:floaterm_position == 'topleft'
+  elseif g:floaterm_position ==# 'topleft'
     let row = 0
     let col = 0
     let vert = 'N'
     let hor = 'W'
-  elseif g:floaterm_position == 'bottomright'
+  elseif g:floaterm_position ==# 'bottomright'
     let row = &lines
     let col = &columns
     let vert = 'S'
     let hor = 'E'
-  elseif g:floaterm_position == 'bottomleft'
+  elseif g:floaterm_position ==# 'bottomleft'
     let row = &lines
     let col = 0
     let vert = 'S'
     let hor = 'W'
-  elseif g:floaterm_position == 'center'
+  elseif g:floaterm_position ==# 'center'
     let row = (&lines - a:height)/2
     let col = (&columns - a:width)/2
     let vert = 'N'
@@ -75,7 +75,7 @@ function! floaterm#util#is_floaterm_available() abort
 endfunction
 
 function! s:echo(group, msg) abort
-  if a:msg == '' | return | endif
+  if a:msg ==# '' | return | endif
   execute 'echohl' a:group
   echo a:msg
   echon ' '
@@ -83,7 +83,7 @@ function! s:echo(group, msg) abort
 endfunction
 
 function! s:echon(group, msg) abort
-  if a:msg == '' | return | endif
+  if a:msg ==# '' | return | endif
   execute 'echohl' a:group
   echon a:msg
   echon ' '
@@ -105,11 +105,11 @@ function! floaterm#util#show_msg(message, ...) abort
 
   call s:echo('Constant', '[vim-floaterm]')
 
-  if msg_type == 'info'
+  if msg_type ==# 'info'
     call s:echon('Normal', message)
-  elseif msg_type == 'warning'
+  elseif msg_type ==# 'warning'
     call s:echon('WarningMsg', message)
-  elseif msg_type == 'error'
+  elseif msg_type ==# 'error'
     call s:echon('Error', message)
   endif
 endfunction

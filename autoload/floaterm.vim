@@ -40,7 +40,7 @@ endfunction
 function! g:floaterm.toggle() dict abort
   let found_winnr = self.find_term_win()
   if found_winnr > 0
-    if &buftype == 'terminal'
+    if &buftype ==# 'terminal'
       execute found_winnr . ' wincmd q'
     else
       execute found_winnr . ' wincmd w | startinsert'
@@ -167,7 +167,7 @@ endfunction
 function! g:floaterm.find_term_win() abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&buftype') == 'terminal'
+    if getbufvar(winbufnr(winnr), '&buftype') ==# 'terminal'
       \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
       let found_winnr = winnr
     endif
@@ -185,7 +185,7 @@ function! g:floaterm.open(found_bufnr) dict abort
     \ ? float2nr(0.6*&columns)
     \ : float2nr(g:floaterm_width)
 
-  if g:floaterm_type == 'floating'
+  if g:floaterm_type ==# 'floating'
     let [bufnr, border_bufnr] = s:open_floating_terminal(a:found_bufnr, height, width)
   else
     let bufnr = s:open_floating_normaml(a:found_bufnr, height, width)
@@ -226,19 +226,19 @@ function! s:on_open() abort
         let hiInfo = execute('hi ' . hiGroup)
         let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
         let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
-        if g:floaterm_background != '' || hiGroup == ''
+        if g:floaterm_background !=# '' || hiGroup ==# ''
           break
         endif
       endwhile
     endif
-    if g:floaterm_background != ''
+    if g:floaterm_background !=# ''
       execute 'hi FloatTermNormal term=NONE guibg='. g:floaterm_background
       setlocal winhighlight=NormalFloat:FloatTermNormal,FoldColumn:FloatTermNormal
     endif
 
     augroup close_floaterm_window
       autocmd!
-      autocmd TermClose <buffer> if &buftype=='terminal'
+      autocmd TermClose <buffer> if &buftype ==# 'terminal'
         \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
         \ bdelete! |
         \ endif
@@ -270,7 +270,7 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
           \ repeat(g:floaterm_borderchars[0], a:width) .
           \ g:floaterm_borderchars[5]
   let mid = g:floaterm_borderchars[3] .
-          \ repeat(" ", a:width) .
+          \ repeat(' ', a:width) .
           \ g:floaterm_borderchars[1]
   let bot = g:floaterm_borderchars[7] .
           \ repeat(g:floaterm_borderchars[2], a:width) .
@@ -280,7 +280,10 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
   call nvim_buf_set_lines(border_bufnr, 0, -1, v:true, lines)
   call nvim_open_win(border_bufnr, v:false, border_opts)
   " Floating window border highlight
-  autocmd FileType floaterm_border ++once execute 'syn match Border /.*/ | hi def link Border ' . g:floaterm_border_highlight
+  augroup floaterm_border_highlight
+    autocmd!
+    autocmd FileType floaterm_border ++once execute 'syn match Border /.*/ | hi def link Border ' . g:floaterm_border_highlight
+  augroup END
   call nvim_buf_set_option(border_bufnr, 'filetype', 'floaterm_border')
 
   ""
@@ -291,8 +294,8 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
     \ 'relative': 'win',
     \ 'bufpos': [0,0],
     \ 'anchor': vert . hor,
-    \ 'row': row + (vert == 'N' ? 1 : -1),
-    \ 'col': col + (hor == 'W' ? 1 : -1),
+    \ 'row': row + (vert ==# 'N' ? 1 : -1),
+    \ 'col': col + (hor ==# 'W' ? 1 : -1),
     \ 'width': a:width,
     \ 'height': a:height,
     \ 'style':'minimal'
@@ -343,13 +346,13 @@ function! floaterm#start(action) abort
     return
   endif
 
-  if a:action == 'new'
+  if a:action ==# 'new'
     call g:floaterm.new()
-  elseif a:action == 'next'
+  elseif a:action ==# 'next'
     call g:floaterm.next()
-  elseif a:action == 'prev'
+  elseif a:action ==# 'prev'
     call g:floaterm.prev()
-  elseif a:action == 'toggle'
+  elseif a:action ==# 'toggle'
     call g:floaterm.toggle()
   endif
 endfunction

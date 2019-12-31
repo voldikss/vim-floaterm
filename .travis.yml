@@ -1,0 +1,11 @@
+matrix:
+  include:
+    - language: python
+      python: '3.7'
+      dist: xenial
+      os: linux
+      env: RUN_LINT=true
+
+install: pip3 install vim-vint
+
+script: vint --color --style ./autoload ./plugin ./syntax
