@@ -66,10 +66,10 @@ g:floaterm_winblend                         *g:floaterm_winblend*
 
 g:floaterm_position                         *g:floaterm_position*
 
-			    Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`,
-					`'bottomright'`, `'center'`
+			    Available: `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`,
+					`'bottomright'`, `'auto'`
 
-			    Default: `'auto'`(at the cursor place)
+			    Default: `'center'`
 
 g:floaterm_background                       *g:floaterm_background*
 

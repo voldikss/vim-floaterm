@@ -63,9 +63,9 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 #### **`g:floaterm_position`**
 
-- Available: `'auto'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`
+- Available: `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`
 
-- Default: `'auto'`(at the cursor place)
+- Default: `'center'`
 
 #### **`g:floaterm_background`**
 
