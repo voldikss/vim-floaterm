@@ -75,17 +75,17 @@ g:floaterm_background                       *g:floaterm_background*
 
 			    Type: string(e.g. `'#000000'`, `'black'`)
 
-			    Default: depends on your `colorscheme`
+                            Default: background color of normal floating window
 
 g:floaterm_borderchars                      *g:floaterm_borderchars*
 
 			    Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
-g:floaterm_border_highlight                 *g:floaterm_border_highlight*
+g:floaterm_border_color                 *g:floaterm_border_color*
 
-			    Available: see `:help group-name` and `:help highlight-groups`
+			    Type: string(e.g. `'#FFFFFF'`, `'white'`)
 
-			    Default: `'NormalFloat'`
+                            Default: foreground color of normal floating window
 
 ==============================================================================
 

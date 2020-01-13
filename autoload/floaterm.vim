@@ -29,6 +29,14 @@ let g:floaterm_node = {
   \ 'prev': v:null
   \ }
 
+if g:floaterm_border_color == v:null
+  let g:floaterm_border_color = floaterm#util#get_normalfloat_fg()
+endif
+
+if g:floaterm_background == v:null
+  let g:floaterm_background = floaterm#util#get_normalfloat_bg()
+endif
+
 " Remove a node if it was closed(the buffer doesn't exist)
 function! g:floaterm.kickout() dict abort
   if self.count == 0 | return | endif
@@ -217,22 +225,8 @@ function! s:on_open() abort
   " Find the true background(not 'hi link') for floating
   if has('nvim')
     execute 'setlocal winblend=' . g:floaterm_winblend
-
-    if g:floaterm_background == v:null
-      let hiGroup = 'NormalFloat'
-      while v:true
-        let hiInfo = execute('hi ' . hiGroup)
-        let g:floaterm_background = matchstr(hiInfo, 'guibg=\zs\S*')
-        let hiGroup = matchstr(hiInfo, 'links to \zs\S*')
-        if g:floaterm_background !=# '' || hiGroup ==# ''
-          break
-        endif
-      endwhile
-    endif
-    if g:floaterm_background !=# ''
-      execute 'hi FloatTermNormal term=NONE guibg='. g:floaterm_background
-      setlocal winhighlight=NormalFloat:FloatTermNormal,FoldColumn:FloatTermNormal
-    endif
+    execute 'hi FloatTermNormal term=NONE guibg='. g:floaterm_background
+    setlocal winhighlight=NormalFloat:FloatTermNormal,FoldColumn:FloatTermNormal
 
     augroup close_floaterm_window
       autocmd!
@@ -278,7 +272,11 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
   " Floating window border highlight
   augroup floaterm_border_highlight
     autocmd!
-    autocmd FileType floaterm_border ++once execute 'syn match Border /.*/ | hi def link Border ' . g:floaterm_border_highlight
+    autocmd FileType floaterm_border ++once execute printf(
+      \ 'syn match Border /.*/ | hi Border guibg=%s guifg=%s',
+      \ g:floaterm_background,
+      \ g:floaterm_border_color
+      \ )
   augroup END
   call nvim_buf_set_option(border_bufnr, 'filetype', 'floaterm_border')
 

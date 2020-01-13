@@ -14,7 +14,7 @@ let g:floaterm_winblend         = get(g:, 'floaterm_winblend', 0)
 let g:floaterm_position         = get(g:, 'floaterm_position', 'auto')
 let g:floaterm_background       = get(g:, 'floaterm_background', v:null)
 let g:floaterm_borderchars      = get(g:, 'floaterm_borderchars', ['─', '│', '─', '│', '┌', '┐', '┘', '└'])
-let g:floaterm_border_highlight = get(g:, 'floaterm_border_highlight', 'NormalFloat')
+let g:floaterm_border_color     = get(g:, 'floaterm_border_color', v:null)
 
 let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', v:null)
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)

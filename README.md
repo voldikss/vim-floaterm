@@ -71,17 +71,17 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 - Type: string(e.g. `'#000000'`, `'black'`)
 
-- Default: depends on your `colorscheme`
+- Default: background color of normal floating window
 
 #### **`g:floaterm_borderchars`**
 
 - Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
-#### **`g:floaterm_border_highlight`**
+#### **`g:floaterm_border_color`**
 
-- Available: see `:help group-name` and `:help highlight-groups`
+- Type: string(e.g. `'#FFFFFF'`, `'blue'`)
 
-- Default: `'NormalFloat'`
+- Default: foreground color of normal floating window
 
 ## Commands
 
