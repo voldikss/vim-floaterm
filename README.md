@@ -121,5 +121,5 @@ let g:floaterm_keymap_toggle = '<F10>'
       " more settings
   endfunction
 
-  autocmd FileType terminal call s:floatermSettings()
+  autocmd FileType floaterm call s:floatermSettings()
   ```

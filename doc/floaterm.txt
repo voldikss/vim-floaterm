@@ -140,7 +140,7 @@ Q-A                                                        *floaterm-q&a*
       " more settings
   endfunction
 
-  autocmd FileType terminal call s:floatermSettings()
+  autocmd FileType floaterm call s:floatermSettings()
 
 ==============================================================================
 REPOSITORY                                          *floaterm-repository-page*

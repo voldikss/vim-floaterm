@@ -167,8 +167,7 @@ endfunction
 function! g:floaterm.find_term_win() abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&buftype') ==# 'terminal'
-      \ && getbufvar(winbufnr(winnr), 'floaterm_window') == 1
+    if getbufvar(winbufnr(winnr), '&filetype') ==# 'floaterm'
       let found_winnr = winnr
     endif
   endfor
@@ -212,9 +211,8 @@ function! g:floaterm.open(found_bufnr) dict abort
 endfunction
 
 function! s:on_open() abort
-  call setbufvar(bufnr('%'), 'floaterm_window', 1)
   setlocal cursorline
-  setlocal filetype=terminal
+  setlocal filetype=floaterm
 
   " Find the true background(not 'hi link') for floating
   if has('nvim')
@@ -238,8 +236,7 @@ function! s:on_open() abort
 
     augroup close_floaterm_window
       autocmd!
-      autocmd TermClose <buffer> if &buftype ==# 'terminal'
-        \ && getbufvar(bufnr('%'), 'floaterm_window') == 1 |
+      autocmd TermClose <buffer> if &filetype ==# 'floaterm' |
         \ bdelete! |
         \ endif
       autocmd TermClose,BufHidden <buffer> if exists('g:floaterm.index.border_bufnr')
