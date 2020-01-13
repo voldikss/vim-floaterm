@@ -257,8 +257,7 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
   let [row, col, vert, hor] = floaterm#util#floating_win_pos(a:width, a:height)
 
   let border_opts = {
-    \ 'relative': 'win',
-    \ 'bufpos': [0,0],
+    \ 'relative': 'editor',
     \ 'anchor': vert . hor,
     \ 'row': row,
     \ 'col': col,
@@ -291,8 +290,7 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
   " Use 'relative': 'cursor' for the border window
   " Use 'relative':'win'(which behaviors not as expected...) for content window
   let opts = {
-    \ 'relative': 'win',
-    \ 'bufpos': [0,0],
+    \ 'relative': 'editor',
     \ 'anchor': vert . hor,
     \ 'row': row + (vert ==# 'N' ? 1 : -1),
     \ 'col': col + (hor ==# 'W' ? 1 : -1),
