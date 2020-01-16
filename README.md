@@ -49,11 +49,13 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 #### **`g:floaterm_width`**
 
-- Default: `0.6 * &columns`
+- Type: `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`.
+- Default: `0.6`
 
 #### **`g:floaterm_height`**
 
-- Default: `0.6 * &lines`
+- Type: `int` (number of lines) or `float` (between 0 and 1). If `float`, the height is relative to `&lines`.
+- Default: `0.6`
 
 #### `g:floaterm_winblend`
 

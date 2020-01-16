@@ -183,14 +183,13 @@ function! g:floaterm.find_term_win() abort
 endfunction
 
 function! g:floaterm.open(found_bufnr) dict abort
-  let height =
-    \ g:floaterm_height == v:null
-    \ ? float2nr(0.6*&lines)
-    \ : float2nr(g:floaterm_height)
-  let width =
-    \ g:floaterm_width == v:null
-    \ ? float2nr(0.6*&columns)
-    \ : float2nr(g:floaterm_width)
+  let height = g:floaterm_height == v:null ? 0.6 : g:floaterm_height
+  if type(height) == v:t_float | let height = height * &lines | endif
+  let height = float2nr(height)
+
+  let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
+  if type(width) == v:t_float | let width = width * &columns | endif
+  let width = float2nr(width)
 
   if g:floaterm_type ==# 'floating'
     let [bufnr, border_bufnr] = s:open_floating_terminal(a:found_bufnr, height, width)
