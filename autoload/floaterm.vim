@@ -266,6 +266,7 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
           \ g:floaterm_borderchars[6]
   let lines = [top] + repeat([mid], a:height) + [bot]
   let border_bufnr = nvim_create_buf(v:false, v:true)
+  call nvim_buf_set_option(border_bufnr, 'synmaxcol', 3000) " #27
   call nvim_buf_set_lines(border_bufnr, 0, -1, v:true, lines)
   call nvim_open_win(border_bufnr, v:false, border_opts)
   " Floating window border highlight
