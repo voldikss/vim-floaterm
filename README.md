@@ -38,6 +38,8 @@ let g:floaterm_keymap_toggle = '<F10>'
 - Multiple terminal instances
 - Customizable floating terminal style
 - Switch/Preview floating terminal buffer using [vim-clap](https://github.com/liuchengxu/vim-clap)(try `:Clap floaterm`)
+- Switch/Preview/Open floating terminal buffers using [denite.nvim](https://github.com/Shougo/denite.nvim)(try `:Denite floaterm`)
+  - See the animation GIF in [PR #30](https://github.com/voldikss/vim-floaterm/pull/30).
 
 ## Configurations
 

@@ -11,6 +11,7 @@ CONTENTS                                               *floaterm-contents*
     Variables                                          |floaterm-variables|
     Keymappings                                        |floaterm-key-mappings|
     Commands                                           |floaterm-commands|
+    Extensions                                         |floaterm-extensions|
     Q-A                                                |floaterm-q&a|
     Repository                                         |floaterm-repository|
 
@@ -38,7 +39,11 @@ FEATURES                                                 *floaterm-features*
 
 - Customizable floating terminal style
 
-- Switch/Preview floating terminal buffer using [vim-clap](https://github.com/liuchengxu/vim-clap)(try `:Clap floaterm`)
+- Switch/Preview floating terminal buffer using *vim-clap*
+  https://github.com/liuchengxu/vim-clap
+
+- Switch/Preview/Open floating terminal buffer using *denite.nvim*
+  https://github.com/Shougo/denite.nvim
 
 
 ==============================================================================
@@ -121,6 +126,56 @@ COMMANDS                                                *floaterm-commands*
 
 :FloatermToggle                                         *:FloatermToggle*
 
+
+==============================================================================
+EXTENSIONS                                              *floaterm-extensions*
+
+------------------------------------------------------------------------------
+VIM-CLAP                                                *:Clap-floaterm*
+
+Start *vim-clap* to manage floaterms.
+>
+		:Clap floaterm
+<
+------------------------------------------------------------------------------
+DENITE.NVIM                                             *denite-floaterm*
+
+							*denite-source-floaterm*
+SOURCES~
+
+floaterm	Gather floaterms as candidates. This accepts an argument
+		below.
+
+		Source arguments:
+		1. "new" adds a candidate to open a new floaterm.
+
+						       *denite-floaterm-actions*
+ACTIONS~
+
+open (default)
+		Open the selected floaterm.
+
+new
+		Open a new floaterm.
+
+preview
+		Preview the selected floaterm.
+
+							*denite-floaterm-usage*
+USAGE~
+
+Start to manage existent floaterms.
+>
+		:Denite floaterm
+<
+Start to open a new floaterm.
+>
+		:Denite floaterm:new
+<
+Start with all features and preview automatically with moving the cursor.
+>
+		:Denite floaterm floaterm:new -auto-action=preview
+<
 
 ==============================================================================
 Q-A                                                        *floaterm-q&a*
