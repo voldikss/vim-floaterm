@@ -21,7 +21,7 @@ class Floaterm:
         return str(
             self.vim.api.buf_get_var(bufnr, "term_title")
             if self.is_nvim
-            else self.vim.funcs.getbufvar(bufnr, "term_title")
+            else self.vim.funcs.term_gettitle(bufnr)
         )
 
     def call(self, name: str, *args: List[Any], **kwargs: Dict[str, Any]) -> Any:
