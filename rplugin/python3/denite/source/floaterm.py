@@ -1,5 +1,11 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
+
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidate, Candidates
+from denite_floaterm import Floaterm
 
 DELIMITER = "\u00a0:\u00a0"
 FLOATERM_HIGHLIGHT_SYNTAX = [
@@ -15,33 +21,29 @@ class Source(Base):
 
         self.name = "floaterm"
         self.kind = "floaterm"
+        self._floaterm = Floaterm(vim)
 
     def on_init(self, context: UserContext) -> None:
-        if self._can_use_floaterm():
-            self.vim.call("nvim_call_dict_function", "g:floaterm", "hide", [])
+        if self._floaterm.can_use():
+            self._floaterm.call("hide")
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         if "new" in context["args"]:
             return [{"word": "[open new floaterm]", "action__is_new": True}]
 
-        if not self._can_use_floaterm():
+        if not self._floaterm.can_use():
             return []
 
         def candidate(bufnr: int) -> Candidate:
             name = self.vim.buffers[bufnr].name
-            title = self.vim.call("nvim_buf_get_var", bufnr, "term_title")
+            title = self._floaterm.term_title(bufnr)
             return {
                 "word": name,
                 "abbr": f"{bufnr: >2} {DELIMITER}{name}{DELIMITER} {title}",
                 "action__bufnr": bufnr,
             }
 
-        return [
-            candidate(x)
-            for x in self.vim.call(
-                "nvim_call_dict_function", "g:floaterm", "gather", []
-            )
-        ]
+        return [candidate(x) for x in self._floaterm.call("gather")]
 
     def highlight(self) -> None:
         for i, syn in enumerate(FLOATERM_HIGHLIGHT_SYNTAX):
@@ -64,6 +66,3 @@ class Source(Base):
                         syn_name("name"), syn["re"], containedin, nextgroup
                     )
                 )
-
-    def _can_use_floaterm(self) -> bool:
-        return "floaterm" in self.vim.vars

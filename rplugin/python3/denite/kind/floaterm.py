@@ -1,5 +1,11 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
+
 from denite.kind.base import Base
 from denite.util import Nvim, Candidates, UserContext
+from denite_floaterm import Floaterm
 
 PREVIEW_FILENAME = "[denite-floaterm-preview]"
 
@@ -11,6 +17,7 @@ class Kind(Base):
         self.name = "floaterm"
         self.default_action = "open"
         self._previewed_bufnr = -1
+        self._floaterm = Floaterm(vim)
 
     def action_new(self, context: UserContext) -> None:
         self.vim.call("floaterm#start", "new")
@@ -22,7 +29,7 @@ class Kind(Base):
             return
 
         bufnr = target["action__bufnr"]
-        self.vim.call("nvim_call_dict_function", "g:floaterm", "jump", [bufnr])
+        self._floaterm.call("jump", bufnr)
 
     def action_preview(self, context: UserContext) -> None:
         target = context["targets"][0]
@@ -37,14 +44,16 @@ class Kind(Base):
             self.vim.command("pclose!")
             return
 
-        denite_window = self.vim.current.window
-        self.vim.call("denite#helper#preview_file", context, PREVIEW_FILENAME)
-        self.vim.command("wincmd P")
-        self.vim.current.buffer.options["swapfile"] = False
-        self.vim.current.buffer.options["bufhidden"] = "wipe"
-        self.vim.current.buffer.options["buftype"] = "nofile"
-        self.vim.current.buffer[:] = self.vim.buffers[bufnr][
-            0 : self.vim.options["previewheight"]
-        ]
-        self.vim.current.window = denite_window
+        @self._floaterm.restore_window_wrapper
+        def preview() -> None:
+            self.vim.call("denite#helper#preview_file", context, PREVIEW_FILENAME)
+            self.vim.command("wincmd P")
+            self.vim.current.buffer.options["swapfile"] = False
+            self.vim.current.buffer.options["bufhidden"] = "wipe"
+            self.vim.current.buffer.options["buftype"] = "nofile"
+            self.vim.current.buffer[:] = self.vim.buffers[bufnr][
+                0 : self.vim.options["previewheight"]
+            ]
+
+        preview()
         self._previewed_bufnr = bufnr
