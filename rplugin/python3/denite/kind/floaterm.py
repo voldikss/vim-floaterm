@@ -12,12 +12,26 @@ class Kind(Base):
         self.default_action = "open"
         self._previewed_bufnr = -1
 
+    def action_new(self, context: UserContext) -> None:
+        self.vim.call("floaterm#start", "new")
+
     def action_open(self, context: UserContext) -> None:
-        bufnr = context["targets"][0]["action__bufnr"]
+        target = context["targets"][0]
+        if target.get("action__is_new", False):
+            self.action_new(context)
+            return
+
+        bufnr = target["action__bufnr"]
         self.vim.call("nvim_call_dict_function", "g:floaterm", "jump", [bufnr])
 
     def action_preview(self, context: UserContext) -> None:
-        bufnr = context["targets"][0]["action__bufnr"]
+        target = context["targets"][0]
+
+        if "action__bufnr" not in target:
+            self.vim.command("pclose!")
+            return
+
+        bufnr = target["action__bufnr"]
 
         if context["auto_action"] != "preview" and self._previewed_bufnr == bufnr:
             self.vim.command("pclose!")

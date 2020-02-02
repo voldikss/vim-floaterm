@@ -21,6 +21,9 @@ class Source(Base):
             self.vim.call("nvim_call_dict_function", "g:floaterm", "hide", [])
 
     def gather_candidates(self, context: UserContext) -> Candidates:
+        if "new" in context["args"]:
+            return [{"word": "[open new floaterm]", "action__is_new": True}]
+
         if not self._can_use_floaterm():
             return []
 
