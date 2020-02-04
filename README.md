@@ -61,7 +61,7 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 #### `g:floaterm_winblend`
 
-- Description: The opacity of the floating terminal
+- Description: The transparency of the floating terminal
 
 - Default: `0`
 
