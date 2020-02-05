@@ -37,6 +37,10 @@ if g:floaterm_background == v:null
   let g:floaterm_background = floaterm#util#get_normalfloat_bg()
 endif
 
+if g:floaterm_border_bgcolor == v:null
+  let g:floaterm_border_bgcolor = g:floaterm_background
+endif
+
 " Remove a node if it was closed(the buffer doesn't exist)
 function! g:floaterm.kickout() dict abort
   if self.count == 0 | return | endif
@@ -194,7 +198,7 @@ function! g:floaterm.open(found_bufnr) dict abort
   if g:floaterm_type ==# 'floating'
     let [bufnr, border_bufnr] = s:open_floating_terminal(a:found_bufnr, height, width)
   else
-    let bufnr = s:open_floating_normaml(a:found_bufnr, height, width)
+    let bufnr = s:open_normaml_terminal(a:found_bufnr, height, width)
     let border_bufnr = 0
   endif
   if bufnr != 0
@@ -229,18 +233,20 @@ function! s:on_open() abort
 
     augroup close_floaterm_window
       autocmd!
-      autocmd TermClose <buffer> if &filetype ==# 'floaterm' |
-        \ bdelete! |
-        \ endif
-      autocmd TermClose,BufHidden <buffer> if exists('g:floaterm.index.border_bufnr')
-        \ && bufexists(g:floaterm.index.border_bufnr)
-        \ && g:floaterm.index.border_bufnr != 0 |
-        \ execute 'bw ' . g:floaterm.index.border_bufnr |
-        \ endif
+      autocmd TermClose <buffer> bdelete!
+      autocmd BufHidden <buffer> call s:hide_border()
     augroup END
   endif
 
   startinsert
+endfunction
+
+function! s:hide_border(...) abort
+  if exists('g:floaterm.index.border_bufnr')
+    \ && bufexists(g:floaterm.index.border_bufnr)
+    \ && g:floaterm.index.border_bufnr != 0
+    execute 'bw ' . g:floaterm.index.border_bufnr
+  endif
 endfunction
 
 function! s:open_floating_terminal(found_bufnr, height, width) abort
@@ -274,7 +280,7 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
     autocmd!
     autocmd FileType floaterm_border ++once execute printf(
       \ 'syn match Border /.*/ | hi Border guibg=%s guifg=%s',
-      \ g:floaterm_background,
+      \ g:floaterm_border_bgcolor,
       \ g:floaterm_border_color
       \ )
   augroup END
@@ -300,12 +306,13 @@ function! s:open_floating_terminal(found_bufnr, height, width) abort
   else
     let bufnr = nvim_create_buf(v:false, v:true)
     call nvim_open_win(bufnr, v:true, opts)
-    terminal
+    let opts = {'on_exit': function('s:hide_border')}
+    call termopen(&shell, opts)
     return [bufnr, border_bufnr]
   endif
 endfunction
 
-function! s:open_floating_normaml(found_bufnr, height, width) abort
+function! s:open_normaml_terminal(found_bufnr, height, width) abort
   if a:found_bufnr > 0
     if &lines > 30
       execute 'botright ' . a:height . 'split'

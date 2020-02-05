@@ -93,6 +93,12 @@ g:floaterm_border_color                 *g:floaterm_border_color*
 
                             Default: foreground color of normal floating window
 
+g:floaterm_border_bgcolor                 *g:floaterm_border_bgcolor*
+
+			    Type: string(e.g. `'#FFFFFF'`, `'white'`)
+
+                            Default: same as `g:floaterm_background`
+
 ==============================================================================
 
 MAPPINGS                                       *floaterm-key-mappings*

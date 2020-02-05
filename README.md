@@ -85,6 +85,12 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 - Default: foreground color of normal floating window
 
+#### **`g:floaterm_border_bgcolor`**
+
+- Type: string(e.g. `'#FFFFFF'`, `'blue'`)
+
+- Default: Same as `g:floaterm_background`
+
 ## Commands
 
 - `:FloatermNew`
