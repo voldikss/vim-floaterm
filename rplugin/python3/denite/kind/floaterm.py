@@ -51,9 +51,15 @@ class Kind(Base):
             self.vim.current.buffer.options["swapfile"] = False
             self.vim.current.buffer.options["bufhidden"] = "wipe"
             self.vim.current.buffer.options["buftype"] = "nofile"
-            self.vim.current.buffer[:] = self.vim.buffers[bufnr][
-                0 : self.vim.options["previewheight"]
-            ]
+
+            buf = self.vim.buffers[bufnr]
+            last_line = len(buf) - 1
+            last_non_empty_line = next(
+                filter(lambda x: buf[x] != "", range(last_line, 0, -1)), last_line
+            )
+            start = max(0, last_non_empty_line - self.vim.options["previewheight"] + 1)
+            end = last_non_empty_line + 1
+            self.vim.current.buffer[:] = buf[start:end]
 
         preview()
         self._previewed_bufnr = bufnr
