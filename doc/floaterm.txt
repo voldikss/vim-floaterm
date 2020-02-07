@@ -1,4 +1,4 @@
-*floaterm.txt*  Neovim's floating terminal plugin     Last change: 2019-12-28
+*floaterm.txt*  Neovim floating terminal plugin     Last change: 2019-02-07
 
 Author : voldikss <https://github.com/voldikss>
 License: MIT license
@@ -39,70 +39,64 @@ FEATURES                                                 *floaterm-features*
 
 - Customizable floating terminal style
 
-- Switch/Preview floating terminal buffer using *vim-clap*
+- Switch/Preview floating terminal buffer using |vim-clap|
   https://github.com/liuchengxu/vim-clap
 
-- Switch/Preview/Open floating terminal buffer using *denite.nvim*
+- Switch/Preview/Open floating terminal buffer using |denite.nvim|
   https://github.com/Shougo/denite.nvim
 
 
 ==============================================================================
 VARIABLES                                            *floaterm-variables*
 
-g:floaterm_type                             *g:floaterm_type*
-
-			    Available:`'floating'`(neovim only), `'normal'`(vim8 and neovim)
-
-			    Default: `'floating'`
-
 g:floaterm_width                            *g:floaterm_width*
 
-			    Type: `int` (number of columns) or `float` (between 0 and 1).
-			    If `float`, the width is relative to `&columns`.
-			    Default: `0.6`
+			    Type: |v:t_number| (number of columns) or |v:t_float| (between 0 and 1).
+			    If |v:t_float|, the width is relative to `&columns`.
+			    Default: 0.6
 
 g:floaterm_height                           *g:floaterm_height*
 
 
-			    Type: `int` (number of lines) or `float` (between 0 and 1).
-			    If `float`, the height is relative to `&lines`.
-			    Default: `0.6`
+			    Type: |v:t_number| (number of lines) or |v:t_float| (between 0 and 1).
+			    If |v:t_float|, the height is relative to `&lines`.
+			    Default: 0.6
 
 
 g:floaterm_winblend                         *g:floaterm_winblend*
 
-			    Description: The opacity of the floating terminal
+			    Description: The transparency of the floating terminal
 
-			    Default: `0`
+			    Default: 0
 
 g:floaterm_position                         *g:floaterm_position*
 
-			    Available: `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`,
-					`'bottomright'`, `'auto'`
+			    Available: "center", "topleft", "topright", "bottomleft",
+					"bottomright", "auto"
 
-			    Default: `'center'`
+			    Default: "center"
 
 g:floaterm_background                       *g:floaterm_background*
 
-			    Type: string(e.g. `'#000000'`, `'black'`)
+			    Type: |v:t_string|(e.g. "#000000", "black")
 
                             Default: background color of normal floating window
 
 g:floaterm_borderchars                      *g:floaterm_borderchars*
 
-			    Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
+			    Default: "['─', '│', '─', '│', '┌', '┐', '┘', '└']"
 
 g:floaterm_border_color                 *g:floaterm_border_color*
 
-			    Type: string(e.g. `'#FFFFFF'`, `'white'`)
+			    Type: |v:t_string|(e.g. "#FFFFFF", "white")
 
                             Default: foreground color of normal floating window
 
 g:floaterm_border_bgcolor                 *g:floaterm_border_bgcolor*
 
-			    Type: string(e.g. `'#FFFFFF'`, `'white'`)
+			    Type: |v:t_string|(e.g. "#FFFFFF", "white")
 
-                            Default: same as `g:floaterm_background`
+                            Default: same as |g:floaterm_background|
 
 ==============================================================================
 
@@ -110,7 +104,7 @@ MAPPINGS                                       *floaterm-key-mappings*
 
 This plugin doesn't supply any default mappings.
  >
-		    """ Example configuration
+		    """ Configuration example
 		    let g:floaterm_keymap_new    = '<F7>'
 		    let g:floaterm_keymap_prev   = '<F8>'
 		    let g:floaterm_keymap_next   = '<F9>'
@@ -137,14 +131,14 @@ COMMANDS                                                *floaterm-commands*
 EXTENSIONS                                              *floaterm-extensions*
 
 ------------------------------------------------------------------------------
-VIM-CLAP                                                *:Clap-floaterm*
+VIM-CLAP                                                *Clap-floaterm*
 
-Start *vim-clap* to manage floaterms.
->
+Start |vim-clap| to manage floaterms.
+ >
 		:Clap floaterm
 <
 ------------------------------------------------------------------------------
-DENITE.NVIM                                             *denite-floaterm*
+DENITE.NVIM                                             *Denite-floaterm*
 
 							*denite-source-floaterm*
 SOURCES~
@@ -171,15 +165,15 @@ preview
 USAGE~
 
 Start to manage existent floaterms.
->
+ >
 		:Denite floaterm
 <
 Start to open a new floaterm.
->
+ >
 		:Denite floaterm:new
 <
 Start with all features and preview automatically with moving the cursor.
->
+ >
 		:Denite floaterm floaterm:new -auto-action=preview
 <
 
@@ -188,19 +182,19 @@ Q-A                                                        *floaterm-q&a*
 
 - This plugin leaves an empty buffer on startify window
 
-  Put this code in `vimrc`
+  Put this code in "vimrc"
     >
   autocmd User Startified setlocal buflisted
-    <
+<
 - I want to use another shell in the terminal. (e.g. Use fish instead of bash)
 
-  Set `shell` option in your `vimrc`:
+  Set 'shell' option in your "vimrc":
  >
   set shell=/path/to/shell
 
 - I would like to customize the style of the floating terminal window
 
-  Use `autocmd`. For example
+  Use |autocmd|. For example,
  >
   function s:floatermSettings()
       setlocal number
