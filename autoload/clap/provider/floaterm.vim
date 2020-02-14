@@ -5,31 +5,21 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-let s:save_cpo = &cpoptions
-set cpoptions&vim
-
 let s:floaterm = {}
-
 let s:preview_height = 10
-
 let s:bar = '[bufnr]    [name]'
 
-
 function! s:floaterm.source() abort
-  if !exists('g:floaterm')
-    return []
-  endif
-
-  let lst = [s:bar]
-  let bufs = g:floaterm.gather()
+  let candidates = [s:bar]
+  let bufs = floaterm#buflist#gather()
   for bufnr in bufs
     let bufinfo = getbufinfo(bufnr)[0]
     let name = bufinfo['name']
     let title = getbufvar(bufnr, 'term_title')
-    let line = '   ' . string(bufnr) . '    ' . name . '    ' . title
-    call add(lst, line)
+    let line = printf('    %s    %s    %s', bufnr, name, title)
+    call add(candidates, line)
   endfor
-  return lst
+  return candidates
 endfunction
 
 function! s:floaterm.on_move() abort
@@ -37,7 +27,6 @@ function! s:floaterm.on_move() abort
   if curline == s:bar
     return
   endif
-
   let bufnr = str2nr(matchstr(curline, '\S'))
   let lnum = getbufinfo(bufnr)[0]['lnum']
   let lines = getbufline(bufnr, max([lnum-s:preview_height, 0]), '$')
@@ -47,12 +36,8 @@ endfunction
 
 function! s:floaterm.sink(curline) abort
   if a:curline == s:bar | return | endif
-  call g:floaterm.jump(str2nr(matchstr(a:curline, '\S')))
+  let bufnr = str2nr(matchstr(a:curline, '\S'))
+  call floaterm#terminal#open(bufnr)
 endfunction
 
-let s:floaterm.on_enter = { -> g:clap.display.setbufvar('&syntax', 'clap_floaterm') }
-
 let g:clap#provider#floaterm# = s:floaterm
-
-let &cpoptions = s:save_cpo
-unlet s:save_cpo
