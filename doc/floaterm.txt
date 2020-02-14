@@ -11,6 +11,7 @@ CONTENTS                                               *floaterm-contents*
     Variables                                          |floaterm-variables|
     Keymappings                                        |floaterm-key-mappings|
     Commands                                           |floaterm-commands|
+    Highlight                                          |floaterm-highlight|
     Extensions                                         |floaterm-extensions|
     Q-A                                                |floaterm-q&a|
     Repository                                         |floaterm-repository|
@@ -19,15 +20,15 @@ CONTENTS                                               *floaterm-contents*
 ==============================================================================
 INTRODUCTION                                        *floaterm-introduction*
 
-	Use neovim terminal in the floating window.
+Use neovim terminal in the floating window.
 
 
 ==============================================================================
 INSTALL                                                 *floaterm-install*
 
-	With vim-plug:
-    >
-	    Plug 'voldikss/vim-floaterm'
+    With vim-plug:
+ >
+	Plug 'voldikss/vim-floaterm'
 <
 
 ==============================================================================
@@ -49,54 +50,45 @@ FEATURES                                                 *floaterm-features*
 ==============================================================================
 VARIABLES                                            *floaterm-variables*
 
+g:floaterm_type                             *g:floaterm_type*
+
+	Available: "floating"(neovim only), "normal"(vim8 and neovim)
+
+	Default: "floating"
+
 g:floaterm_width                            *g:floaterm_width*
 
-			    Type: |v:t_number| (number of columns) or |v:t_float| (between 0 and 1).
-			    If |v:t_float|, the width is relative to `&columns`.
-			    Default: 0.6
+	Type: |v:t_number| (number of columns) or |v:t_float| (between 0 and 1).
+	If |v:t_float|, the width is relative to `&columns`.
+
+	Default: 0.6
 
 g:floaterm_height                           *g:floaterm_height*
 
 
-			    Type: |v:t_number| (number of lines) or |v:t_float| (between 0 and 1).
-			    If |v:t_float|, the height is relative to `&lines`.
-			    Default: 0.6
+	Type: |v:t_number| (number of lines) or |v:t_float| (between 0 and 1).
+	If |v:t_float|, the height is relative to `&lines`.
+
+	Default: 0.6
 
 
 g:floaterm_winblend                         *g:floaterm_winblend*
 
-			    Description: The transparency of the floating terminal
+	Description: The transparency of the floating terminal
 
-			    Default: 0
+	Default: 0
 
 g:floaterm_position                         *g:floaterm_position*
 
-			    Available: "center", "topleft", "topright", "bottomleft",
-					"bottomright", "auto"
+	Available: "center", "topleft", "topright", "bottomleft",
+		    "bottomright", "auto"
 
-			    Default: "center"
-
-g:floaterm_background                       *g:floaterm_background*
-
-			    Type: |v:t_string|(e.g. "#000000", "black")
-
-                            Default: background color of normal floating window
+	Default: "center"
 
 g:floaterm_borderchars                      *g:floaterm_borderchars*
 
-			    Default: "['─', '│', '─', '│', '┌', '┐', '┘', '└']"
+	Default: "['─', '│', '─', '│', '┌', '┐', '┘', '└']"
 
-g:floaterm_border_color                 *g:floaterm_border_color*
-
-			    Type: |v:t_string|(e.g. "#FFFFFF", "white")
-
-                            Default: foreground color of normal floating window
-
-g:floaterm_border_bgcolor                 *g:floaterm_border_bgcolor*
-
-			    Type: |v:t_string|(e.g. "#FFFFFF", "white")
-
-                            Default: same as |g:floaterm_background|
 
 ==============================================================================
 
@@ -104,13 +96,12 @@ MAPPINGS                                       *floaterm-key-mappings*
 
 This plugin doesn't supply any default mappings.
  >
-		    """ Configuration example
-		    let g:floaterm_keymap_new    = '<F7>'
-		    let g:floaterm_keymap_prev   = '<F8>'
-		    let g:floaterm_keymap_next   = '<F9>'
-		    let g:floaterm_keymap_toggle = '<F10>'
+	""" Configuration example
+	let g:floaterm_keymap_new    = '<F7>'
+	let g:floaterm_keymap_prev   = '<F8>'
+	let g:floaterm_keymap_next   = '<F9>'
+	let g:floaterm_keymap_toggle = '<F10>'
 <
-
 
 ==============================================================================
 COMMANDS                                                *floaterm-commands*
@@ -126,6 +117,17 @@ COMMANDS                                                *floaterm-commands*
 
 :FloatermToggle                                         *:FloatermToggle*
 
+==============================================================================
+HIGHLIGHT                                                *floaterm-highlight*
+
+This plugin supplies two `highlight-groups` to specify the
+background/foregrond color of floaterm(border) window
+
+ >
+	" Configuration example
+	hi FloatermNF guibg=black
+	hi FloatermBorderNF guibg=gray guifg=blue
+<
 
 ==============================================================================
 EXTENSIONS                                              *floaterm-extensions*

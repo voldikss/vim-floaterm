@@ -20,26 +20,26 @@ Plug 'voldikss/vim-floaterm'
 call dein#add('voldikss/vim-floaterm')
 ```
 
-## Keymaps
-
-This plugin doesn't supply any default mappings.
-
-```vim
-""" Example configuration
-let g:floaterm_keymap_new    = '<F7>'
-let g:floaterm_keymap_prev   = '<F8>'
-let g:floaterm_keymap_next   = '<F9>'
-let g:floaterm_keymap_toggle = '<F10>'
-```
-
 ## Features
 
 - Toggle terminal window quickly
 - Multiple terminal instances
 - Customizable floating terminal style
-- Switch/Preview floating terminal buffer using [vim-clap](https://github.com/liuchengxu/vim-clap)(try `:Clap floaterm`)
+- Switch/Preview floating terminal buffers using [vim-clap](https://github.com/liuchengxu/vim-clap)(try `:Clap floaterm`)
 - Switch/Preview/Open floating terminal buffers using [denite.nvim](https://github.com/Shougo/denite.nvim)(try `:Denite floaterm`)
   - See the animation GIF in [PR #30](https://github.com/voldikss/vim-floaterm/pull/30).
+
+## Keymaps
+
+This plugin doesn't supply any default mappings.
+
+```vim
+""" Configuration example
+let g:floaterm_keymap_new    = '<F7>'
+let g:floaterm_keymap_prev   = '<F8>'
+let g:floaterm_keymap_next   = '<F9>'
+let g:floaterm_keymap_toggle = '<F10>'
+```
 
 ## Configurations
 
@@ -71,27 +71,9 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 - Default: `'center'`
 
-#### **`g:floaterm_background`**
-
-- Type: string(e.g. `'#000000'`, `'black'`)
-
-- Default: background color of normal floating window
-
 #### **`g:floaterm_borderchars`**
 
 - Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
-
-#### **`g:floaterm_border_color`**
-
-- Type: string(e.g. `'#FFFFFF'`, `'blue'`)
-
-- Default: foreground color of normal floating window
-
-#### **`g:floaterm_border_bgcolor`**
-
-- Type: string(e.g. `'#FFFFFF'`, `'blue'`)
-
-- Default: Same as `g:floaterm_background`
 
 ## Commands
 
@@ -102,6 +84,16 @@ let g:floaterm_keymap_toggle = '<F10>'
 - `:FloatermPrev`
 
 - `:FloatermNext`
+
+## Highlight
+
+This plugin supplies two `highlight-groups` to specify the background/foreground color of floaterm(border) window
+
+```vim
+" Configuration example
+hi FloatermNF guibg=black
+hi FloatermBorderNF guibg=gray guifg=blue
+```
 
 ## Q & A
 
