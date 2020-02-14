@@ -11,11 +11,13 @@ class Floaterm:
         self.is_nvim = bool(vim.funcs.has("nvim"))
 
     def can_use(self) -> bool:
-        return (
-            "floaterm" in self.vim.vars
-            if self.is_nvim
-            else bool(self.vim.funcs.exists("g:floaterm"))
-        )
+        return True
+        # TODO
+        # return (
+        #     "floaterm" in self.vim.vars
+        #     if self.is_nvim
+        #     else bool(self.vim.funcs.exists("g:floaterm"))
+        # )
 
     def term_title(self, bufnr: int) -> str:
         return str(
@@ -26,10 +28,11 @@ class Floaterm:
 
     def call(self, name: str, *args: List[Any], **kwargs: Dict[str, Any]) -> Any:
         if self.is_nvim:
-            return self.vim.api.call_dict_function("g:floaterm", name, args, **kwargs)
+            return self.vim.api.call_function(name, args, **kwargs)
 
-        args_str = ", ".join([f"'{x}'" if isinstance(x, str) else str(x) for x in args])
-        return self.vim.eval(f"g:floaterm.{name}({args_str})", **kwargs)
+        args_str = ", ".join(
+            [f"'{x}'" if isinstance(x, str) else str(x) for x in args])
+        return self.vim.eval(f"{name}({args_str})", **kwargs)
 
     def restore_window_wrapper(self, f: T) -> T:
         def wrapper(*args: List[Any], **kwargs: Dict[str, Any]) -> Any:

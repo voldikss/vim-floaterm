@@ -29,7 +29,7 @@ class Kind(Base):
             return
 
         bufnr = target["action__bufnr"]
-        self._floaterm.call("jump", bufnr)
+        self._floaterm.call("floaterm#terminal#open", bufnr)
 
     def action_preview(self, context: UserContext) -> None:
         target = context["targets"][0]

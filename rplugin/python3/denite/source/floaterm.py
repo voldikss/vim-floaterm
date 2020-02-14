@@ -25,7 +25,7 @@ class Source(Base):
 
     def on_init(self, context: UserContext) -> None:
         if self._floaterm.can_use():
-            self._floaterm.call("hide")
+            self._floaterm.call("floaterm#hide")
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         if "new" in context["args"]:
@@ -43,7 +43,7 @@ class Source(Base):
                 "action__bufnr": bufnr,
             }
 
-        return [candidate(x) for x in self._floaterm.call("gather")]
+        return [candidate(x) for x in self._floaterm.call("floaterm#buflist#gather")]
 
     def highlight(self) -> None:
         for i, syn in enumerate(FLOATERM_HIGHLIGHT_SYNTAX):
@@ -51,13 +51,15 @@ class Source(Base):
             def syn_name(key: str) -> str:
                 return "_".join([self.syntax_name, syn[key]])
 
-            self.vim.command(f"highlight default link {syn_name('name')} {syn['link']}")
+            self.vim.command(
+                f"highlight default link {syn_name('name')} {syn['link']}")
             containedin = f" containedin={self.syntax_name}" if i == 0 else ""
             nextgroup = f" nextgroup={syn_name('next')}" if "next" in syn else ""
             if "delimiter" in syn:
                 self.vim.command(
                     "syntax region {0} matchgroup=Delimiter start=/{1}/ end=/{1}/ concealends contained{2}{3}".format(
-                        syn_name("name"), syn["delimiter"], containedin, nextgroup
+                        syn_name(
+                            "name"), syn["delimiter"], containedin, nextgroup
                     )
                 )
             else:
