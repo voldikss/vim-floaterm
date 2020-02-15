@@ -1,6 +1,6 @@
 # vim-floaterm
 
-[![Build Status](https://travis-ci.org/voldikss/vim-floaterm.svg?branch=master)](https://travis-ci.org/voldikss/vim-floaterm)
+![CI](https://github.com/voldikss/vim-floaterm/workflows/CI/badge.svg)
 
 Use neovim terminal in the floating window.
 
