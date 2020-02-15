@@ -4,7 +4,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-if exists('g:floaterm_type')
+if g:floaterm_type
   let s:wintype = g:floaterm_type
 elseif has('nvim') && exists('*nvim_win_set_config')
   let s:wintype = 'floating'

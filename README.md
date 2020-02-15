@@ -87,7 +87,9 @@ let g:floaterm_keymap_toggle = '<F10>'
 
 ## Highlight
 
-This plugin supplies two `highlight-groups` to specify the background/foreground color of floaterm(border) window
+This plugin supplies two `highlight-groups` to specify the background/foreground color of floaterm(border) window.
+
+By default, they are both linked to `NormalFloat`.
 
 ```vim
 " Configuration example

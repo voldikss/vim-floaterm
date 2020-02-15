@@ -123,6 +123,7 @@ HIGHLIGHT                                                *floaterm-highlight*
 This plugin supplies two `highlight-groups` to specify the
 background/foregrond color of floaterm(border) window
 
+By default, they are both linked to `NormalFloat`
  >
 	" Configuration example
 	hi FloatermNF guibg=black

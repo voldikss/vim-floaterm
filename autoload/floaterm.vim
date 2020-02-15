@@ -59,7 +59,7 @@ function! floaterm#toggle()  abort
 endfunction
 
 " @usage:
-"   find **one** floaterm window
+"   Find **one** floaterm window
 function! s:find_term_win() abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
@@ -72,7 +72,7 @@ function! s:find_term_win() abort
 endfunction
 
 " @usage:
-"   hide current before opening another terminal window
+"   Hide current before opening another terminal window
 function! floaterm#hide() abort
   while v:true
     let found_winnr = s:find_term_win()

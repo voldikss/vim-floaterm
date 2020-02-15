@@ -30,12 +30,12 @@ function! s:add_border(winid) abort
   let buf_opts = {}
   let buf_opts.synmaxcol = 3000 " #17
   let buf_opts.filetype = 'floaterm_border'
-  " reuse s:add_border
+  " Reuse s:add_border
   if !exists('s:border_bufnr')
     let s:border_bufnr = s:nvim_create_buf(lines, buf_opts)
   endif
   let win_opts.row -= (win_opts.anchor[0] ==# 'N' ? 1 : -1)
-  " a bug fix
+  " A bug fix
   if win_opts.row < 0
     let win_opts.row = 1
     call nvim_win_set_config(a:winid, win_opts)

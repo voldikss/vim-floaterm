@@ -139,7 +139,7 @@ endfunction
 "   For source extensions(vim-clap, denite)
 "   Return a list containing floaterm bufnr
 "   Every bufnr should exist
-function! s:buflist.gather() abort
+function! s:buflist.gather() dict abort
   let candidates = []
   let curr = self.head.next
   while curr != self.head
