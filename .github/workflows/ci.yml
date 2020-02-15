@@ -1,0 +1,47 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  vader-tests:
+    name: Vader tests
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        neovim: true # only test on neovim currently
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Checkout vader.vim
+        uses: actions/checkout@v2
+        with:
+          repository: junegunn/vader.vim
+          path: vader.vim
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          neovim: ${{ matrix.neovim }}
+      - name: Run vader tests
+        env:
+          VIM_EXEC: ${{ steps.vim.outputs.executable }}
+        run: |
+          echo $VIM_EXEC
+          pwd
+          VIM_EXEC -Nu <(cat << VIMRC
+          set rtp+=vader.vim
+          set rtp+=.
+          let g:floaterm_type          = 'floating'
+          let g:floaterm_keymap_new    = '<F7>'
+          let g:floaterm_keymap_prev   = '<F8>'
+          let g:floaterm_keymap_next   = '<F9>'
+          let g:floaterm_keymap_toggle = '<F12>'
+          VIMRC) -c 'Vader! test/floaterm.vader' > /dev/null
+
+  vint:
+    name: Run vint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - run: pip install vim-vint
+      - run: vint --warning --verbose --enable-neovim --color --style ./autoload ./plugin
