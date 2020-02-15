@@ -1,0 +1,116 @@
+Execute (Define functions and get original bufnr):
+  function! AssertFiletype(filetype)
+    AssertEqual a:filetype, &filetype
+  endfunction
+  function! AssertBufnr(bufnr)
+    AssertEqual a:bufnr, bufnr('%')
+  endfunction
+  function! CheckWindow(if_floaterm)
+    let has_floaterm = 0
+    let has_floaterm_border = 0
+    for i in range(1, winnr('$'))
+      let filetype = getbufvar(winbufnr(i), '&filetype')
+      if filetype ==# 'floaterm'
+        let has_floaterm += 1
+      elseif filetype ==# 'floaterm_border'
+        let has_floaterm_border += 1
+      endif
+    endfor
+    if a:if_floaterm
+      AssertEqual 1, has_floaterm
+      AssertEqual 1, has_floaterm_border
+    else
+      AssertEqual 0, has_floaterm
+      AssertEqual 0, has_floaterm_border
+    endif
+  endfunction
+  let buffer0 = bufnr('%')
+
+Do (Open first floaterm):
+  \<F7>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer1 = bufnr('%')
+
+Do (Open second floaterm):
+  \<F7>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer2 = bufnr('%')
+
+Do (Open third floaterm):
+  \<F7>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer3 = bufnr('%')
+
+Do (Toggle close floaterm):
+  \<C-\><C-n><F12>
+Then:
+  call AssertFiletype('')
+  call CheckWindow(v:false)
+  call AssertBufnr(buffer0)
+
+Do (Toggle open floaterm):
+  \<F12>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer3)
+
+Do (Toggle close floaterm):
+  \<C-\><C-n><F12>
+Then:
+  call AssertFiletype('')
+  call CheckWindow(v:false)
+  call AssertBufnr(buffer0)
+
+Do (Next floaterm):
+  \<F9>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer1)
+
+Do (Next floaterm):
+  \<F9>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer2)
+
+Do (Next floaterm):
+  \<F9>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer3)
+
+Do (Prev floaterm):
+  \<F8>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer2)
+
+Do (Prev floaterm):
+  \<F8>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer1)
+
+Do (Insert a floaterm between first and second):
+  \<F7>
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer1_5 = bufnr('%')
+  AssertEqual floaterm#buflist#gather(), [buffer1,buffer1_5,buffer2,buffer3]
+
+Execute (Exit):
+  call floaterm#hide()
+  sleep 100m

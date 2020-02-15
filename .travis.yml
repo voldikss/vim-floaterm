@@ -4,8 +4,30 @@ matrix:
       python: '3.7'
       dist: xenial
       os: linux
-      env: RUN_LINT=true
 
-install: pip3 install vim-vint
+install:
+  - mkdir nvim-nightly
+  - |
+    curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
+    tar xzf nvim-linux64.tar.gz -C ./nvim-nightly
+  - |
+    python3 -V
+    pip3 install vim-vint
+before_script:
+  - uname -a
+  - nvim-nightly/nvim-linux64/bin/nvim --version
+  - git clone https://github.com/junegunn/vader.vim.git --depth 1
+  - git clone https://github.com/voldikss/vim-floaterm.git --depth 1
 
-script: vint --color --style ./autoload ./plugin
+script:
+  - |
+    nvim-nightly/nvim-linux64/bin/nvim -Nu <(cat << VIMRC
+    set rtp+=vader.vim
+    set rtp+=vim-floaterm
+    let g:floaterm_type          = 'floating'
+    let g:floaterm_keymap_new    = '<F7>'
+    let g:floaterm_keymap_prev   = '<F8>'
+    let g:floaterm_keymap_next   = '<F9>'
+    let g:floaterm_keymap_toggle = '<F12>'
+    VIMRC) -c 'Vader! test/floaterm.vader' > /dev/null
+  - vint --color --style ./autoload ./plugin
