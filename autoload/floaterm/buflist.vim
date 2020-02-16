@@ -124,10 +124,10 @@ endfunction
 function! s:buflist.to_string() dict abort
   let str = '[-'
   let curr = self.head
-  let str .= curr.to_string()
+  let str .= printf('(%s)', curr.to_string())
   let curr = curr.next
   while curr != self.head
-    let str .= '--' . curr.to_string()
+    let str .= printf('--(%s)', curr.to_string())
     let curr = curr.next
   endwhile
   let str .= '-]'
