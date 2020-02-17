@@ -4,10 +4,19 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#new() abort
+if !exists(':terminal')
+  let message = 'Terminal feature is required, please upgrade your vim/nvim'
+  call floaterm#util#show_msg(message, 'error')
+  finish
+endif
+
+function! floaterm#new(...) abort
   call floaterm#hide()
   let bufnr = floaterm#terminal#open(-1)
   call floaterm#buflist#add(bufnr)
+  if a:0 > 0
+    call floaterm#terminal#send(bufnr, a:1)
+  endif
 endfunction
 
 function! floaterm#next()  abort
@@ -82,21 +91,4 @@ function! floaterm#hide() abort
       break
     endif
   endwhile
-endfunction
-
-function! floaterm#start(action) abort
-  if !exists(':terminal')
-    let message = 'Terminal feature is required, please upgrade your vim/nvim'
-    call floaterm#util#show_msg(message, 'warning')
-    return
-  endif
-  if a:action ==# 'new'
-    call floaterm#new()
-  elseif a:action ==# 'next'
-    call floaterm#next()
-  elseif a:action ==# 'prev'
-    call floaterm#prev()
-  elseif a:action ==# 'toggle'
-    call floaterm#toggle()
-  endif
 endfunction

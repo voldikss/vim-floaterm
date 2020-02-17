@@ -1,6 +1,5 @@
 " ============================================================================
 " FileName: plugin/floaterm.vim
-" Description:
 " Author: voldikss <dyzplus@gmail.com>
 " GitHub: https://github.com/voldikss
 " ============================================================================
@@ -19,10 +18,10 @@ let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)
 let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', v:null)
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 
-command! -nargs=0 FloatermNew    call floaterm#start('new')
-command! -nargs=0 FloatermPrev   call floaterm#start('prev')
-command! -nargs=0 FloatermNext   call floaterm#start('next')
-command! -nargs=0 FloatermToggle call floaterm#start('toggle')
+command! -nargs=? FloatermNew    call floaterm#new(<f-args>)
+command! -nargs=0 FloatermPrev   call floaterm#prev()
+command! -nargs=0 FloatermNext   call floaterm#next()
+command! -nargs=0 FloatermToggle call floaterm#toggle()
 command! -nargs=0 FloatermInfo   call floaterm#buflist#info()
 
 hi def link FloatermNF NormalFloat
