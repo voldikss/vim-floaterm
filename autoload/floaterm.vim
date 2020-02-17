@@ -4,10 +4,19 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-if !exists(':terminal')
-  let message = 'Terminal feature is required, please upgrade your vim/nvim'
-  call floaterm#util#show_msg(message, 'error')
-  finish
+let $VIM_SERVERNAME = v:servername
+let $VIM_EXE = v:progpath
+
+let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let s:script = fnamemodify(s:home . '/../bin', ':p')
+let s:windows = has('win32') || has('win64')
+
+if stridx($PATH, s:script) < 0
+  if s:windows == 0
+    let $PATH .= ':' . s:script
+  else
+    let $PATH .= ';' . s:script
+  endif
 endif
 
 function! floaterm#new(...) abort
