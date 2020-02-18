@@ -46,6 +46,7 @@ function! floaterm#new(...) abort
     let bufnr = floaterm#terminal#open(-1, &shell)
   endif
   call floaterm#buflist#add(bufnr)
+  return bufnr
 endfunction
 
 function! floaterm#next()  abort
@@ -73,10 +74,11 @@ endfunction
 function! floaterm#curr() abort
   let curr_bufnr = floaterm#buflist#find_curr()
   if curr_bufnr == -1
-    call floaterm#new()
+    let curr_bufnr = floaterm#new()
   else
     call floaterm#terminal#open(curr_bufnr)
   endif
+  return curr_bufnr
 endfunction
 
 function! floaterm#toggle()  abort
@@ -121,4 +123,22 @@ function! floaterm#hide() abort
       break
     endif
   endwhile
+endfunction
+
+function! floaterm#send(startlnum, endlnum) abort
+  if &filetype ==# 'floaterm'
+    let msg = "FloatermSend can't be used in the floaterm window"
+    call floaterm#util#show_msg(msg, 'warning')
+    return
+  endif
+
+  let bufnr = floaterm#buflist#find_curr()
+  if bufnr == -1
+    let bufnr = floaterm#new()
+  endif
+
+  for lnum in range(a:startlnum, a:endlnum)
+    let line = getline(lnum)
+    call floaterm#terminal#send(bufnr, line)
+  endfor
 endfunction

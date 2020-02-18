@@ -162,7 +162,7 @@ function! s:jobexists(bufnr) abort
     return jobwait([jobid], 0)[0] == -1
   else
     let job = term_getjob(a:bufnr)
-    return job_status(job) != 'dead'
+    return job_status(job) !=# 'dead'
   endif
 endfunction
 

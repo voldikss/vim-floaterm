@@ -10,7 +10,7 @@ function! floaterm#wrapper#ranger#() abort
   return [cmd, {'on_exit': funcref('s:ranger_callback')}, v:false]
 endfunction
 
-function! s:ranger_callback(...)
+function! s:ranger_callback(...) abort
   if filereadable(s:ranger_tmpfile)
     let filenames = readfile(s:ranger_tmpfile)
     if !empty(filenames)

@@ -66,15 +66,15 @@ function! floaterm#terminal#open(bufnr, ...) abort
   if s:wintype ==# 'floating'
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#floatwin#nvim_open_win(bufnr, width, height)
-    let chan_id = termopen(cmd, opts)
-    let s:channel_map[bufnr] = chan_id
+    let ch = termopen(cmd, opts)
+    let s:channel_map[bufnr] = ch
   else
     if has('nvim')
       execute 'botright ' . height . 'split'
       wincmd j | enew
       let bufnr = bufnr('%')
-      let chan_id = termopen(cmd, opts)
-      let s:channel_map[bufnr] = chan_id
+      let ch = termopen(cmd, opts)
+      let s:channel_map[bufnr] = ch
     else
       if has_key(opts, 'on_exit')
         let opts['exit_cb'] = opts.on_exit
@@ -91,12 +91,12 @@ function! floaterm#terminal#open(bufnr, ...) abort
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmd) abort
-  let chan_id = get(s:channel_map, a:bufnr, v:null)
-  if empty(chan_id) | return | endif
+  let ch = get(s:channel_map, a:bufnr, v:null)
+  if empty(ch) | return | endif
   sleep 300m
   if has('nvim')
-    call chansend(chan_id, [a:cmd, ''])
+    call chansend(ch, [a:cmd, ''])
   else
-    call ch_sendraw(chan_id, a:cmd.(s:is_win ? "\r\n" : "\n"))
+    call ch_sendraw(ch, a:cmd.(s:is_win ? "\r\n" : "\n"))
   endif
 endfunction
