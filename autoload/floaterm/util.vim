@@ -43,3 +43,8 @@ function! floaterm#util#show_msg(message, ...) abort
     call s:echon('Error', message)
   endif
 endfunction
+
+function! floaterm#util#edit(filename) abort
+  call floaterm#hide()
+  silent execute 'edit ' . a:filename
+endfunction

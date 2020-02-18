@@ -116,8 +116,12 @@ function! floaterm#floatwin#nvim_open_win(bufnr, width, height) abort
   call nvim_set_current_win(winid)
 endfunction
 
+function! s:winexists(winid) abort
+  return !empty(getwininfo(a:winid))
+endfunction
+
 function! floaterm#floatwin#hide_border(...) abort
-  if exists('s:border_winid')
+  if exists('s:border_winid') && s:winexists(s:border_winid)
     execute win_id2win(s:border_winid) . 'hide'
   endif
 endfunction

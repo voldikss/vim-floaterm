@@ -4,10 +4,49 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#new() abort
+let $VIM_SERVERNAME = v:servername
+let $VIM_EXE = v:progpath
+
+let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let s:script = fnamemodify(s:home . '/../bin', ':p')
+let s:wrappers = fnamemodify(s:home . '/floaterm/wrapper', ':p')
+let s:windows = has('win32') || has('win64')
+
+if stridx($PATH, s:script) < 0
+  if s:windows == 0
+    let $PATH .= ':' . s:script
+  else
+    let $PATH .= ';' . s:script
+  endif
+endif
+
+function! s:get_wrappers() abort
+  let files = split(glob(s:wrappers . '/*.vim'), "\n")
+  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
+endfunction
+
+function! floaterm#new(...) abort
   call floaterm#hide()
-  let bufnr = floaterm#terminal#open(-1)
+  if a:0 > 0
+    let wrappers = s:get_wrappers()
+    if index(wrappers, a:1) >= 0
+      let WrapFunc = function(printf('floaterm#wrapper#%s#', a:1))
+      let [cmd, opts, send2shell] = WrapFunc()
+      if send2shell
+        let bufnr = floaterm#terminal#open(-1, &shell)
+        call floaterm#terminal#send(bufnr, cmd)
+      else
+        let bufnr = floaterm#terminal#open(-1, cmd, opts)
+      endif
+    else
+      let bufnr = floaterm#terminal#open(-1, &shell)
+      call floaterm#terminal#send(bufnr, a:1)
+    endif
+  else
+    let bufnr = floaterm#terminal#open(-1, &shell)
+  endif
   call floaterm#buflist#add(bufnr)
+  return bufnr
 endfunction
 
 function! floaterm#next()  abort
@@ -34,10 +73,12 @@ endfunction
 
 function! floaterm#curr() abort
   let curr_bufnr = floaterm#buflist#find_curr()
-  let bufnr = floaterm#terminal#open(curr_bufnr)
-  if curr_bufnr == -1 && bufnr != -1
-    call floaterm#buflist#add(bufnr)
+  if curr_bufnr == -1
+    let curr_bufnr = floaterm#new()
+  else
+    call floaterm#terminal#open(curr_bufnr)
   endif
+  return curr_bufnr
 endfunction
 
 function! floaterm#toggle()  abort
@@ -84,19 +125,20 @@ function! floaterm#hide() abort
   endwhile
 endfunction
 
-function! floaterm#start(action) abort
-  if !exists(':terminal')
-    let message = 'Terminal feature is required, please upgrade your vim/nvim'
-    call floaterm#util#show_msg(message, 'warning')
+function! floaterm#send(startlnum, endlnum) abort
+  if &filetype ==# 'floaterm'
+    let msg = "FloatermSend can't be used in the floaterm window"
+    call floaterm#util#show_msg(msg, 'warning')
     return
   endif
-  if a:action ==# 'new'
-    call floaterm#new()
-  elseif a:action ==# 'next'
-    call floaterm#next()
-  elseif a:action ==# 'prev'
-    call floaterm#prev()
-  elseif a:action ==# 'toggle'
-    call floaterm#toggle()
+
+  let bufnr = floaterm#buflist#find_curr()
+  if bufnr == -1
+    let bufnr = floaterm#new()
   endif
+
+  for lnum in range(a:startlnum, a:endlnum)
+    let line = getline(lnum)
+    call floaterm#terminal#send(bufnr, line)
+  endfor
 endfunction
