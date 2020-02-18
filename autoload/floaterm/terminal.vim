@@ -15,40 +15,6 @@ else
   let s:wintype = 'normal'
 endif
 
-function! s:create_floating_terminal(bufnr, width, height) abort
-  if a:bufnr > 0
-    call floaterm#floatwin#nvim_open_win(a:bufnr, a:width, a:height)
-    return 0
-  else
-    let bufnr = nvim_create_buf(v:false, v:true)
-    call floaterm#floatwin#nvim_open_win(bufnr, a:width, a:height)
-    let opts = {'on_exit': funcref('floaterm#floatwin#hide_border')}
-    let chan_id = termopen(&shell, opts)
-    let s:channel_map[bufnr] = chan_id
-    return bufnr
-  endif
-endfunction
-
-function! s:create_normal_terminal(found_bufnr, width, height) abort
-  if a:found_bufnr > 0
-    execute 'botright ' . a:height . 'split'
-    execute 'buffer ' . a:found_bufnr
-    return 0
-  else
-    if has('nvim')
-      execute 'botright ' . a:height . 'split term://' . &shell
-      let bufnr = bufnr('%')
-      let s:channel_map[bufnr] = &channel
-    else
-      execute 'botright terminal ++rows=' . a:height
-      let bufnr = bufnr('%')
-      let job = term_getjob(bufnr)
-      let s:channel_map[bufnr] = job_getchannel(job)
-    endif
-    return bufnr('%')
-  endif
-endfunction
-
 function! s:on_open() abort
   setlocal nobuflisted
   setlocal filetype=floaterm
@@ -57,14 +23,16 @@ function! s:on_open() abort
     setlocal winhighlight=NormalFloat:FloatermNF,Normal:FloatermNF
     augroup close_floaterm_window
       autocmd!
-      autocmd TermClose <buffer> bdelete!
+      autocmd TermClose <buffer> if &filetype ==# 'floaterm' | bdelete! | endif
+      autocmd TermClose <buffer> call floaterm#floatwin#hide_border()
+    " let opts['on_exit'] = funcref('floaterm#floatwin#hide_border')
       autocmd BufHidden <buffer> call floaterm#floatwin#hide_border()
     augroup END
   endif
   startinsert
 endfunction
 
-function! floaterm#terminal#open(bufnr) abort
+function! floaterm#terminal#open(bufnr, ...) abort
   let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
   if type(width) == v:t_float | let width = width * &columns | endif
   let width = float2nr(width)
@@ -73,10 +41,50 @@ function! floaterm#terminal#open(bufnr) abort
   if type(height) == v:t_float | let height = height * &lines | endif
   let height = float2nr(height)
 
+  if a:0 == 0
+    let cmd = &shell
+    let opts = {}
+  elseif a:0 == 1
+    let cmd = a:1
+    let opts = {}
+  elseif a:0 == 2
+    let cmd = a:1
+    let opts = a:2
+  endif
+
+  if a:bufnr > 0
+    if s:wintype ==# 'floating'
+      call floaterm#floatwin#nvim_open_win(a:bufnr, width, height)
+    else
+      execute 'botright ' . height . 'split'
+      execute 'buffer ' . a:bufnr
+    endif
+    call s:on_open()
+    return 0
+  endif
+
   if s:wintype ==# 'floating'
-    let bufnr = s:create_floating_terminal(a:bufnr, width, height)
+    let bufnr = nvim_create_buf(v:false, v:true)
+    call floaterm#floatwin#nvim_open_win(bufnr, width, height)
+    let chan_id = termopen(cmd, opts)
+    let s:channel_map[bufnr] = chan_id
   else
-    let bufnr = s:create_normal_terminal(a:bufnr, width, height)
+    if has('nvim')
+      execute 'botright ' . height . 'split'
+      wincmd j | enew
+      let bufnr = bufnr('%')
+      let chan_id = termopen(cmd, opts)
+      let s:channel_map[bufnr] = chan_id
+    else
+      if has_key(opts, 'on_exit')
+        let opts['exit_cb'] = opts.on_exit
+        unlet opts.on_exit
+      endif
+      let bufnr = term_start(cmd, opts)
+      let job = term_getjob(bufnr)
+      let s:channel_map[bufnr] = job_getchannel(job)
+      wincmd J
+    endif
   endif
   call s:on_open()
   return bufnr

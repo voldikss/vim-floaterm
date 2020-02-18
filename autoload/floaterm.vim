@@ -9,6 +9,7 @@ let $VIM_EXE = v:progpath
 
 let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let s:script = fnamemodify(s:home . '/../bin', ':p')
+let s:wrappers = fnamemodify(s:home . '/floaterm/wrapper', ':p')
 let s:windows = has('win32') || has('win64')
 
 if stridx($PATH, s:script) < 0
@@ -19,13 +20,32 @@ if stridx($PATH, s:script) < 0
   endif
 endif
 
+function! s:get_wrappers() abort
+  let files = split(glob(s:wrappers . '/*.vim'), "\n")
+  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
+endfunction
+
 function! floaterm#new(...) abort
   call floaterm#hide()
-  let bufnr = floaterm#terminal#open(-1)
-  call floaterm#buflist#add(bufnr)
   if a:0 > 0
-    call floaterm#terminal#send(bufnr, a:1)
+    let wrappers = s:get_wrappers()
+    if index(wrappers, a:1) >= 0
+      let WrapFunc = function(printf('floaterm#wrapper#%s#', a:1))
+      let [cmd, opts, send2shell] = WrapFunc()
+      if send2shell
+        let bufnr = floaterm#terminal#open(-1, &shell)
+        call floaterm#terminal#send(bufnr, cmd)
+      else
+        let bufnr = floaterm#terminal#open(-1, cmd, opts)
+      endif
+    else
+      let bufnr = floaterm#terminal#open(-1, &shell)
+      call floaterm#terminal#send(bufnr, a:1)
+    endif
+  else
+    let bufnr = floaterm#terminal#open(-1, &shell)
   endif
+  call floaterm#buflist#add(bufnr)
 endfunction
 
 function! floaterm#next()  abort
@@ -52,9 +72,10 @@ endfunction
 
 function! floaterm#curr() abort
   let curr_bufnr = floaterm#buflist#find_curr()
-  let bufnr = floaterm#terminal#open(curr_bufnr)
-  if curr_bufnr == -1 && bufnr != -1
-    call floaterm#buflist#add(bufnr)
+  if curr_bufnr == -1
+    call floaterm#new()
+  else
+    call floaterm#terminal#open(curr_bufnr)
   endif
 endfunction
 

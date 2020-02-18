@@ -18,7 +18,7 @@ let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)
 let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', v:null)
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 
-command! -nargs=? FloatermNew    call floaterm#new(<f-args>)
+command! -nargs=? -complete=shellcmd FloatermNew call floaterm#new(<f-args>)
 command! -nargs=0 FloatermPrev   call floaterm#prev()
 command! -nargs=0 FloatermNext   call floaterm#next()
 command! -nargs=0 FloatermToggle call floaterm#toggle()
