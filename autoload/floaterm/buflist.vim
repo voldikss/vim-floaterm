@@ -54,6 +54,9 @@ function! s:buflist.remove(node) dict abort
   if self.empty() || a:node == self.head
     return v:false
   endif
+  if bufexists(a:node.bufnr)
+    execute a:node.bufnr . 'bdelete!'
+  endif
   let a:node.prev.next = a:node.next
   let a:node.next.prev = a:node.prev
   let self.index = a:node.next
@@ -74,7 +77,7 @@ endfunction
 "   If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_next() dict abort
   let node = self.index.next
-  while !bufexists(node.bufnr)
+  while !s:valid(node.bufnr)
     call self.remove(node)
     if self.empty()
       return -1
@@ -91,7 +94,7 @@ endfunction
 "   If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_prev() dict abort
   let node = self.index.prev
-  while !bufexists(node.bufnr)
+  while !s:valid(node.bufnr)
     call self.remove(node)
     if self.empty()
       return -1
@@ -108,7 +111,7 @@ endfunction
 "   If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_curr() dict abort
   let node = self.index
-  while !bufexists(node.bufnr)
+  while !s:valid(node.bufnr)
     call self.remove(node)
     if self.empty()
       return -1
@@ -143,12 +146,28 @@ function! s:buflist.gather() dict abort
   let candidates = []
   let curr = self.head.next
   while curr != self.head
-    if bufexists(curr.bufnr)
+    if s:valid(curr.bufnr)
       call add(candidates, curr.bufnr)
     endif
     let curr = curr.next
   endwhile
   return candidates
+endfunction
+
+" Check if a job is running in the buffer
+" @todo: vim8
+function! s:jobexists(bufnr) abort
+  if has('nvim')
+    let jobid = getbufvar(a:bufnr, '&channel')
+    return jobwait([jobid], 0)[0] == -1
+  else
+    let job = term_getjob(a:bufnr)
+    return job_status(job) != 'dead'
+  endif
+endfunction
+
+function! s:valid(bufnr) abort
+  return bufexists(a:bufnr) && s:jobexists(a:bufnr)
 endfunction
 
 function! floaterm#buflist#add(bufnr) abort
