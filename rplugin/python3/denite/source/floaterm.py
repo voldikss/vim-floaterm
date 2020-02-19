@@ -1,11 +1,5 @@
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
-
 from denite.base.source import Base
 from denite.util import Nvim, UserContext, Candidate, Candidates
-from denite_floaterm import Floaterm
 
 DELIMITER = "\u00a0:\u00a0"
 FLOATERM_HIGHLIGHT_SYNTAX = [
@@ -21,7 +15,7 @@ class Source(Base):
 
         self.name = "floaterm"
         self.kind = "floaterm"
-        self._floaterm = Floaterm(vim)
+        self._is_nvim = bool(vim.funcs.has("nvim"))
 
     def on_init(self, context: UserContext) -> None:
         self.vim.call("floaterm#hide")
@@ -62,9 +56,16 @@ class Source(Base):
 
     def _make_candidate(self, bufnr: int) -> Candidate:
         name = self.vim.buffers[bufnr].name
-        title = self._floaterm.term_title(bufnr)
+        title = self._term_title(bufnr)
         return {
             "word": name,
             "abbr": f"{bufnr: >2} {DELIMITER}{name}{DELIMITER} {title}",
             "action__bufnr": bufnr,
         }
+
+    def _term_title(self, bufnr: int) -> str:
+        return str(
+            self.vim.api.buf_get_var(bufnr, "term_title")
+            if self._is_nvim
+            else self.vim.funcs.term_gettitle(bufnr)
+        )
