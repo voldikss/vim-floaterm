@@ -27,19 +27,14 @@ class Source(Base):
         self._floaterm.call("floaterm#hide")
 
     def gather_candidates(self, context: UserContext) -> Candidates:
-        if "new" in context["args"]:
-            return [{"word": "[open new floaterm]", "action__is_new": True}]
-
-        def candidate(bufnr: int) -> Candidate:
-            name = self.vim.buffers[bufnr].name
-            title = self._floaterm.term_title(bufnr)
-            return {
-                "word": name,
-                "abbr": f"{bufnr: >2} {DELIMITER}{name}{DELIMITER} {title}",
-                "action__bufnr": bufnr,
-            }
-
-        return [candidate(x) for x in self._floaterm.call("floaterm#buflist#gather")]
+        return (
+            [{"word": "[open new floaterm]", "action__is_new": True}]
+            if "new" in context["args"]
+            else [
+                self._make_candidate(x)
+                for x in self._floaterm.call("floaterm#buflist#gather")
+            ]
+        )
 
     def highlight(self) -> None:
         for i, syn in enumerate(FLOATERM_HIGHLIGHT_SYNTAX):
@@ -64,3 +59,12 @@ class Source(Base):
                         syn_name("name"), syn["re"], containedin, nextgroup
                     )
                 )
+
+    def _make_candidate(self, bufnr: int) -> Candidate:
+        name = self.vim.buffers[bufnr].name
+        title = self._floaterm.term_title(bufnr)
+        return {
+            "word": name,
+            "abbr": f"{bufnr: >2} {DELIMITER}{name}{DELIMITER} {title}",
+            "action__bufnr": bufnr,
+        }
