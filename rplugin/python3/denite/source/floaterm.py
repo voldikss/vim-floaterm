@@ -24,7 +24,7 @@ class Source(Base):
         self._floaterm = Floaterm(vim)
 
     def on_init(self, context: UserContext) -> None:
-        self._floaterm.call("floaterm#hide")
+        self.vim.call("floaterm#hide")
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         return (
@@ -32,7 +32,7 @@ class Source(Base):
             if "new" in context["args"]
             else [
                 self._make_candidate(x)
-                for x in self._floaterm.call("floaterm#buflist#gather")
+                for x in self.vim.call("floaterm#buflist#gather")
             ]
         )
 

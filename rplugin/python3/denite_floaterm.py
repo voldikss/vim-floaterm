@@ -17,14 +17,6 @@ class Floaterm:
             else self.vim.funcs.term_gettitle(bufnr)
         )
 
-    def call(self, name: str, *args: List[Any], **kwargs: Dict[str, Any]) -> Any:
-        if self.is_nvim:
-            return self.vim.api.call_function(name, args, **kwargs)
-
-        args_str = ", ".join(
-            [f"'{x}'" if isinstance(x, str) else str(x) for x in args])
-        return self.vim.eval(f"{name}({args_str})", **kwargs)
-
     def restore_window_wrapper(self, f: T) -> T:
         def wrapper(*args: List[Any], **kwargs: Dict[str, Any]) -> Any:
             self._save_win()
