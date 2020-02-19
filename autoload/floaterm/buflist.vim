@@ -4,6 +4,10 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+" ----------------------------------------------------------------------------
+" Node type
+" ----------------------------------------------------------------------------
+
 " @type
 "   {
 "     \'next': s:node,
@@ -22,6 +26,11 @@ function! s:node.to_string() dict abort
   return string(self.bufnr)
 endfunction
 
+
+" ----------------------------------------------------------------------------
+" Linkedlist type and functions
+" ----------------------------------------------------------------------------
+
 " @type
 "   {
 "     \'head': s:none,
@@ -35,8 +44,6 @@ let s:buflist.head.prev = s:buflist.head
 let s:buflist.index = s:buflist.head
 let s:buflist.size = 0
 
-" @param
-"   node: type s:node
 function! s:buflist.insert(node) dict abort
   let a:node.prev = self.index
   let a:node.next = self.index.next
@@ -46,10 +53,6 @@ function! s:buflist.insert(node) dict abort
   let self.size += 1
 endfunction
 
-" @param
-"   node: type s:node
-" @todo:
-"   How to delete those removed nodes?
 function! s:buflist.remove(node) dict abort
   if self.empty() || a:node == self.head
     return v:false
@@ -71,10 +74,9 @@ function! s:buflist.empty() dict abort
   return self.head.next == self.head
 endfunction
 
-" @usage:
-"   Find next bufnr with bufexists(bufnr) == v:true
-"   If not found, return -1
-"   If bufexists(bufnr) != v:true, remove that node
+" Find next bufnr with bufexists(bufnr) == v:true
+" If not found, return -1
+" If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_next() dict abort
   let node = self.index.next
   while !s:valid(node.bufnr)
@@ -88,10 +90,9 @@ function! s:buflist.find_next() dict abort
   return node.bufnr
 endfunction
 
-" @usage:
-"   Find prev bufnr with bufexists(bufnr) == v:true
-"   If not found, return -1
-"   If bufexists(bufnr) != v:true, remove that node
+" Find prev bufnr with bufexists(bufnr) == v:true
+" If not found, return -1
+" If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_prev() dict abort
   let node = self.index.prev
   while !s:valid(node.bufnr)
@@ -105,10 +106,9 @@ function! s:buflist.find_prev() dict abort
   return node.bufnr
 endfunction
 
-" @usage:
-"   Find current bufnr with bufexists(bufnr) == v:true
-"   If not found, find next and next
-"   If bufexists(bufnr) != v:true, remove that node
+" Find current bufnr with bufexists(bufnr) == v:true
+" If not found, find next and next
+" If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_curr() dict abort
   let node = self.index
   while !s:valid(node.bufnr)
@@ -122,8 +122,7 @@ function! s:buflist.find_curr() dict abort
   return node.bufnr
 endfunction
 
-" @usage:
-"   Return buflist str, node.bufnr may not exist
+" Return buflist str, note that node.bufnr may not exist
 function! s:buflist.to_string() dict abort
   let str = '[-'
   let curr = self.head
@@ -138,10 +137,9 @@ function! s:buflist.to_string() dict abort
   return str
 endfunction
 
-" @usage:
-"   For source extensions(vim-clap, denite)
-"   Return a list containing floaterm bufnr
-"   Every bufnr should exist
+" For source extensions(vim-clap, denite)
+" Return a list containing floaterm bufnr
+" Every bufnr should exist
 function! s:buflist.gather() dict abort
   let candidates = []
   let curr = self.head.next
@@ -155,7 +153,6 @@ function! s:buflist.gather() dict abort
 endfunction
 
 " Check if a job is running in the buffer
-" @todo: vim8
 function! s:jobexists(bufnr) abort
   if has('nvim')
     let jobid = getbufvar(a:bufnr, '&channel')
@@ -170,6 +167,10 @@ function! s:valid(bufnr) abort
   return bufexists(a:bufnr) && s:jobexists(a:bufnr)
 endfunction
 
+
+" ----------------------------------------------------------------------------
+" Wrap functions to allow to be involved
+" ----------------------------------------------------------------------------
 function! floaterm#buflist#add(bufnr) abort
   let node = s:node.new(a:bufnr)
   call s:buflist.insert(node)
@@ -193,6 +194,7 @@ endfunction
 
 " ----------------------------------------------------------------------------
 " UNIT TEST
+" ----------------------------------------------------------------------------
 function! floaterm#buflist#test() abort
   let list = deepcopy(s:buflist)
   echo list.index.bufnr

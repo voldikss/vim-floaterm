@@ -13,8 +13,7 @@ function! s:nvim_create_buf(linelist, opts) abort
   return bufnr
 endfunction
 
-" @param:
-"   winid: floaterm window id
+" winid: floaterm window id
 function! s:add_border(winid) abort
   let win_opts = nvim_win_get_config(a:winid)
   let top = g:floaterm_borderchars[4] .

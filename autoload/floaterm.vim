@@ -4,6 +4,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+" ----------------------------------------------------------------------------
 let $VIM_SERVERNAME = v:servername
 let $VIM_EXE = v:progpath
 
@@ -25,6 +26,10 @@ function! s:get_wrappers() abort
   return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
 endfunction
 
+
+" ----------------------------------------------------------------------------
+" Main functions
+" ----------------------------------------------------------------------------
 function! floaterm#new(...) abort
   call floaterm#hide()
 
@@ -107,8 +112,7 @@ function! floaterm#toggle()  abort
   endif
 endfunction
 
-" @usage:
-"   Find **one** floaterm window
+" Find **one** floaterm window
 function! s:find_term_win() abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
@@ -120,8 +124,7 @@ function! s:find_term_win() abort
   return found_winnr
 endfunction
 
-" @usage:
-"   Hide current before opening another terminal window
+" Hide current before opening another terminal window
 function! floaterm#hide() abort
   while v:true
     let found_winnr = s:find_term_win()
