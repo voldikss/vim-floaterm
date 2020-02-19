@@ -24,15 +24,11 @@ class Source(Base):
         self._floaterm = Floaterm(vim)
 
     def on_init(self, context: UserContext) -> None:
-        if self._floaterm.can_use():
-            self._floaterm.call("floaterm#hide")
+        self._floaterm.call("floaterm#hide")
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         if "new" in context["args"]:
             return [{"word": "[open new floaterm]", "action__is_new": True}]
-
-        if not self._floaterm.can_use():
-            return []
 
         def candidate(bufnr: int) -> Candidate:
             name = self.vim.buffers[bufnr].name

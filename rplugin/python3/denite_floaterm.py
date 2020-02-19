@@ -10,15 +10,6 @@ class Floaterm:
         self.vim = vim
         self.is_nvim = bool(vim.funcs.has("nvim"))
 
-    def can_use(self) -> bool:
-        return True
-        # TODO
-        # return (
-        #     "floaterm" in self.vim.vars
-        #     if self.is_nvim
-        #     else bool(self.vim.funcs.exists("g:floaterm"))
-        # )
-
     def term_title(self, bufnr: int) -> str:
         return str(
             self.vim.api.buf_get_var(bufnr, "term_title")
