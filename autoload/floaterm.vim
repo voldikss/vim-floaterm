@@ -27,6 +27,14 @@ endfunction
 
 function! floaterm#new(...) abort
   call floaterm#hide()
+
+  if g:floaterm_open_in_root == v:true
+    let dest = floaterm#resolver#get_root()
+    if dest !=# ''
+      call floaterm#resolver#chdir(dest)
+    endif
+  endif
+
   if a:0 > 0
     let wrappers = s:get_wrappers()
     if index(wrappers, a:1) >= 0

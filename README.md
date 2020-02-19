@@ -102,6 +102,14 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
   Type `array of string`. Characters of the floating window border. Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
+- **`g:floaterm_open_in_root`**
+
+  Type `bool`. Open floaterm in project root directory. Default: `v:false`
+
+* **`g:floaterm_rootmarkers`**
+
+  Type `array of string`. Default: `['.project', '.git', '.hg', '.svn', '.root']`
+
 ### Keymaps
 
 This plugin doesn't supply any default mappings. To use a recommended mappings, put the following code in your `vimrc`.
