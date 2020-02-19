@@ -26,6 +26,21 @@ function! s:node.to_string() dict abort
   return string(self.bufnr)
 endfunction
 
+function! s:node.is_valid() dict abort
+  return bufexists(self.bufnr) && s:jobexists(self.bufnr)
+endfunction
+
+" Check if a job is running in the buffer
+function! s:jobexists(bufnr) abort
+  if has('nvim')
+    let jobid = getbufvar(a:bufnr, '&channel')
+    return jobwait([jobid], 0)[0] == -1
+  else
+    let job = term_getjob(a:bufnr)
+    return job_status(job) !=# 'dead'
+  endif
+endfunction
+
 
 " ----------------------------------------------------------------------------
 " Linkedlist type and functions
@@ -79,7 +94,7 @@ endfunction
 " If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_next() dict abort
   let node = self.index.next
-  while !s:valid(node.bufnr)
+  while !node.is_valid()
     call self.remove(node)
     if self.empty()
       return -1
@@ -95,7 +110,7 @@ endfunction
 " If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_prev() dict abort
   let node = self.index.prev
-  while !s:valid(node.bufnr)
+  while !node.is_valid()
     call self.remove(node)
     if self.empty()
       return -1
@@ -111,7 +126,7 @@ endfunction
 " If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.find_curr() dict abort
   let node = self.index
-  while !s:valid(node.bufnr)
+  while !node.is_valid()
     call self.remove(node)
     if self.empty()
       return -1
@@ -144,27 +159,12 @@ function! s:buflist.gather() dict abort
   let candidates = []
   let curr = self.head.next
   while curr != self.head
-    if s:valid(curr.bufnr)
+    if curr.is_valid()
       call add(candidates, curr.bufnr)
     endif
     let curr = curr.next
   endwhile
   return candidates
-endfunction
-
-" Check if a job is running in the buffer
-function! s:jobexists(bufnr) abort
-  if has('nvim')
-    let jobid = getbufvar(a:bufnr, '&channel')
-    return jobwait([jobid], 0)[0] == -1
-  else
-    let job = term_getjob(a:bufnr)
-    return job_status(job) !=# 'dead'
-  endif
-endfunction
-
-function! s:valid(bufnr) abort
-  return bufexists(a:bufnr) && s:jobexists(a:bufnr)
 endfunction
 
 

@@ -128,7 +128,7 @@ You can also use other keys as shown below:
 let g:floaterm_keymap_new = '<Leader>fn'
 ```
 
-Note that this key mapping is installed from the `[plugin](./plugin)` directory, so if you use on-demand loading provided by some plugin manager, the keymap won't take effect. Actually you don't need the on-demand loading for this plugin as it even doesn't slow your startup.
+Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugin manager, the keymap won't take effect. Actually you don't need the on-demand loading for this plugin as it even doesn't slow your startup.
 
 ### Change highlight
 
