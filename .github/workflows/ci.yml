@@ -35,4 +35,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
       - run: pip install vim-vint
-      - run: vint --warning --verbose --enable-neovim --color --style ./autoload ./plugin
+      - run: vint --error --verbose --enable-neovim --color --style ./autoload ./plugin
