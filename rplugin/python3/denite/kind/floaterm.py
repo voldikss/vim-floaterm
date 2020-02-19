@@ -20,7 +20,7 @@ class Kind(Base):
         self._floaterm = Floaterm(vim)
 
     def action_new(self, context: UserContext) -> None:
-        self.vim.call("floaterm#start", "new")
+        self.vim.command("FloatermNew")
 
     def action_open(self, context: UserContext) -> None:
         target = context["targets"][0]
