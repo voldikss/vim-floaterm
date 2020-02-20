@@ -51,23 +51,23 @@ endfunction
 
 function! s:floatwin_pos(width, height) abort
   if g:floaterm_position ==# 'topright'
-    let row = 0
-    let col = &columns
+    let row = 2
+    let col = &columns - 1
     let vert = 'N'
     let hor = 'E'
   elseif g:floaterm_position ==# 'topleft'
-    let row = 0
-    let col = 0
+    let row = 2
+    let col = 1
     let vert = 'N'
     let hor = 'W'
   elseif g:floaterm_position ==# 'bottomright'
-    let row = &lines
-    let col = &columns
+    let row = &lines - 3
+    let col = &columns - 1
     let vert = 'S'
     let hor = 'E'
   elseif g:floaterm_position ==# 'bottomleft'
-    let row = &lines
-    let col = 0
+    let row = &lines - 3
+    let col = 1
     let vert = 'S'
     let hor = 'W'
   elseif g:floaterm_position ==# 'center'
