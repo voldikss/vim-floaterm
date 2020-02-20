@@ -25,7 +25,7 @@ function! s:on_open() abort
       autocmd!
       autocmd TermClose <buffer> if &filetype ==# 'floaterm' | bdelete! | endif
       autocmd TermClose <buffer> call floaterm#floatwin#hide_border()
-    " let opts['on_exit'] = funcref('floaterm#floatwin#hide_border')
+      autocmd TermClose <buffer> doautocmd BufRead
       autocmd BufHidden <buffer> call floaterm#floatwin#hide_border()
     augroup END
   endif
