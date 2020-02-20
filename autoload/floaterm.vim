@@ -136,7 +136,7 @@ function! floaterm#hide() abort
   endwhile
 endfunction
 
-function! floaterm#send(startlnum, endlnum) abort
+function! floaterm#send(bang, startlnum, endlnum) abort
   if &filetype ==# 'floaterm'
     let msg = "FloatermSend can't be used in the floaterm window"
     call floaterm#util#show_msg(msg, 'warning')
@@ -148,8 +148,21 @@ function! floaterm#send(startlnum, endlnum) abort
     let bufnr = floaterm#new()
   endif
 
-  for lnum in range(a:startlnum, a:endlnum)
-    let line = getline(lnum)
-    call floaterm#terminal#send(bufnr, line)
-  endfor
+  if a:bang ==# '!'
+    let line1 = getline(a:startlnum)
+    let trim_line = substitute(line1, '\v^\s+', '', '')
+    let indent = len(line1) - len(trim_line)
+    for lnum in range(a:startlnum, a:endlnum)
+      let line = getline(lnum)
+      if line[:indent] =~# '\s\+'
+        let line = line[indent:]
+      endif
+      call floaterm#terminal#send(bufnr, line)
+    endfor
+  else
+    for lnum in range(a:startlnum, a:endlnum)
+      let line = getline(lnum)
+      call floaterm#terminal#send(bufnr, line)
+    endfor
+  endif
 endfunction

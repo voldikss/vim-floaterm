@@ -24,8 +24,8 @@ command! -nargs=0                    FloatermPrev   call floaterm#prev()
 command! -nargs=0                    FloatermNext   call floaterm#next()
 command! -nargs=0                    FloatermToggle call floaterm#toggle()
 command! -nargs=0                    FloatermInfo   call floaterm#buflist#info()
-command! -nargs=0 -range             FloatermSend   call floaterm#send(<line1>, <line2>)
-command! -nargs=? -complete=shellcmd FloatermNew call floaterm#new(<f-args>)
+command! -nargs=0 -range -bang       FloatermSend   call floaterm#send('<bang>', <line1>, <line2>)
+command! -nargs=? -complete=shellcmd FloatermNew    call floaterm#new(<f-args>)
 
 hi def link FloatermNF NormalFloat
 hi def link FloatermBorderNF NormalFloat

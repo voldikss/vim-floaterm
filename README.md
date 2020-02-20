@@ -74,7 +74,7 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
 - `:FloatermNext` Switch to the next floaterm window
 
-- `:FloatermSend` Send selected lines to a job in floaterm. Typically this command is executed with a range, i.e., `:'<,'>FloatermSend`, if no ranges, send the current line.
+- `:FloatermSend` Send selected lines to a job in floaterm. Typically this command is executed with a range, i.e., `:'<,'>FloatermSend`, if no ranges, send the current line. Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
 
 ## Global variables
 
