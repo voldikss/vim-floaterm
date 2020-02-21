@@ -23,6 +23,7 @@ Use neovim terminal in the floating window.
   - [Use with other command line tools](#use-with-other-command-line-tools)
   - [Integrate with vim-clap](#integrate-with-vim-clap)
   - [Integrate with denite](#integrate-with-denite)
+  - [Integrate with coc.nvim](#integrate-with-coc.nvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [F.A.Q](#f.a.q)
 - [Credits](#credits)
@@ -35,7 +36,7 @@ Use neovim terminal in the floating window.
 - Multiple terminal instances
 - Customizable floating terminal style
 - Switch/Preview floating terminal buffers using [vim-clap](https://github.com/liuchengxu/vim-clap)
-- Switch/Preview/Open floating terminal buffers using [denite.nvim](https://github.com/Shougo/denite.nvim)
+- Switch/Preview/Open floating terminal buffers using [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim)
 - Integrate with other external command-line tools(ranger, fzf, etc.)
 
 ## Requirements
@@ -201,7 +202,7 @@ Use `lazygit` for instance:
 
 ![](https://user-images.githubusercontent.com/20282795/74755376-0f239a00-52ae-11ea-9261-44d94abe5924.png)
 
-### Integrate with vim-clap
+### Integrate with [vim-clap](https://github.com/liuchengxu/vim-clap)
 
 Use vim-clap to switch/preview floating terminal buffers.
 
@@ -209,13 +210,21 @@ Try `:Clap floaterm`
 
 ![](https://user-images.githubusercontent.com/20282795/74755336-00d57e00-52ae-11ea-8afc-030ff55c2145.gif)
 
-### Integrate with denite
+### Integrate with [denite](https://github.com/Shougo/denite.nvim)
 
 Use denite to switch/preview/open floating terminal buffers.
 
 Try `:Denite floaterm`
 
 ![](https://user-images.githubusercontent.com/1239245/73604753-17ef4d00-45d9-11ea-967f-ef75927e2beb.gif)
+
+### Integrate with [coc.nvim](https://github.com/neoclide/coc.nvim)
+
+Use CocList to switch/preview/open floating terminal buffers.
+
+Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocList floaterm`
+
+![](https://user-images.githubusercontent.com/20282795/75005925-fcc27f80-54aa-11ea-832e-59ea5b02fc04.gif)
 
 ## How to define more wrappers
 
