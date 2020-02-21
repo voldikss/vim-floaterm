@@ -34,7 +34,11 @@ class Kind(Base):
 
         bufnr = target["action__bufnr"]
 
-        if context["auto_action"] != "preview" and self._previewed_bufnr == bufnr:
+        if (
+            context["auto_action"] != "preview"
+            and self._is_preview_window_opened()
+            and self._previewed_bufnr == bufnr
+        ):
             self.vim.command("pclose!")
             self._previewed_bufnr = -1
             return
@@ -58,6 +62,17 @@ class Kind(Base):
 
         self._restore_win()
         self._previewed_bufnr = bufnr
+
+    def _is_preview_window_opened(self) -> bool:
+        # NOTE: Using `vim.windows` is better, but vim does not recognize it.
+        # So here uses an odd way to list windows.
+        return next(
+            filter(
+                lambda x: bool(self.vim.call("getwinvar", x, "&previewwindow")),
+                range(1, self.vim.call("winnr", "$") + 1),
+            ),
+            False,
+        )
 
     def _save_win(self) -> None:
         if self._is_nvim:
