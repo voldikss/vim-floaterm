@@ -36,6 +36,7 @@ class Kind(Base):
 
         if context["auto_action"] != "preview" and self._previewed_bufnr == bufnr:
             self.vim.command("pclose!")
+            self._previewed_bufnr = -1
             return
 
         self._save_win()
