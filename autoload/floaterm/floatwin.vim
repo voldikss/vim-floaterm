@@ -30,9 +30,8 @@ function! s:add_border(winid) abort
   let buf_opts.synmaxcol = 3000 " #17
   let buf_opts.filetype = 'floaterm_border'
   " Reuse s:add_border
-  if !exists('s:border_bufnr')
-    let s:border_bufnr = s:nvim_create_buf(lines, buf_opts)
-  endif
+  let border_bufnr = s:nvim_create_buf(lines, buf_opts)
+  call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
   let win_opts.row -= (win_opts.anchor[0] ==# 'N' ? 1 : -1)
   " A bug fix
   if win_opts.row < 0
@@ -45,7 +44,7 @@ function! s:add_border(winid) abort
   let win_opts.height += 2
   let win_opts.style = 'minimal'
   let win_opts.focusable = v:false
-  let s:border_winid = nvim_open_win(s:border_bufnr, v:false, win_opts)
+  let s:border_winid = nvim_open_win(border_bufnr, v:false, win_opts)
   call nvim_win_set_option(s:border_winid, 'winhl', 'NormalFloat:FloatermBorderNF')
 endfunction
 
@@ -121,6 +120,6 @@ endfunction
 
 function! floaterm#floatwin#hide_border(...) abort
   if exists('s:border_winid') && s:winexists(s:border_winid)
-    execute win_id2win(s:border_winid) . 'hide'
+    call nvim_win_close(s:border_winid, v:true)
   endif
 endfunction
