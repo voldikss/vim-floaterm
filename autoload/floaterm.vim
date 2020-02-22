@@ -46,7 +46,7 @@ function! floaterm#new(...) abort
       let WrapFunc = function(printf('floaterm#wrapper#%s#', a:1))
       let [cmd, opts, send2shell] = WrapFunc()
       if send2shell
-        let bufnr = floaterm#terminal#open(-1, &shell)
+        let bufnr = floaterm#terminal#open(-1, 'bash')
         call floaterm#terminal#send(bufnr, cmd)
       else
         let bufnr = floaterm#terminal#open(-1, cmd, opts)
