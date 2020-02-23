@@ -19,6 +19,7 @@ Use neovim terminal in the floating window.
 - [More use cases and demos](#more-use-cases-and-demos)
   - [Use as a Fzf plugin](#use-as-a-fzf-plugin)
   - [Use as a Ranger plugin](#use-as-a-ranger-plugin)
+  - [Use as a fff plugin](#use-as-an-fff-plugin)
   - [Use as a Python REPL plugin](#use-as-a-python-repl-plugin)
   - [Use with other command line tools](#use-with-other-command-line-tools)
   - [Integrate with vim-clap](#integrate-with-vim-clap)
@@ -185,6 +186,18 @@ command! Ranger FloatermNew ranger
 ```
 
 ![](https://user-images.githubusercontent.com/20282795/74800026-2e054900-530d-11ea-8e2a-67168a9532a9.gif)
+
+### Use as an fff plugin
+
+There is also an [fff wrapper](./autoload/floaterm/wrapper/fff.vim)
+
+Try `:FloatermNew fff` or define a new command:
+
+```vim
+command! fff FloatermNew fff
+```
+
+![](https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif)
 
 ### Use as a Python REPL plugin
 
