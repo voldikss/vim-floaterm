@@ -1,4 +1,3 @@
-# vim-floaterm
 
 ![CI](https://github.com/voldikss/vim-floaterm/workflows/CI/badge.svg)
 
@@ -11,20 +10,20 @@ Use neovim terminal in the floating window.
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Basic Usage](#basic-usage)
   - [Global variables](#global-variables)
   - [Commands](#commands)
   - [Keymaps](#keymaps)
   - [Change highlight](#change-highlight)
 - [More use cases and demos](#more-use-cases-and-demos)
-  - [Use as a Fzf plugin](#use-as-a-fzf-plugin)
-  - [Use as a Ranger plugin](#use-as-a-ranger-plugin)
-  - [Use as a fff plugin](#use-as-an-fff-plugin)
+  - [General](#general)
+  - [Use as a fzf plugin](#use-as-a-fzf-plugin)
+  - [Use as a ranger plugin](#use-as-a-ranger-plugin)
   - [Use as a Python REPL plugin](#use-as-a-python-repl-plugin)
   - [Use with other command line tools](#use-with-other-command-line-tools)
   - [Integrate with vim-clap](#integrate-with-vim-clap)
-  - [Integrate with denite](#integrate-with-denite)
-  - [Integrate with coc.nvim](#integrate-with-coc.nvim)
+  - [Integrate with denite.nvim](#integrate-with-denitenvim)
+  - [Integrate with coc.nvim](#integrate-with-cocnvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [F.A.Q](#f.a.q)
 - [Credits](#credits)
@@ -155,7 +154,7 @@ vim-floaterm is a nvim/vim terminal plugin, it can run all the command-line prog
 
 **❗️Note**: The following cases should work both in NeoVim and Vim, if some of them don't work on Vim, try startuping Vim with `--servername` argument, i.e., `vim --servername /tmp/vimtmpfile`
 
-### Basic
+### General
 
 Requirements: `pip3 install neovim-remote`
 
@@ -223,7 +222,7 @@ Try `:Clap floaterm`
 
 ![](https://user-images.githubusercontent.com/20282795/74755336-00d57e00-52ae-11ea-8afc-030ff55c2145.gif)
 
-### Integrate with [denite](https://github.com/Shougo/denite.nvim)
+### Integrate with [denite.nvim](https://github.com/Shougo/denite.nvim)
 
 Use denite to switch/preview/open floating terminal buffers.
 
