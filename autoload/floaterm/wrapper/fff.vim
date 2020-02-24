@@ -18,9 +18,9 @@ function! s:fff_callback(...) abort
 
     let tmp_file .= "/fff/opened_file"
     let tmp_file = fnameescape(tmp_file)
-    bd!
 
     if filereadable(tmp_file)
+        bd!
         let file_data = readfile(tmp_file)
         execute delete(tmp_file)
     else
