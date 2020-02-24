@@ -17,8 +17,9 @@ Use neovim terminal in the floating window.
   - [Change highlight](#change-highlight)
 - [More use cases and demos](#more-use-cases-and-demos)
   - [General](#general)
-  - [Use as a fzf plugin](#use-as-a-fzf-plugin)
+  - [Use as an fzf plugin](#use-as-an-fzf-plugin)
   - [Use as a ranger plugin](#use-as-a-ranger-plugin)
+  - [Use as an fff plugin](#use-as-an-fff-plugin)
   - [Use as a Python REPL plugin](#use-as-a-python-repl-plugin)
   - [Use with other command line tools](#use-with-other-command-line-tools)
   - [Integrate with vim-clap](#integrate-with-vim-clap)
@@ -162,7 +163,7 @@ Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will 
 
 ![](https://user-images.githubusercontent.com/20282795/74755351-06cb5f00-52ae-11ea-84ba-d0b3e88e9377.gif)
 
-### Use as a fzf plugin
+### Use as an fzf plugin
 
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim) for fzf command. So it can be used as a tiny fzf plugin.
 
