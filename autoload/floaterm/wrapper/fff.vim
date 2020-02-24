@@ -5,7 +5,7 @@
 " ============================================================================
 
 function! floaterm#wrapper#fff#() abort
-  let cmd = 'fff -p'
+  let cmd = 'fff -p ' . $PWD
   return [cmd, {'on_exit': funcref('s:fff_callback')}, v:false]
 endfunction
 
