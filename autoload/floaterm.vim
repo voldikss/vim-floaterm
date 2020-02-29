@@ -47,13 +47,13 @@ function! floaterm#new(...) abort
       let [cmd, opts, send2shell] = WrapFunc()
       if send2shell
         let bufnr = floaterm#terminal#open(-1, &shell)
-        call floaterm#terminal#send(bufnr, cmd)
+        call floaterm#terminal#send(bufnr, [cmd])
       else
         let bufnr = floaterm#terminal#open(-1, cmd, opts)
       endif
     else
       let bufnr = floaterm#terminal#open(-1, &shell)
-      call floaterm#terminal#send(bufnr, a:1)
+      call floaterm#terminal#send(bufnr, [a:1])
     endif
   else
     let bufnr = floaterm#terminal#open(-1, &shell)
@@ -148,6 +148,7 @@ function! floaterm#send(bang, startlnum, endlnum) abort
     let bufnr = floaterm#new()
   endif
 
+  let linelist = []
   if a:bang ==# '!'
     let line1 = getline(a:startlnum)
     let trim_line = substitute(line1, '\v^\s+', '', '')
@@ -156,13 +157,15 @@ function! floaterm#send(bang, startlnum, endlnum) abort
       let line = getline(lnum)
       if line[:indent] =~# '\s\+'
         let line = line[indent:]
+        call add(linelist, line)
       endif
-      call floaterm#terminal#send(bufnr, line)
+      call floaterm#terminal#send(bufnr, linelist)
     endfor
   else
     for lnum in range(a:startlnum, a:endlnum)
       let line = getline(lnum)
-      call floaterm#terminal#send(bufnr, line)
+      call add(linelist, line)
     endfor
+    call floaterm#terminal#send(bufnr, linelist)
   endif
 endfunction

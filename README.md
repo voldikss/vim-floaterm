@@ -221,7 +221,7 @@ Use `:FloatermNew python` to open a python REPL. After that you can use `:Floate
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 
-![](https://user-images.githubusercontent.com/20282795/74755385-12b72100-52ae-11ea-8464-e99df4bfddc9.gif)
+![](https://user-images.githubusercontent.com/20282795/75602790-227f0280-5b03-11ea-9411-67dd1895a66b.gif)
 
 ### Use with other command line tools
 

@@ -92,13 +92,16 @@ function! floaterm#terminal#open(bufnr, ...) abort
   return bufnr
 endfunction
 
-function! floaterm#terminal#send(bufnr, cmd) abort
+function! floaterm#terminal#send(bufnr, cmds) abort
   let ch = get(s:channel_map, a:bufnr, v:null)
   if empty(ch) | return | endif
-  sleep 300m
   if has('nvim')
-    call chansend(ch, [a:cmd, ''])
+    if !empty(a:cmds[len(a:cmds) - 1])
+      call add(a:cmds, '')
+    endif
+    call chansend(ch, a:cmds)
   else
-    call ch_sendraw(ch, a:cmd.(s:is_win ? "\r\n" : "\n"))
+    let newline = s:is_win ? "\r\n" : "\n"
+    call ch_sendraw(ch, join(a:cmds, newline) . newline)
   endif
 endfunction
