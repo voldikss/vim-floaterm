@@ -1,4 +1,3 @@
-
 ![CI](https://github.com/voldikss/vim-floaterm/workflows/CI/badge.svg)
 
 【[Introduction in Chinese|中文文档](https://zhuanlan.zhihu.com/p/107749687)】
@@ -108,9 +107,13 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
   Type `bool`. Open floaterm in project root directory. Default: `v:false`
 
-* **`g:floaterm_rootmarkers`**
+- **`g:floaterm_rootmarkers`**
 
   Type `array of string`. Default: `['.project', '.git', '.hg', '.svn', '.root']`
+
+- **`g:floaterm_autoinsert`**
+
+  Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
 
 ### Keymaps
 

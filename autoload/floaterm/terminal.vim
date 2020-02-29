@@ -29,7 +29,9 @@ function! s:on_open() abort
       autocmd BufHidden <buffer> call floaterm#floatwin#hide_border()
     augroup END
   endif
-  startinsert
+  if g:floaterm_autoinsert == v:true
+    startinsert
+  endif
 endfunction
 
 function! floaterm#terminal#open(bufnr, ...) abort
