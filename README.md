@@ -17,8 +17,9 @@ Use neovim terminal in the floating window.
 - [More use cases and demos](#more-use-cases-and-demos)
   - [General](#general)
   - [Use as an fzf plugin](#use-as-an-fzf-plugin)
-  - [Use as a ranger plugin](#use-as-a-ranger-plugin)
   - [Use as an fff plugin](#use-as-an-fff-plugin)
+  - [Use as an nnn plugin](#use-as-an-nnn-plugin)
+  - [Use as a ranger plugin](#use-as-a-ranger-plugin)
   - [Use as a Python REPL plugin](#use-as-a-python-repl-plugin)
   - [Use with other command line tools](#use-with-other-command-line-tools)
   - [Integrate with vim-clap](#integrate-with-vim-clap)
@@ -173,10 +174,34 @@ This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim) for
 Try `:FloatermNew fzf` or even wrap this to a new command like this:
 
 ```vim
-command! FzfTiny FloatermNew fzf
+command! FZF FloatermNew fzf
 ```
 
 ![](https://user-images.githubusercontent.com/20282795/74755357-09c64f80-52ae-11ea-90a0-a6b6bbe8940c.gif)
+
+### Use as an fff plugin
+
+There is also an [fff wrapper](./autoload/floaterm/wrapper/fff.vim)
+
+Try `:FloatermNew fff` or define a new command:
+
+```vim
+command! FFF FloatermNew fff
+```
+
+![](https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif)
+
+### Use as an nnn plugin
+
+There is also an [nnn wrapper](./autoload/floaterm/wrapper/nnn.vim)
+
+Try `:FloatermNew nnn` or define a new command:
+
+```vim
+command! NNN FloatermNew nnn
+```
+
+![](https://user-images.githubusercontent.com/20282795/75599726-7a594180-5ae2-11ea-80e2-7a33df1433f6.gif)
 
 ### Use as a ranger plugin
 
@@ -190,23 +215,11 @@ command! Ranger FloatermNew ranger
 
 ![](https://user-images.githubusercontent.com/20282795/74800026-2e054900-530d-11ea-8e2a-67168a9532a9.gif)
 
-### Use as an fff plugin
-
-There is also an [fff wrapper](./autoload/floaterm/wrapper/fff.vim)
-
-Try `:FloatermNew fff` or define a new command:
-
-```vim
-command! fff FloatermNew fff
-```
-
-![](https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif)
-
 ### Use as a Python REPL plugin
 
 Use `:FloatermNew python` to open a python REPL. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
 
-This can also work for other languages which have interactive shell, such as lua, node, etc.
+This can also work for other languages which have interactive shells, such as lua, node, etc.
 
 ![](https://user-images.githubusercontent.com/20282795/74755385-12b72100-52ae-11ea-8464-e99df4bfddc9.gif)
 
