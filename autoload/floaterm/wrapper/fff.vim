@@ -28,6 +28,6 @@ function! s:fff_callback(...) abort
     endif
 
     if filereadable(file_data[0])
-        execute "e " . file_data[0]
+        execute g:floaterm_open_command . ' ' . file_data[0]
     endif
 endfunction

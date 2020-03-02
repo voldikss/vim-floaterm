@@ -2,6 +2,10 @@
 
 Author : voldikss <https://github.com/voldikss>
 License: MIT license
+NOTE: This is outdated, please refer to the README file:
+    ../README.md
+    or
+    https://github.com/voldikss/vim-floaterm/blob/master/README.md
 ==============================================================================
 CONTENTS                                               *floaterm-contents*
 

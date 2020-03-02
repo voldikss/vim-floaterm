@@ -116,6 +116,10 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
   Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
 
+- **`g:floaterm_open_command`**
+
+  Type `string`. Command used for opening a file from within `:terminal`. Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
+
 ### Keymaps
 
 This plugin doesn't supply any default mappings. To use a recommended mappings, put the following code in your `vimrc`.

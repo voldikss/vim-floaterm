@@ -16,7 +16,7 @@ function! s:nnn_callback(...) abort
     if !empty(filenames)
       call floaterm#hide()
       for filename in filenames
-        execute 'edit ' . fnameescape(filename)
+        execute g:floaterm_open_command . ' ' . fnameescape(filename)
       endfor
     endif
   endif

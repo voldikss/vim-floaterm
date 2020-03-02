@@ -46,5 +46,5 @@ endfunction
 
 function! floaterm#util#edit(filename) abort
   call floaterm#hide()
-  silent execute 'edit ' . a:filename
+  silent execute g:floaterm_open_command . ' ' . a:filename
 endfunction

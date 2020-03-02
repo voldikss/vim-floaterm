@@ -15,6 +15,7 @@ let g:floaterm_borderchars   = get(g:, 'floaterm_borderchars', ['─', '│', '�
 let g:floaterm_rootmarkers   = get(g:, 'floaterm_rootmarkers', ['.project', '.git', '.hg', '.svn', '.root'])
 let g:floaterm_open_in_root  = get(g:, 'floaterm_open_in_root', v:false)
 let g:floaterm_autoinsert    = get(g:, 'floaterm_autoinsert', v:true)
+let g:floaterm_open_command  = get(g:, 'floaterm_open_command', 'edit')
 
 let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', v:null)
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)
