@@ -6,7 +6,10 @@
 
 function! floaterm#wrapper#ranger#() abort
   let s:ranger_tmpfile = tempname()
-  let cmd = 'ranger ' . $PWD . ' --choosefiles=' . s:ranger_tmpfile
+  let s:original_dir = getcwd()
+  lcd %:p:h
+  let cmd = 'ranger ' . getcwd() . ' --choosefiles=' . s:ranger_tmpfile
+  exe "lcd " . s:original_dir
   return [cmd, {'on_exit': funcref('s:ranger_callback')}, v:false]
 endfunction
 
