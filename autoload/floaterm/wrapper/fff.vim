@@ -5,7 +5,10 @@
 " ============================================================================
 
 function! floaterm#wrapper#fff#() abort
-  let cmd = 'fff -p ' . $PWD
+  let original_dir = getcwd()
+  lcd %:p:h
+  let cmd = 'fff -p ' . getcwd()
+  exe "lcd " . original_dir
   return [cmd, {'on_exit': funcref('s:fff_callback')}, v:false]
 endfunction
 
