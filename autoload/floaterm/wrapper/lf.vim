@@ -8,7 +8,7 @@ function! floaterm#wrapper#lf#() abort
   let tmp_file = s:lf_tmp_file()
   let original_dir = getcwd()
   lcd %:p:h
-  let cmd = 'lf -selection-path=' . tmp_file
+  let cmd = 'lf -selection-path=' . tmp_file . ' ' . getcwd()
   exe "lcd " . original_dir
   return [cmd, {'on_exit': funcref('s:lf_callback')}, v:false]
 endfunction
