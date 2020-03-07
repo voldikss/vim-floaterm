@@ -23,7 +23,7 @@ function! s:fff_callback(...) abort
     let tmp_file = fnameescape(tmp_file)
 
     if filereadable(tmp_file)
-        bd!
+        call floaterm#hide()
         let file_data = readfile(tmp_file)
         execute delete(tmp_file)
     else
