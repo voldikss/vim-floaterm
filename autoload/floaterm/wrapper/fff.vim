@@ -13,24 +13,24 @@ function! floaterm#wrapper#fff#() abort
 endfunction
 
 function! s:fff_callback(...) abort
-    let tmp_file = $XDG_CACHE_HOME
+  let s:fff_tmpfile = $XDG_CACHE_HOME
 
-    if !isdirectory(tmp_file)
-        let tmp_file = $HOME . "/.cache"
-    endif
+  if !isdirectory(s:fff_tmpfile)
+    let s:fff_tmpfile = $HOME . "/.cache"
+  endif
 
-    let tmp_file .= "/fff/opened_file"
-    let tmp_file = fnameescape(tmp_file)
+  let s:fff_tmpfile .= "/fff/opened_file"
+  let s:fff_tmpfile = fnameescape(s:fff_tmpfile)
 
-    if filereadable(tmp_file)
-        call floaterm#hide()
-        let file_data = readfile(tmp_file)
-        execute delete(tmp_file)
-    else
-        return
-    endif
+  if filereadable(s:fff_tmpfile)
+    let file_data = readfile(s:fff_tmpfile)
+    execute delete(s:fff_tmpfile)
+  else
+    return
+  endif
 
-    if filereadable(file_data[0])
-        execute g:floaterm_open_command . ' ' . file_data[0]
-    endif
+  if filereadable(file_data[0])
+    call floaterm#hide()
+    execute g:floaterm_open_command . ' ' . file_data[0]
+  endif
 endfunction
