@@ -273,12 +273,14 @@ function! s:runner_proc(opts)
   if has_key(a:opts, 'silent') && a:opts.silent == 1
     call floaterm#hide()
   endif
+  let cmd = 'cd ' . shellescape(getcwd())
+  call floaterm#terminal#send(curr_bufnr, [cmd])
   call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
   stopinsert
   if &filetype == 'floaterm' && g:floaterm_autoinsert
     startinsert
   endif
-endfunc
+endfunction
 
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
 let g:asyncrun_runner.floaterm = function('s:runner_proc')
