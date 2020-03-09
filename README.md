@@ -16,6 +16,7 @@ Use neovim terminal in the floating window.
   - [Change highlight](#change-highlight)
 - [More use cases and demos](#more-use-cases-and-demos)
   - [General](#general)
+  - [Use as the git editor](#use-as-the-git-editor)
   - [Use as an fzf plugin](#use-as-an-fzf-plugin)
   - [Use as an fff plugin](#use-as-an-fff-plugin)
   - [Use as an nnn plugin](#use-as-an-nnn-plugin)
@@ -172,6 +173,12 @@ Requirements: `pip3 install neovim-remote`
 Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will get another nvim/vim instance running in the subprocess. This plugin allows you to open files from within `:terminal` without starting a nested nvim process. To archive that, just replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
 ![](https://user-images.githubusercontent.com/20282795/74755351-06cb5f00-52ae-11ea-84ba-d0b3e88e9377.gif)
+
+### Use as the git editor
+
+Execute `git commit` in the terminal window without starting a nested nvim.
+
+![](https://user-images.githubusercontent.com/20282795/76213003-b0b26180-6244-11ea-85ad-1632adfd07d9.gif)
 
 ### Use as an fzf plugin
 
