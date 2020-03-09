@@ -25,6 +25,7 @@ Use neovim terminal in the floating window.
   - [Integrate with vim-clap](#integrate-with-vim-clap)
   - [Integrate with denite.nvim](#integrate-with-denitenvim)
   - [Integrate with coc.nvim](#integrate-with-cocnvim)
+  - [Integrate with asynctasks.vim](#integrate-with-asynctasksvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [F.A.Q](#f.a.q)
 - [Credits](#credits)
@@ -39,6 +40,7 @@ Use neovim terminal in the floating window.
 - Switch/Preview floating terminal buffers using [vim-clap](https://github.com/liuchengxu/vim-clap)
 - Switch/Preview/Open floating terminal buffers using [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim)
 - Integrate with other external command-line tools(ranger, fzf, etc.)
+- Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 ## Requirements
 
@@ -258,6 +260,29 @@ Use CocList to switch/preview/open floating terminal buffers.
 Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocList floaterm`
 
 ![](https://user-images.githubusercontent.com/20282795/75005925-fcc27f80-54aa-11ea-832e-59ea5b02fc04.gif)
+
+### Integrate with [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
+
+This plugin already has a builtin runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/). To use it, change `g:asynctasks_term_pos` to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks configuration files. Then your task will be ran in the floaterm window. See asynctasks.vim [WIKI](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
+
+If you are using on-demand loading, you need to copy the following lines to your `vimrc` to make it work.
+
+```vim
+function! s:runner_proc(opts)
+  let curr_bufnr = floaterm#curr()
+  if has_key(a:opts, 'silent') && a:opts.silent == 1
+    call floaterm#hide()
+  endif
+  call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
+  stopinsert
+  if &filetype == 'floaterm' && g:floaterm_autoinsert
+    startinsert
+  endif
+endfunc
+
+let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
+let g:asyncrun_runner.floaterm = function('s:runner_proc')
+```
 
 ## How to define more wrappers
 
