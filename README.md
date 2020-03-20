@@ -238,7 +238,7 @@ Try `:FloatermNew vifm` or define a new command:
 command! Vifm FloatermNew vifm
 ```
 
-![](https://user-images.githubusercontent.com/43941510/77135898-304ef480-6abf-11ea-973f-515d448ec153.gif)
+![](https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif)
 
 ### Use as a Python REPL plugin
 
