@@ -6,9 +6,12 @@
 
 function! floaterm#wrapper#vifm#() abort
   let s:vifm_tmpfile = tempname()
-  let original_dir = expand("%:p:h")
-  exe "lcd " . original_dir
-  let cmd = 'vifm . --choose-files ' . s:vifm_tmpfile
+  let original_dir = expand("%:p")
+  if empty(original_dir)
+    let cmd = 'vifm . --choose-files ' . s:vifm_tmpfile
+  else
+    let cmd = 'vifm ' . original_dir . '--choose-files ' . s:vifm_tmpfile
+  endif
   return [cmd, {'on_exit': funcref('s:vifm_callback')}, v:false]
 endfunction
 
