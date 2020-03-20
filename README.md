@@ -238,6 +238,8 @@ Try `:FloatermNew vifm` or define a new command:
 command! Vifm FloatermNew vifm
 ```
 
+![](https://user-images.githubusercontent.com/43941510/77135898-304ef480-6abf-11ea-973f-515d448ec153.gif)
+
 ### Use as a Python REPL plugin
 
 Use `:FloatermNew python` to open a python REPL. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
