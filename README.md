@@ -20,7 +20,9 @@ Use neovim terminal in the floating window.
   - [Use as an fzf plugin](#use-as-an-fzf-plugin)
   - [Use as an fff plugin](#use-as-an-fff-plugin)
   - [Use as an nnn plugin](#use-as-an-nnn-plugin)
+  - [Use as an lf plugin](#use-as-an-lf-plugin)
   - [Use as a ranger plugin](#use-as-a-ranger-plugin)
+  - [Use as a vifm plugin](#use-as-a-vifm-plugin)
   - [Use as a Python REPL plugin](#use-as-a-python-repl-plugin)
   - [Use with other command line tools](#use-with-other-command-line-tools)
   - [Integrate with vim-clap](#integrate-with-vim-clap)
@@ -28,6 +30,7 @@ Use neovim terminal in the floating window.
   - [Integrate with coc.nvim](#integrate-with-cocnvim)
   - [Integrate with asynctasks.vim](#integrate-with-asynctasksvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
+- [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [F.A.Q](#f.a.q)
 - [Credits](#credits)
 - [License](#license)
@@ -38,9 +41,8 @@ Use neovim terminal in the floating window.
 - Open and toggle terminal window quickly
 - Multiple terminal instances
 - Customizable floating terminal style
-- Switch/Preview floating terminal buffers using [vim-clap](https://github.com/liuchengxu/vim-clap)
-- Switch/Preview/Open floating terminal buffers using [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim)
-- Integrate with other external command-line tools(ranger, fzf, etc.)
+- Switch/Preview floating terminal buffers using [vim-clap](https://github.com/liuchengxu/vim-clap), [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim)
+- Integrate with other external command-line tools(ranger, lf, fzf, etc.)
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 ## Requirements
@@ -71,7 +73,7 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
 ### Commands
 
-- `:FloatermNew [cmd]` Open a floating terminal window, if `cmd` exists, it will be executed after the shell startup
+- `:FloatermNew [cmd]` Open a floating terminal window, if `cmd` exists, it will be executed after shell startup
 
 - `:FloatermToggle` Open or hide the floaterm window
 
@@ -141,7 +143,7 @@ You can also use other keys as shown below:
 let g:floaterm_keymap_new = '<Leader>fn'
 ```
 
-Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugin manager, the keymap won't take effect. Actually you don't need the on-demand loading for this plugin as it even doesn't slow your startup.
+Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugins manager, the keymap won't take effect. Actually you don't need the on-demand loading for this plugin as it even doesn't slow your startup.
 
 ### Change highlight
 
@@ -215,6 +217,18 @@ command! NNN FloatermNew nnn
 ```
 
 ![](https://user-images.githubusercontent.com/20282795/75599726-7a594180-5ae2-11ea-80e2-7a33df1433f6.gif)
+
+### Use as an lf plugin
+
+There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim)
+
+Try `:FloatermNew lf` or define a new command:
+
+```vim
+command! LF FloatermNew lf
+```
+
+![](https://user-images.githubusercontent.com/20282795/77142551-6e4a1980-6abb-11ea-9525-73e1a1844e83.gif)
 
 ### Use as a ranger plugin
 
@@ -342,6 +356,14 @@ There are two ways for a command to be spawned:
   ```
 
   Here `v:false` means `cmd` will be passed through `termopen()`(neovim) or `term_start()`(vim). Function `s:ranger_callback()` will be invoked when the `cmd` exits.
+
+## How to write sources for fuzzy finder plugins
+
+Function `floaterm#buflist#gather()` returns a list contains all the floaterm buffers.
+
+Function `floaterm#terminal#open({bufnr})` opens the floaterm whose buffer number is `bufnr`.
+
+For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
 
 ## F.A.Q
 
