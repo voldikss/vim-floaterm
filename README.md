@@ -228,6 +228,16 @@ command! Ranger FloatermNew ranger
 
 ![](https://user-images.githubusercontent.com/20282795/74800026-2e054900-530d-11ea-8e2a-67168a9532a9.gif)
 
+### Use as an Vifm plugin
+
+There is also an [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
+
+Try `:FloatermNew vifm` or define a new command:
+
+```vim
+command! Vifm FloatermNew vifm
+```
+
 ### Use as a Python REPL plugin
 
 Use `:FloatermNew python` to open a python REPL. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
