@@ -228,9 +228,9 @@ command! Ranger FloatermNew ranger
 
 ![](https://user-images.githubusercontent.com/20282795/74800026-2e054900-530d-11ea-8e2a-67168a9532a9.gif)
 
-### Use as an Vifm plugin
+### Use as a Vifm plugin
 
-There is also an [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
+There is also a [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
 
 Try `:FloatermNew vifm` or define a new command:
 
