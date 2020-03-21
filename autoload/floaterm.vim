@@ -34,7 +34,7 @@ endfunction
 function! floaterm#new(...) abort
   call floaterm#hide()
 
-  if g:floaterm_open_in_root == v:true
+  if !empty(g:floaterm_rootmarkers)
     let dest = floaterm#resolver#get_root()
     if dest !=# ''
       call floaterm#resolver#chdir(dest)
