@@ -32,7 +32,15 @@ function! s:find_root(path, markers, strict) abort
       let prev = pivot
       for marker in a:markers
         let newname = s:path_join(pivot, marker)
-        if filereadable(newname)
+        if stridx(newname, '*') >= 0 || stridx(newname, '?') >= 0
+          if glob(newname) != ''
+            return pivot
+          endif
+        elseif stridx(newname, '[') >= 0 || stridx(newname, ']') >= 0
+          if glob(newname) != ''
+            return pivot
+          endif
+        elseif filereadable(newname)
           return pivot
         elseif isdirectory(newname)
           return pivot
