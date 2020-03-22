@@ -4,10 +4,18 @@
 " GitHub: https://github.com/benwoodward
 " ============================================================================
 
-function! floaterm#wrapper#fff#() abort
+function! floaterm#wrapper#fff#(cmd) abort
   let original_dir = getcwd()
   lcd %:p:h
-  let cmd = 'fff -p ' . getcwd()
+
+  let cmdlist = split(a:cmd)
+  let cmd = 'fff -p'
+  if len(cmdlist) > 1
+    let cmd .= ' ' . join(cmdlist[1:], ' ')
+  else
+    let cmd .= ' ' . shellescape(getcwd())
+  endif
+
   exe "lcd " . original_dir
   return [cmd, {'on_exit': funcref('s:fff_callback')}, v:false]
 endfunction

@@ -4,10 +4,20 @@
 " GitHub: https://github.com/kazhala
 " ============================================================================
 
-function! floaterm#wrapper#vifm#() abort
+function! floaterm#wrapper#vifm#(cmd) abort
   let s:vifm_tmpfile = tempname()
-  let original_dir = expand("%:p:h")
-  let cmd = 'vifm ' . original_dir . ' --choose-files ' . s:vifm_tmpfile
+  let original_dir = getcwd()
+  lcd %:p:h
+
+  let cmdlist = split(a:cmd)
+  let cmd = 'vifm --choose-files ' . s:vifm_tmpfile
+  if len(cmdlist) > 1
+    let cmd .= ' ' . join(cmdlist[1:], ' ')
+  else
+    let cmd .= ' ' . shellescape(getcwd())
+  endif
+
+  exe "lcd " . original_dir
   return [cmd, {'on_exit': funcref('s:vifm_callback')}, v:false]
 endfunction
 

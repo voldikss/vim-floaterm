@@ -42,10 +42,12 @@ function! floaterm#new(...) abort
   endif
 
   if a:0 > 0
+    let arg = a:1
     let wrappers = s:get_wrappers()
-    if index(wrappers, a:1) >= 0
-      let WrapFunc = function(printf('floaterm#wrapper#%s#', a:1))
-      let [cmd, opts, send2shell] = WrapFunc()
+    let maybe_wrapper = split(arg, '\s')[0]
+    if index(wrappers, maybe_wrapper) >= 0
+      let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
+      let [cmd, opts, send2shell] = WrapFunc(arg)
       if send2shell
         let bufnr = floaterm#terminal#open(-1, &shell)
         call floaterm#terminal#send(bufnr, [cmd])
@@ -54,7 +56,7 @@ function! floaterm#new(...) abort
       endif
     else
       let bufnr = floaterm#terminal#open(-1, &shell)
-      call floaterm#terminal#send(bufnr, [a:1])
+      call floaterm#terminal#send(bufnr, [arg])
     endif
   else
     let bufnr = floaterm#terminal#open(-1, &shell)

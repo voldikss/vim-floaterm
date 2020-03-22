@@ -4,9 +4,20 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#wrapper#nnn#() abort
+function! floaterm#wrapper#nnn#(cmd) abort
   let s:nnn_tmpfile = tempname()
+  let original_dir = getcwd()
+  lcd %:p:h
+
+  let cmdlist = split(a:cmd)
   let cmd = 'nnn -p ' . s:nnn_tmpfile
+  if len(cmdlist) > 1
+    let cmd .= ' ' . join(cmdlist[1:], ' ')
+  else
+    let cmd .= ' ' . shellescape(getcwd())
+  endif
+
+  exe "lcd " . original_dir
   return [cmd, {'on_exit': funcref('s:nnn_callback')}, v:false]
 endfunction
 
