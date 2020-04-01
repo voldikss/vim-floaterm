@@ -188,7 +188,7 @@ Try `:FloatermNew fzf` or even wrap this to a new command like this:
 command! FZF FloatermNew fzf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/74755357-09c64f80-52ae-11ea-90a0-a6b6bbe8940c.gif)
+![](https://user-images.githubusercontent.com/20282795/78089550-60b95b80-73fa-11ea-8ac8-8fab2025b4d8.gif)
 
 ### Use as an fff plugin
 
