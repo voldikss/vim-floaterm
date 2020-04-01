@@ -4,7 +4,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#wrapper#fzf#() abort
+function! floaterm#wrapper#fzf#(...) abort
   if stridx(&shell, 'fish') >= 0
     let cmd = 'floaterm (fzf)'
   elseif stridx(&shell, 'csh')
