@@ -188,6 +188,8 @@ Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will 
 
 ### Use as the git editor
 
+See `g:floaterm_gitcommit` option.
+
 Execute `git commit` in the terminal window without starting a nested nvim.
 
 ![](https://user-images.githubusercontent.com/20282795/76213003-b0b26180-6244-11ea-85ad-1632adfd07d9.gif)
