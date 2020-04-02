@@ -20,6 +20,7 @@ let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', v:null)
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)
 let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', v:null)
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
+let g:floaterm_gitcommit     = get(g:, 'floaterm_gitcommit', v:null)
 
 command! -nargs=0                    FloatermPrev   call floaterm#prev()
 command! -nargs=0                    FloatermNext   call floaterm#next()

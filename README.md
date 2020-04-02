@@ -107,11 +107,15 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
 - **`g:floaterm_borderchars`**
 
-  Type `array of string`. Characters of the floating window border. Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
+  Type `array of string`. Characters of the floating window border.
+
+  Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
 - **`g:floaterm_rootmarkers`**
 
-  Type `array of string`. If not empty, floaterm will be opened in the project root directory. Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
+  Type `array of string`. If not empty, floaterm will be opened in the project root directory.
+
+  Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
 
 - **`g:floaterm_autoinsert`**
 
@@ -119,7 +123,17 @@ Generally just one floaterm instance is enough. If you've opened more than one f
 
 - **`g:floaterm_open_command`**
 
-  Type `string`. Command used for opening a file from within `:terminal`. Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
+  Type `string`. Command used for opening a file from within `:terminal`.
+
+  Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
+
+- **`g:floaterm_gitcommit`**
+
+  Type `string`. Opening strategy for running `git commit` in floaterm window.
+
+  Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
+
+  Default: `v:null` which means this is disabled by default(use your own `$GIT_EDITOR`).
 
 ### Keymaps
 

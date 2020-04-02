@@ -5,7 +5,6 @@
 " ============================================================================
 
 " ----------------------------------------------------------------------------
-let $GIT_EDITOR='floaterm'
 let $VIM_SERVERNAME = v:servername
 let $VIM_EXE = v:progpath
 
@@ -26,6 +25,18 @@ function! s:get_wrappers() abort
   let files = split(glob(s:wrappers . '/*.vim'), "\n")
   return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
 endfunction
+
+if g:floaterm_gitcommit != v:null
+  autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+  if g:floaterm_gitcommit == 'floaterm'
+    let $GIT_EDITOR = 'nvr --remote-wait'
+  else
+    let $GIT_EDITOR = printf(
+      \ 'nvr -cc "call floaterm#hide() | %s" --remote-wait',
+      \ g:floaterm_gitcommit
+      \ )
+  endif
+endif
 
 
 " ----------------------------------------------------------------------------
