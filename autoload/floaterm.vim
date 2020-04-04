@@ -52,25 +52,26 @@ function! floaterm#new(...) abort
     endif
   endif
 
-  if a:0 > 0
-    let arg = a:1
+  let arg = get(a:, 1, '')
+  let window_opts = get(a:, 2, {})
+  if arg != ''
     let wrappers = s:get_wrappers()
     let maybe_wrapper = split(arg, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
       let [cmd, opts, send2shell] = WrapFunc(arg)
       if send2shell
-        let bufnr = floaterm#terminal#open(-1, &shell)
+        let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
         call floaterm#terminal#send(bufnr, [cmd])
       else
-        let bufnr = floaterm#terminal#open(-1, cmd, opts)
+        let bufnr = floaterm#terminal#open(-1, cmd, opts, window_opts)
       endif
     else
-      let bufnr = floaterm#terminal#open(-1, &shell)
+      let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
       call floaterm#terminal#send(bufnr, [arg])
     endif
   else
-    let bufnr = floaterm#terminal#open(-1, &shell)
+    let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
   endif
   call floaterm#buflist#add(bufnr)
   return bufnr
@@ -83,7 +84,7 @@ function! floaterm#next()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    call floaterm#terminal#open(next_bufnr)
+    call floaterm#terminal#open_existing(next_bufnr)
   endif
 endfunction
 
@@ -94,7 +95,7 @@ function! floaterm#prev()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    call floaterm#terminal#open(prev_bufnr)
+    call floaterm#terminal#open_existing(prev_bufnr)
   endif
 endfunction
 
@@ -103,7 +104,7 @@ function! floaterm#curr() abort
   if curr_bufnr == -1
     let curr_bufnr = floaterm#new()
   else
-    call floaterm#terminal#open(curr_bufnr)
+    call floaterm#terminal#open_existing(curr_bufnr)
   endif
   return curr_bufnr
 endfunction

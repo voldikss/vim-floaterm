@@ -37,7 +37,7 @@ endfunction
 function! s:floaterm.sink(curline) abort
   if a:curline == s:bar | return | endif
   let bufnr = str2nr(matchstr(a:curline, '\S'))
-  call floaterm#terminal#open(bufnr)
+  call floaterm#terminal#open_existing(bufnr)
 endfunction
 
 let g:clap#provider#floaterm# = s:floaterm

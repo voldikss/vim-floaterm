@@ -35,24 +35,34 @@ function! s:on_open() abort
 endfunction
 
 function! floaterm#terminal#open(bufnr, ...) abort
-  let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
-  if type(width) == v:t_float | let width = width * &columns | endif
-  let width = float2nr(width)
-
-  let height = g:floaterm_height == v:null ? 0.6 : g:floaterm_height
-  if type(height) == v:t_float | let height = height * &lines | endif
-  let height = float2nr(height)
 
   if a:0 == 0
     let cmd = &shell
     let opts = {}
+    let window_opts = {}
   elseif a:0 == 1
     let cmd = a:1
     let opts = {}
+    let window_opts = {}
   elseif a:0 == 2
     let cmd = a:1
     let opts = a:2
+    let window_opts = {}
+  elseif a:0 == 3
+    let cmd = a:1
+    let opts = a:2
+    let window_opts = a:3
   endif
+
+  let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
+  let width = get(window_opts, 'width', width)
+  if type(width) == v:t_float | let width = width * &columns | endif
+  let width = float2nr(width)
+
+  let height = g:floaterm_height == v:null ? 0.6 : g:floaterm_height
+  let height = get(window_opts, 'height', height)
+  if type(height) == v:t_float | let height = height * &lines | endif
+  let height = float2nr(height)
 
   if a:bufnr > 0
     if s:wintype ==# 'floating'
@@ -88,8 +98,14 @@ function! floaterm#terminal#open(bufnr, ...) abort
       wincmd J
     endif
   endif
+  call setbufvar(bufnr, 'window_opts', window_opts)
   call s:on_open()
   return bufnr
+endfunction
+
+function! floaterm#terminal#open_existing(bufnr) abort
+  let window_opts = getbufvar(a:bufnr, 'window_opts', {})
+  call floaterm#terminal#open(a:bufnr, '', {}, window_opts)
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort
