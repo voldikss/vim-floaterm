@@ -14,7 +14,11 @@ function! floaterm#wrapper#ranger#(cmd) abort
   if len(cmdlist) > 1
     let cmd .= ' ' . join(cmdlist[1:], ' ')
   else
-    let cmd .= ' ' . shellescape(getcwd())
+    if expand('%:p') != ''
+      let cmd .= ' --selectfile="' . expand('%:p') . '"'
+    else
+      let cmd .= ' ' . shellescape(getcwd())
+    endif
   endif
 
   exe "lcd " . original_dir
