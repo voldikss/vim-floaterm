@@ -1,0 +1,93 @@
+Include: setup.vader
+
+Execute (Get original bufnr):
+  let buffer0 = bufnr('%')
+
+Execute (Open first floaterm):
+  FloatermNew height=0.3 width=0.4 wintype='floating' name='floating_floaterm_1'
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer1 = bufnr('%')
+
+Execute (Open second floaterm):
+  FloatermNew height=0.3 width=0.4 wintype='floating' name='normal_floaterm_2'
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer2 = bufnr('%')
+
+Execute (Open third floaterm):
+  FloatermNew height=0.3 width=0.4 wintype='floating' name='floating_floaterm_3'
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer3 = bufnr('%')
+
+Execute (Toggle off):
+  FloatermToggle " without comment, vader will fail
+Then:
+  call AssertFiletype('')
+  call CheckWindow(v:false)
+  call AssertBufnr(buffer0)
+
+Execute (Toggle open floaterm):
+  FloatermToggle
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer3)
+
+Execute (Toggle open floaterm):
+  FloatermToggle " without comment, vader will fail
+Then:
+  call AssertFiletype('')
+  call CheckWindow(v:false)
+  call AssertBufnr(buffer0)
+
+Execute (Next floaterm):
+  FloatermNext
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer1)
+
+Execute (Next floaterm):
+  FloatermNext
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer2)
+
+Execute (Next floaterm):
+  FloatermNext
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer3)
+
+Execute (Prev floaterm):
+  FloatermPrev
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer2)
+
+Execute (Prev floaterm):
+  FloatermPrev
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  call AssertBufnr(buffer1)
+
+Execute (Insert a floaterm between first and second):
+  FloatermNew
+Then:
+  call AssertFiletype('floaterm')
+  call CheckWindow(v:true)
+  let buffer1_5 = bufnr('%')
+  AssertEqual floaterm#buflist#gather(), [buffer1,buffer1_5,buffer2,buffer3]
+
+Execute (Exit):
+  call floaterm#hide()
+  sleep 100m
