@@ -26,8 +26,8 @@ jobs:
           VIM_EXEC: ${{ steps.vim.outputs.executable }}
         run: |
           $VIM_EXEC --version
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/command.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/keymap.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/command.vader'
 
   vint:
     name: Run vint

@@ -1,4 +1,29 @@
-Include: setup.vader
+Execute (Setup functions):
+  function! AssertFiletype(filetype) abort
+    AssertEqual a:filetype, &filetype
+  endfunction
+  function! AssertBufnr(bufnr) abort
+    AssertEqual a:bufnr, bufnr('%')
+  endfunction
+  function! CheckWindow(if_floaterm) abort
+    let has_floaterm = 0
+    let has_floaterm_border = 0
+    for i in range(1, winnr('$'))
+      let filetype = getbufvar(winbufnr(i), '&filetype')
+      if filetype ==# 'floaterm'
+        let has_floaterm = 1
+      elseif filetype ==# 'floaterm_border'
+        let has_floaterm_border = 1
+      endif
+    endfor
+    if a:if_floaterm
+      AssertEqual 1, has_floaterm
+      AssertEqual 1, has_floaterm_border
+    else
+      AssertEqual 0, has_floaterm
+      AssertEqual 0, has_floaterm_border
+    endif
+  endfunction
 
 Execute (Get original bufnr):
   let buffer0 = bufnr('%')
