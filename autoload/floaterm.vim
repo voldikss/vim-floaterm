@@ -43,8 +43,6 @@ endif
 " Main functions
 " ----------------------------------------------------------------------------
 function! floaterm#new(...) abort
-  call floaterm#hide()
-
   if !empty(g:floaterm_rootmarkers)
     let dest = floaterm#resolver#get_root()
     if dest !=# ''
@@ -116,8 +114,13 @@ function! floaterm#toggle(...)  abort
     if bufnr == -1
       call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
       return
+    elseif bufnr == bufnr()
+      hide
+    elseif bufwinnr(bufnr) > -1
+      execute bufwinnr(bufnr) . 'wincmd w'
+    else
+      call floaterm#terminal#open_existing(bufnr)
     endif
-    call floaterm#terminal#open_existing(bufnr)
   elseif &filetype == 'floaterm'
     hide
   else
