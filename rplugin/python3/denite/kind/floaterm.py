@@ -23,7 +23,7 @@ class Kind(Base):
             return
 
         bufnr = target["action__bufnr"]
-        self.vim.call("floaterm#terminal#open", bufnr)
+        self.vim.call("floaterm#terminal#open_existing", bufnr)
 
     def action_preview(self, context: UserContext) -> None:
         target = context["targets"][0]
