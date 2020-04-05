@@ -122,3 +122,11 @@ endfunction
 function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
 endfunction
+
+function! floaterm#terminal#update_window_opts(bufnr, window_opts) abort
+  let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
+  for item in items(a:window_opts)
+    let window_opts[item[0]] = item[1]
+  endfor
+  call setbufvar(a:bufnr, 'floaterm_window_opts', window_opts)
+endfunction
