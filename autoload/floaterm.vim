@@ -115,7 +115,7 @@ function! floaterm#toggle(...)  abort
   else
     let termname = get(a:, 1, '')
     if termname != ''
-      let bufnr = bufnr('floaterm://' . termname)
+      let bufnr = floaterm#terminal#get_bufnr(termname)
       echo bufnr
       if bufnr == -1
         call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
@@ -163,17 +163,26 @@ function! floaterm#hide() abort
   endwhile
 endfunction
 
-function! floaterm#send(bang, startlnum, endlnum) abort
+function! floaterm#send(bang, startlnum, endlnum, ...) abort
   if &filetype ==# 'floaterm'
     let msg = "FloatermSend can't be used in the floaterm window"
     call floaterm#util#show_msg(msg, 'warning')
     return
   endif
 
-  let bufnr = floaterm#buflist#find_curr()
-  if bufnr == -1
-    let bufnr = floaterm#new()
+  let termname = get(a:, 1, '')
+  if termname != ''
+    let bufnr = floaterm#terminal#get_bufnr(termname)
+    if bufnr == -1
+      call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
+    endif
+  else
+    let bufnr = floaterm#buflist#find_curr()
+    if bufnr == -1
+      let bufnr = floaterm#new()
+    endif
   endif
+
 
   let linelist = []
   if a:bang ==# '!'

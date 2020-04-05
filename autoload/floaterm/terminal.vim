@@ -117,3 +117,7 @@ function! floaterm#terminal#send(bufnr, cmds) abort
     call ch_sendraw(ch, join(a:cmds, newline) . newline)
   endif
 endfunction
+
+function! floaterm#terminal#get_bufnr(termname) abort
+  return bufnr('floaterm://' . a:termname)
+endfunction
