@@ -24,7 +24,7 @@ let g:floaterm_gitcommit     = get(g:, 'floaterm_gitcommit', v:null)
 
 command! -nargs=0                    FloatermPrev   call floaterm#prev()
 command! -nargs=0                    FloatermNext   call floaterm#next()
-command! -nargs=0                    FloatermToggle call floaterm#toggle()
+command! -nargs=?                    FloatermToggle call floaterm#toggle(<f-args>)
 command! -nargs=0                    FloatermInfo   call floaterm#buflist#info()
 command! -nargs=0 -range -bang       FloatermSend   call floaterm#send('<bang>', <line1>, <line2>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
