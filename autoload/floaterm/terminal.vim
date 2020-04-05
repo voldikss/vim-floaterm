@@ -34,37 +34,18 @@ function! s:on_open() abort
   endif
 endfunction
 
-function! floaterm#terminal#open(bufnr, ...) abort
-
-  if a:0 == 0
-    let cmd = &shell
-    let opts = {}
-    let window_opts = {}
-  elseif a:0 == 1
-    let cmd = a:1
-    let opts = {}
-    let window_opts = {}
-  elseif a:0 == 2
-    let cmd = a:1
-    let opts = a:2
-    let window_opts = {}
-  elseif a:0 == 3
-    let cmd = a:1
-    let opts = a:2
-    let window_opts = a:3
-  endif
-
+function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
   let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
-  let width = get(window_opts, 'width', width)
+  let width = get(a:window_opts, 'width', width)
   if type(width) == v:t_float | let width = width * &columns | endif
   let width = float2nr(width)
 
   let height = g:floaterm_height == v:null ? 0.6 : g:floaterm_height
-  let height = get(window_opts, 'height', height)
+  let height = get(a:window_opts, 'height', height)
   if type(height) == v:t_float | let height = height * &lines | endif
   let height = float2nr(height)
 
-  let wintype = get(window_opts, 'wintype', s:wintype)
+  let wintype = get(a:window_opts, 'wintype', s:wintype)
 
   if a:bufnr > 0
     if wintype ==# 'floating'
@@ -80,28 +61,27 @@ function! floaterm#terminal#open(bufnr, ...) abort
   if wintype ==# 'floating'
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#floatwin#nvim_open_win(bufnr, width, height)
-    let ch = termopen(cmd, opts)
+    let ch = termopen(a:cmd, a:opts)
     let s:channel_map[bufnr] = ch
   else
     if has('nvim')
       execute 'botright ' . height . 'split'
       wincmd j | enew
       let bufnr = bufnr('%')
-      let ch = termopen(cmd, opts)
+      let ch = termopen(a:cmd, a:opts)
       let s:channel_map[bufnr] = ch
     else
-      if has_key(opts, 'on_exit')
-        let opts['exit_cb'] = opts.on_exit
-        unlet opts.on_exit
+      if has_key(a:opts, 'on_exit')
+        let a:opts['exit_cb'] = a:opts.on_exit
+        unlet a:opts.on_exit
       endif
-      let bufnr = term_start(cmd, opts)
+      let bufnr = term_start(a:cmd, a:opts)
       let job = term_getjob(bufnr)
       let s:channel_map[bufnr] = job_getchannel(job)
       wincmd J
     endif
   endif
-  call setbufvar(bufnr, 'window_opts', window_opts)
-  
+  call setbufvar(bufnr, 'window_opts', a:window_opts)
   call s:on_open()
   return bufnr
 endfunction
