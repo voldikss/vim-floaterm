@@ -110,20 +110,17 @@ function! floaterm#curr() abort
 endfunction
 
 function! floaterm#toggle(...)  abort
-  if &filetype ==# 'floaterm'
-    hide
-  else
-    let termname = get(a:, 1, '')
-    if termname != ''
-      let bufnr = floaterm#terminal#get_bufnr(termname)
-      if bufnr == -1
-        call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
-        return
-      endif
-      call floaterm#terminal#open_existing(bufnr)
+  let termname = get(a:, 1, '')
+  if termname != ''
+    let bufnr = floaterm#terminal#get_bufnr(termname)
+    if bufnr == -1
+      call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
       return
     endif
-
+    call floaterm#terminal#open_existing(bufnr)
+  elseif &filetype == 'floaterm'
+    hide
+  else
     let found_winnr = s:find_term_win()
     if found_winnr > 0
       execute found_winnr . 'wincmd w'

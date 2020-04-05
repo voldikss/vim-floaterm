@@ -93,6 +93,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
+  call floaterm#hide()
   let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
   call floaterm#terminal#open(a:bufnr, '', {}, window_opts)
 endfunction
