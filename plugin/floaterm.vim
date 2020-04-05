@@ -30,7 +30,6 @@ command! -nargs=0 -range -bang       FloatermSend   call floaterm#send('<bang>',
 command! -nargs=* -complete=shellcmd FloatermNew    call s:new_floaterm(<f-args>)
 
 function! s:new_floaterm(...) abort
-  echo a:000
   let window_opts = {}
   let cmd = ''
   if a:000 != []
