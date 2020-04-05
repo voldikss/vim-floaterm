@@ -5,7 +5,7 @@
 " ============================================================================
 
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let win_opts_key = ['height=', 'width=', 'wintype=']
+  let win_opts_key = ['height=', 'width=', 'wintype=', 'name=']
   let candidates = win_opts_key + sort(getcompletion('', 'shellcmd'))
 
   let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
