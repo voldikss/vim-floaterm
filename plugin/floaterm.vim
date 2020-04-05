@@ -26,7 +26,7 @@ command! -nargs=0                    FloatermPrev   call floaterm#prev()
 command! -nargs=0                    FloatermNext   call floaterm#next()
 command! -nargs=?                    FloatermToggle call floaterm#toggle(<f-args>)
 command! -nargs=0                    FloatermInfo   call floaterm#buflist#info()
-command! -nargs=0 -range -bang       FloatermSend   call floaterm#send('<bang>', <line1>, <line2>)
+command! -nargs=? -range -bang       FloatermSend   call floaterm#send('<bang>', <line1>, <line2>, <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                                    \ FloatermNew    call s:new_floaterm(<f-args>)
 
