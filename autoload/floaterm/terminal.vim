@@ -82,6 +82,12 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
     endif
   endif
   call setbufvar(bufnr, 'window_opts', a:window_opts)
+  let term_name = get(a:window_opts, 'name', '')
+  if term_name != ''
+    let term_name = 'floaterm://' . term_name
+    execute 'file ' . term_name
+  endif
+  
   call s:on_open()
   return bufnr
 endfunction
