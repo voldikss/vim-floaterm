@@ -27,7 +27,27 @@ command! -nargs=0                    FloatermNext   call floaterm#next()
 command! -nargs=0                    FloatermToggle call floaterm#toggle()
 command! -nargs=0                    FloatermInfo   call floaterm#buflist#info()
 command! -nargs=0 -range -bang       FloatermSend   call floaterm#send('<bang>', <line1>, <line2>)
-command! -nargs=? -complete=shellcmd FloatermNew    call floaterm#new(<f-args>)
+command! -nargs=* -complete=shellcmd FloatermNew    call s:new_floaterm(<f-args>)
+
+function! s:new_floaterm(...) abort
+  echo a:000
+  let window_opts = {}
+  let cmd = ''
+  if a:000 != []
+    let c = 0
+    for arg in a:000
+      let opt = split(arg, '=')
+      if len(opt) == 1
+        let cmd = join(a:000[c:])
+        break
+      elseif len(opt) == 2
+        let window_opts[opt[0]] = eval(opt[1])
+      endif
+      let c += 1
+    endfor
+  endif
+  call floaterm#new(cmd, window_opts)
+endfunction
 
 hi def link FloatermNF NormalFloat
 hi def link FloatermBorderNF NormalFloat
