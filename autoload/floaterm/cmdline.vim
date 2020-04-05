@@ -26,3 +26,17 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
   endif
 endfunction
+
+function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos)
+  let buflist = floaterm#buflist#gather()
+  let ret = []
+  let pattern = '^floaterm://'
+  for bufnr in buflist
+    let name = getbufinfo(bufnr)[0].name
+    let termname = substitute(name, pattern, '', '')
+    if name =~ pattern && match(termname, a:arg_lead) != -1
+      call add(ret, termname)
+    endif
+  endfor
+  return ret
+endfunction
