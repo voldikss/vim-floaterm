@@ -27,7 +27,8 @@ command! -nargs=0                    FloatermNext   call floaterm#next()
 command! -nargs=0                    FloatermToggle call floaterm#toggle()
 command! -nargs=0                    FloatermInfo   call floaterm#buflist#info()
 command! -nargs=0 -range -bang       FloatermSend   call floaterm#send('<bang>', <line1>, <line2>)
-command! -nargs=* -complete=shellcmd FloatermNew    call s:new_floaterm(<f-args>)
+command! -nargs=* -complete=customlist,floaterm#cmdline#complete
+                                   \ FloatermNew    call s:new_floaterm(<f-args>)
 
 function! s:new_floaterm(...) abort
   let window_opts = {}
