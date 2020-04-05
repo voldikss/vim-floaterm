@@ -46,10 +46,11 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
   let height = float2nr(height)
 
   let wintype = get(a:window_opts, 'wintype', s:wintype)
+  let pos = get(a:window_opts, 'position', g:floaterm_position)
 
   if a:bufnr > 0
     if wintype ==# 'floating'
-      call floaterm#floatwin#nvim_open_win(a:bufnr, width, height)
+      call floaterm#floatwin#nvim_open_win(a:bufnr, width, height, pos)
     else
       execute 'botright ' . height . 'split'
       execute 'buffer ' . a:bufnr
@@ -60,7 +61,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 
   if wintype ==# 'floating'
     let bufnr = nvim_create_buf(v:false, v:true)
-    call floaterm#floatwin#nvim_open_win(bufnr, width, height)
+    call floaterm#floatwin#nvim_open_win(bufnr, width, height, pos)
     let ch = termopen(a:cmd, a:opts)
     let s:channel_map[bufnr] = ch
   else
@@ -93,7 +94,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
-  call floaterm#hide()
+  "call floaterm#hide()
   let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
   call floaterm#terminal#open(a:bufnr, '', {}, window_opts)
 endfunction

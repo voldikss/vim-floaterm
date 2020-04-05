@@ -48,28 +48,28 @@ function! s:add_border(winid) abort
   call nvim_win_set_option(s:border_winid, 'winhl', 'NormalFloat:FloatermBorderNF')
 endfunction
 
-function! s:floatwin_pos(width, height) abort
-  if g:floaterm_position ==# 'topright'
+function! s:floatwin_pos(width, height, pos) abort
+  if a:pos ==# 'topright'
     let row = 2
     let col = &columns - 1
     let vert = 'N'
     let hor = 'E'
-  elseif g:floaterm_position ==# 'topleft'
+  elseif a:pos ==# 'topleft'
     let row = 2
     let col = 1
     let vert = 'N'
     let hor = 'W'
-  elseif g:floaterm_position ==# 'bottomright'
+  elseif a:pos ==# 'bottomright'
     let row = &lines - 3
     let col = &columns - 1
     let vert = 'S'
     let hor = 'E'
-  elseif g:floaterm_position ==# 'bottomleft'
+  elseif a:pos ==# 'bottomleft'
     let row = &lines - 3
     let col = 1
     let vert = 'S'
     let hor = 'W'
-  elseif g:floaterm_position ==# 'center'
+  elseif a:pos ==# 'center'
     let row = (&lines - a:height)/2
     let col = (&columns - a:width)/2
     let vert = 'N'
@@ -98,8 +98,8 @@ function! s:floatwin_pos(width, height) abort
   return [row, col, vert, hor]
 endfunction
 
-function! floaterm#floatwin#nvim_open_win(bufnr, width, height) abort
-  let [row, col, vert, hor] = s:floatwin_pos(a:width, a:height)
+function! floaterm#floatwin#nvim_open_win(bufnr, width, height, pos) abort
+  let [row, col, vert, hor] = s:floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'relative': 'editor',
     \ 'anchor': vert . hor,
