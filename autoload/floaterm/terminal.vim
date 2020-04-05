@@ -81,19 +81,19 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
       wincmd J
     endif
   endif
-  call setbufvar(bufnr, 'window_opts', a:window_opts)
+  call setbufvar(bufnr, 'floaterm_window_opts', a:window_opts)
   let term_name = get(a:window_opts, 'name', '')
   if term_name != ''
     let term_name = 'floaterm://' . term_name
     execute 'file ' . term_name
   endif
-  
+
   call s:on_open()
   return bufnr
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
-  let window_opts = getbufvar(a:bufnr, 'window_opts', {})
+  let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
   call floaterm#terminal#open(a:bufnr, '', {}, window_opts)
 endfunction
 
