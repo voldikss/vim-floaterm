@@ -116,7 +116,6 @@ function! floaterm#toggle(...)  abort
     let termname = get(a:, 1, '')
     if termname != ''
       let bufnr = floaterm#terminal#get_bufnr(termname)
-      echo bufnr
       if bufnr == -1
         call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
         return
