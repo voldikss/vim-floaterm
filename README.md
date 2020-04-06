@@ -318,7 +318,7 @@ Use `:FloatermNew python` to open a python REPL. After that you can use `:Floate
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 
-![](https://user-images.githubusercontent.com/20282795/75602790-227f0280-5b03-11ea-9411-67dd1895a66b.gif)
+![](https://user-images.githubusercontent.com/20282795/78530892-0c0d4a80-7817-11ea-8934-835a6e6d0628.gif)
 
 ### Use with other command line tools
 
