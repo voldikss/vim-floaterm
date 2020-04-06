@@ -105,6 +105,11 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
       wincmd J
     endif
   endif
+  " save floaterm attributes
+  let a:window_opts.width = width
+  let a:window_opts.height = height
+  let a:window_opts.wintype = wintype
+  let a:window_opts.pos = pos
   call setbufvar(bufnr, 'floaterm_window_opts', a:window_opts)
   let term_name = get(a:window_opts, 'name', '')
   if term_name != ''
