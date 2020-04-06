@@ -22,15 +22,24 @@ function! s:on_open() abort
     execute 'setlocal winblend=' . g:floaterm_winblend
     setlocal winhighlight=NormalFloat:FloatermNF,Normal:FloatermNF
     augroup close_floaterm_window
-      autocmd! TermClose <buffer> if &filetype ==# 'floaterm' | bdelete! | endif
-      autocmd! TermClose <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
-      autocmd! TermClose <buffer> doautocmd BufDelete
-      autocmd! BufHidden <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
+      autocmd!
+      autocmd TermClose <buffer> call s:on_floaterm_close(bufnr('%'))
+      autocmd BufHidden <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
     startinsert
   endif
+endfunction
+
+function! s:on_floaterm_close(bufnr) abort
+  if getbufvar(a:bufnr, '&filetype') != 'floaterm'
+    return
+  endif
+  " NOTE: MUST hide border BEFORE deleting floaterm buffer
+  call floaterm#floatwin#hide_border(a:bufnr)
+  execute a:bufnr . 'bdelete!'
+  call lightline#update()
 endfunction
 
 function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
