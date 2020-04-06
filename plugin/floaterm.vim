@@ -31,6 +31,8 @@ command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_na
                                    \ FloatermSend   call floaterm#send('<bang>', <line1>, <line2>, <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                                    \ FloatermNew    call s:new_floaterm(<f-args>)
+command! -nargs=* -complete=customlist,floaterm#cmdline#complete
+                                   \ FloatermUpdate    call s:update_windowopts(<f-args>)
 
 function! s:new_floaterm(...) abort
   let window_opts = {}
@@ -49,6 +51,26 @@ function! s:new_floaterm(...) abort
     endfor
   endif
   call floaterm#new(cmd, window_opts)
+endfunction
+
+function! s:update_windowopts(...) abort
+  if &filetype !=# 'floaterm'
+    call floaterm#util#show_msg('You have to be in a floaterm window to change window opts.', 'error')
+    return
+  endif
+
+  let bufnr = bufnr('%')
+  let window_opts = {}
+  if a:000 != []
+    for arg in a:000
+      let opt = split(arg, '=')
+      let window_opts[opt[0]] = eval(opt[1])
+    endfor
+  endif
+
+  hide
+  call floaterm#terminal#update_window_opts(bufnr, window_opts)
+  call floaterm#terminal#open_existing(bufnr)
 endfunction
 
 hi def link FloatermNF NormalFloat
