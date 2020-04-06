@@ -50,14 +50,13 @@ function! floaterm#new(...) abort
     endif
   endif
 
-  let arg = get(a:, 1, '')
-  let window_opts = get(a:, 2, {})
-  if arg != ''
+  let [cmd, window_opts] = floaterm#cmdline#parse_new(a:000)
+  if cmd != ''
     let wrappers = s:get_wrappers()
-    let maybe_wrapper = split(arg, '\s')[0]
+    let maybe_wrapper = split(cmd, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
-      let [cmd, opts, send2shell] = WrapFunc(arg)
+      let [name, opts, send2shell] = WrapFunc(cmd)
       if send2shell
         let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
         call floaterm#terminal#send(bufnr, [cmd])
@@ -66,13 +65,64 @@ function! floaterm#new(...) abort
       endif
     else
       let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
-      call floaterm#terminal#send(bufnr, [arg])
+      call floaterm#terminal#send(bufnr, [cmd])
     endif
   else
     let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
   endif
   call floaterm#buflist#add(bufnr)
   return bufnr
+endfunction
+
+function! floaterm#toggle(...)  abort
+  let termname = get(a:, 1, '')
+  if termname != ''
+    let bufnr = floaterm#terminal#get_bufnr(termname)
+    if bufnr == -1
+      call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
+      return
+    elseif bufnr == bufnr()
+      hide
+    elseif bufwinnr(bufnr) > -1
+      execute bufwinnr(bufnr) . 'wincmd w'
+    else
+      call floaterm#terminal#open_existing(bufnr)
+    endif
+  elseif &filetype == 'floaterm'
+    hide
+  else
+    let found_winnr = floaterm#window#find_floaterm_winnr()
+    if found_winnr > 0
+      execute found_winnr . 'wincmd w'
+      if has('nvim')
+        startinsert
+      elseif mode() ==# 'n'
+        normal! i
+      endif
+    else
+      call floaterm#curr()
+    endif
+  endif
+endfunction
+
+function! floaterm#update(...) abort
+  if &filetype !=# 'floaterm'
+    call floaterm#util#show_msg('You have to be in a floaterm window to change window opts.', 'error')
+    return
+  endif
+
+  let bufnr = bufnr('%')
+  let window_opts = {}
+  if a:000 != []
+    for arg in a:000
+      let opt = split(arg, '=')
+      let window_opts[opt[0]] = eval(opt[1])
+    endfor
+  endif
+
+  hide
+  call floaterm#buffer#update_window_opts(bufnr, window_opts)
+  call floaterm#terminal#open_existing(bufnr)
 endfunction
 
 function! floaterm#next()  abort
@@ -107,53 +157,10 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-function! floaterm#toggle(...)  abort
-  let termname = get(a:, 1, '')
-  if termname != ''
-    let bufnr = floaterm#terminal#get_bufnr(termname)
-    if bufnr == -1
-      call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
-      return
-    elseif bufnr == bufnr()
-      hide
-    elseif bufwinnr(bufnr) > -1
-      execute bufwinnr(bufnr) . 'wincmd w'
-    else
-      call floaterm#terminal#open_existing(bufnr)
-    endif
-  elseif &filetype == 'floaterm'
-    hide
-  else
-    let found_winnr = s:find_term_win()
-    if found_winnr > 0
-      execute found_winnr . 'wincmd w'
-      if has('nvim')
-        startinsert
-      elseif mode() ==# 'n'
-        normal! i
-      endif
-    else
-      call floaterm#curr()
-    endif
-  endif
-endfunction
-
-" Find **one** floaterm window
-function! s:find_term_win() abort
-  let found_winnr = 0
-  for winnr in range(1, winnr('$'))
-    if getbufvar(winbufnr(winnr), '&filetype') ==# 'floaterm'
-      let found_winnr = winnr
-      break
-    endif
-  endfor
-  return found_winnr
-endfunction
-
 " Hide current before opening another terminal window
 function! floaterm#hide() abort
   while v:true
-    let found_winnr = s:find_term_win()
+    let found_winnr = floaterm#window#find_floaterm_winnr()
     if found_winnr > 0
       execute found_winnr . 'hide'
     else
@@ -181,7 +188,6 @@ function! floaterm#send(bang, startlnum, endlnum, ...) abort
       let bufnr = floaterm#new()
     endif
   endif
-
 
   let linelist = []
   if a:bang ==# '!'

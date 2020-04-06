@@ -23,7 +23,7 @@ function! s:on_open() abort
     setlocal winhighlight=NormalFloat:FloatermNF,Normal:FloatermNF
     augroup close_floaterm_window
       autocmd! TermClose <buffer> call s:on_floaterm_close(bufnr('%'))
-      autocmd! BufHidden <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
+      autocmd! BufHidden <buffer> call floaterm#window#hide_border(bufnr('%'))
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
@@ -36,7 +36,7 @@ function! s:on_floaterm_close(bufnr) abort
     return
   endif
   " NOTE: MUST hide border BEFORE deleting floaterm buffer
-  call floaterm#floatwin#hide_border(a:bufnr)
+  call floaterm#window#hide_border(a:bufnr)
   execute a:bufnr . 'bdelete!'
   call lightline#update()
 endfunction
@@ -57,7 +57,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 
   if a:bufnr > 0
     if wintype ==# 'floating'
-      call floaterm#floatwin#nvim_open_win(a:bufnr, width, height, pos)
+      call floaterm#window#nvim_open_win(a:bufnr, width, height, pos)
     else
       if pos == 'top'
         execute 'topleft' . height . 'split'
@@ -76,7 +76,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 
   if wintype ==# 'floating'
     let bufnr = nvim_create_buf(v:false, v:true)
-    call floaterm#floatwin#nvim_open_win(bufnr, width, height, pos)
+    call floaterm#window#nvim_open_win(bufnr, width, height, pos)
     let ch = termopen(a:cmd, a:opts)
     let s:channel_map[bufnr] = ch
   else
@@ -146,10 +146,13 @@ function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
 endfunction
 
-function! floaterm#terminal#update_window_opts(bufnr, window_opts) abort
-  let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
-  for item in items(a:window_opts)
-    let window_opts[item[0]] = item[1]
-  endfor
-  call setbufvar(a:bufnr, 'floaterm_window_opts', window_opts)
+" Check if a job is running in the buffer
+function! floaterm#terminal#jobexists(bufnr) abort
+  if has('nvim')
+    let jobid = getbufvar(a:bufnr, '&channel')
+    return jobwait([jobid], 0)[0] == -1
+  else
+    let job = term_getjob(a:bufnr)
+    return job_status(job) !=# 'dead'
+  endif
 endfunction

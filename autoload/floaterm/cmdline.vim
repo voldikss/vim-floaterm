@@ -4,6 +4,25 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+function! floaterm#cmdline#parse_new(arglist) abort
+  let window_opts = {}
+  let cmd = ''
+  if a:arglist != []
+    let c = 0
+    for arg in a:arglist
+      let opt = split(arg, '=')
+      if len(opt) == 1
+        let cmd = join(a:arglist[c:])
+        break
+      elseif len(opt) == 2
+        let window_opts[opt[0]] = eval(opt[1])
+      endif
+      let c += 1
+    endfor
+  endif
+  return [cmd, window_opts]
+endfunction
+
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   let win_opts_key = ['height=', 'width=', "wintype='", "name='", "position='"]
   if a:cmd_line =~ '^FloatermNew'
@@ -39,7 +58,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
 endfunction
 
-function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos)
+function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos) abort
   let buflist = floaterm#buflist#gather()
   let ret = []
   let pattern = '^floaterm://'

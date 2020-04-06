@@ -27,18 +27,7 @@ function! s:node.to_string() dict abort
 endfunction
 
 function! s:node.is_valid() dict abort
-  return bufexists(self.bufnr) && s:jobexists(self.bufnr)
-endfunction
-
-" Check if a job is running in the buffer
-function! s:jobexists(bufnr) abort
-  if has('nvim')
-    let jobid = getbufvar(a:bufnr, '&channel')
-    return jobwait([jobid], 0)[0] == -1
-  else
-    let job = term_getjob(a:bufnr)
-    return job_status(job) !=# 'dead'
-  endif
+  return bufexists(self.bufnr) && floaterm#terminal#jobexists(self.bufnr)
 endfunction
 
 

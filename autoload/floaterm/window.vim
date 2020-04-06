@@ -4,15 +4,6 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! s:nvim_create_buf(linelist, opts) abort
-  let bufnr = nvim_create_buf(v:false, v:true)
-  call nvim_buf_set_lines(bufnr, 0, -1, v:true, a:linelist)
-  for [name, value] in items(a:opts)
-    call nvim_buf_set_option(bufnr, name, value)
-  endfor
-  return bufnr
-endfunction
-
 " winid: floaterm window id
 function! s:add_border(winid) abort
   let win_opts = nvim_win_get_config(a:winid)
@@ -30,7 +21,7 @@ function! s:add_border(winid) abort
   let buf_opts.synmaxcol = 3000 " #17
   let buf_opts.filetype = 'floaterm_border'
   " Reuse s:add_border
-  let border_bufnr = s:nvim_create_buf(lines, buf_opts)
+  let border_bufnr = floaterm#buffer#create(lines, buf_opts)
   call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
   let win_opts.row -= (win_opts.anchor[0] == 'N' ? 1 : -1)
   " A bug fix
@@ -111,7 +102,7 @@ function! s:floatwin_pos(width, height, pos) abort
   return [row, col, anchor]
 endfunction
 
-function! floaterm#floatwin#nvim_open_win(bufnr, width, height, pos) abort
+function! floaterm#window#nvim_open_win(bufnr, width, height, pos) abort
   let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'relative': 'editor',
@@ -132,10 +123,22 @@ function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
-function! floaterm#floatwin#hide_border(bufnr, ...) abort
+function! floaterm#window#hide_border(bufnr, ...) abort
   let winid = getbufvar(a:bufnr, 'floaterm_border_winid', v:null)
   if winid != v:null && s:winexists(winid)
     call nvim_win_close(winid, v:true)
   endif
   call setbufvar(a:bufnr, 'floaterm_border_winid', v:null)
+endfunction
+
+" Find **one** floaterm window
+function! floaterm#window#find_floaterm_winnr() abort
+  let found_winnr = 0
+  for winnr in range(1, winnr('$'))
+    if getbufvar(winbufnr(winnr), '&filetype') ==# 'floaterm'
+      let found_winnr = winnr
+      break
+    endif
+  endfor
+  return found_winnr
 endfunction
