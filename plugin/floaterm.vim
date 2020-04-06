@@ -24,15 +24,14 @@ let g:floaterm_gitcommit     = get(g:, 'floaterm_gitcommit', v:null)
 
 command! -nargs=0                    FloatermPrev   call floaterm#prev()
 command! -nargs=0                    FloatermNext   call floaterm#next()
-command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
-                                   \ FloatermToggle call floaterm#toggle(<f-args>)
-command! -nargs=0                    FloatermInfo   call floaterm#buflist#info()
-command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names
-                                   \ FloatermSend   call floaterm#send('<bang>', <line1>, <line2>, <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                                    \ FloatermNew    call s:new_floaterm(<f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                                    \ FloatermUpdate    call s:update_windowopts(<f-args>)
+command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
+                                   \ FloatermToggle call floaterm#toggle(<f-args>)
+command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                                   \ FloatermSend   call floaterm#send('<bang>', <line1>, <line2>, <f-args>)
 
 function! s:new_floaterm(...) abort
   let window_opts = {}
