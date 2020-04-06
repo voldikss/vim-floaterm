@@ -73,30 +73,39 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 ### Commands
 
-- `:FloatermNew [options] [cmd]` Open a floating terminal window.
+- `:FloatermNew [options] [cmd]` Open a floaterm window.
 
   - If `cmd` exists, it will be executed automatically after the shell startup.
-  - The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance.
+  - The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position` and `name`.
+    - `height` see `g:floaterm_height`
+    - `width` see `g:floaterm_width`
+    - `wintype` see `g:floaterm_wintype`
+    - `position` see `g:floaterm_position`
+    - `name` name of the floaterm
   - Use `<TAB>` to get completion.
 
   For example, command
 
   ```vim
-  :FloatermNew height=0.6 width=0.4 wintype='floating' name='floaterm1' ranger --cmd="cd ~"
+  :FloatermNew height=0.6 width=0.4 wintype='floating' name='floaterm1' position='topleft' ranger --cmd="cd ~"
   ```
 
-  will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"`. For `height` and `width`, please see `g:floaterm_height` and `g:floaterm_width`.
+  will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
+
+- `:FloatermUpdate [options]` Update floaterm window attributes.
+
+  - The `options` is the same as in `:FloatermNew`.
 
 - `:FloatermToggle [floaterm_name]` Open or hide the floaterm window.
 
-  - If `floaterm_name` exists, switch to the floaterm instance whose `name` attribute is `floaterm_name`.
+  - If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
   - Use `<TAB>` to get completion.
 
-* `:FloatermPrev` Switch to the previous floaterm instance
+- `:FloatermPrev` Switch to the previous floaterm instance
 
-* `:FloatermNext` Switch to the next floaterm instance
+- `:FloatermNext` Switch to the next floaterm instance
 
-* `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
+- `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
 
   - If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
   - Use `<TAB>` to get completion.
