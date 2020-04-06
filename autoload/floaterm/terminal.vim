@@ -22,9 +22,8 @@ function! s:on_open() abort
     execute 'setlocal winblend=' . g:floaterm_winblend
     setlocal winhighlight=NormalFloat:FloatermNF,Normal:FloatermNF
     augroup close_floaterm_window
-      autocmd!
-      autocmd TermClose <buffer> call s:on_floaterm_close(bufnr('%'))
-      autocmd BufHidden <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
+      autocmd! TermClose <buffer> call s:on_floaterm_close(bufnr('%'))
+      autocmd! BufHidden <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
