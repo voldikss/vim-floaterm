@@ -1,6 +1,7 @@
 filetype off
 let &runtimepath .= ',' . expand('<sfile>:p:h:h')
 let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/vader.vim'
+echom &runtimepath
 filetype plugin indent on
 syntax enable
 

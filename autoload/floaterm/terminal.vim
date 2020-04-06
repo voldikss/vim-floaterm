@@ -22,11 +22,10 @@ function! s:on_open() abort
     execute 'setlocal winblend=' . g:floaterm_winblend
     setlocal winhighlight=NormalFloat:FloatermNF,Normal:FloatermNF
     augroup close_floaterm_window
-      autocmd!
-      autocmd TermClose <buffer> if &filetype ==# 'floaterm' | bdelete! | endif
-      autocmd TermClose <buffer> call floaterm#floatwin#hide_border()
-      autocmd TermClose <buffer> doautocmd BufDelete
-      autocmd BufHidden <buffer> call floaterm#floatwin#hide_border()
+      autocmd! TermClose <buffer> if &filetype ==# 'floaterm' | bdelete! | endif
+      autocmd! TermClose <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
+      autocmd! TermClose <buffer> doautocmd BufDelete
+      autocmd! BufHidden <buffer> call floaterm#floatwin#hide_border(bufnr('%'))
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
@@ -94,7 +93,6 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
-  "call floaterm#hide()
   let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
   call floaterm#terminal#open(a:bufnr, '', {}, window_opts)
 endfunction

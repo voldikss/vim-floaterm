@@ -1,19 +1,19 @@
-Execute (Define functions and get original bufnr):
-  function! AssertFiletype(filetype)
+Execute (Setup functions):
+  function! AssertFiletype(filetype) abort
     AssertEqual a:filetype, &filetype
   endfunction
-  function! AssertBufnr(bufnr)
+  function! AssertBufnr(bufnr) abort
     AssertEqual a:bufnr, bufnr('%')
   endfunction
-  function! CheckWindow(if_floaterm)
+  function! CheckWindow(if_floaterm) abort
     let has_floaterm = 0
     let has_floaterm_border = 0
     for i in range(1, winnr('$'))
       let filetype = getbufvar(winbufnr(i), '&filetype')
       if filetype ==# 'floaterm'
-        let has_floaterm += 1
+        let has_floaterm = 1
       elseif filetype ==# 'floaterm_border'
-        let has_floaterm_border += 1
+        let has_floaterm_border = 1
       endif
     endfor
     if a:if_floaterm
@@ -24,24 +24,26 @@ Execute (Define functions and get original bufnr):
       AssertEqual 0, has_floaterm_border
     endif
   endfunction
+
+Execute (Get original bufnr):
   let buffer0 = bufnr('%')
 
-Do (Open first floaterm):
-  \<F7>
+Execute (Open first floaterm):
+  FloatermNew height=0.3 width=0.4 wintype='floating' name='floating_floaterm_1'
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   let buffer1 = bufnr('%')
 
-Do (Open second floaterm):
-  \<F7>
+Execute (Open second floaterm):
+  FloatermNew height=0.3 width=0.4 wintype='floating' name='normal_floaterm_2'
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   let buffer2 = bufnr('%')
 
-Do (Open third floaterm):
-  \<F7>
+Execute (Open third floaterm):
+  FloatermNew height=0.3 width=0.4 wintype='floating' name='floating_floaterm_3'
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
@@ -54,8 +56,8 @@ Then:
   call CheckWindow(v:false)
   call AssertBufnr(buffer0)
 
-Do (Toggle open floaterm):
-  \<F12>
+Execute (Toggle open floaterm):
+  FloatermToggle
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
@@ -68,43 +70,43 @@ Then:
   call CheckWindow(v:false)
   call AssertBufnr(buffer0)
 
-Do (Next floaterm):
-  \<F9>
+Execute (Next floaterm):
+  FloatermNext
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   call AssertBufnr(buffer1)
 
-Do (Next floaterm):
-  \<F9>
+Execute (Next floaterm):
+  FloatermNext
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   call AssertBufnr(buffer2)
 
-Do (Next floaterm):
-  \<F9>
+Execute (Next floaterm):
+  FloatermNext
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   call AssertBufnr(buffer3)
 
-Do (Prev floaterm):
-  \<F8>
+Execute (Prev floaterm):
+  FloatermPrev
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   call AssertBufnr(buffer2)
 
-Do (Prev floaterm):
-  \<F8>
+Execute (Prev floaterm):
+  FloatermPrev
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   call AssertBufnr(buffer1)
 
-Do (Insert a floaterm between first and second):
-  \<F7>
+Execute (Insert a floaterm between first and second):
+  FloatermNew
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)

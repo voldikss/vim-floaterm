@@ -44,8 +44,9 @@ function! s:add_border(winid) abort
   let win_opts.height += 2
   let win_opts.style = 'minimal'
   let win_opts.focusable = v:false
-  let s:border_winid = nvim_open_win(border_bufnr, v:false, win_opts)
-  call nvim_win_set_option(s:border_winid, 'winhl', 'NormalFloat:FloatermBorderNF')
+  let border_winid = nvim_open_win(border_bufnr, v:false, win_opts)
+  call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorderNF')
+  return border_winid
 endfunction
 
 function! s:floatwin_pos(width, height, pos) abort
@@ -110,7 +111,8 @@ function! floaterm#floatwin#nvim_open_win(bufnr, width, height, pos) abort
     \ 'style':'minimal'
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, opts)
-  call s:add_border(winid)
+  let border_winid = s:add_border(winid)
+  call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
   call nvim_set_current_win(winid)
 endfunction
 
@@ -118,8 +120,10 @@ function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
-function! floaterm#floatwin#hide_border(...) abort
-  if exists('s:border_winid') && s:winexists(s:border_winid)
-    call nvim_win_close(s:border_winid, v:true)
+function! floaterm#floatwin#hide_border(bufnr, ...) abort
+  let winid = getbufvar(a:bufnr, 'floaterm_border_winid', v:null)
+  if winid != v:null && s:winexists(winid)
+    call nvim_win_close(winid, v:true)
   endif
+  call setbufvar(a:bufnr, 'floaterm_border_winid', v:null)
 endfunction

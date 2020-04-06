@@ -10,8 +10,8 @@ Use neovim terminal in the floating window.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
-  - [Global variables](#global-variables)
   - [Commands](#commands)
+  - [Global variables](#global-variables)
   - [Keymaps](#keymaps)
   - [Change highlight](#change-highlight)
 - [More use cases and demos](#more-use-cases-and-demos)
@@ -65,23 +65,45 @@ Plug 'voldikss/vim-floaterm'
 call dein#add('voldikss/vim-floaterm')
 ```
 
-## Usage
+## Basic Usage
 
-Use `:FloatermNew` command to open a terminal window, `:FloatermToggle` to hide/reopen that. The filetype of the terminal buffer is set to `floaterm`.
+Use `:FloatermNew` command to open a terminal window, use `:FloatermToggle` to hide/reopen that. The filetype of the terminal buffer is set to `floaterm`.
 
-Generally just one floaterm instance is enough. If you've opened more than one floaterm instances, they are attached to a double-circular-linkedlist. Then you can use `:FloatermNext` or `:FloatermPrev` to switch between them.
+If you've opened multiple floaterm instances, they will be attached to a double-circular-linkedlist. Then you can use `:FloatermNext` or `:FloatermPrev` to switch between them.
 
 ### Commands
 
-- `:FloatermNew [cmd]` Open a floating terminal window, if `cmd` exists, it will be executed after shell startup
+- `:FloatermNew [options] [cmd]` Open a floating terminal window.
 
-- `:FloatermToggle` Open or hide the floaterm window
+  - If `cmd` exists, it will be executed automatically after the shell startup.
+  - The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance.
+  - Use `<TAB>` to get completion.
 
-- `:FloatermPrev` Switch to the previous floaterm window
+  For example, command
 
-- `:FloatermNext` Switch to the next floaterm window
+  ```vim
+  :FloatermNew height=0.6 width=0.4 wintype='floating' name='floaterm1' ranger --cmd="cd ~"
+  ```
 
-- `:FloatermSend` Send selected lines to a job in floaterm. Typically this command is executed with a range, i.e., `:'<,'>FloatermSend`, if no ranges, send the current line. Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
+  will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"`. For `height` and `width`, please see `g:floaterm_height` and `g:floaterm_width`.
+
+- `:FloatermToggle [floaterm_name]` Open or hide the floaterm window.
+
+  - If `floaterm_name` exists, switch to the floaterm instance whose `name` attribute is `floaterm_name`.
+  - Use `<TAB>` to get completion.
+
+* `:FloatermPrev` Switch to the previous floaterm instance
+
+* `:FloatermNext` Switch to the next floaterm instance
+
+* `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
+
+  - If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
+  - Use `<TAB>` to get completion.
+
+  Typically this command is executed with a range. i.e., `:'<,'>FloatermSend`, if no ranges, send the current line.
+
+  Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
 
 ## Global variables
 
@@ -153,11 +175,22 @@ You can also use other keys as shown below:
 let g:floaterm_keymap_new = '<Leader>fn'
 ```
 
-Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugins manager, the keymap won't take effect. Actually you don't need the on-demand loading for this plugin as it even doesn't slow your startup.
+Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugins manager, the keymap won't take effect(`:help load-plugins`). Then you have to define the key bindings by yourself: put the code used to define the key bindings in your `vimrc`. For example,
+
+```vim
+nnoremap   <silent>   <F7>    :FloatermNew<CR>'
+tnoremap   <silent>   <F7>    <C-\><C-n>:FloatermNew<CR>'
+nnoremap   <silent>   <F8>    :FloatermPrev<CR>'
+tnoremap   <silent>   <F8>    <C-\><C-n>:FloatermPrev<CR>'
+nnoremap   <silent>   <F9>    :FloatermNext<CR>'
+tnoremap   <silent>   <F9>    <C-\><C-n>:FloatermNext<CR>'
+nnoremap   <silent>   <F10>   :FloatermToggle<CR>'
+tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>'
+```
 
 ### Change highlight
 
-This plugin supplies two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_type` is `'floating'`) window.
+This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_type` is `'floating'`) window.
 
 By default, they are both linked to `NormalFloat`. To customize, use `hi` command together with the colors you prefer.
 
@@ -308,7 +341,7 @@ Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocLi
 
 ### Integrate with [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
-This plugin already has a builtin runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/). To use it, change `g:asynctasks_term_pos` to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks configuration files. Then your task will be ran in the floaterm window. See asynctasks.vim [WIKI](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
+This plugin has a builtin runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/). To use it, set `g:asynctasks_term_pos` to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks configuration files. Then your task will be ran in the floaterm instance. See asynctasks.vim [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
 
 If you are using on-demand loading, you need to copy the following lines to your `vimrc` to make it work.
 
@@ -408,7 +441,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
   autocmd FileType floaterm call s:floatermSettings()
   ```
 
-- #### I want to open normal floaterm in the vsplit window.
+- #### I want to open normal(non-floating) floaterm in a vsplit window.
 
   Use `:wincmd H` or `:wincmd L`. If you want a persistent layout, register an `autocmd`:
 
