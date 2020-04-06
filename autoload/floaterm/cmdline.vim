@@ -5,7 +5,7 @@
 " ============================================================================
 
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let win_opts_key = ['height=', 'width=', 'wintype=', 'name=', 'pos=']
+  let win_opts_key = ['height=', 'width=', 'wintype=', 'name=', 'position=']
   if a:cmd_line =~ '^FloatermNew'
     let candidates = win_opts_key + sort(getcompletion('', 'shellcmd'))
   elseif a:cmd_line =~ '^FloatermUpdate'
