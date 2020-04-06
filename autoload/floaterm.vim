@@ -59,13 +59,13 @@ function! floaterm#new(...) abort
       let [name, opts, send2shell] = WrapFunc(cmd)
       if send2shell
         let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
-        call floaterm#terminal#send(bufnr, [cmd])
+        call floaterm#terminal#send(bufnr, [name])
       else
-        let bufnr = floaterm#terminal#open(-1, cmd, opts, window_opts)
+        let bufnr = floaterm#terminal#open(-1, name, opts, window_opts)
       endif
     else
       let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
-      call floaterm#terminal#send(bufnr, [cmd])
+      call floaterm#terminal#send(bufnr, [name])
     endif
   else
     let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
