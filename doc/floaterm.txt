@@ -54,7 +54,7 @@ FEATURES                                                 *floaterm-features*
 ==============================================================================
 VARIABLES                                            *floaterm-variables*
 
-g:floaterm_type                             *g:floaterm_type*
+g:floaterm_wintype                             *g:floaterm_wintype*
 
 	Available: "floating"(neovim only), "normal"(vim8 and neovim)
 

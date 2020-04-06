@@ -5,7 +5,7 @@ echom &runtimepath
 filetype plugin indent on
 syntax enable
 
-let g:floaterm_type          = 'floating'
+let g:floaterm_wintype       = 'floating'
 let g:floaterm_keymap_new    = '<F7>'
 let g:floaterm_keymap_prev   = '<F8>'
 let g:floaterm_keymap_next   = '<F9>'

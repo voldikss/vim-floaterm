@@ -107,7 +107,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 ## Global variables
 
-- **`g:floaterm_type`**
+- **`g:floaterm_wintype`**
 
   Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or you don't like floating window.
 
@@ -190,7 +190,7 @@ tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>'
 
 ### Change highlight
 
-This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_type` is `'floating'`) window.
+This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'`) window.
 
 By default, they are both linked to `NormalFloat`. To customize, use `hi` command together with the colors you prefer.
 

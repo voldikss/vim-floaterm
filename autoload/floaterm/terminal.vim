@@ -7,8 +7,8 @@
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
 
-if g:floaterm_type != v:null
-  let s:wintype = g:floaterm_type
+if g:floaterm_wintype != v:null
+  let s:wintype = g:floaterm_wintype
 elseif has('nvim') && exists('*nvim_win_set_config')
   let s:wintype = 'floating'
 else
