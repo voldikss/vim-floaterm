@@ -73,98 +73,99 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 ### Commands
 
-- `:FloatermNew [options] [cmd]` Open a floaterm window.
+#### `:FloatermNew [options] [cmd]` Open a floaterm window.
 
-  - If `cmd` exists, it will be executed automatically after the shell startup.
-  - The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position` and `name`.
-    - `height` see `g:floaterm_height`
-    - `width` see `g:floaterm_width`
-    - `wintype` see `g:floaterm_wintype`
-    - `position` see `g:floaterm_position`
-    - `name` name of the floaterm
-  - Use `<TAB>` to get completion.
+- If `cmd` exists, it will be executed automatically after the shell startup.
+- The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position` and `name`.
+  - `height` see `g:floaterm_height`
+  - `width` see `g:floaterm_width`
+  - `wintype` see `g:floaterm_wintype`
+  - `position` see `g:floaterm_position`
+  - `name` name of the floaterm
+- Use `<TAB>` to get completion.
 
-  For example, command
+For example, command
 
-  ```vim
-  :FloatermNew height=0.6 width=0.4 wintype='floating' name='floaterm1' position='topleft' ranger --cmd="cd ~"
-  ```
+```vim
+:FloatermNew height=0.6 width=0.4 wintype='floating' name='floaterm1' position='topleft' ranger --cmd="cd ~"
+```
 
-  will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
+will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
 
-- `:FloatermUpdate [options]` Update floaterm window attributes.
+#### `:FloatermUpdate [options]` Update floaterm window attributes(`height`, `width`, etc.).
 
-  - The `options` is the same as in `:FloatermNew`.
+- The `options` is the same as in `:FloatermNew`.
+- Use `<TAB>` to get completion.
 
-- `:FloatermToggle [floaterm_name]` Open or hide the floaterm window.
+#### `:FloatermToggle [floaterm_name]` Open or hide the floaterm window.
 
-  - If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
-  - Use `<TAB>` to get completion.
+- If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
+- Use `<TAB>` to get completion.
 
-- `:FloatermPrev` Switch to the previous floaterm instance
+#### `:FloatermPrev` Switch to the previous floaterm instance
 
-- `:FloatermNext` Switch to the next floaterm instance
+#### `:FloatermNext` Switch to the next floaterm instance
 
-- `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
+#### `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
 
-  - If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
-  - Use `<TAB>` to get completion.
+- If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
+- Use `<TAB>` to get completion.
 
-  Typically this command is executed with a range. i.e., `:'<,'>FloatermSend`, if no ranges, send the current line.
+Typically this command is executed with a range. i.e., `:'<,'>FloatermSend`, if no ranges, send the current line.
 
-  Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
+Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
 
-## Global variables
+### Global variables
 
-- **`g:floaterm_wintype`**
+#### **`g:floaterm_wintype`**
 
-  Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or you don't like floating window.
+Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or you don't like floating window.
 
-- **`g:floaterm_width`**
+#### **`g:floaterm_width`**
 
-  Type `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`. Default: `0.6`
+Type `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`. Default: `0.6`
 
-- **`g:floaterm_height`**
+#### **`g:floaterm_height`**
 
-  Type `int` (number of lines) or `float` (between 0 and 1). If `float`, the height is relative to `&lines`. Default: `0.6`
+Type `int` (number of lines) or `float` (between 0 and 1). If `float`, the height is relative to `&lines`. Default: `0.6`
 
-- **`g:floaterm_winblend`**
+#### **`g:floaterm_winblend`**
 
-  Type `int`. The transparency of the floating terminal. Default: `0`
+Type `int`. The transparency of the floating terminal. Default: `0`
 
-- **`g:floaterm_position`**
+#### **`g:floaterm_position`**
 
-  Type `string`. The position of the floating window. Available: `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
+Type `string`. The position of the floating window. Available: `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
-- **`g:floaterm_borderchars`**
+#### **`g:floaterm_borderchars`**
 
-  Type `array of string`. Characters of the floating window border.
+Type `array of string`. Characters of the floating window border.
 
-  Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
+Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
-- **`g:floaterm_rootmarkers`**
+#### **`g:floaterm_rootmarkers`**
 
-  Type `array of string`. If not empty, floaterm will be opened in the project root directory.
+Type `array of string`. If not empty, floaterm will be opened in the project root directory.
 
-  Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
+Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
 
-- **`g:floaterm_autoinsert`**
+#### **`g:floaterm_autoinsert`**
 
-  Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
+Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
 
-- **`g:floaterm_open_command`**
+#### **`g:floaterm_open_command`**
 
-  Type `string`. Command used for opening a file from within `:terminal`.
+Type `string`. Command used for opening a file from within `:terminal`.
 
-  Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
+Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
 
-- **`g:floaterm_gitcommit`**
+#### **`g:floaterm_gitcommit`**
 
-  Type `string`. Opening strategy for running `git commit` in floaterm window.
+Type `string`. Opening strategy for running `git commit` in floaterm window.
 
-  Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
+Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
 
-  Default: `v:null` which means this is disabled by default(use your own `$GIT_EDITOR`).
+Default: `v:null` which means this is disabled by default(use your own `$GIT_EDITOR`).
 
 ### Keymaps
 
@@ -184,17 +185,17 @@ You can also use other keys as shown below:
 let g:floaterm_keymap_new = '<Leader>fn'
 ```
 
-Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugins manager, the keymap won't take effect(`:help load-plugins`). Then you have to define the key bindings by yourself: put the code used to define the key bindings in your `vimrc`. For example,
+Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugins-managers, the keymap above won't take effect(`:help load-plugins`). Then you have to define the key bindings yourself by putting the code used to define the key bindings in your `vimrc`. For example,
 
 ```vim
-nnoremap   <silent>   <F7>    :FloatermNew<CR>'
-tnoremap   <silent>   <F7>    <C-\><C-n>:FloatermNew<CR>'
-nnoremap   <silent>   <F8>    :FloatermPrev<CR>'
-tnoremap   <silent>   <F8>    <C-\><C-n>:FloatermPrev<CR>'
-nnoremap   <silent>   <F9>    :FloatermNext<CR>'
-tnoremap   <silent>   <F9>    <C-\><C-n>:FloatermNext<CR>'
-nnoremap   <silent>   <F10>   :FloatermToggle<CR>'
-tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>'
+nnoremap   <silent>   <F7>    :FloatermNew<CR>
+tnoremap   <silent>   <F7>    <C-\><C-n>:FloatermNew<CR>
+nnoremap   <silent>   <F8>    :FloatermPrev<CR>
+tnoremap   <silent>   <F8>    <C-\><C-n>:FloatermPrev<CR>
+nnoremap   <silent>   <F9>    :FloatermNext<CR>
+tnoremap   <silent>   <F9>    <C-\><C-n>:FloatermNext<CR>
+nnoremap   <silent>   <F10>   :FloatermToggle<CR>
+tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>
 ```
 
 ### Change highlight
