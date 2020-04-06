@@ -32,14 +32,14 @@ function! s:add_border(winid) abort
   " Reuse s:add_border
   let border_bufnr = s:nvim_create_buf(lines, buf_opts)
   call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
-  let win_opts.row -= (win_opts.anchor[0] ==# 'N' ? 1 : -1)
+  let win_opts.row -= (win_opts.anchor[0] == 'N' ? 1 : -1)
   " A bug fix
   if win_opts.row < 0
     let win_opts.row = 1
     call nvim_win_set_config(a:winid, win_opts)
     let win_opts.row = 0
   endif
-  let win_opts.col -= (win_opts.anchor[1] ==# 'W' ? 1 : -1)
+  let win_opts.col -= (win_opts.anchor[1] == 'W' ? 1 : -1)
   let win_opts.width += 2
   let win_opts.height += 2
   let win_opts.style = 'minimal'
@@ -50,31 +50,42 @@ function! s:add_border(winid) abort
 endfunction
 
 function! s:floatwin_pos(width, height, pos) abort
-  if a:pos ==# 'topright'
+  if a:pos == 'topright'
     let row = 2
     let col = &columns - 1
-    let vert = 'N'
-    let hor = 'E'
-  elseif a:pos ==# 'topleft'
+    let anchor = 'NE'
+  elseif a:pos == 'topleft'
     let row = 2
     let col = 1
-    let vert = 'N'
-    let hor = 'W'
-  elseif a:pos ==# 'bottomright'
+    let anchor = 'NW'
+  elseif a:pos == 'bottomright'
     let row = &lines - 3
     let col = &columns - 1
-    let vert = 'S'
-    let hor = 'E'
-  elseif a:pos ==# 'bottomleft'
+    let anchor = 'SE'
+  elseif a:pos == 'bottomleft'
     let row = &lines - 3
     let col = 1
-    let vert = 'S'
-    let hor = 'W'
-  elseif a:pos ==# 'center'
+    let anchor = 'SW'
+  elseif a:pos == 'top'
+    let row = 2
+    let col = (&columns - a:width)/2
+    let anchor = 'NW'
+  elseif a:pos == 'right'
+    let row = (&lines - a:height)/2
+    let col = &columns - 1
+    let anchor = 'NE'
+  elseif a:pos == 'bottom'
+    let row = &lines - 3
+    let col = (&columns - a:width)/2
+    let anchor = 'SW'
+  elseif a:pos == 'left'
+    let row = (&lines - a:height)/2
+    let col = 1
+    let anchor = 'NW'
+  elseif a:pos == 'center'
     let row = (&lines - a:height)/2
     let col = (&columns - a:width)/2
-    let vert = 'N'
-    let hor = 'W'
+    let anchor = 'NW'
     if row < 0
       let row = 0
     endif
@@ -95,15 +106,16 @@ function! s:floatwin_pos(width, height, pos) abort
     else
       let hor = 'E'
     endif
+    let anchor = vert . hor
   endif
-  return [row, col, vert, hor]
+  return [row, col, anchor]
 endfunction
 
 function! floaterm#floatwin#nvim_open_win(bufnr, width, height, pos) abort
-  let [row, col, vert, hor] = s:floatwin_pos(a:width, a:height, a:pos)
+  let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'relative': 'editor',
-    \ 'anchor': vert . hor,
+    \ 'anchor': anchor,
     \ 'row': row,
     \ 'col': col,
     \ 'width': a:width,

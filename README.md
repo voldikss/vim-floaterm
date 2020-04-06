@@ -119,7 +119,7 @@ Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims th
 
 #### **`g:floaterm_wintype`**
 
-Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or you don't like floating window.
+Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin`.
 
 #### **`g:floaterm_width`**
 
@@ -135,7 +135,10 @@ Type `int`. The transparency of the floating terminal. Default: `0`
 
 #### **`g:floaterm_position`**
 
-Type `string`. The position of the floating window. Available: `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
+Type `string`. The position of the floating window. Available values:
+
+- If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
+- If `wintype` is `floating`: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
 #### **`g:floaterm_borderchars`**
 

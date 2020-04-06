@@ -33,7 +33,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let wintype = ['normal', 'floating']
     let candidates = map(wintype, {idx -> "wintype='" . wintype[idx] . "'"})
   elseif match(prefix, 'position=') > -1
-    let position = ['center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
+    let position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
     let candidates = map(position, {idx -> "position='" . position[idx] . "'"})
   endif
   return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
