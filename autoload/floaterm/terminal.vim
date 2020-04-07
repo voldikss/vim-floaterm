@@ -15,7 +15,7 @@ else
   let s:wintype = 'normal'
 endif
 
-function! s:on_open() abort
+function! s:on_floaterm_open() abort
   setlocal nobuflisted
   setlocal filetype=floaterm
   if has('nvim')
@@ -62,7 +62,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
       call floaterm#window#open_split(height, width, pos)
       execute 'buffer ' . a:bufnr
     endif
-    call s:on_open()
+    call s:on_floaterm_open()
     return 0
   endif
 
@@ -101,7 +101,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
     execute 'file ' . term_name
   endif
 
-  call s:on_open()
+  call s:on_floaterm_open()
   return bufnr
 endfunction
 
