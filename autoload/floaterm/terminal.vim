@@ -15,15 +15,16 @@ else
   let s:wintype = 'normal'
 endif
 
-function! s:on_floaterm_open() abort
-  setlocal nobuflisted
-  setlocal filetype=floaterm
+function! s:on_floaterm_open(bufnr) abort
+  call setbufvar(a:bufnr, '&buflisted', 0)
+  call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
-    execute 'setlocal winblend=' . g:floaterm_winblend
-    setlocal winhighlight=NormalFloat:FloatermNF,Normal:FloatermNF
+    let winnr = bufwinnr(a:bufnr)
+    call setwinvar(winnr, '&winblend', g:floaterm_winblend)
+    call setwinvar(winnr, '&winhl', 'NormalFloat:FloatermNF,Normal:FloatermNF')
     augroup close_floaterm_window
-      autocmd! TermClose <buffer> call s:on_floaterm_close(bufnr('%'))
-      autocmd! BufHidden <buffer> call floaterm#window#hide_border(bufnr('%'))
+      execute 'autocmd! TermClose <buffer=' . a:bufnr . '> call s:on_floaterm_close(' . a:bufnr .')'
+      execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_border(' . a:bufnr . ')'
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
@@ -62,7 +63,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
       call floaterm#window#open_split(height, width, pos)
       execute 'buffer ' . a:bufnr
     endif
-    call s:on_floaterm_open()
+    call s:on_floaterm_open(a:bufnr)
     return 0
   endif
 
@@ -101,7 +102,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
     execute 'file ' . term_name
   endif
 
-  call s:on_floaterm_open()
+  call s:on_floaterm_open(bufnr)
   return bufnr
 endfunction
 

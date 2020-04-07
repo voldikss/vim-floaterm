@@ -120,6 +120,7 @@ function! floaterm#window#nvim_open_win(bufnr, width, height, pos) abort
     call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
   endif
   call nvim_set_current_win(winid)
+  return winid
 endfunction
 
 function! s:winexists(winid) abort
