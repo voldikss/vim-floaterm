@@ -114,8 +114,11 @@ function! floaterm#window#nvim_open_win(bufnr, width, height, pos) abort
     \ 'style':'minimal'
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, opts)
-  let border_winid = s:add_border(winid)
-  call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
+  let border_winid = getbufvar(a:bufnr, 'floaterm_border_winid', v:null)
+  if border_winid == v:null || !s:winexists(border_winid)
+    let border_winid = s:add_border(winid)
+    call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
+  endif
   call nvim_set_current_win(winid)
 endfunction
 
