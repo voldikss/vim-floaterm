@@ -131,7 +131,7 @@ endfunction
 function! floaterm#resolver#get_root() abort
   let markers = g:floaterm_rootmarkers
   let strict = 0
-  let l:hr = s:find_root('%', markers, strict)
+  let l:hr = s:find_root(getcwd(), markers, strict)
   if s:is_windows
     let l:hr = s:StringReplace(l:hr, '/', "\\")
   endif
