@@ -59,15 +59,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
     if wintype ==# 'floating'
       call floaterm#window#nvim_open_win(a:bufnr, width, height, pos)
     else
-      if pos == 'top'
-        execute 'topleft' . height . 'split'
-      elseif pos == 'left'
-        execute 'topleft' . width . 'vsplit'
-      elseif pos == 'right'
-        execute 'botright' . width . 'vsplit'
-      else " default position: bottom
-        execute 'botright' . height . 'split'
-      endif
+      call floaterm#window#open_split(height, width, pos)
       execute 'buffer ' . a:bufnr
     endif
     call s:on_open()
@@ -81,15 +73,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
     let s:channel_map[bufnr] = ch
   else
     if has('nvim')
-      if pos == 'top'
-        execute 'topleft' . height . 'split'
-      elseif pos == 'left'
-        execute 'topleft' . width . 'vsplit'
-      elseif pos == 'right'
-        execute 'botright' . width . 'vsplit'
-      else " default position: bottom
-        execute 'botright' . height . 'split'
-      endif
+      call floaterm#window#open_split(height, width, pos)
       enew
       let bufnr = bufnr('%')
       let ch = termopen(a:cmd, a:opts)

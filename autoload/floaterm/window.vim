@@ -142,3 +142,15 @@ function! floaterm#window#find_floaterm_winnr() abort
   endfor
   return found_winnr
 endfunction
+
+function! floaterm#window#open_split(height, width, pos) abort
+  if a:pos == 'top'
+    execute 'topleft' . a:height . 'split'
+  elseif a:pos == 'left'
+    execute 'topleft' . a:width . 'vsplit'
+  elseif a:pos == 'right'
+    execute 'botright' . a:width . 'vsplit'
+  else " default position: bottom
+    execute 'botright' . a:height . 'split'
+  endif
+endfunction
