@@ -65,7 +65,7 @@ function! floaterm#new(...) abort
       endif
     else
       let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
-      call floaterm#terminal#send(bufnr, [name])
+      call floaterm#terminal#send(bufnr, [cmd])
     endif
   else
     let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
