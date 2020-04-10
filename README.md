@@ -51,6 +51,8 @@ Use neovim terminal in the floating window.
 
 - NeoVim supporting `floating window` is better, but not necessary
 
+Run `:checkhealth` to check the environment.
+
 ## Installation
 
 - vim-plug
@@ -456,10 +458,10 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 - #### I want to open normal(non-floating) floaterm in a vsplit window.
 
-  Use `:wincmd H` or `:wincmd L`. If you want a persistent layout, register an `autocmd`:
+  Use `:FloatermUpdate`
 
   ```vim
-  autocmd FileType floaterm wincmd H
+  :FloatermUpdate wintype='normal' position='right'
   ```
 
 ## Credits
