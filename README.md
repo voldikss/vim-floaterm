@@ -464,6 +464,10 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
   :FloatermUpdate wintype='normal' position='right'
   ```
 
+- #### Not starting insert mode after creating a new floaterm...
+
+  See option [g:floaterm_autoinsert](#gfloaterm_autoinsert), also [#52](https://github.com/voldikss/vim-floaterm/issues/52) might be helpful.
+
 ## Credits
 
 - [floaterm executable](https://github.com/voldikss/vim-floaterm/blob/master/bin/floaterm) is modified from [vim-terminal-help](https://github.com/skywind3000/vim-terminal-help/blob/master/tools/utils/drop)
