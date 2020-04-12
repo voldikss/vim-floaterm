@@ -15,7 +15,11 @@ function! floaterm#cmdline#parse_new(arglist) abort
         let cmd = join(a:arglist[c:])
         break
       elseif len(opt) == 2
-        let window_opts[opt[0]] = eval(opt[1])
+        let [key, value] = opt
+        if key == 'height' || key == 'width'
+          let value = eval(value)
+        endif
+        let window_opts[key] = value
       endif
       let c += 1
     endfor
@@ -24,7 +28,7 @@ function! floaterm#cmdline#parse_new(arglist) abort
 endfunction
 
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let win_opts_key = ['height=', 'width=', "wintype='", "name='", "position='"]
+  let win_opts_key = ['height=', 'width=', 'wintype=', 'name=', 'position=']
   if a:cmd_line =~ '^FloatermNew'
     let candidates = win_opts_key + sort(getcompletion('', 'shellcmd'))
   elseif a:cmd_line =~ '^FloatermUpdate'
@@ -50,10 +54,10 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
 
   if match(prefix, 'wintype=') > -1
     let wintype = ['normal', 'floating']
-    let candidates = map(wintype, {idx -> "wintype='" . wintype[idx] . "'"})
+    let candidates = map(wintype, {idx -> 'wintype=' . wintype[idx]})
   elseif match(prefix, 'position=') > -1
     let position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
-    let candidates = map(position, {idx -> "position='" . position[idx] . "'"})
+    let candidates = map(position, {idx -> 'position=' . position[idx]})
   endif
   return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
 endfunction

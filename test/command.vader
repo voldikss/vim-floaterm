@@ -29,21 +29,21 @@ Execute (Get original bufnr):
   let buffer0 = bufnr('%')
 
 Execute (Open first floaterm):
-  FloatermNew height=0.3 width=0.4 wintype='floating' name='floating_floaterm_1'
+  FloatermNew height=0.3 width=0.4 wintype=floating name=floating_floaterm_1
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   let buffer1 = bufnr('%')
 
 Execute (Open second floaterm):
-  FloatermNew height=0.3 width=0.4 wintype='floating' name='normal_floaterm_2'
+  FloatermNew height=0.3 width=0.4 wintype=floating name=normal_floaterm_2
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)
   let buffer2 = bufnr('%')
 
 Execute (Open third floaterm):
-  FloatermNew height=0.3 width=0.4 wintype='floating' name='floating_floaterm_3'
+  FloatermNew height=0.3 width=0.4 wintype=floating name=floating_floaterm_3
 Then:
   call AssertFiletype('floaterm')
   call CheckWindow(v:true)

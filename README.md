@@ -89,7 +89,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 For example, command
 
 ```vim
-:FloatermNew height=0.6 width=0.4 wintype='floating' name='floaterm1' position='topleft' ranger --cmd="cd ~"
+:FloatermNew height=0.6 width=0.4 wintype=floating name=floaterm1 position=topleft ranger --cmd="cd ~"
 ```
 
 will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
