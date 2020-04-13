@@ -427,7 +427,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## F.A.Q
 
-- #### This plugin leaves an empty buffer on startify window
+- #### This plugin leaves an empty buffer/window on startify window
 
   Put this code in your `vimrc`
 
