@@ -371,7 +371,7 @@ function! s:runner_proc(opts)
   call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
   stopinsert
   if &filetype == 'floaterm' && g:floaterm_autoinsert
-    startinsert
+    call floaterm#util#startinsert()
   endif
 endfunction
 

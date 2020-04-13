@@ -48,3 +48,11 @@ function! floaterm#util#edit(filename) abort
   call floaterm#hide()
   silent execute g:floaterm_open_command . ' ' . a:filename
 endfunction
+
+function! floaterm#util#startinsert() abort
+  if has('nvim')
+    startinsert
+  elseif mode() ==# 'n'
+    silent! execute 'normal! i'
+  endif
+endfunction

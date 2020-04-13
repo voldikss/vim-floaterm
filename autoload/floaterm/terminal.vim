@@ -28,7 +28,7 @@ function! s:on_floaterm_open(bufnr) abort
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
-    startinsert
+    call floaterm#util#startinsert()
   endif
 endfunction
 

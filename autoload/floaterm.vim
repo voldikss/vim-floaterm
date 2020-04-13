@@ -94,11 +94,7 @@ function! floaterm#toggle(...)  abort
     let found_winnr = floaterm#window#find_floaterm_winnr()
     if found_winnr > 0
       execute found_winnr . 'wincmd w'
-      if has('nvim')
-        startinsert
-      elseif mode() ==# 'n'
-        normal! i
-      endif
+      call floaterm#util#startinsert()
     else
       call floaterm#curr()
     endif
