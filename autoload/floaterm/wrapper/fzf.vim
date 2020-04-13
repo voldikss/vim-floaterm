@@ -1,3 +1,4 @@
+" vim:sw=2:
 " ============================================================================
 " FileName: fzf.vim
 " Author: voldikss <dyzplus@gmail.com>

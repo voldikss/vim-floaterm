@@ -1,3 +1,4 @@
+" vim:sw=2:
 " ============================================================================
 " FileName: fff.vim
 " Author: benwoodward <ben@terminalcoder.dev>

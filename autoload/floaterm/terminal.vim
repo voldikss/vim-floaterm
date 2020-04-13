@@ -1,3 +1,4 @@
+" vim:sw=2:
 " ============================================================================
 " FileName: terminal.vim
 " Author: voldikss <dyzplus@gmail.com>

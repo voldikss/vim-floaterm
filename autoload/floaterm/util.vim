@@ -1,3 +1,4 @@
+" vim:sw=2:
 " ============================================================================
 " FileName: autoload/floaterm/util.vim
 " Author: voldikss <dyzplus@gmail.com>
