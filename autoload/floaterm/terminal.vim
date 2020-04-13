@@ -6,10 +6,11 @@
 
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
+let s:is_nvim = has('nvim')
 
 if g:floaterm_wintype != v:null
   let s:wintype = g:floaterm_wintype
-elseif has('nvim') && exists('*nvim_win_set_config')
+elseif s:is_nvim && exists('*nvim_win_set_config')
   let s:wintype = 'floating'
 else
   let s:wintype = 'normal'
@@ -18,7 +19,7 @@ endif
 function! s:on_floaterm_open(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
-  if has('nvim')
+  if s:is_nvim
     let winnr = bufwinnr(a:bufnr)
     call setwinvar(winnr, '&winblend', g:floaterm_winblend)
     call setwinvar(winnr, '&winhl', 'NormalFloat:FloatermNF,Normal:FloatermNF')
@@ -73,7 +74,7 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
     let ch = termopen(a:cmd, a:opts)
     let s:channel_map[bufnr] = ch
   else
-    if has('nvim')
+    if s:is_nvim
       call floaterm#window#open_split(height, width, pos)
       enew
       let bufnr = bufnr('%')
@@ -114,7 +115,7 @@ endfunction
 function! floaterm#terminal#send(bufnr, cmds) abort
   let ch = get(s:channel_map, a:bufnr, v:null)
   if empty(ch) | return | endif
-  if has('nvim')
+  if s:is_nvim
     if !empty(a:cmds[len(a:cmds) - 1])
       call add(a:cmds, '')
     endif
@@ -138,7 +139,7 @@ endfunction
 
 " Check if a job is running in the buffer
 function! floaterm#terminal#jobexists(bufnr) abort
-  if has('nvim')
+  if s:is_nvim
     let jobid = getbufvar(a:bufnr, '&channel')
     return jobwait([jobid], 0)[0] == -1
   else
