@@ -5,7 +5,9 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-" ----------------------------------------------------------------------------
+"-----------------------------------------------------------------------------
+" script level variables and environment variables
+"-----------------------------------------------------------------------------
 let $VIM_SERVERNAME = v:servername
 let $VIM_EXE = v:progpath
 
@@ -22,11 +24,6 @@ if stridx($PATH, s:script) < 0
   endif
 endif
 
-function! s:get_wrappers() abort
-  let files = split(glob(s:wrappers . '/*.vim'), "\n")
-  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
-endfunction
-
 if g:floaterm_gitcommit != v:null
   autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
   if g:floaterm_gitcommit == 'floaterm'
@@ -39,9 +36,16 @@ if g:floaterm_gitcommit != v:null
   endif
 endif
 
+"-----------------------------------------------------------------------------
+" script level functions
+"-----------------------------------------------------------------------------
+function! s:get_wrappers() abort
+  let files = split(glob(s:wrappers . '/*.vim'), "\n")
+  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
+endfunction
 
 " ----------------------------------------------------------------------------
-" Main functions
+" main functions
 " ----------------------------------------------------------------------------
 function! floaterm#new(...) abort
   if !empty(g:floaterm_rootmarkers)
@@ -51,27 +55,26 @@ function! floaterm#new(...) abort
     endif
   endif
 
-  let [cmd, window_opts] = floaterm#cmdline#parse_new(a:000)
+  let [cmd, winopts] = floaterm#cmdline#parse_new(a:000)
   if cmd != ''
     let wrappers = s:get_wrappers()
     let maybe_wrapper = split(cmd, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
-      let [name, opts, send2shell] = WrapFunc(cmd)
+      let [name, jobopts, send2shell] = WrapFunc(cmd)
       if send2shell
-        let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
+        let bufnr = floaterm#terminal#open(-1, &shell, {}, winopts)
         call floaterm#terminal#send(bufnr, [name])
       else
-        let bufnr = floaterm#terminal#open(-1, name, opts, window_opts)
+        let bufnr = floaterm#terminal#open(-1, name, jobopts, winopts)
       endif
     else
-      let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
+      let bufnr = floaterm#terminal#open(-1, &shell, {}, winopts)
       call floaterm#terminal#send(bufnr, [cmd])
     endif
   else
-    let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
+    let bufnr = floaterm#terminal#open(-1, &shell, {}, winopts)
   endif
-  call floaterm#buflist#add(bufnr)
   return bufnr
 endfunction
 
@@ -83,16 +86,16 @@ function! floaterm#toggle(...)  abort
       call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
       return
     elseif bufnr == bufnr()
-      hide
+      call floaterm#window#hide_floaterm(bufnr)
     elseif bufwinnr(bufnr) > -1
       execute bufwinnr(bufnr) . 'wincmd w'
     else
       call floaterm#terminal#open_existing(bufnr)
     endif
   elseif &filetype == 'floaterm'
-    hide
+    call floaterm#window#hide_floaterm(bufnr())
   else
-    let found_winnr = floaterm#window#find_floaterm_winnr()
+    let found_winnr = floaterm#window#find_floaterm_window()
     if found_winnr > 0
       execute found_winnr . 'wincmd w'
       call floaterm#util#startinsert()
@@ -109,25 +112,14 @@ function! floaterm#update(...) abort
   endif
 
   let bufnr = bufnr('%')
-  let window_opts = {}
-  if a:000 != []
-    for arg in a:000
-      let opt = split(arg, '=')
-      let [key, value] = opt
-      if key == 'height' || key == 'width'
-        let value = eval(value)
-      endif
-      let window_opts[key] = value
-    endfor
-  endif
-
-  hide
-  call floaterm#buffer#update_window_opts(bufnr, window_opts)
+  let [_, winopts] = floaterm#cmdline#parse_new(a:000)
+  call floaterm#window#hide_floaterm(bufnr)
+  call floaterm#buffer#update_winopts(bufnr, winopts)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
 
 function! floaterm#next()  abort
-  call floaterm#hide()
+  call floaterm#window#hide_floaterm(bufnr())
   let next_bufnr = floaterm#buflist#find_next()
   if next_bufnr == -1
     let msg = 'No more floaterms'
@@ -138,7 +130,7 @@ function! floaterm#next()  abort
 endfunction
 
 function! floaterm#prev()  abort
-  call floaterm#hide()
+  call floaterm#window#hide_floaterm(bufnr())
   let prev_bufnr = floaterm#buflist#find_prev()
   if prev_bufnr == -1
     let msg = 'No more floaterms'
@@ -158,16 +150,14 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-" Hide current before opening another terminal window
+"-----------------------------------------------------------------------------
+" hide all floaterms
+"-----------------------------------------------------------------------------
 function! floaterm#hide() abort
-  while v:true
-    let found_winnr = floaterm#window#find_floaterm_winnr()
-    if found_winnr > 0
-      execute found_winnr . 'hide'
-    else
-      break
-    endif
-  endwhile
+  let buffers = floaterm#buflist#gather()
+  for bufnr in buffers
+    call floaterm#window#hide_floaterm(bufnr)
+  endfor
 endfunction
 
 function! floaterm#send(bang, startlnum, endlnum, ...) abort

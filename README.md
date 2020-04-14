@@ -2,7 +2,7 @@
 
 【[Introduction in Chinese|中文文档](https://zhuanlan.zhihu.com/p/107749687)】
 
-Use neovim terminal in the floating window.
+Use (neo)vim terminal in the floating/popup window.
 
 ![](https://user-images.githubusercontent.com/20282795/74799912-de268200-530c-11ea-9831-d412a7700505.png)
 
@@ -38,7 +38,7 @@ Use neovim terminal in the floating window.
 
 ## Features
 
-- Floating window support
+- NeoVim floatwin and Vim8 popup support
 - Open and toggle terminal window quickly
 - Multiple terminal instances
 - Customizable floating terminal style
@@ -122,7 +122,11 @@ Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims th
 
 #### **`g:floaterm_wintype`**
 
-Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin`.
+Type `string`. `'floating'`(neovim) or `'popup'` by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
+
+#### **`g:floaterm_wintitle`**
+
+Type `bool`. Whether to show floaterm info(e.g., `'floaterm: 1/3'`) at the top left corner of floaterm window. Default: `v:true`
 
 #### **`g:floaterm_width`**
 
@@ -141,7 +145,7 @@ Type `int`. The transparency of the floating terminal. Default: `0`
 Type `string`. The position of the floating window. Available values:
 
 - If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
-- If `wintype` is `floating`: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
+- If `wintype` is `floating` or `popup`: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
 #### **`g:floaterm_borderchars`**
 
@@ -206,7 +210,7 @@ tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>
 
 ### Change highlight
 
-This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'`) window.
+This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'` or `'popup'`) window.
 
 By default, they are both linked to `Normal`. To customize, use `hi` command together with the colors you prefer.
 
@@ -225,7 +229,7 @@ hi FloatermBorder guibg=orange guifg=cyan
 
 vim-floaterm is a nvim/vim terminal plugin, it can run all the command-line programs in the terminal even `nvim/vim` itself.
 
-**❗️Note**: The following cases should work both in NeoVim and Vim, if some of them don't work on Vim, try startuping Vim with `--servername` argument, i.e., `vim --servername /tmp/vimtmpfile`
+**❗️Note**: The following cases should work both in NeoVim and Vim, if some of them don't work on Vim, try startuping Vim with `--servername` argument, i.e., `vim --servername /tmp/vimtmpfile`(`:help client-server`).
 
 ### General
 
