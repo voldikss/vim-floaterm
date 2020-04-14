@@ -7,36 +7,36 @@
 
 " winid: floaterm window id
 function! s:add_border(winid, title) abort
-  let win_opts = nvim_win_get_config(a:winid)
+  let winopts = nvim_win_get_config(a:winid)
   let top = g:floaterm_borderchars[4] .
-          \ repeat(g:floaterm_borderchars[0], win_opts.width) .
+          \ repeat(g:floaterm_borderchars[0], winopts.width) .
           \ g:floaterm_borderchars[5]
   let mid = g:floaterm_borderchars[3] .
-          \ repeat(' ', win_opts.width) .
+          \ repeat(' ', winopts.width) .
           \ g:floaterm_borderchars[1]
   let bot = g:floaterm_borderchars[7] .
-          \ repeat(g:floaterm_borderchars[2], win_opts.width) .
+          \ repeat(g:floaterm_borderchars[2], winopts.width) .
           \ g:floaterm_borderchars[6]
   let top = floaterm#util#string_compose(top, 1, a:title)
-  let lines = [top] + repeat([mid], win_opts.height) + [bot]
+  let lines = [top] + repeat([mid], winopts.height) + [bot]
   let buf_opts = {}
   let buf_opts.synmaxcol = 3000 " #17
   let buf_opts.filetype = 'floaterm_border'
   let border_bufnr = floaterm#buffer#create(lines, buf_opts)
   call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
-  let win_opts.row -= (win_opts.anchor[0] == 'N' ? 1 : -1)
+  let winopts.row -= (winopts.anchor[0] == 'N' ? 1 : -1)
   " adjust offset
-  if win_opts.row < 0
-    let win_opts.row = 1
-    call nvim_win_set_config(a:winid, win_opts)
-    let win_opts.row = 0
+  if winopts.row < 0
+    let winopts.row = 1
+    call nvim_win_set_config(a:winid, winopts)
+    let winopts.row = 0
   endif
-  let win_opts.col -= (win_opts.anchor[1] == 'W' ? 1 : -1)
-  let win_opts.width += 2
-  let win_opts.height += 2
-  let win_opts.style = 'minimal'
-  let win_opts.focusable = v:false
-  let border_winid = nvim_open_win(border_bufnr, v:false, win_opts)
+  let winopts.col -= (winopts.anchor[1] == 'W' ? 1 : -1)
+  let winopts.width += 2
+  let winopts.height += 2
+  let winopts.style = 'minimal'
+  let winopts.focusable = v:false
+  let border_winid = nvim_open_win(border_bufnr, v:false, winopts)
   call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorder')
   return border_winid
 endfunction
@@ -45,7 +45,7 @@ function! s:build_title(bufnr) abort
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
   let idx = index(buffers, a:bufnr) + 1
-  return printf(' floaterm: %s/%s ', idx, cnt)
+  return printf(' floaterm: %s/%s', idx, cnt)
 endfunction
 
 function! s:floatwin_pos(width, height, pos) abort
@@ -138,7 +138,6 @@ function! floaterm#window#open_floating(bufnr, width, height, pos) abort
     let border_winid = s:add_border(winid, title)
     call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
   endif
-  call setbufvar(a:bufnr, 'floaterm_window_type', 'floating')
   return winid
 endfunction
 
@@ -163,9 +162,9 @@ function! floaterm#window#open_popup(bufnr, width, height, pos) abort
   let opts.title = s:build_title(a:bufnr)
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
-  call setbufvar(winbufnr(winid), '&filetype', 'floaterm')
+  call setbufvar(a:bufnr, '&filetype', 'floaterm')
   " refer: floaterm#window#hide_floaterm()
-  call setbufvar(a:bufnr, 'floaterm_window_type', 'popup')
+  call setbufvar(a:bufnr, 'popup', 1)
   return winid
 endfunction
 
@@ -181,7 +180,6 @@ function! floaterm#window#open_split(bufnr, height, width, pos) abort
   endif
   wincmd J
   enew
-  call setbufvar(a:bufnr, 'floaterm_window_type', 'normal')
   return win_getid()
 endfunction
 
@@ -194,21 +192,22 @@ function! floaterm#window#hide_floaterm_border(bufnr, ...) abort
 endfunction
 
 function! floaterm#window#hide_floaterm(bufnr) abort
-  let winid = getbufvar(a:bufnr, 'floaterm_window_id')
+  let winid = getbufvar(a:bufnr, 'floaterm_winid')
   if has('nvim')
-    if !s:winexists(winid)
-      return
-    endif
+    if !s:winexists(winid) | return | endif
     call nvim_win_close(winid, v:true)
-  elseif getbufvar(a:bufnr, 'floaterm_window_type', '') == 'popup'
+  elseif getbufvar(a:bufnr, 'popup', 1)
     call popup_close(winid)
+    call setbufvar(a:bufnr, 'popup', 0)
   else
     hide
   endif
 endfunction
 
-" Find **one** floaterm window
-function! floaterm#window#find_floaterm_winnr() abort
+"-----------------------------------------------------------------------------
+" find **one** visible floaterm window
+"-----------------------------------------------------------------------------
+function! floaterm#window#find_floaterm_window() abort
   let found_winnr = 0
   for winnr in range(1, winnr('$'))
     if getbufvar(winbufnr(winnr), '&filetype') ==# 'floaterm'

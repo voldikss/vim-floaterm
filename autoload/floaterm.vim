@@ -5,7 +5,9 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-" ----------------------------------------------------------------------------
+"-----------------------------------------------------------------------------
+" script level variables and environment variables
+"-----------------------------------------------------------------------------
 let $VIM_SERVERNAME = v:servername
 let $VIM_EXE = v:progpath
 
@@ -22,11 +24,6 @@ if stridx($PATH, s:script) < 0
   endif
 endif
 
-function! s:get_wrappers() abort
-  let files = split(glob(s:wrappers . '/*.vim'), "\n")
-  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
-endfunction
-
 if g:floaterm_gitcommit != v:null
   autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
   if g:floaterm_gitcommit == 'floaterm'
@@ -39,9 +36,16 @@ if g:floaterm_gitcommit != v:null
   endif
 endif
 
+"-----------------------------------------------------------------------------
+" script level functions
+"-----------------------------------------------------------------------------
+function! s:get_wrappers() abort
+  let files = split(glob(s:wrappers . '/*.vim'), "\n")
+  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
+endfunction
 
 " ----------------------------------------------------------------------------
-" Main functions
+" main functions
 " ----------------------------------------------------------------------------
 function! floaterm#new(...) abort
   if !empty(g:floaterm_rootmarkers)
@@ -51,25 +55,25 @@ function! floaterm#new(...) abort
     endif
   endif
 
-  let [cmd, window_opts] = floaterm#cmdline#parse_new(a:000)
+  let [cmd, winopts] = floaterm#cmdline#parse_new(a:000)
   if cmd != ''
     let wrappers = s:get_wrappers()
     let maybe_wrapper = split(cmd, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
-      let [name, job_opts, send2shell] = WrapFunc(cmd)
+      let [name, jobopts, send2shell] = WrapFunc(cmd)
       if send2shell
-        let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
+        let bufnr = floaterm#terminal#open(-1, &shell, {}, winopts)
         call floaterm#terminal#send(bufnr, [name])
       else
-        let bufnr = floaterm#terminal#open(-1, name, job_opts, window_opts)
+        let bufnr = floaterm#terminal#open(-1, name, jobopts, winopts)
       endif
     else
-      let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
+      let bufnr = floaterm#terminal#open(-1, &shell, {}, winopts)
       call floaterm#terminal#send(bufnr, [cmd])
     endif
   else
-    let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
+    let bufnr = floaterm#terminal#open(-1, &shell, {}, winopts)
   endif
   return bufnr
 endfunction
@@ -91,7 +95,7 @@ function! floaterm#toggle(...)  abort
   elseif &filetype == 'floaterm'
     call floaterm#window#hide_floaterm(bufnr())
   else
-    let found_winnr = floaterm#window#find_floaterm_winnr()
+    let found_winnr = floaterm#window#find_floaterm_window()
     if found_winnr > 0
       execute found_winnr . 'wincmd w'
       call floaterm#util#startinsert()
@@ -108,20 +112,9 @@ function! floaterm#update(...) abort
   endif
 
   let bufnr = bufnr('%')
-  let window_opts = {}
-  if a:000 != []
-    for arg in a:000
-      let opt = split(arg, '=')
-      let [key, value] = opt
-      if key == 'height' || key == 'width'
-        let value = eval(value)
-      endif
-      let window_opts[key] = value
-    endfor
-  endif
-
+  let [_, winopts] = floaterm#cmdline#parse_new(a:000)
   call floaterm#window#hide_floaterm(bufnr)
-  call floaterm#buffer#update_window_opts(bufnr, window_opts)
+  call floaterm#buffer#update_winopts(bufnr, winopts)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
 
@@ -157,7 +150,9 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-" Hide all floaterms
+"-----------------------------------------------------------------------------
+" hide all floaterms
+"-----------------------------------------------------------------------------
 function! floaterm#hide() abort
   let buffers = floaterm#buflist#gather()
   for bufnr in buffers

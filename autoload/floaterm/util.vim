@@ -51,16 +51,17 @@ function! floaterm#util#edit(filename) abort
 endfunction
 
 function! floaterm#util#startinsert() abort
+  if mode() == 'i' | return | endif
   if has('nvim')
     startinsert
-  elseif mode() ==# 'n'
+  else
     silent! execute 'normal! i'
   endif
 endfunction
 
-"----------------------------------------------------------------------
+"-----------------------------------------------------------------------------
 " compose two string(thank skywind3000/vim-quickui)
-"----------------------------------------------------------------------
+"-----------------------------------------------------------------------------
 function! floaterm#util#string_compose(target, pos, source)
   if a:source == ''
     return a:target
@@ -76,6 +77,9 @@ function! floaterm#util#string_compose(target, pos, source)
     let target .= repeat(' ', pos - strchars(target))
   endif
   let target .= source
-  let target .= strcharpart(a:target, pos + strchars(source))
+  " vim popup will pad the end of title but not begin part
+  " so we build the title as ' floaterm idx/cnt'
+  " therefore, we need to add a space here
+  let target .= ' ' . strcharpart(a:target, pos + strchars(source) + 1)
   return target
-endfunc
+endfunction

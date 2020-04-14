@@ -14,10 +14,10 @@ function! floaterm#buffer#create(linelist, opts) abort
   return bufnr
 endfunction
 
-function! floaterm#buffer#update_window_opts(bufnr, window_opts) abort
-  let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
-  for item in items(a:window_opts)
-    let window_opts[item[0]] = item[1]
+function! floaterm#buffer#update_winopts(bufnr, winopts) abort
+  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
+  for item in items(a:winopts)
+    let winopts[item[0]] = item[1]
   endfor
-  call setbufvar(a:bufnr, 'floaterm_window_opts', window_opts)
+  call setbufvar(a:bufnr, 'floaterm_winopts', winopts)
 endfunction

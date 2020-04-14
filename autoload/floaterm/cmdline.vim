@@ -6,7 +6,7 @@
 " ============================================================================
 
 function! floaterm#cmdline#parse_new(arglist) abort
-  let window_opts = {}
+  let winopts = {}
   let cmd = ''
   if a:arglist != []
     let c = 0
@@ -20,27 +20,27 @@ function! floaterm#cmdline#parse_new(arglist) abort
         if key == 'height' || key == 'width'
           let value = eval(value)
         endif
-        let window_opts[key] = value
+        let winopts[key] = value
       endif
       let c += 1
     endfor
   endif
-  return [cmd, window_opts]
+  return [cmd, winopts]
 endfunction
 
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let win_opts_key = ['height=', 'width=', 'wintype=', 'name=', 'position=']
+  let winopts_key = ['height=', 'width=', 'wintype=', 'name=', 'position=']
   if a:cmd_line =~ '^FloatermNew'
-    let candidates = win_opts_key + sort(getcompletion('', 'shellcmd'))
+    let candidates = winopts_key + sort(getcompletion('', 'shellcmd'))
   elseif a:cmd_line =~ '^FloatermUpdate'
-    let candidates = win_opts_key
+    let candidates = winopts_key
   endif
 
   let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
   let args = split(cmd_line_before_cursor, '\v\\@<!(\\\\)*\zs\s+', 1)
   call remove(args, 0)
 
-  for key in win_opts_key
+  for key in winopts_key
     if match(cmd_line_before_cursor, key) != -1
       let idx = index(candidates, key)
       call remove(candidates, idx)

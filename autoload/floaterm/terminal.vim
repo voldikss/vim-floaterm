@@ -46,19 +46,19 @@ function! s:on_floaterm_close(bufnr) abort
   doautocmd BufDelete   " call lightline#update()
 endfunction
 
-function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
+function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
   let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
-  let width = get(a:window_opts, 'width', width)
+  let width = get(a:winopts, 'width', width)
   if type(width) == v:t_float | let width = width * &columns | endif
   let width = float2nr(width)
 
   let height = g:floaterm_height == v:null ? 0.6 : g:floaterm_height
-  let height = get(a:window_opts, 'height', height)
+  let height = get(a:winopts, 'height', height)
   if type(height) == v:t_float | let height = height * &lines | endif
   let height = float2nr(height)
 
-  let wintype = get(a:window_opts, 'wintype', s:wintype)
-  let pos = get(a:window_opts, 'position', g:floaterm_position)
+  let wintype = get(a:winopts, 'wintype', s:wintype)
+  let pos = get(a:winopts, 'position', g:floaterm_position)
 
   if a:bufnr > 0
     if wintype ==# 'floating'
@@ -71,7 +71,7 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
       let winid = floaterm#window#open_split(a:bufnr, height, width, pos)
       execute 'buffer ' . a:bufnr
     endif
-    call setbufvar(a:bufnr, 'floaterm_window_id', winid)
+    call setbufvar(a:bufnr, 'floaterm_winid', winid)
     call s:on_floaterm_open(a:bufnr)
     return 0
   endif
@@ -107,18 +107,17 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
     endif
   endif
   " save floaterm attributes
-  " TODO: save all attributes in b:floaterm_info
-  call setbufvar(bufnr, 'floaterm_window_id', winid)
-  let a:window_opts.width = width
-  let a:window_opts.height = height
-  let a:window_opts.wintype = wintype
-  let a:window_opts.pos = pos
-  call setbufvar(bufnr, 'floaterm_window_opts', a:window_opts)
-  " TODO: save term_name
-  let term_name = get(a:window_opts, 'name', '')
+  call setbufvar(bufnr, 'floaterm_winid', winid)
+  let a:winopts.width = width
+  let a:winopts.height = height
+  let a:winopts.wintype = wintype
+  let a:winopts.pos = pos
+  call setbufvar(bufnr, 'floaterm_winopts', a:winopts)
+  let term_name = get(a:winopts, 'name', '')
   if term_name != ''
     let term_name = 'floaterm://' . term_name
     execute 'file ' . term_name
+    let a:winopts.name = term_name
   endif
 
   call s:on_floaterm_open(bufnr)
@@ -126,8 +125,8 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
-  let window_opts = getbufvar(a:bufnr, 'floaterm_window_opts', {})
-  call floaterm#terminal#open(a:bufnr, '', {}, window_opts)
+  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
+  call floaterm#terminal#open(a:bufnr, '', {}, winopts)
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort
@@ -155,7 +154,10 @@ function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
 endfunction
 
-" Check if a job is running in the buffer
+
+"-----------------------------------------------------------------------------
+" check if a job is running in the buffer(not used)
+"-----------------------------------------------------------------------------
 function! floaterm#terminal#jobexists(bufnr) abort
   if s:is_nvim
     let jobid = getbufvar(a:bufnr, '&channel')
