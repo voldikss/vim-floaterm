@@ -52,12 +52,12 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
     call floaterm#window#hide_floaterm(bufnr())
   endif
 
-  let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
+  let width = type(g:floaterm_width) == 7 ? 0.6 : g:floaterm_width
   let width = get(a:winopts, 'width', width)
   if type(width) == v:t_float | let width = width * &columns | endif
   let width = float2nr(width)
 
-  let height = g:floaterm_height == v:null ? 0.6 : g:floaterm_height
+  let height = type(g:floaterm_height) == 7 ? 0.6 : g:floaterm_height
   let height = get(a:winopts, 'height', height)
   if type(height) == v:t_float | let height = height * &lines | endif
   let height = float2nr(height)
