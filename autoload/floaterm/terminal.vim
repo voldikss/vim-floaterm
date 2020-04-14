@@ -77,13 +77,14 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
   endif
 
   if s:is_nvim
+    let bufnr = nvim_create_buf(v:false, v:true)
+    call floaterm#buflist#add(bufnr)
     if wintype == 'floating'
-      let bufnr = nvim_create_buf(v:false, v:true)
       let winid = floaterm#window#open_floating(bufnr, width, height, pos)
+      call nvim_set_current_win(winid)
       let ch = termopen(a:cmd, a:job_opts)
       let s:channel_map[bufnr] = ch
     else
-      let bufnr = bufnr('%')
       let ch = termopen(a:cmd, a:job_opts)
       let s:channel_map[bufnr] = ch
       let winid = floaterm#window#open_split(bufnr, height, width, pos)
@@ -96,6 +97,7 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
     let a:job_opts.hidden = 1
     let a:job_opts.term_finish = 'close'
     let bufnr = term_start(a:cmd, a:job_opts)
+    call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
     if wintype == 'floating'

@@ -57,3 +57,25 @@ function! floaterm#util#startinsert() abort
     silent! execute 'normal! i'
   endif
 endfunction
+
+"----------------------------------------------------------------------
+" compose two string(thank skywind3000/vim-quickui)
+"----------------------------------------------------------------------
+function! floaterm#util#string_compose(target, pos, source)
+  if a:source == ''
+    return a:target
+  endif
+  let pos = a:pos
+  let source = a:source
+  if pos < 0
+    let source = strcharpart(a:source, -pos)
+    let pos = 0
+  endif
+  let target = strcharpart(a:target, 0, pos)
+  if strchars(target) < pos
+    let target .= repeat(' ', pos - strchars(target))
+  endif
+  let target .= source
+  let target .= strcharpart(a:target, pos + strchars(source))
+  return target
+endfunc

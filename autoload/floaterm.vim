@@ -71,7 +71,6 @@ function! floaterm#new(...) abort
   else
     let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
   endif
-  call floaterm#buflist#add(bufnr)
   return bufnr
 endfunction
 

@@ -6,7 +6,7 @@
 " ============================================================================
 
 " winid: floaterm window id
-function! s:add_border(winid) abort
+function! s:add_border(winid, title) abort
   let win_opts = nvim_win_get_config(a:winid)
   let top = g:floaterm_borderchars[4] .
           \ repeat(g:floaterm_borderchars[0], win_opts.width) .
@@ -17,15 +17,15 @@ function! s:add_border(winid) abort
   let bot = g:floaterm_borderchars[7] .
           \ repeat(g:floaterm_borderchars[2], win_opts.width) .
           \ g:floaterm_borderchars[6]
+  let top = floaterm#util#string_compose(top, 1, a:title)
   let lines = [top] + repeat([mid], win_opts.height) + [bot]
   let buf_opts = {}
   let buf_opts.synmaxcol = 3000 " #17
   let buf_opts.filetype = 'floaterm_border'
-  " Reuse s:add_border
   let border_bufnr = floaterm#buffer#create(lines, buf_opts)
   call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
   let win_opts.row -= (win_opts.anchor[0] == 'N' ? 1 : -1)
-  " A bug fix
+  " adjust offset
   if win_opts.row < 0
     let win_opts.row = 1
     call nvim_win_set_config(a:winid, win_opts)
@@ -39,6 +39,13 @@ function! s:add_border(winid) abort
   let border_winid = nvim_open_win(border_bufnr, v:false, win_opts)
   call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorder')
   return border_winid
+endfunction
+
+function! s:build_title(bufnr) abort
+  let buffers = floaterm#buflist#gather()
+  let cnt = len(buffers)
+  let idx = index(buffers, a:bufnr) + 1
+  return printf(' floaterm: %s/%s ', idx, cnt)
 endfunction
 
 function! s:floatwin_pos(width, height, pos) abort
@@ -127,11 +134,11 @@ function! floaterm#window#open_floating(bufnr, width, height, pos) abort
   let winid = nvim_open_win(a:bufnr, v:true, opts)
   let border_winid = getbufvar(a:bufnr, 'floaterm_border_winid', v:null)
   if border_winid == v:null || !s:winexists(border_winid)
-    let border_winid = s:add_border(winid)
+    let title = s:build_title(a:bufnr)
+    let border_winid = s:add_border(winid, title)
     call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
   endif
   call setbufvar(a:bufnr, 'floaterm_window_type', 'floating')
-  call nvim_set_current_win(winid)
   return winid
 endfunction
 
@@ -153,6 +160,7 @@ function! floaterm#window#open_popup(bufnr, width, height, pos) abort
     \ 'padding': [0,1,0,1],
     \ 'highlight': 'Floaterm'
     \ }
+  let opts.title = s:build_title(a:bufnr)
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
   call setbufvar(winbufnr(winid), '&filetype', 'floaterm')
