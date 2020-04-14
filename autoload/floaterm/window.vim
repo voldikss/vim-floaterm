@@ -166,8 +166,6 @@ function! floaterm#window#open_popup(bufnr, width, height, pos) abort
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
-  " refer: floaterm#window#hide_floaterm()
-  call setbufvar(a:bufnr, 'popup', 1)
   return winid
 endfunction
 
@@ -196,15 +194,17 @@ function! floaterm#window#hide_floaterm_border(bufnr, ...) abort
 endfunction
 
 function! floaterm#window#hide_floaterm(bufnr) abort
-  let winid = getbufvar(a:bufnr, 'floaterm_winid')
+  let winid = getbufvar(a:bufnr, 'floaterm_winid', -1)
+  if winid == -1 | return | endif
   if has('nvim')
     if !s:winexists(winid) | return | endif
     call nvim_win_close(winid, v:true)
-  elseif getbufvar(a:bufnr, 'popup', 0)
-    call popup_close(winid)
-    call setbufvar(a:bufnr, 'popup', 0)
   else
-    hide
+    try
+      call popup_close(winid)
+    catch
+      hide
+    endtry
   endif
 endfunction
 

@@ -119,7 +119,7 @@ function! floaterm#update(...) abort
 endfunction
 
 function! floaterm#next()  abort
-  call floaterm#hide()
+  call floaterm#window#hide_floaterm(bufnr())
   let next_bufnr = floaterm#buflist#find_next()
   if next_bufnr == -1
     let msg = 'No more floaterms'
@@ -130,7 +130,7 @@ function! floaterm#next()  abort
 endfunction
 
 function! floaterm#prev()  abort
-  call floaterm#hide()
+  call floaterm#window#hide_floaterm(bufnr())
   let prev_bufnr = floaterm#buflist#find_prev()
   if prev_bufnr == -1
     let msg = 'No more floaterms'
