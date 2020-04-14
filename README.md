@@ -124,6 +124,10 @@ Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims th
 
 Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin`.
 
+#### **`g:floaterm_wintitle`**
+
+Type `bool`. Whether to show floaterm info(e.g., `'floaterm: 1/3'`) at the top left corner of floaterm window. Default: `v:true`
+
 #### **`g:floaterm_width`**
 
 Type `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`. Default: `0.6`
