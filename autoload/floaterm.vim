@@ -113,7 +113,11 @@ function! floaterm#update(...) abort
   if a:000 != []
     for arg in a:000
       let opt = split(arg, '=')
-      let window_opts[opt[0]] = eval(opt[1])
+      let [key, value] = opt
+      if key == 'height' || key == 'width'
+        let value = eval(value)
+      endif
+      let window_opts[key] = value
     endfor
   endif
 
