@@ -57,12 +57,12 @@ function! floaterm#new(...) abort
     let maybe_wrapper = split(cmd, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
-      let [name, opts, send2shell] = WrapFunc(cmd)
+      let [name, job_opts, send2shell] = WrapFunc(cmd)
       if send2shell
         let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
         call floaterm#terminal#send(bufnr, [name])
       else
-        let bufnr = floaterm#terminal#open(-1, name, opts, window_opts)
+        let bufnr = floaterm#terminal#open(-1, name, job_opts, window_opts)
       endif
     else
       let bufnr = floaterm#terminal#open(-1, &shell, {}, window_opts)
@@ -83,14 +83,14 @@ function! floaterm#toggle(...)  abort
       call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
       return
     elseif bufnr == bufnr()
-      hide
+      call floaterm#window#hide_floaterm(bufnr)
     elseif bufwinnr(bufnr) > -1
       execute bufwinnr(bufnr) . 'wincmd w'
     else
       call floaterm#terminal#open_existing(bufnr)
     endif
   elseif &filetype == 'floaterm'
-    hide
+    call floaterm#window#hide_floaterm(bufnr())
   else
     let found_winnr = floaterm#window#find_floaterm_winnr()
     if found_winnr > 0
@@ -121,7 +121,7 @@ function! floaterm#update(...) abort
     endfor
   endif
 
-  hide
+  call floaterm#window#hide_floaterm(bufnr)
   call floaterm#buffer#update_window_opts(bufnr, window_opts)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
@@ -158,16 +158,12 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-" Hide current before opening another terminal window
+" Hide all floaterms
 function! floaterm#hide() abort
-  while v:true
-    let found_winnr = floaterm#window#find_floaterm_winnr()
-    if found_winnr > 0
-      execute found_winnr . 'hide'
-    else
-      break
-    endif
-  endwhile
+  let buffers = floaterm#buflist#gather()
+  for bufnr in buffers
+    call floaterm#window#hide_floaterm(bufnr)
+  endfor
 endfunction
 
 function! floaterm#send(bang, startlnum, endlnum, ...) abort

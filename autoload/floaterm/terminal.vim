@@ -13,6 +13,8 @@ if g:floaterm_wintype != v:null
   let s:wintype = g:floaterm_wintype
 elseif s:is_nvim && exists('*nvim_win_set_config')
   let s:wintype = 'floating'
+elseif has('textprop') && has('patch-8.1.1522')
+  let s:wintype = 'floating'
 else
   let s:wintype = 'normal'
 endif
@@ -26,7 +28,7 @@ function! s:on_floaterm_open(bufnr) abort
     call setwinvar(winnr, '&winhl', 'NormalFloat:Floaterm,Normal:Floaterm')
     augroup close_floaterm_window
       execute 'autocmd! TermClose <buffer=' . a:bufnr . '> call s:on_floaterm_close(' . a:bufnr .')'
-      execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_border(' . a:bufnr . ')'
+      execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
     augroup END
   endif
   if g:floaterm_autoinsert == v:true
@@ -39,12 +41,12 @@ function! s:on_floaterm_close(bufnr) abort
     return
   endif
   " NOTE: MUST hide border BEFORE deleting floaterm buffer
-  call floaterm#window#hide_border(a:bufnr)
+  call floaterm#window#hide_floaterm_border(a:bufnr)
   bdelete!
   doautocmd BufDelete   " call lightline#update()
 endfunction
 
-function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
+function! floaterm#terminal#open(bufnr, cmd, job_opts, window_opts) abort
   let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
   let width = get(a:window_opts, 'width', width)
   if type(width) == v:t_float | let width = width * &columns | endif
@@ -60,44 +62,57 @@ function! floaterm#terminal#open(bufnr, cmd, opts, window_opts) abort
 
   if a:bufnr > 0
     if wintype ==# 'floating'
-      call floaterm#window#nvim_open_win(a:bufnr, width, height, pos)
+      if s:is_nvim
+        let winid = floaterm#window#open_floating(a:bufnr, width, height, pos)
+      else
+        let winid = floaterm#window#open_popup(a:bufnr, width, height, pos)
+      endif
     else
-      call floaterm#window#open_split(height, width, pos)
+      let winid = floaterm#window#open_split(a:bufnr, height, width, pos)
       execute 'buffer ' . a:bufnr
     endif
+    call setbufvar(a:bufnr, 'floaterm_window_id', winid)
     call s:on_floaterm_open(a:bufnr)
     return 0
   endif
 
-  if wintype ==# 'floating'
-    let bufnr = nvim_create_buf(v:false, v:true)
-    call floaterm#window#nvim_open_win(bufnr, width, height, pos)
-    let ch = termopen(a:cmd, a:opts)
-    let s:channel_map[bufnr] = ch
-  else
-    if s:is_nvim
-      call floaterm#window#open_split(height, width, pos)
-      enew
-      let bufnr = bufnr('%')
-      let ch = termopen(a:cmd, a:opts)
+  if s:is_nvim
+    if wintype == 'floating'
+      let bufnr = nvim_create_buf(v:false, v:true)
+      let winid = floaterm#window#open_floating(bufnr, width, height, pos)
+      let ch = termopen(a:cmd, a:job_opts)
       let s:channel_map[bufnr] = ch
     else
-      if has_key(a:opts, 'on_exit')
-        let a:opts['exit_cb'] = a:opts.on_exit
-        unlet a:opts.on_exit
-      endif
-      let bufnr = term_start(a:cmd, a:opts)
-      let job = term_getjob(bufnr)
-      let s:channel_map[bufnr] = job_getchannel(job)
-      wincmd J
+      let bufnr = bufnr('%')
+      let ch = termopen(a:cmd, a:job_opts)
+      let s:channel_map[bufnr] = ch
+      let winid = floaterm#window#open_split(bufnr, height, width, pos)
+    endif
+  else
+    if has_key(a:job_opts, 'on_exit')
+      let a:job_opts['exit_cb'] = a:job_opts.on_exit
+      unlet a:job_opts.on_exit
+    endif
+    let a:job_opts.hidden = 1
+    let a:job_opts.term_finish = 'close'
+    let bufnr = term_start(a:cmd, a:job_opts)
+    let job = term_getjob(bufnr)
+    let s:channel_map[bufnr] = job_getchannel(job)
+    if wintype == 'floating'
+      let winid = floaterm#window#open_popup(bufnr, width, height, pos)
+    else
+      let winid = floaterm#window#open_split(bufnr, height, width, pos)
     endif
   endif
   " save floaterm attributes
+  " TODO: save all attributes in b:floaterm_info
+  call setbufvar(bufnr, 'floaterm_window_id', winid)
   let a:window_opts.width = width
   let a:window_opts.height = height
   let a:window_opts.wintype = wintype
   let a:window_opts.pos = pos
   call setbufvar(bufnr, 'floaterm_window_opts', a:window_opts)
+  " TODO: save term_name
   let term_name = get(a:window_opts, 'name', '')
   if term_name != ''
     let term_name = 'floaterm://' . term_name
