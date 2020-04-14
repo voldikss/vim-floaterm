@@ -14,7 +14,7 @@ if g:floaterm_wintype != v:null
 elseif s:is_nvim && exists('*nvim_win_set_config')
   let s:wintype = 'floating'
 elseif has('textprop') && has('patch-8.1.1522')
-  let s:wintype = 'floating'
+  let s:wintype = 'popup'
 else
   let s:wintype = 'normal'
 endif
@@ -61,15 +61,12 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
   let pos = get(a:winopts, 'position', g:floaterm_position)
 
   if a:bufnr > 0
-    if wintype ==# 'floating'
-      if s:is_nvim
-        let winid = floaterm#window#open_floating(a:bufnr, width, height, pos)
-      else
-        let winid = floaterm#window#open_popup(a:bufnr, width, height, pos)
-      endif
+    if wintype == 'floating'
+      let winid = floaterm#window#open_floating(a:bufnr, width, height, pos)
+    elseif wintype == 'popup'
+      let winid = floaterm#window#open_popup(a:bufnr, width, height, pos)
     else
       let winid = floaterm#window#open_split(a:bufnr, height, width, pos)
-      execute 'buffer ' . a:bufnr
     endif
     call setbufvar(a:bufnr, 'floaterm_winid', winid)
     call s:on_floaterm_open(a:bufnr)
@@ -85,9 +82,9 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
       let ch = termopen(a:cmd, a:job_opts)
       let s:channel_map[bufnr] = ch
     else
+      let winid = floaterm#window#open_split(bufnr, height, width, pos)
       let ch = termopen(a:cmd, a:job_opts)
       let s:channel_map[bufnr] = ch
-      let winid = floaterm#window#open_split(bufnr, height, width, pos)
     endif
   else
     if has_key(a:job_opts, 'on_exit')
@@ -100,7 +97,7 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
-    if wintype == 'floating'
+    if wintype == 'popup'
       let winid = floaterm#window#open_popup(bufnr, width, height, pos)
     else
       let winid = floaterm#window#open_split(bufnr, height, width, pos)

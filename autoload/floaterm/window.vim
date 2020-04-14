@@ -183,6 +183,7 @@ function! floaterm#window#open_split(bufnr, height, width, pos) abort
   endif
   wincmd J
   enew
+  execute 'buffer ' . a:bufnr
   return win_getid()
 endfunction
 
@@ -199,7 +200,7 @@ function! floaterm#window#hide_floaterm(bufnr) abort
   if has('nvim')
     if !s:winexists(winid) | return | endif
     call nvim_win_close(winid, v:true)
-  elseif getbufvar(a:bufnr, 'popup', 1)
+  elseif getbufvar(a:bufnr, 'popup', 0)
     call popup_close(winid)
     call setbufvar(a:bufnr, 'popup', 0)
   else

@@ -122,7 +122,7 @@ Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims th
 
 #### **`g:floaterm_wintype`**
 
-Type `string`. `'floating'`(neovim only) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin`.
+Type `string`. `'floating'`(neovim) or `'popup'` by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
 
 #### **`g:floaterm_wintitle`**
 
@@ -145,7 +145,7 @@ Type `int`. The transparency of the floating terminal. Default: `0`
 Type `string`. The position of the floating window. Available values:
 
 - If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
-- If `wintype` is `floating`: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
+- If `wintype` is `floating` or `popup`: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
 #### **`g:floaterm_borderchars`**
 
@@ -210,7 +210,7 @@ tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>
 
 ### Change highlight
 
-This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'`) window.
+This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'` or `'popup'`) window.
 
 By default, they are both linked to `Normal`. To customize, use `hi` command together with the colors you prefer.
 

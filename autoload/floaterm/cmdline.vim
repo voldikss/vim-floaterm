@@ -54,8 +54,12 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   endif
 
   if match(prefix, 'wintype=') > -1
-    let wintype = ['normal', 'floating']
-    let candidates = map(wintype, {idx -> 'wintype=' . wintype[idx]})
+    if has('nvim')
+      let wintypes = ['normal', 'floating']
+    else
+      let wintypes = ['normal', 'popup']
+    endif
+    let candidates = map(wintypes, {idx -> 'wintype=' . wintypes[idx]})
   elseif match(prefix, 'position=') > -1
     let position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
     let candidates = map(position, {idx -> 'position=' . position[idx]})
