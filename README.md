@@ -2,7 +2,7 @@
 
 【[Introduction in Chinese|中文文档](https://zhuanlan.zhihu.com/p/107749687)】
 
-Use neovim terminal in the floating window.
+Use (neo)vim terminal in the floating/popup window.
 
 ![](https://user-images.githubusercontent.com/20282795/74799912-de268200-530c-11ea-9831-d412a7700505.png)
 
@@ -38,7 +38,7 @@ Use neovim terminal in the floating window.
 
 ## Features
 
-- Floating window support
+- NeoVim floatwin and Vim8 popup support
 - Open and toggle terminal window quickly
 - Multiple terminal instances
 - Customizable floating terminal style
@@ -225,7 +225,7 @@ hi FloatermBorder guibg=orange guifg=cyan
 
 vim-floaterm is a nvim/vim terminal plugin, it can run all the command-line programs in the terminal even `nvim/vim` itself.
 
-**❗️Note**: The following cases should work both in NeoVim and Vim, if some of them don't work on Vim, try startuping Vim with `--servername` argument, i.e., `vim --servername /tmp/vimtmpfile`
+**❗️Note**: The following cases should work both in NeoVim and Vim, if some of them don't work on Vim, try startuping Vim with `--servername` argument, i.e., `vim --servername /tmp/vimtmpfile`(`:help client-server`).
 
 ### General
 
