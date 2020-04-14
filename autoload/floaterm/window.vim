@@ -200,7 +200,7 @@ function! floaterm#window#hide_floaterm(bufnr) abort
     if !s:winexists(winid) | return | endif
     call nvim_win_close(winid, v:true)
   else
-    try
+    try      " there should be a function like `win_type()`
       call popup_close(winid)
     catch
       hide

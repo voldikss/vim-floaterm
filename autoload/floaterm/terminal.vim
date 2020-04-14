@@ -47,6 +47,11 @@ function! s:on_floaterm_close(bufnr) abort
 endfunction
 
 function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
+  " for vim's popup, must close popup can we open and jump to a new window
+  if !has('nvim')
+    call floaterm#window#hide_floaterm(bufnr())
+  endif
+
   let width = g:floaterm_width == v:null ? 0.6 : g:floaterm_width
   let width = get(a:winopts, 'width', width)
   if type(width) == v:t_float | let width = width * &columns | endif
