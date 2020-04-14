@@ -207,7 +207,7 @@ tnoremap   <silent>   <F10>   <C-\><C-n>:FloatermToggle<CR>
 
 This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'`) window.
 
-By default, they are both linked to `NormalFloat`. To customize, use `hi` command together with the colors you prefer.
+By default, they are both linked to `Normal`. To customize, use `hi` command together with the colors you prefer.
 
 ```vim
 " Configuration example
