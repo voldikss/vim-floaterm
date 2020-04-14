@@ -130,8 +130,8 @@ background/foregrond color of floaterm(border) window
 By default, they are both linked to `Normal`
  >
 	" Configuration example
-	hi FloatermNF guibg=black
-	hi FloatermBorderNF guibg=gray guifg=blue
+	hi Floaterm guibg=black
+	hi FloatermBorder guibg=gray guifg=blue
 <
 
 ==============================================================================

@@ -34,8 +34,8 @@ command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names
                           \ FloatermSend   call floaterm#send('<bang>', <line1>, <line2>, <f-args>)
 
-hi def link FloatermNF Normal
-hi def link FloatermBorderNF Normal
+hi def link Floaterm Normal
+hi def link FloatermBorder Normal
 
 function! s:install_keymap()
   if g:floaterm_keymap_new != v:null

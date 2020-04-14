@@ -37,7 +37,7 @@ function! s:add_border(winid) abort
   let win_opts.style = 'minimal'
   let win_opts.focusable = v:false
   let border_winid = nvim_open_win(border_bufnr, v:false, win_opts)
-  call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorderNF')
+  call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorder')
   return border_winid
 endfunction
 

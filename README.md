@@ -32,6 +32,7 @@ Use neovim terminal in the floating window.
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [F.A.Q](#f.a.q)
+- [Break Changes](#break-changes)
 - [Credits](#credits)
 - [License](#license)
 
@@ -213,9 +214,9 @@ By default, they are both linked to `Normal`. To customize, use `hi` command tog
 " Configuration example
 
 " Set floaterm window's background to black
-hi FloatermNF guibg=black
+hi Floaterm guibg=black
 " Set floating window border line color to cyan, and background to orange
-hi FloatermBorderNF guibg=orange guifg=cyan
+hi FloatermBorder guibg=orange guifg=cyan
 ```
 
 ![](https://user-images.githubusercontent.com/20282795/74794098-42d9e080-52fd-11ea-9ccf-661dd748aa03.png)
@@ -467,6 +468,12 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 - #### Not starting insert mode after creating a new floaterm...
 
   See option [g:floaterm_autoinsert](#gfloaterm_autoinsert), also [#52](https://github.com/voldikss/vim-floaterm/issues/52) might be helpful.
+
+## Break Changes
+
+- Rename: `g:floaterm_type` --> `g:floaterm_wintype`
+- Rename: `FloatermNF` --> `Floaterm`
+- Rename: `FloatermBorderNF` --> `FloatermBorder`
 
 ## Credits
 

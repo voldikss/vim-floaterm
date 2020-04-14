@@ -23,7 +23,7 @@ function! s:on_floaterm_open(bufnr) abort
   if s:is_nvim
     let winnr = bufwinnr(a:bufnr)
     call setwinvar(winnr, '&winblend', g:floaterm_winblend)
-    call setwinvar(winnr, '&winhl', 'NormalFloat:FloatermNF,Normal:FloatermNF')
+    call setwinvar(winnr, '&winhl', 'NormalFloat:Floaterm,Normal:Floaterm')
     augroup close_floaterm_window
       execute 'autocmd! TermClose <buffer=' . a:bufnr . '> call s:on_floaterm_close(' . a:bufnr .')'
       execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_border(' . a:bufnr . ')'
