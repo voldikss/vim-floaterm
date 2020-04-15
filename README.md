@@ -171,7 +171,7 @@ Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'
 
 #### **`g:floaterm_gitcommit`**
 
-Type `string`. Opening strategy for running `git commit` in floaterm window.
+Type `string`. Opening strategy for running `git commit` in floaterm window. Only works in neovim.
 
 Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
 
@@ -229,7 +229,7 @@ hi FloatermBorder guibg=orange guifg=cyan
 
 vim-floaterm is a nvim/vim terminal plugin, it can run all the command-line programs in the terminal even `nvim/vim` itself.
 
-**❗️Note**: Some of the following cases might not work in Vim.
+**❗️Note**: The following cases should work both in Vim and NeoVim unless otherwise specifically noted.
 
 ### General
 
