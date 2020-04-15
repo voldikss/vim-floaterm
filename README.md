@@ -361,9 +361,7 @@ Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocLi
 
 ### Integrate with [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
-This plugin has a builtin runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/). To use it, set `g:asynctasks_term_pos` to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks configuration files. Then your task will be ran in the floaterm instance. See asynctasks.vim [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
-
-If you are using on-demand loading, you need to copy the following lines to your `vimrc` to make it work.
+This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/). To use it, copy the following code to your `vimrc` set `g:asynctasks_term_pos` to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks configuration files.
 
 ```vim
 function! s:runner_proc(opts)
@@ -383,6 +381,8 @@ endfunction
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
 let g:asyncrun_runner.floaterm = function('s:runner_proc')
 ```
+
+Then your task will be ran in the floaterm instance. See asynctasks.vim [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
 
 ## How to define more wrappers
 
