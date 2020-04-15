@@ -34,10 +34,10 @@ absolute_path() {
 name="$(absolute_path """$1""")"
 
 if [ -z "$NVIM_LISTEN_ADDRESS" ]; then
-    "$VIM_EXE" --servername "$VIM_SERVERNAME" --remote-expr "floaterm#util#edit('$name')"
+    printf '\033]51;["call", "floaterm#util#edit", "%s"]\007' "$name"
 else
     if [ -x "$(which nvr 2> /dev/null)" ]; then
-        nvr --servername "$NVIM_LISTEN_ADDRESS" --remote-expr "floaterm#util#edit('$name')"
+        nvr --servername "$NVIM_LISTEN_ADDRESS" --remote-expr "floaterm#util#edit(0, '$name')"
     else
         echo "Cannot find nvr executable, please install neovim-remote"
         exit 2

@@ -13,11 +13,11 @@ if "%NVIM_LISTEN_ADDRESS%" == "" GOTO vim
 goto neovim
 
 :vim
-call "%VIM_EXE%" --servername "%VIM_SERVERNAME%" --remote-expr "floaterm#util#edit('%NAME%')"
+call "%VIM_EXE%" --servername "%VIM_SERVERNAME%" --remote-expr "floaterm#util#edit(0, '%NAME%')"
 goto end
 
 :neovim
-call "nvr" --servername "%NVIM_LISTEN_ADDRESS%" --remote-expr "floaterm#util#edit('%NAME%')"
+call "nvr" --servername "%NVIM_LISTEN_ADDRESS%" --remote-expr "floaterm#util#edit(0, '%NAME%')"
 goto end
 
 :nonvr

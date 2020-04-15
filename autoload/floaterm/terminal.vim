@@ -98,6 +98,7 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
     endif
     let a:job_opts.hidden = 1
     let a:job_opts.term_finish = 'close'
+    let a:job_opts.term_api = 'floaterm#util#edit'
     let bufnr = term_start(a:cmd, a:job_opts)
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)

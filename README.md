@@ -229,11 +229,11 @@ hi FloatermBorder guibg=orange guifg=cyan
 
 vim-floaterm is a nvim/vim terminal plugin, it can run all the command-line programs in the terminal even `nvim/vim` itself.
 
-**❗️Note**: The following cases should work both in NeoVim and Vim, if some of them don't work on Vim, try startuping Vim with `--servername` argument, i.e., `vim --servername /tmp/vimtmpfile`(`:help client-server`).
+**❗️Note**: Some of the following cases might not work in Vim.
 
 ### General
 
-Requirements: `pip3 install neovim-remote`
+Requirements: For neovim users, `nvr` is required, please install it via pip using `pip3 install neovim-remote`.
 
 Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will get another nvim/vim instance running in the subprocess. This plugin allows you to open files from within `:terminal` without starting a nested nvim process. To archive that, just replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
