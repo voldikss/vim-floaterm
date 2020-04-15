@@ -109,6 +109,8 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermNext` Switch to the next floaterm instance
 
+#### `:FloatermHide` Hide all visible floaterms
+
 #### `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
 
 - If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.

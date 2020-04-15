@@ -26,6 +26,7 @@ let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 
 command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
+command! -nargs=0           FloatermHide   call floaterm#hide()
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                           \ FloatermNew    call floaterm#run('new', <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
