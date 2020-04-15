@@ -7,22 +7,31 @@
 
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
-let s:is_nvim = has('nvim')
+let s:has_popup = has('textprop') && has('patch-8.2.0286')
+let s:has_float = has('nvim') && exists('*nvim_win_set_config')
 
-if g:floaterm_wintype != v:null
-  let s:wintype = g:floaterm_wintype
-elseif s:is_nvim && exists('*nvim_win_set_config')
-  let s:wintype = 'floating'
-elseif has('textprop') && has('patch-8.1.1522')
-  let s:wintype = 'popup'
-else
+if g:floaterm_wintype == v:null
+  if s:has_float
+    let s:wintype = 'floating'
+  elseif s:has_popup
+    let s:wintype = 'popup'
+  else
+    let s:wintype = 'normal'
+  endif
+elseif g:floaterm_wintype == 'floating' && !s:has_float
+  call floaterm#util#show_msg("floating window is not supported in your nvim, fall back to normal window", 'warning')
   let s:wintype = 'normal'
+elseif g:floaterm_wintype == 'popup' && !s:popup
+  call floaterm#util#show_msg("popup window is not supported in your vim, fall back to normal window", 'warning')
+  let s:wintype = 'normal'
+else
+  let s:wintype = g:floaterm_wintype
 endif
 
 function! s:on_floaterm_open(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
-  if s:is_nvim
+  if has('nvim')
     let winnr = bufwinnr(a:bufnr)
     call setwinvar(winnr, '&winblend', g:floaterm_winblend)
     call setwinvar(winnr, '&winhl', 'NormalFloat:Floaterm,Normal:Floaterm')
@@ -78,7 +87,7 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
     return 0
   endif
 
-  if s:is_nvim
+  if has('nvim')
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#buflist#add(bufnr)
     if wintype == 'floating'
@@ -135,7 +144,7 @@ endfunction
 function! floaterm#terminal#send(bufnr, cmds) abort
   let ch = get(s:channel_map, a:bufnr, v:null)
   if empty(ch) | return | endif
-  if s:is_nvim
+  if has('nvim')
     if !empty(a:cmds[len(a:cmds) - 1])
       call add(a:cmds, '')
     endif
@@ -162,7 +171,7 @@ endfunction
 " check if a job is running in the buffer(not used)
 "-----------------------------------------------------------------------------
 function! floaterm#terminal#jobexists(bufnr) abort
-  if s:is_nvim
+  if has('nvim')
     let jobid = getbufvar(a:bufnr, '&channel')
     return jobwait([jobid], 0)[0] == -1
   else
