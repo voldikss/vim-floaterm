@@ -30,7 +30,6 @@ function! s:ranger_callback(...) abort
   if filereadable(s:ranger_tmpfile)
     let filenames = readfile(s:ranger_tmpfile)
     if !empty(filenames)
-      call floaterm#hide()
       for filename in filenames
         execute g:floaterm_open_command . ' ' . fnameescape(filename)
       endfor

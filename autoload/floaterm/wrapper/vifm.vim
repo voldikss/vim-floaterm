@@ -26,7 +26,6 @@ function! s:vifm_callback(...) abort
   if filereadable(s:vifm_tmpfile)
     let filenames = readfile(s:vifm_tmpfile)
     if !empty(filenames)
-      call floaterm#hide()
       for filename in filenames
         execute g:floaterm_open_command . ' ' . fnameescape(filename)
       endfor
