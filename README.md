@@ -122,7 +122,7 @@ Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims th
 
 #### **`g:floaterm_wintype`**
 
-Type `string`. `'floating'`(neovim) or `'popup'` by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
+Type `string`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
 
 #### **`g:floaterm_wintitle`**
 
@@ -138,7 +138,7 @@ Type `int` (number of lines) or `float` (between 0 and 1). If `float`, the heigh
 
 #### **`g:floaterm_winblend`**
 
-Type `int`. The transparency of the floating terminal. Default: `0`
+Type `int`. The transparency of the floating terminal. Only works in neovim. Default: `0`
 
 #### **`g:floaterm_position`**
 
@@ -466,12 +466,16 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
   Use `:FloatermUpdate`
 
   ```vim
-  :FloatermUpdate wintype='normal' position='right'
+  :FloatermUpdate wintype=normal position=right
   ```
 
 - #### Not starting insert mode after creating a new floaterm...
 
   See option [g:floaterm_autoinsert](#gfloaterm_autoinsert), also [#52](https://github.com/voldikss/vim-floaterm/issues/52) might be helpful.
+
+- #### Why the plugin is named "vim-floaterm" instead of "vim-popterm" or others?
+
+  Because this was firstly developed based on nvim's floating window. But now it supports both floaterm and popup, you can get similar experience in both.
 
 ## Break Changes
 
