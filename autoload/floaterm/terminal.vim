@@ -58,7 +58,7 @@ endfunction
 function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   " for vim's popup, must close popup can we open and jump to a new window
   if !has('nvim')
-    call floaterm#window#hide_floaterm(bufnr())
+    call floaterm#window#hide_floaterm(bufnr('%'))
   endif
 
   " change to root directory

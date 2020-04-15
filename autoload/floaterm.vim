@@ -94,7 +94,7 @@ function! floaterm#toggle(name)  abort
     if bufnr == -1
       call floaterm#util#show_msg('No floaterm found with name: ' . a:name, 'error')
       return
-    elseif bufnr == bufnr()
+    elseif bufnr == bufnr('%')
       call floaterm#window#hide_floaterm(bufnr)
     elseif bufwinnr(bufnr) > -1
       execute bufwinnr(bufnr) . 'wincmd w'
@@ -102,7 +102,7 @@ function! floaterm#toggle(name)  abort
       call floaterm#terminal#open_existing(bufnr)
     endif
   elseif &filetype == 'floaterm'
-    call floaterm#window#hide_floaterm(bufnr())
+    call floaterm#window#hide_floaterm(bufnr('%'))
   else
     let found_winnr = floaterm#window#find_floaterm_window()
     if found_winnr > 0
@@ -130,7 +130,7 @@ function! floaterm#update(winopts) abort
 endfunction
 
 function! floaterm#next()  abort
-  call floaterm#window#hide_floaterm(bufnr())
+  call floaterm#window#hide_floaterm(bufnr('%'))
   let next_bufnr = floaterm#buflist#find_next()
   if next_bufnr == -1
     let msg = 'No more floaterms'
@@ -141,7 +141,7 @@ function! floaterm#next()  abort
 endfunction
 
 function! floaterm#prev()  abort
-  call floaterm#window#hide_floaterm(bufnr())
+  call floaterm#window#hide_floaterm(bufnr('%'))
   let prev_bufnr = floaterm#buflist#find_prev()
   if prev_bufnr == -1
     let msg = 'No more floaterms'
