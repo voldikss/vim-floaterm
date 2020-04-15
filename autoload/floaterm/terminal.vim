@@ -55,7 +55,7 @@ function! s:on_floaterm_close(bufnr) abort
   doautocmd BufDelete   " call lightline#update()
 endfunction
 
-function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
+function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   " for vim's popup, must close popup can we open and jump to a new window
   if !has('nvim')
     call floaterm#window#hide_floaterm(bufnr())
@@ -101,22 +101,22 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
     if wintype == 'floating'
       let winid = floaterm#window#open_floating(bufnr, width, height, pos)
       call nvim_set_current_win(winid)
-      let ch = termopen(a:cmd, a:job_opts)
+      let ch = termopen(a:cmd, a:jobopts)
       let s:channel_map[bufnr] = ch
     else
       let winid = floaterm#window#open_split(bufnr, height, width, pos)
-      let ch = termopen(a:cmd, a:job_opts)
+      let ch = termopen(a:cmd, a:jobopts)
       let s:channel_map[bufnr] = ch
     endif
   else
-    if has_key(a:job_opts, 'on_exit')
-      let a:job_opts['exit_cb'] = a:job_opts.on_exit
-      unlet a:job_opts.on_exit
+    if has_key(a:jobopts, 'on_exit')
+      let a:jobopts['exit_cb'] = a:jobopts.on_exit
+      unlet a:jobopts.on_exit
     endif
-    let a:job_opts.hidden = 1
-    let a:job_opts.term_finish = 'close'
-    let a:job_opts.term_api = 'floaterm#util#edit'
-    let bufnr = term_start(a:cmd, a:job_opts)
+    let a:jobopts.hidden = 1
+    let a:jobopts.term_finish = 'close'
+    let a:jobopts.term_api = 'floaterm#util#edit'
+    let bufnr = term_start(a:cmd, a:jobopts)
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
