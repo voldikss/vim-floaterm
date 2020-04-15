@@ -18,7 +18,7 @@ function! floaterm#wrapper#ranger#(cmd) abort
     if expand('%:p') != ''
       let cmd .= ' --selectfile="' . expand('%:p') . '"'
     else
-      let cmd .= ' ' . shellescape(getcwd())
+      let cmd .= ' ' . getcwd()
     endif
   endif
 
