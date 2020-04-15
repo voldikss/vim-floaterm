@@ -5,7 +5,11 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#cmdline#parse_new(arglist) abort
+" ----------------------------------------------------------------------------
+" used for `:FloatermNew` and `:FloatermUpdate`
+" parse argument list to `cmd`(string, default '') and `winopts`(dict)
+" ----------------------------------------------------------------------------
+function! floaterm#cmdline#parse(arglist) abort
   let winopts = {}
   let cmd = ''
   if a:arglist != []
@@ -28,6 +32,9 @@ function! floaterm#cmdline#parse_new(arglist) abort
   return [cmd, winopts]
 endfunction
 
+" ----------------------------------------------------------------------------
+" used for `:FloatermNew` and `:FloatermUpdate`
+" ----------------------------------------------------------------------------
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   let winopts_key = ['height=', 'width=', 'wintype=', 'name=', 'position=']
   if a:cmd_line =~ '^FloatermNew'
@@ -67,6 +74,9 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
 endfunction
 
+" ----------------------------------------------------------------------------
+" used for `:FloatermToggle`
+" ----------------------------------------------------------------------------
 function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos) abort
   let buflist = floaterm#buflist#gather()
   let ret = []

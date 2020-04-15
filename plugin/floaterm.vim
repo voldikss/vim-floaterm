@@ -27,11 +27,11 @@ let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
-                          \ FloatermNew    call floaterm#new(<f-args>)
+                          \ FloatermNew    call floaterm#run('new', <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
-                          \ FloatermUpdate call floaterm#update(<f-args>)
+                          \ FloatermUpdate call floaterm#run('update', <f-args>)
 command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermToggle call floaterm#toggle(<f-args>)
+                          \ FloatermToggle call floaterm#toggle(<q-args>)
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names
                           \ FloatermSend   call floaterm#send('<bang>', <line1>, <line2>, <f-args>)
 

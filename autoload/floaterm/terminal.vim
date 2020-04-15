@@ -61,6 +61,14 @@ function! floaterm#terminal#open(bufnr, cmd, job_opts, winopts) abort
     call floaterm#window#hide_floaterm(bufnr())
   endif
 
+  " change to root directory
+  if !empty(g:floaterm_rootmarkers)
+    let dest = floaterm#resolver#get_root()
+    if dest !=# ''
+      call floaterm#resolver#chdir(dest)
+    endif
+  endif
+
   let width = type(g:floaterm_width) == 7 ? 0.6 : g:floaterm_width
   let width = get(a:winopts, 'width', width)
   if type(width) == v:t_float | let width = width * &columns | endif
