@@ -115,7 +115,9 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     endif
     let a:jobopts.hidden = 1
     let a:jobopts.term_finish = 'close'
-    let a:jobopts.term_api = 'floaterm#util#edit'
+    if has('patch-8.1.2080')
+      let a:jobopts.term_api = 'floaterm#util#edit'
+    endif
     let bufnr = term_start(a:cmd, a:jobopts)
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
