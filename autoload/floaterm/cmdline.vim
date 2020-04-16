@@ -82,10 +82,12 @@ function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos) abort
   let ret = []
   let pattern = '^floaterm://'
   for bufnr in buflist
-    let name = getbufinfo(bufnr)[0].name
-    let termname = substitute(name, pattern, '', '')
-    if name =~ pattern && match(termname, a:arg_lead) != -1
-      call add(ret, termname)
+    let winopts = getbufvar(bufnr, 'floaterm_winopts', {})
+    if !empty(winopts)
+      let termname = get(winopts, 'name', '')
+      if !empty(termname)
+        call add(ret, termname)
+      endif
     endif
   endfor
   return ret
