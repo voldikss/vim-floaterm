@@ -28,7 +28,15 @@ else
   let s:wintype = g:floaterm_wintype
 endif
 
-function! s:on_floaterm_open(bufnr) abort
+function! s:on_floaterm_open(bufnr, winid, winopts) abort
+  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
+  call setbufvar(a:bufnr, 'floaterm_winopts', a:winopts)
+  let termname = get(a:winopts, 'name', '')
+  if termname != ''
+    let termname = 'floaterm://' . termname
+    execute 'file ' . termname
+  endif
+
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
@@ -90,8 +98,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     else
       let winid = floaterm#window#open_split(a:bufnr, height, width, pos)
     endif
-    call setbufvar(a:bufnr, 'floaterm_winid', winid)
-    call s:on_floaterm_open(a:bufnr)
+    call s:on_floaterm_open(a:bufnr, winid, a:winopts)
     return 0
   endif
 
@@ -128,21 +135,12 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
       let winid = floaterm#window#open_split(bufnr, height, width, pos)
     endif
   endif
-  " save floaterm attributes
-  call setbufvar(bufnr, 'floaterm_winid', winid)
+
   let a:winopts.width = width
   let a:winopts.height = height
   let a:winopts.wintype = wintype
   let a:winopts.pos = pos
-  call setbufvar(bufnr, 'floaterm_winopts', a:winopts)
-  let term_name = get(a:winopts, 'name', '')
-  if term_name != ''
-    let term_name = 'floaterm://' . term_name
-    execute 'file ' . term_name
-    let a:winopts.name = term_name
-  endif
-
-  call s:on_floaterm_open(bufnr)
+  call s:on_floaterm_open(bufnr, winid, a:winopts)
   return bufnr
 endfunction
 
