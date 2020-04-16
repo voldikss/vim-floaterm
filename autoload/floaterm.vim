@@ -171,44 +171,49 @@ function! floaterm#hide() abort
   endfor
 endfunction
 
-function! floaterm#send(bang, startlnum, endlnum, ...) abort
+function! floaterm#send(bang, termname) abort
   if &filetype ==# 'floaterm'
     let msg = "FloatermSend can't be used in the floaterm window"
     call floaterm#util#show_msg(msg, 'warning')
     return
   endif
 
-  let termname = get(a:, 1, '')
-  if termname != ''
-    let bufnr = floaterm#terminal#get_bufnr(termname)
+  if a:termname != ''
+    let bufnr = floaterm#terminal#get_bufnr(a:termname)
     if bufnr == -1
-      call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
+      call floaterm#util#show_msg('No floaterm found with name: ' . a:termname, 'error')
     endif
   else
     let bufnr = floaterm#buflist#find_curr()
     if bufnr == -1
       let bufnr = floaterm#new('', {}, {})
+      call floaterm#toggle('')
+      call floaterm#send(a:bang, a:termname)
+      call floaterm#toggle('')
+      return
     endif
   endif
 
+  " https://vi.stackexchange.com/a/11028/17515
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - 1]
+  let lines[0] = lines[0][col1 - 1:]
+
   let linelist = []
   if a:bang ==# '!'
-    let line1 = getline(a:startlnum)
+    let line1 = lines[0]
     let trim_line = substitute(line1, '\v^\s+', '', '')
     let indent = len(line1) - len(trim_line)
-    for lnum in range(a:startlnum, a:endlnum)
-      let line = getline(lnum)
+    for line in lines
       if line[:indent] =~# '\s\+'
         let line = line[indent:]
-        call add(linelist, line)
       endif
-      call floaterm#terminal#send(bufnr, linelist)
-    endfor
-  else
-    for lnum in range(a:startlnum, a:endlnum)
-      let line = getline(lnum)
       call add(linelist, line)
     endfor
-    call floaterm#terminal#send(bufnr, linelist)
+  else
+    let linelist = lines
   endif
+  call floaterm#terminal#send(bufnr, linelist)
 endfunction

@@ -110,14 +110,14 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermHide` Hide all visible floaterms
 
-#### `:FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
+#### `:'<,'>FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
 
 - If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
 - Use `<TAB>` to get completion.
 
-Typically this command is executed with a range. i.e., `:'<,'>FloatermSend`, if no ranges, send the current line.
+Note: This command must be executed with a range!
 
-Also you may try `:FloatermSend!` and `:'<,'>FloatermSend!`, the former trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
+Also you may try `:'<,'>FloatermSend!`, which trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
 
 ### Global variables
 
@@ -511,6 +511,7 @@ There are some other functions which can be served as APIs, for detail infomatio
 
 ## Break Changes
 
+- Command `FloatermSend` must be used with a range
 - Rename: `g:floaterm_type` --> `g:floaterm_wintype`
 - Rename: `FloatermNF` --> `Floaterm`
 - Rename: `FloatermBorderNF` --> `FloatermBorder`
