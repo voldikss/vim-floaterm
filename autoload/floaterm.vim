@@ -182,6 +182,7 @@ function! floaterm#send(bang, termname) abort
     let bufnr = floaterm#terminal#get_bufnr(a:termname)
     if bufnr == -1
       call floaterm#util#show_msg('No floaterm found with name: ' . a:termname, 'error')
+      return
     endif
   else
     let bufnr = floaterm#buflist#find_curr()
