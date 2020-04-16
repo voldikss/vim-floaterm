@@ -31,6 +31,7 @@ Use (neo)vim terminal in the floating/popup window.
   - [Integrate with asynctasks.vim](#integrate-with-asynctasksvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
+- [APIs](#apis)
 - [F.A.Q](#f.a.q)
 - [Break Changes](#break-changes)
 - [Credits](#credits)
@@ -49,8 +50,6 @@ Use (neo)vim terminal in the floating/popup window.
 ## Requirements
 
 - Vim or NeoVim with `terminal` feature
-
-- NeoVim supporting `floating window` is better, but not necessary
 
 Run `:checkhealth` to check the environment.
 
@@ -323,7 +322,7 @@ command! Vifm FloatermNew vifm
 
 ### Use as a Python REPL plugin
 
-Use `:FloatermNew python` to open a python REPL. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
+Use `:FloatermNew python` to open a python shell. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 
@@ -400,7 +399,7 @@ There are two ways for a command to be spawned:
 
   The code above returns an array. `floaterm $(fzf)` is the command to be executed. `v:true` means the command will be executed after the `&shell` startup.
 
-- To be executed through `termopen()`/`term_start()` function, in this case, a callback function is allowed. See [ranger wrapper](./autoload/floaterm/wrapper/ranger.vim)
+- To be executed through `termopen()`/`term_start()` function, in that case, a callback function is can be provided. See [ranger wrapper](./autoload/floaterm/wrapper/ranger.vim)
 
   ```vim
   function! floaterm#wrapper#ranger#() abort
@@ -413,7 +412,6 @@ There are two ways for a command to be spawned:
     if filereadable(s:ranger_tmpfile)
       let filenames = readfile(s:ranger_tmpfile)
       if !empty(filenames)
-        call floaterm#hide()
         for filename in filenames
           execute 'edit ' . fnameescape(filename)
         endfor
@@ -422,7 +420,7 @@ There are two ways for a command to be spawned:
   endfunction
   ```
 
-  Here `v:false` means `cmd` will be passed through `termopen()`(neovim) or `term_start()`(vim). Function `s:ranger_callback()` will be invoked when the `cmd` exits.
+  Here `v:false` means `cmd` will be passed through `termopen()`(neovim) or `term_start()`(vim). Function `s:ranger_callback()` will be invoked when `cmd` exits.
 
 ## How to write sources for fuzzy finder plugins
 
@@ -431,6 +429,38 @@ Function `floaterm#buflist#gather()` returns a list contains all the floaterm bu
 Function `floaterm#terminal#open({bufnr})` opens the floaterm whose buffer number is `bufnr`.
 
 For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
+
+## APIs
+
+- `floaterm#new(cmd, win_opts, job_opts)` create a new floaterm instance and return the bufnum
+
+  - `cmd` type `string`, if empty(`''`), will use `&shell`
+  - `win_opts` type `dict`. See [FloatermNew options](#floatermnew-options-cmd-open-a-floaterm-window), e.g., `{'name': 'floaterm1', 'wintype': 'floating', 'position': 'top'}`
+  - `job_opts` type `dict`. For reference, see `:help job-options`(for vim) or `:help jobstart-options`(for nvim)
+
+- `floaterm#update(win_opts)` update floaterm window attributes
+
+- `floaterm#toggle(name)` toggle on/off a floaterm
+
+  - `name` name of the floaterm, if empty(`''`), toggle the current floaterm
+
+- `floaterm#prev()` switch to the previous floaterm buffeum and return the bufnum
+
+- `floaterm#next()` switch to the next floaterm buffer and return the bufnum
+
+- `floaterm#curr()` return current floaterm buffer number
+
+- `floaterm#hide()` hide all visible floaterms
+
+- `floaterm#window#hide_floaterm(bufnr)` hide the floaterm whose bufnum is `bufnr`
+
+- `floaterm#terminal#send(bufnr, cmds)` send commands to a terminal whose bufnum is `bufnr`
+
+  - `cmd`: a list contains some commands
+
+- `floaterm#window#open_floating(bufnr, width, height, pos)` open a generic floating window with a border, return window id
+
+There are some other functions which can be served as APIs, for detail infomation, go and check source files yourself.
 
 ## F.A.Q
 
@@ -450,7 +480,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
   set shell=/path/to/shell
   ```
 
-- #### I would like to customize the style of the floating terminal window
+- #### I would like to customize the style of the floaterm window
 
   Use `autocmd`. For example
 
@@ -471,7 +501,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
   :FloatermUpdate wintype=normal position=right
   ```
 
-- #### Not starting insert mode after creating a new floaterm...
+- #### Can not enter insert mode after creating a new floaterm...
 
   See option [g:floaterm_autoinsert](#gfloaterm_autoinsert), also [#52](https://github.com/voldikss/vim-floaterm/issues/52) might be helpful.
 
