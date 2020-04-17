@@ -1,5 +1,8 @@
 # For current directory only
 
+vimrc
+*.appimage
+
 # ----------------------------------------------------------------------------
 
 # General
