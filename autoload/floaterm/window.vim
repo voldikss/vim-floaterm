@@ -180,7 +180,6 @@ function! floaterm#window#open_split(bufnr, height, width, pos) abort
     execute 'botright' . a:height . 'split'
   endif
   wincmd J
-  enew
   execute 'buffer ' . a:bufnr
   return win_getid()
 endfunction
