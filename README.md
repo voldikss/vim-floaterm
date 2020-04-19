@@ -33,7 +33,7 @@ Use (neo)vim terminal in the floating/popup window.
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [APIs](#apis)
 - [F.A.Q](#f.a.q)
-- [Break Changes](#break-changes)
+- [Break changes](#break-changes)
 - [Credits](#credits)
 - [License](#license)
 
@@ -177,6 +177,12 @@ Type `string`. Opening strategy for running `git commit` in floaterm window. Onl
 Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
 
 Default: `v:null` which means this is disabled by default(use your own `$GIT_EDITOR`).
+
+#### **`g:floaterm_autoclose`**
+
+Type `bool`. If `v:true`, floaterm window will be deleted after job finished. Otherwise the window will keep unclosed with some messages like `[Process exited 0]` and you must type a key to close it.
+
+Default: `v:false`.
 
 ### Keymaps
 
@@ -511,6 +517,7 @@ There are some other functions which can be served as APIs, for detail infomatio
 
 ## Break Changes
 
+- Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
 - Command `FloatermSend` must be used with a range
 - Rename: `g:floaterm_type` --> `g:floaterm_wintype`
 - Rename: `FloatermNF` --> `Floaterm`

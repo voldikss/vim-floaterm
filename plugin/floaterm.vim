@@ -18,6 +18,7 @@ let g:floaterm_rootmarkers   = get(g:, 'floaterm_rootmarkers', [])
 let g:floaterm_autoinsert    = get(g:, 'floaterm_autoinsert', v:true)
 let g:floaterm_open_command  = get(g:, 'floaterm_open_command', 'edit')
 let g:floaterm_gitcommit     = get(g:, 'floaterm_gitcommit', v:null)
+let g:floaterm_autoclose     = get(g:, 'floaterm_autoclose', v:false)
 
 let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', v:null)
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)

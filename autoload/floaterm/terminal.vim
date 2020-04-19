@@ -54,6 +54,9 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
 endfunction
 
 function! s:on_floaterm_close(bufnr) abort
+  if !g:floaterm_autoclose
+    return
+  endif
   if getbufvar(a:bufnr, '&filetype') != 'floaterm'
     return
   endif
