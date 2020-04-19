@@ -179,7 +179,6 @@ function! floaterm#window#open_split(bufnr, height, width, pos) abort
   else " default position: bottom
     execute 'botright' . a:height . 'split'
   endif
-  wincmd J
   execute 'buffer ' . a:bufnr
   return win_getid()
 endfunction
