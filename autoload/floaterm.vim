@@ -76,8 +76,7 @@ function! floaterm#new(cmd, winopts, jobopts) abort
         let bufnr = floaterm#terminal#open(-1, name, jobopts, a:winopts)
       endif
     else
-      let bufnr = floaterm#terminal#open(-1, &shell, a:jobopts, a:winopts)
-      call floaterm#terminal#send(bufnr, [a:cmd])
+      let bufnr = floaterm#terminal#open(-1, a:cmd, a:jobopts, a:winopts)
     endif
   else
     let bufnr = floaterm#terminal#open(-1, &shell, a:jobopts, a:winopts)
