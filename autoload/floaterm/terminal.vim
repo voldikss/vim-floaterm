@@ -54,7 +54,8 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
 endfunction
 
 function! s:on_floaterm_close(bufnr) abort
-  if !g:floaterm_autoclose
+  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
+  if !get(winopts, 'autoclose', 0)
     return
   endif
   if getbufvar(a:bufnr, '&filetype') != 'floaterm'
@@ -91,15 +92,16 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   let height = float2nr(height)
 
   let wintype = get(a:winopts, 'wintype', s:wintype)
-  let pos = get(a:winopts, 'position', g:floaterm_position)
+  let position = get(a:winopts, 'position', g:floaterm_position)
+  let autoclose = get(a:winopts, 'autoclose', g:floaterm_autoclose)
 
   if a:bufnr > 0
     if wintype == 'floating'
-      let winid = floaterm#window#open_floating(a:bufnr, width, height, pos)
+      let winid = floaterm#window#open_floating(a:bufnr, width, height, position)
     elseif wintype == 'popup'
-      let winid = floaterm#window#open_popup(a:bufnr, width, height, pos)
+      let winid = floaterm#window#open_popup(a:bufnr, width, height, position)
     else
-      let winid = floaterm#window#open_split(a:bufnr, height, width, pos)
+      let winid = floaterm#window#open_split(a:bufnr, height, width, position)
     endif
     call s:on_floaterm_open(a:bufnr, winid, a:winopts)
     return 0
@@ -109,12 +111,12 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#buflist#add(bufnr)
     if wintype == 'floating'
-      let winid = floaterm#window#open_floating(bufnr, width, height, pos)
+      let winid = floaterm#window#open_floating(bufnr, width, height, position)
       call nvim_set_current_win(winid)
       let ch = termopen(a:cmd, a:jobopts)
       let s:channel_map[bufnr] = ch
     else
-      let winid = floaterm#window#open_split(bufnr, height, width, pos)
+      let winid = floaterm#window#open_split(bufnr, height, width, position)
       let ch = termopen(a:cmd, a:jobopts)
       let s:channel_map[bufnr] = ch
     endif
@@ -133,16 +135,16 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
     if wintype == 'popup'
-      let winid = floaterm#window#open_popup(bufnr, width, height, pos)
+      let winid = floaterm#window#open_popup(bufnr, width, height, position)
     else
-      let winid = floaterm#window#open_split(bufnr, height, width, pos)
+      let winid = floaterm#window#open_split(bufnr, height, width, position)
     endif
   endif
 
   let a:winopts.width = width
   let a:winopts.height = height
   let a:winopts.wintype = wintype
-  let a:winopts.pos = pos
+  let a:winopts.position = position
   call s:on_floaterm_open(bufnr, winid, a:winopts)
   return bufnr
 endfunction

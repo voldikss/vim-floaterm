@@ -78,18 +78,19 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 #### `:FloatermNew [options] [cmd]` Open a floaterm window.
 
 - If `cmd` exists, it will be executed automatically after the shell startup.
-- The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, and `name`.
+- The `options` is formed as `--key[=value]`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
   - `name` name of the floaterm
+  - `autoclose` close the window after finishing job, see `g:floaterm_autoclose`
 - Use `<TAB>` to get completion.
 
 For example, command
 
 ```vim
-:FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft ranger --cmd="cd ~"
+:FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose ranger --cmd="cd ~"
 ```
 
 will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.

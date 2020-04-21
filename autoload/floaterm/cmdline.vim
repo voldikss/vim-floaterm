@@ -17,11 +17,16 @@ function! floaterm#cmdline#parse(arglist) abort
     for arg in a:arglist
       if arg =~ '^--.*$'
         let opt = split(arg, '=')
-        let [key, value] = [opt[0][2:], opt[1]]
-        if key == 'height' || key == 'width'
-          let value = eval(value)
+        if len(opt) == 2
+          let [key, value] = [opt[0][2:], opt[1]]
+          if key == 'height' || key == 'width'
+            let value = eval(value)
+          endif
+          let winopts[key] = value
+        else
+          let key = opt[0][2:]
+          let winopts[key] = v:true
         endif
-        let winopts[key] = value
       else
         let cmd = join(a:arglist[c:])
         break
@@ -36,7 +41,7 @@ endfunction
 " used for `:FloatermNew` and `:FloatermUpdate`
 " ----------------------------------------------------------------------------
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let winopts_key = ['--height=', '--width=', '--wintype=', '--name=', '--position=']
+  let winopts_key = ['--height=', '--width=', '--wintype=', '--name=', '--position=', '--autoclose']
   if a:cmd_line =~ '^FloatermNew'
     let candidates = winopts_key + sort(getcompletion('', 'shellcmd'))
   elseif a:cmd_line =~ '^FloatermUpdate'
