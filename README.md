@@ -440,11 +440,12 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## APIs
 
-- `floaterm#new(cmd, win_opts, job_opts)` create a new floaterm instance and return the bufnum
+- `floaterm#new(cmd, win_opts, job_opts, shell)` create a new floaterm instance and return the bufnum
 
   - `cmd` type `string`, if empty(`''`), will use `&shell`
   - `win_opts` type `dict`. See [FloatermNew options](#floatermnew-options-cmd-open-a-floaterm-window), e.g., `{'name': 'floaterm1', 'wintype': 'floating', 'position': 'top'}`
   - `job_opts` type `dict`. For reference, see `:help job-options`(for vim) or `:help jobstart-options`(for nvim)
+  - `shell` type `bool`. Whether to run `cmd` in `$SHELL`
 
 - `floaterm#update(win_opts)` update floaterm window attributes
 
