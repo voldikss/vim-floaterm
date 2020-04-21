@@ -51,6 +51,7 @@ function! floaterm#util#edit(_bufnr, filename) abort
 endfunction
 
 function! floaterm#util#startinsert() abort
+  if !g:floaterm_autoinsert | return | endif
   if mode() == 'i' | return | endif
   if has('nvim')
     startinsert

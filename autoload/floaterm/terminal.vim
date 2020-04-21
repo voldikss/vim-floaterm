@@ -48,9 +48,7 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
       execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
     augroup END
   endif
-  if g:floaterm_autoinsert == v:true
-    call floaterm#util#startinsert()
-  endif
+  call floaterm#util#startinsert()
 endfunction
 
 function! s:on_floaterm_close(bufnr) abort
