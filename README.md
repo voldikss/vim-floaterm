@@ -78,7 +78,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 #### `:FloatermNew [options] [cmd]` Open a floaterm window.
 
 - If `cmd` exists, it will be executed automatically after the shell startup.
-- The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position` and `name`.
+- The `options` is formed as `key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, and `name`.
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
   - `wintype` see `g:floaterm_wintype`
@@ -89,7 +89,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 For example, command
 
 ```vim
-:FloatermNew height=0.6 width=0.4 wintype=floating name=floaterm1 position=topleft ranger --cmd="cd ~"
+:FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft ranger --cmd="cd ~"
 ```
 
 will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
@@ -110,14 +110,14 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermHide` Hide all visible floaterms
 
-#### `:'<,'>FloatermSend [floaterm_name]` Send selected lines to a job in floaterm.
+#### `:'<,'>FloatermSend[!] [floaterm_name]` Send selected lines to a job in floaterm.
 
 - If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
 - Use `<TAB>` to get completion.
 
 Note: This command must be executed with a range!
 
-Also you may try `:'<,'>FloatermSend!`, which trims the whitespace in the begin of the line, and the latter removes the whitespace but still keeps the indent.
+`:'<,'>FloatermSend!` will trims the common whitespaces in the beginning of lines but still keeps the indents.
 
 ### Global variables
 
@@ -180,7 +180,7 @@ Default: `v:null` which means this is disabled by default(use your own `$GIT_EDI
 
 #### **`g:floaterm_autoclose`**
 
-Type `bool`. If `v:true`, floaterm window will be deleted after job finished. Otherwise the window will keep unclosed with some messages like `[Process exited 0]` and you must type a key to close it.
+Type `bool`. If `v:true`, floaterm window will be deleted after job finished. Otherwise the window will keep unclosed with some messages like `[Process exited 0]` and you must type a key to close it. Only works in neovim.
 
 Default: `v:false`.
 
@@ -517,6 +517,7 @@ There are some other functions which can be served as APIs, for detail infomatio
 
 ## Break Changes
 
+- Use GNU style for cmdline arguments. e.g., `wintype=normal` became `--wintype=normal`
 - Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
 - Command `FloatermSend` must be used with a range
 - Rename: `g:floaterm_type` --> `g:floaterm_wintype`
