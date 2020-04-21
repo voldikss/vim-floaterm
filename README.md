@@ -75,8 +75,9 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 ### Commands
 
-#### `:FloatermNew [options] [cmd]` Open a floaterm window.
+#### `:FloatermNew[!] [options] [cmd]` Open a floaterm window.
 
+- If with `!`, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If `cmd` exists, it will be executed automatically after the shell startup.
 - The `options` is formed as `--key[=value]`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `height` see `g:floaterm_height`

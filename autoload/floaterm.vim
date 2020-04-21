@@ -48,10 +48,10 @@ endfunction
 " wrapper function for `floaterm#new()` and `floaterm#update()` since they
 " share the same argument: `winopts`
 " ----------------------------------------------------------------------------
-function! floaterm#run(action, ...) abort
+function! floaterm#run(action, bang, ...) abort
   if a:action == 'new'
     let [cmd, winopts] = floaterm#cmdline#parse(a:000)
-    call floaterm#new(cmd, winopts, {})
+    call floaterm#new(cmd, winopts, {}, a:bang)
   elseif a:action == 'update'
     let [_, winopts] = floaterm#cmdline#parse(a:000)
     call floaterm#update(winopts)
@@ -62,7 +62,7 @@ endfunction
 " create a floaterm. `jobopts` is not used inside this pugin actually, it's
 " reserved for outer invoke
 " ----------------------------------------------------------------------------
-function! floaterm#new(cmd, winopts, jobopts) abort
+function! floaterm#new(cmd, winopts, jobopts, shell) abort
   if a:cmd != ''
     let wrappers = s:get_wrappers()
     let maybe_wrapper = split(a:cmd, '\s')[0]
@@ -75,6 +75,9 @@ function! floaterm#new(cmd, winopts, jobopts) abort
       else
         let bufnr = floaterm#terminal#open(-1, name, jobopts, a:winopts)
       endif
+    elseif a:shell
+      let bufnr = floaterm#terminal#open(-1, &shell, a:jobopts, a:winopts)
+      call floaterm#terminal#send(bufnr, [a:cmd])
     else
       let bufnr = floaterm#terminal#open(-1, a:cmd, a:jobopts, a:winopts)
     endif
@@ -153,7 +156,7 @@ endfunction
 function! floaterm#curr() abort
   let curr_bufnr = floaterm#buflist#find_curr()
   if curr_bufnr == -1
-    let curr_bufnr = floaterm#new('', {}, {})
+    let curr_bufnr = floaterm#new('', {}, {}, v:true)
   else
     call floaterm#terminal#open_existing(curr_bufnr)
   endif
@@ -186,7 +189,7 @@ function! floaterm#send(bang, termname) abort
   else
     let bufnr = floaterm#buflist#find_curr()
     if bufnr == -1
-      let bufnr = floaterm#new('', {}, {})
+      let bufnr = floaterm#new('', {}, {}, v:true)
       call floaterm#toggle('')
       call floaterm#send(a:bang, a:termname)
       call floaterm#toggle('')

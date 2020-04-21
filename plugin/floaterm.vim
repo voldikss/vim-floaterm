@@ -28,10 +28,10 @@ let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
 command! -nargs=0           FloatermHide   call floaterm#hide()
+command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang
+                          \ FloatermNew    call floaterm#run('new', <bang>0, <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
-                          \ FloatermNew    call floaterm#run('new', <f-args>)
-command! -nargs=* -complete=customlist,floaterm#cmdline#complete
-                          \ FloatermUpdate call floaterm#run('update', <f-args>)
+                          \ FloatermUpdate call floaterm#run('update', 0, <f-args>)
 command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
                           \ FloatermToggle call floaterm#toggle(<q-args>)
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names
