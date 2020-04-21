@@ -143,6 +143,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   let a:winopts.height = height
   let a:winopts.wintype = wintype
   let a:winopts.position = position
+  let a:winopts.autoclose = autoclose
   call s:on_floaterm_open(bufnr, winid, a:winopts)
   return bufnr
 endfunction
