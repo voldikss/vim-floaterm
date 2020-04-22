@@ -23,6 +23,7 @@ let g:floaterm_autoclose     = get(g:, 'floaterm_autoclose', v:false)
 let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', v:null)
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)
 let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', v:null)
+let g:floaterm_keymap_hide   = get(g:, 'floaterm_keymap_hide', v:null)
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 
 command! -nargs=0           FloatermPrev   call floaterm#prev()
@@ -52,6 +53,10 @@ function! s:install_keymap()
   if g:floaterm_keymap_next != v:null
     exe printf('nnoremap  <silent> %s :FloatermNext<CR>', g:floaterm_keymap_next)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNext<CR>', g:floaterm_keymap_next)
+  endif
+  if g:floaterm_keymap_hide != v:null
+    exe printf('nnoremap  <silent> %s :FloatermHide<CR>', g:floaterm_keymap_hide)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermHide<CR>', g:floaterm_keymap_hide)
   endif
   if g:floaterm_keymap_toggle != v:null
     exe printf('nnoremap  <silent> %s :FloatermToggle<CR>', g:floaterm_keymap_toggle)
