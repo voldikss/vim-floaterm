@@ -77,7 +77,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 #### `:FloatermNew[!] [options] [cmd]` Open a floaterm window.
 
-- If with `!`, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
+- If `!` exists, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If `cmd` exists, it will be executed automatically after the shell startup.
 - The `options` is formed as `--key[=value]`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `height` see `g:floaterm_height`
@@ -112,14 +112,14 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermHide` Hide all visible floaterms
 
-#### `:'<,'>FloatermSend[!] [floaterm_name]` Send selected lines to a job in floaterm.
+#### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
-- If `floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`.
+- If `--name=floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`. Otherwise use current floaterm.
+- If `cmd` exists, it will be sent and selected lines will be ignored.
+- This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
+  - If `cmd` exists, the selected lines will be ignored.
+  - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed but the relative indent between lines will still be kept.
 - Use `<TAB>` to get completion.
-
-Note: This command must be executed with a range!
-
-`:'<,'>FloatermSend!` will trims the common whitespaces in the beginning of lines but still keeps the indents.
 
 ### Global variables
 
@@ -464,11 +464,15 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 - `floaterm#hide()` hide all visible floaterms
 
+- `floaterm#send(bufnr, cmdstr)` send a command to a terminal whose bufnum is `bufnr`
+
+  - `cmdstr` type `string`
+
 - `floaterm#window#hide_floaterm(bufnr)` hide the floaterm whose bufnum is `bufnr`
 
-- `floaterm#terminal#send(bufnr, cmds)` send commands to a terminal whose bufnum is `bufnr`
+- `floaterm#terminal#send(bufnr, cmdlist)` send commands to a terminal whose bufnum is `bufnr`
 
-  - `cmd`: a list contains some commands
+  - `cmdlist`: a list contains some commands
 
 - `floaterm#window#open_floating(bufnr, width, height, pos)` open a generic floating window with a border, return window id
 
@@ -523,7 +527,8 @@ There are some other functions which can be served as APIs, for detail infomatio
 
 ## Break Changes
 
-- Use GNU style for cmdline arguments. e.g., `wintype=normal` became `--wintype=normal`
+- Command `:FloatermSend [floaterm_name]` --> `:FloatermSend [--name=floaterm_name] [cmd]`
+- Use GNU style for cmdline arguments. e.g., `wintype=normal` --> `--wintype=normal`
 - Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
 - Command `FloatermSend` must be used with a range
 - Rename: `g:floaterm_type` --> `g:floaterm_wintype`

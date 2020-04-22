@@ -82,10 +82,9 @@ endfunction
 " ----------------------------------------------------------------------------
 " used for `:FloatermToggle`
 " ----------------------------------------------------------------------------
-function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos) abort
+function! floaterm#cmdline#floaterm_names(...) abort
   let buflist = floaterm#buflist#gather()
   let ret = []
-  let pattern = '^floaterm://'
   for bufnr in buflist
     let winopts = getbufvar(bufnr, 'floaterm_winopts', {})
     if !empty(winopts)
@@ -96,4 +95,29 @@ function! floaterm#cmdline#floaterm_names(arg_lead, cmd_line, cursor_pos) abort
     endif
   endfor
   return ret
+endfunction
+
+" ----------------------------------------------------------------------------
+" used for `:FloatermSend`
+" ----------------------------------------------------------------------------
+function! floaterm#cmdline#floaterm_names2(arg_lead, cmd_line, cursor_pos) abort
+  let candidates = ['--name=']
+  let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
+  let args = split(cmd_line_before_cursor, '\v\\@<!(\\\\)*\zs\s+', 1)
+  call remove(args, 0)
+
+  if match(cmd_line_before_cursor, '--name') != -1
+    let candidates = []
+  endif
+
+  let prefix = args[-1]
+  if prefix ==# ''
+    return candidates
+  endif
+
+  if match(prefix, '--name=') > -1
+    let names = floaterm#cmdline#floaterm_names()
+    let candidates = map(names, {idx -> '--name=' . names[idx]})
+  endif
+  return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
 endfunction
