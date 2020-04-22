@@ -207,6 +207,10 @@ function! floaterm#send(bang, argstr) abort
   let [lnum1, col1] = getpos("'<")[1:2]
   let [lnum2, col2] = getpos("'>")[1:2]
   let lines = getline(lnum1, lnum2)
+  if empty(lines)
+    call floaterm#util#show_msg('No lines were selected', 'error')
+    return
+  endif
   let lines[-1] = lines[-1][: col2 - 1]
   let lines[0] = lines[0][col1 - 1:]
 
