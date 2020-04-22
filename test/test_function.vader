@@ -1,0 +1,66 @@
+Execute(Test floaterm#cmdline#parse):
+  let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose ranger --cmd="cd ~"'
+  let arglist = split(argstr)
+  let [cmd, opts] = floaterm#cmdline#parse(arglist)
+  AssertEqual 'ranger --cmd="cd ~"', cmd
+  AssertEqual {
+    \'wintype': 'floating',
+    \'name': 'floaterm1',
+    \'autoclose': v:true,
+    \'width': 0.4,
+    \'height': 0.6,
+    \'position': 'topleft'
+    \}, opts
+
+Execute(Test floaterm#cmdline#complete):
+  AssertEqual [
+    \'--height=',
+    \'--width=',
+    \'--wintype=',
+    \'--name=',
+    \'--position=',
+    \'--autoclose'
+    \], floaterm#cmdline#complete(v:null, 'FloatermNew ', 12)[:5]
+  AssertEqual [
+    \'--wintype=normal',
+    \'--wintype=floating'
+    \], floaterm#cmdline#complete(v:null, 'FloatermNew --wintype=', 22)
+  AssertEqual [
+    \'--position=top',
+    \'--position=right',
+    \'--position=bottom',
+    \'--position=left',
+    \'--position=center',
+    \'--position=topleft',
+    \'--position=topright',
+    \'--position=bottomleft',
+    \'--position=bottomright',
+    \'--position=auto'
+    \], floaterm#cmdline#complete(v:null, 'FloatermNew --position=', 23)
+  AssertEqual [
+    \'--height=',
+    \'--width=',
+    \'--wintype=',
+    \'--name=',
+    \'--position=',
+    \'--autoclose'
+    \], floaterm#cmdline#complete(v:null, 'FloatermUpdate ', 15)
+
+Execute(Test floaterm#cmdline#floaterm_names):
+  FloatermNew --name=floaterm1
+  AssertEqual ['floaterm1'], floaterm#cmdline#floaterm_names()
+
+Execute(Test floaterm#cmdline#floaterm_names2):
+  FloatermNew --name=floaterm2
+  AssertEqual [
+    \'--name='
+    \], floaterm#cmdline#floaterm_names2(v:null, 'FloatermSend ', 13)
+  AssertEqual [
+    \'--name=floaterm1',
+    \'--name=floaterm2'
+    \], floaterm#cmdline#floaterm_names2(v:null, 'FloatermSend --name=', 20)
+
+Execute(Exit):
+  stopinsert
+  call floaterm#hide()
+  sleep 100m
