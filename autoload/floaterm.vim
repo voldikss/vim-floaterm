@@ -173,17 +173,19 @@ function! floaterm#hide() abort
   endfor
 endfunction
 
-function! floaterm#send(bang, termname) abort
+function! floaterm#send(bang, argstr) abort
   if &filetype ==# 'floaterm'
     let msg = "FloatermSend can't be used in the floaterm window"
     call floaterm#util#show_msg(msg, 'warning')
     return
   endif
 
-  if a:termname != ''
-    let bufnr = floaterm#terminal#get_bufnr(a:termname)
+  let [cmd, opts] = floaterm#cmdline#parse(split(a:argstr))
+  let termname = get(opts, 'termname', '')
+  if !empty(termname)
+    let bufnr = floaterm#terminal#get_bufnr(termname)
     if bufnr == -1
-      call floaterm#util#show_msg('No floaterm found with name: ' . a:termname, 'error')
+      call floaterm#util#show_msg('No floaterm found with name: ' . termname, 'error')
       return
     endif
   else
@@ -191,10 +193,14 @@ function! floaterm#send(bang, termname) abort
     if bufnr == -1
       let bufnr = floaterm#new('', {}, {}, v:true)
       call floaterm#toggle('')
-      call floaterm#send(a:bang, a:termname)
+      call floaterm#send(a:bang, a:argstr)
       call floaterm#toggle('')
       return
     endif
+  endif
+  if !empty(cmd)
+    call floaterm#terminal#send(bufnr, [cmd])
+    return
   endif
 
   " https://vi.stackexchange.com/a/11028/17515
