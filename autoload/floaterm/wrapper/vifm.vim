@@ -11,11 +11,11 @@ function! floaterm#wrapper#vifm#(cmd) abort
   lcd %:p:h
 
   let cmdlist = split(a:cmd)
-  let cmd = 'vifm --choose-files ' . s:vifm_tmpfile
+  let cmd = 'vifm --choose-files "' . s:vifm_tmpfile . '"'
   if len(cmdlist) > 1
     let cmd .= ' ' . join(cmdlist[1:], ' ')
   else
-    let cmd .= ' ' . getcwd()
+    let cmd .= ' "' . getcwd() . '"'
   endif
 
   exe "lcd " . original_dir
