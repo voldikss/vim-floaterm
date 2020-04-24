@@ -155,7 +155,9 @@ endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort
   let ch = get(s:channel_map, a:bufnr, v:null)
-  if empty(ch) | return | endif
+  if empty(ch) || empty(a:cmds)
+    return
+  endif
   if has('nvim')
     if !empty(a:cmds[len(a:cmds) - 1])
       call add(a:cmds, '')
