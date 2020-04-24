@@ -166,10 +166,10 @@ function! floaterm#terminal#send(bufnr, cmds) abort
     let curr_winnr = winnr()
     let ch_winnr = bufwinnr(a:bufnr)
     if ch_winnr > 0
-      execute ch_winnr . 'wincmd w'
-      execute 'normal! G'
+      noautocmd execute ch_winnr . 'wincmd w'
+      noautocmd execute 'normal! G'
     endif
-    execute curr_winnr . 'wincmd w'
+    noautocmd execute curr_winnr . 'wincmd w'
   else
     let newline = s:is_win ? "\r\n" : "\n"
     call ch_sendraw(ch, join(a:cmds, newline) . newline)
