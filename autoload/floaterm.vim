@@ -49,11 +49,10 @@ endfunction
 " share the same argument: `winopts`
 " ----------------------------------------------------------------------------
 function! floaterm#run(action, bang, ...) abort
+  let [cmd, winopts] = floaterm#cmdline#parse(a:000)
   if a:action == 'new'
-    let [cmd, winopts] = floaterm#cmdline#parse(a:000)
     call floaterm#new(cmd, winopts, {}, a:bang)
   elseif a:action == 'update'
-    let [_, winopts] = floaterm#cmdline#parse(a:000)
     call floaterm#update(winopts)
   endif
 endfunction
