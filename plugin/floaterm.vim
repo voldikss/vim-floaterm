@@ -36,7 +36,7 @@ command! -nargs=* -complete=customlist,floaterm#cmdline#complete
 command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
                           \ FloatermToggle call floaterm#toggle(<q-args>)
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names2
-                          \ FloatermSend   call floaterm#send('<bang>', <q-args>)
+                          \ FloatermSend   call floaterm#send(<bang>0, <range>, <line1>, <line2>, <q-args>)
 
 hi def link Floaterm       Normal
 hi def link FloatermBorder Normal

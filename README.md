@@ -120,6 +120,17 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
   - If `cmd` exists, the selected lines will be ignored.
   - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed but the relative indent between lines will still be kept.
 - Use `<TAB>` to get completion.
+- Examples
+  ```vim
+  :FloatermSend                        " Send current line to the current floaterm
+  :FloatermSend --name=ft1             " Send current line to the floaterm named ft1
+  :FloatermSend ls -la                 " Send `ls -la` to the current floaterm
+  :FloatermSend --name=ft1 ls -la      " Send `ls -la` to the floaterm named ft1
+  :23FloatermSend ...                  " Send the line 23 to floaterm
+  :1,23FloatermSend ...                " Send lines between line 1 and line 23 to floaterm
+  :'<,'>FloatermSend ...               " Send lines selected to floaterm
+  :%FloatermSend ...                   " Send the whole buffer to floaterm
+  ```
 
 ### Global variables
 

@@ -173,7 +173,7 @@ function! floaterm#hide() abort
   endfor
 endfunction
 
-function! floaterm#send(bang, argstr) abort
+function! floaterm#send(bang, range, line1, line2, argstr) abort
   if &filetype ==# 'floaterm'
     let msg = "FloatermSend can't be used in the floaterm window"
     call floaterm#util#show_msg(msg, 'warning')
@@ -203,19 +203,29 @@ function! floaterm#send(bang, argstr) abort
     return
   endif
 
-  " https://vi.stackexchange.com/a/11028/17515
-  let [lnum1, col1] = getpos("'<")[1:2]
-  let [lnum2, col2] = getpos("'>")[1:2]
-  let lines = getline(lnum1, lnum2)
-  if empty(lines)
-    call floaterm#util#show_msg('No lines were selected', 'error')
-    return
+  if a:range == 0
+    let lines = [getline('.')]
+  elseif a:range == 1
+    let lines = [getline('.')]
+  else
+    if a:line1 == a:line2
+      " https://vi.stackexchange.com/a/11028/17515
+      let [lnum1, col1] = getpos("'<")[1:2]
+      let [lnum2, col2] = getpos("'>")[1:2]
+      let lines = getline(lnum1, lnum2)
+      if empty(lines)
+        call floaterm#util#show_msg('No lines were selected', 'error')
+        return
+      endif
+      let lines[-1] = lines[-1][: col2 - 1]
+      let lines[0] = lines[0][col1 - 1:]
+    else
+      let lines = getline(a:line1, a:line2)
+    endif
   endif
-  let lines[-1] = lines[-1][: col2 - 1]
-  let lines[0] = lines[0][col1 - 1:]
 
   let linelist = []
-  if a:bang ==# '!'
+  if a:bang
     let line1 = lines[0]
     let trim_line = substitute(line1, '\v^\s+', '', '')
     let indent = len(line1) - len(trim_line)
