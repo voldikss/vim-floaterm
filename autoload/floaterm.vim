@@ -192,7 +192,7 @@ function! floaterm#send(bang, range, line1, line2, argstr) abort
     if bufnr == -1
       let bufnr = floaterm#new('', {}, {}, v:true)
       call floaterm#toggle('')
-      call floaterm#send(a:bang, a:argstr)
+      call floaterm#send(a:bang, a:range, a:line1, a:line2, a:argstr)
       call floaterm#toggle('')
       return
     endif
