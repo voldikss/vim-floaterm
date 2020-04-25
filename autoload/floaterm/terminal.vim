@@ -61,7 +61,10 @@ function! s:on_floaterm_close(bufnr) abort
   endif
   " NOTE: MUST hide border BEFORE deleting floaterm buffer
   call floaterm#window#hide_floaterm_border(a:bufnr)
-  bdelete!
+  try
+    execute a:bufnr . 'bdelete!'
+  catch
+  endtry
   doautocmd BufDelete   " call lightline#update()
 endfunction
 
