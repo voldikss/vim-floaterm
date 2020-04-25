@@ -11,14 +11,14 @@ function! floaterm#wrapper#ranger#(cmd) abort
   lcd %:p:h
 
   let cmdlist = split(a:cmd)
-  let cmd = 'ranger --choosefiles=' . s:ranger_tmpfile
+  let cmd = 'ranger --choosefiles="' . s:ranger_tmpfile . '"'
   if len(cmdlist) > 1
     let cmd .= ' ' . join(cmdlist[1:], ' ')
   else
     if expand('%:p') != ''
       let cmd .= ' --selectfile="' . expand('%:p') . '"'
     else
-      let cmd .= ' ' . getcwd()
+    let cmd .= ' "' . getcwd() . '"'
     endif
   endif
 

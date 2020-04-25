@@ -14,7 +14,7 @@ function! floaterm#wrapper#fff#(cmd) abort
   if len(cmdlist) > 1
     let cmd .= ' ' . join(cmdlist[1:], ' ')
   else
-    let cmd .= ' ' . getcwd()
+    let cmd .= ' "' . getcwd() . '"'
   endif
 
   exe "lcd " . original_dir
