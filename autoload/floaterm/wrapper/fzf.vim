@@ -5,14 +5,22 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#wrapper#fzf#(...) abort
-  if stridx(&shell, 'fish') >= 0
-    let cmd = 'floaterm (fzf)'
-  elseif stridx(&shell, 'csh')
-    let cmd = 'floaterm `fzf`'
-  else
-    " sh/bash/zsh
-    let cmd = 'floaterm $(fzf)'
+function! floaterm#wrapper#fzf#(cmd) abort
+  let s:fzf_tmpfile = tempname()
+  let cmd = a:cmd . ' > ' . s:fzf_tmpfile
+  return [cmd, {'on_exit': funcref('s:fzf_callback')}, v:false]
+endfunction
+
+function! s:fzf_callback(...) abort
+  if filereadable(s:fzf_tmpfile)
+    let filenames = readfile(s:fzf_tmpfile)
+    if !empty(filenames)
+      if has('nvim')
+        call floaterm#window#hide_floaterm(bufnr('%'))
+      endif
+      for filename in filenames
+        execute g:floaterm_open_command . ' ' . fnameescape(filename)
+      endfor
+    endif
   endif
-  return [cmd, {}, v:true]
 endfunction

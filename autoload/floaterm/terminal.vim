@@ -61,7 +61,10 @@ function! s:on_floaterm_close(bufnr) abort
   endif
   " NOTE: MUST hide border BEFORE deleting floaterm buffer
   call floaterm#window#hide_floaterm_border(a:bufnr)
-  bdelete!
+  try
+    execute a:bufnr . 'bdelete!'
+  catch
+  endtry
   doautocmd BufDelete   " call lightline#update()
 endfunction
 
@@ -178,18 +181,4 @@ endfunction
 
 function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
-endfunction
-
-
-"-----------------------------------------------------------------------------
-" check if a job is running in the buffer(not used)
-"-----------------------------------------------------------------------------
-function! floaterm#terminal#jobexists(bufnr) abort
-  if has('nvim')
-    let jobid = getbufvar(a:bufnr, '&channel')
-    return jobwait([jobid], 0)[0] == -1
-  else
-    let job = term_getjob(a:bufnr)
-    return job_status(job) !=# 'dead'
-  endif
 endfunction

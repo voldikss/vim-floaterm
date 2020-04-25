@@ -29,8 +29,15 @@ Execute(FloatermHide):
   FloatermHide
   AssertEqual '', &filetype
 
+Execute(FloatermKill):
+  FloatermNew
+  let bnr = bufnr('%')
+  FloatermKill
+  AssertEqual 0, bufexists(bnr)
+
 Execute(FloatermSend):
   FloatermNew
+  FloatermHide
   FloatermSend ls
 
 Execute (Exit):

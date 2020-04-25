@@ -112,6 +112,8 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermHide` Hide all visible floaterms
 
+#### `:FloatermKill` Kill the current floaterm instance
+
 #### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
 - If `--name=floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`. Otherwise use current floaterm.

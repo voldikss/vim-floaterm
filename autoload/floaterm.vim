@@ -162,6 +162,25 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
+function! floaterm#kill() abort
+  let bufnr = bufnr('%')
+  call floaterm#window#hide_floaterm(bufnr)
+  if has('nvim')
+    let jobid = getbufvar(bufnr, '&channel')
+    if jobwait([jobid], 0)[0] == -1
+      call jobstop(jobid)
+    endif
+  else
+    let job = term_getjob(bufnr)
+    if job_status(job) !=# 'dead'
+      call job_stop(job)
+    endif
+  endif
+  if bufexists(bufnr)
+    execute bufnr . 'bwipeout!'
+  endif
+endfunction
+
 "-----------------------------------------------------------------------------
 " hide all floaterms
 "-----------------------------------------------------------------------------
