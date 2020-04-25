@@ -37,6 +37,7 @@ Execute(FloatermKill):
 
 Execute(FloatermSend):
   FloatermNew
+  FloatermHide
   FloatermSend ls
 
 Execute (Exit):
