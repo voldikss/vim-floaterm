@@ -141,12 +141,16 @@ function! floaterm#window#open_floating(bufnr, width, height, pos) abort
     \ 'style':'minimal'
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, opts)
-  let border_winid = getbufvar(a:bufnr, 'floaterm_border_winid', v:null)
-  if border_winid == v:null || !s:winexists(border_winid)
-    let title = s:build_title(a:bufnr)
-    let border_winid = s:add_border(winid, title)
-    call setbufvar(a:bufnr, 'floaterm_border_winid', border_winid)
+  let border_winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
+  " close border that already exists and make a new border
+  " since `bufhidden` option of floatermborder is set to 'wipe',
+  " the border_bufnr will be wiped out once the window was closed
+  if s:winexists(border_winid)
+    call nvim_win_close(border_winid, v:true)
   endif
+  let title = s:build_title(a:bufnr)
+  let border_winid = s:add_border(winid, title)
+  call setbufvar(a:bufnr, 'floatermborder_winid', border_winid)
   return winid
 endfunction
 
@@ -190,11 +194,11 @@ function! floaterm#window#open_split(bufnr, height, width, pos) abort
 endfunction
 
 function! floaterm#window#hide_floaterm_border(bufnr, ...) abort
-  let winid = getbufvar(a:bufnr, 'floaterm_border_winid', v:null)
+  let winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
   if winid != v:null && s:winexists(winid)
     call nvim_win_close(winid, v:true)
   endif
-  call setbufvar(a:bufnr, 'floaterm_border_winid', v:null)
+  call setbufvar(a:bufnr, 'floatermborder_winid', -1)
 endfunction
 
 function! floaterm#window#hide_floaterm(bufnr) abort
