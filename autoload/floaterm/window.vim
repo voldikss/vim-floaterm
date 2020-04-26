@@ -5,25 +5,41 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+function! s:build_title(bufnr) abort
+  if !g:floaterm_wintitle
+    return ''
+  endif
+  let buffers = floaterm#buflist#gather()
+  let cnt = len(buffers)
+  let idx = index(buffers, a:bufnr) + 1
+  return printf(' floaterm: %s/%s', idx, cnt)
+endfunction
+
+function! s:draw_border(title, width, height) abort
+  let top = g:floaterm_borderchars[4] .
+          \ repeat(g:floaterm_borderchars[0], a:width) .
+          \ g:floaterm_borderchars[5]
+  let mid = g:floaterm_borderchars[3] .
+          \ repeat(' ', a:width) .
+          \ g:floaterm_borderchars[1]
+  let bot = g:floaterm_borderchars[7] .
+          \ repeat(g:floaterm_borderchars[2], a:width) .
+          \ g:floaterm_borderchars[6]
+  let top = floaterm#util#string_compose(top, 1, a:title)
+  let lines = [top] + repeat([mid], a:height) + [bot]
+  return lines
+endfunction
+
 " winid: floaterm window id
 function! s:add_border(winid, title) abort
   let winopts = nvim_win_get_config(a:winid)
-  let top = g:floaterm_borderchars[4] .
-          \ repeat(g:floaterm_borderchars[0], winopts.width) .
-          \ g:floaterm_borderchars[5]
-  let mid = g:floaterm_borderchars[3] .
-          \ repeat(' ', winopts.width) .
-          \ g:floaterm_borderchars[1]
-  let bot = g:floaterm_borderchars[7] .
-          \ repeat(g:floaterm_borderchars[2], winopts.width) .
-          \ g:floaterm_borderchars[6]
-  let top = floaterm#util#string_compose(top, 1, a:title)
-  let lines = [top] + repeat([mid], winopts.height) + [bot]
-  let buf_opts = {}
-  let buf_opts.synmaxcol = 3000 " #17
-  let buf_opts.filetype = 'floaterm_border'
-  let border_bufnr = floaterm#buffer#create(lines, buf_opts)
-  call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
+  let border = s:draw_border(a:title, winopts.width, winopts.height)
+  let bufopts = {}
+  let bufopts.synmaxcol = 3000 " #17
+  let bufopts.filetype = 'floatermborder'
+  let bufopts.bufhidden = 'wipe'
+  let border_bufnr = floaterm#buffer#create(border, bufopts)
+  " update winopts which will be used to config floatermborder window
   let winopts.row -= (winopts.anchor[0] == 'N' ? 1 : -1)
   " adjust offset
   if winopts.row < 0
@@ -39,16 +55,6 @@ function! s:add_border(winid, title) abort
   let border_winid = nvim_open_win(border_bufnr, v:false, winopts)
   call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorder')
   return border_winid
-endfunction
-
-function! s:build_title(bufnr) abort
-  if !g:floaterm_wintitle
-    return ''
-  endif
-  let buffers = floaterm#buflist#gather()
-  let cnt = len(buffers)
-  let idx = index(buffers, a:bufnr) + 1
-  return printf(' floaterm: %s/%s', idx, cnt)
 endfunction
 
 function! s:floatwin_pos(width, height, pos) abort
