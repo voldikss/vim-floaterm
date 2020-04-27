@@ -96,6 +96,10 @@ For example, command
 
 will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
 
+#### `:FloatermPrev` Switch to the previous floaterm instance
+
+#### `:FloatermNext` Switch to the next floaterm instance
+
 #### `:FloatermUpdate [options]` Update floaterm window attributes(`height`, `width`, etc.).
 
 - The `options` is the same as in `:FloatermNew`.
@@ -106,13 +110,17 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
 - Use `<TAB>` to get completion.
 
-#### `:FloatermPrev` Switch to the previous floaterm instance
+#### `:FloatermShow [floaterm_name]` Show the current floaterm
 
-#### `:FloatermNext` Switch to the next floaterm instance
+- If `floaterm_name` exists, show the floaterm named `floaterm_name`.
 
-#### `:FloatermHide` Hide all visible floaterms
+#### `:FloatermHide [floaterm_name]` Hide the current floaterms
 
-#### `:FloatermKill` Kill the current floaterm instance
+- If `floaterm_name` exists, hide the floaterm named `floaterm_name`.
+
+#### `:FloatermKill [floaterm_name]` Kill the current floaterm instance
+
+- If `floaterm_name` exists, kill the floaterm instance named `floaterm_name`.
 
 #### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
@@ -456,38 +464,34 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## APIs
 
-- `floaterm#new(cmd, win_opts, job_opts, shell)` create a new floaterm instance and return the bufnum
+- `floaterm#new({cmd}, {win_opts}, {job_opts}, {shell})` create a new floaterm instance and return the bufnum
 
-  - `cmd` type `string`, if empty(`''`), will use `&shell`
-  - `win_opts` type `dict`. See [FloatermNew options](#floatermnew-options-cmd-open-a-floaterm-window), e.g., `{'name': 'floaterm1', 'wintype': 'floating', 'position': 'top'}`
-  - `job_opts` type `dict`. For reference, see `:help job-options`(for vim) or `:help jobstart-options`(for nvim)
-  - `shell` type `bool`. Whether to run `cmd` in `$SHELL`
+  - `{cmd}` type `string`, if empty, will use `&shell`
+  - `{win_opts}` type `dict`. See [FloatermNew options](#floatermnew-options-cmd-open-a-floaterm-window), e.g., `{'name': 'floaterm1', 'wintype': 'floating', 'position': 'top'}`
+  - `{job_opts}` type `dict`. For reference, see `:help job-options`(for vim) or `:help jobstart-options`(for nvim)
+  - `{shell}` type `bool`. Whether to run `{cmd}` in `$SHELL`
 
-- `floaterm#update(win_opts)` update floaterm window attributes
-
-- `floaterm#toggle(name)` toggle on/off a floaterm
-
-  - `name` name of the floaterm, if empty(`''`), toggle the current floaterm
+- `floaterm#buflist#find_curr()` return current floaterm buffer number
 
 - `floaterm#prev()` switch to the previous floaterm buffeum and return the bufnum
 
 - `floaterm#next()` switch to the next floaterm buffer and return the bufnum
 
-- `floaterm#curr()` return current floaterm buffer number
+- `floaterm#update({win_opts})` update floaterm window attributes
 
-- `floaterm#hide()` hide all visible floaterms
+- `floaterm#toggle([name])` toggle on/off a floaterm
 
-- `floaterm#send(bufnr, cmdstr)` send a command to a terminal whose bufnum is `bufnr`
+- `floaterm#show([name])` show the floaterms (named `{name}`)
 
-  - `cmdstr` type `string`
+- `floaterm#hide([name])` hide the floaterms (named `{name}`)
 
-- `floaterm#window#hide_floaterm(bufnr)` hide the floaterm whose bufnum is `bufnr`
+- `floaterm#kill([name])` kill the floaterms (named `{name}`)
 
-- `floaterm#terminal#send(bufnr, cmdlist)` send commands to a terminal whose bufnum is `bufnr`
+- `floaterm#window#hide_floaterm({bufnr})` hide the floaterm whose bufnum is `bufnr`
 
-  - `cmdlist`: a list contains some commands
+- `floaterm#terminal#send({bufnr}, {cmdlist})` send commands to a terminal whose bufnum is `bufnr`
 
-- `floaterm#window#open_floating(bufnr, width, height, pos)` open a generic floating window with a border, return window id
+  - `{cmdlist}`: a list contains some commands
 
 There are some other functions which can be served as APIs, for detail infomation, go and check source files yourself.
 

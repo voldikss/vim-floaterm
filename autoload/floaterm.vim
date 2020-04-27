@@ -162,8 +162,16 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-function! floaterm#kill() abort
-  let bufnr = bufnr('%')
+function! floaterm#kill(name) abort
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
+  else
+    let bufnr = floaterm#buflist#find_curr()
+  endif
+  if bufnr == -1
+    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
+    return
+  endif
   call floaterm#window#hide_floaterm(bufnr)
   if has('nvim')
     let jobid = getbufvar(bufnr, '&channel')
@@ -181,14 +189,30 @@ function! floaterm#kill() abort
   endif
 endfunction
 
-"-----------------------------------------------------------------------------
-" hide all floaterms
-"-----------------------------------------------------------------------------
-function! floaterm#hide() abort
-  let buffers = floaterm#buflist#gather()
-  for bufnr in buffers
+function! floaterm#show(name) abort
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
+  else
+    let bufnr = floaterm#buflist#find_curr()
+  endif
+  if bufnr != -1
+    call floaterm#terminal#open_existing(bufnr)
+  else
+    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
+  endif
+endfunction
+
+function! floaterm#hide(name) abort
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
+  else
+    let bufnr = floaterm#buflist#find_curr()
+  endif
+  if bufnr != -1
     call floaterm#window#hide_floaterm(bufnr)
-  endfor
+  else
+    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
+  endif
 endfunction
 
 function! floaterm#send(bang, range, line1, line2, argstr) abort

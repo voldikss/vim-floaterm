@@ -26,18 +26,22 @@ let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', v:null)
 let g:floaterm_keymap_hide   = get(g:, 'floaterm_keymap_hide', v:null)
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 
-command! -nargs=0           FloatermPrev   call floaterm#prev()
-command! -nargs=0           FloatermNext   call floaterm#next()
-command! -nargs=0           FloatermHide   call floaterm#hide()
-command! -nargs=0           FloatermKill   call floaterm#kill()
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang
                           \ FloatermNew    call floaterm#run('new', <bang>0, <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                           \ FloatermUpdate call floaterm#run('update', 0, <f-args>)
 command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermShow   call floaterm#show(<q-args>)
+command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermHide   call floaterm#hide(<q-args>)
+command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermKill   call floaterm#kill(<q-args>)
+command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
                           \ FloatermToggle call floaterm#toggle(<q-args>)
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names2
                           \ FloatermSend   call floaterm#send(<bang>0, <range>, <line1>, <line2>, <q-args>)
+command! -nargs=0           FloatermPrev   call floaterm#prev()
+command! -nargs=0           FloatermNext   call floaterm#next()
 
 hi def link Floaterm       Normal
 hi def link FloatermBorder Normal
