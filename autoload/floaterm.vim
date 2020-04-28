@@ -13,7 +13,7 @@ let $VIM_EXE = v:progpath
 
 let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let s:script = fnamemodify(s:home . '/../bin', ':p')
-let s:wrappers = fnamemodify(s:home . '/floaterm/wrapper', ':p')
+let s:wrappers = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
 let s:windows = has('win32') || has('win64')
 
 if stridx($PATH, s:script) < 0
@@ -40,8 +40,7 @@ endif
 " script level functions
 "-----------------------------------------------------------------------------
 function! s:get_wrappers() abort
-  let files = split(glob(s:wrappers . '/*.vim'), "\n")
-  return map(files, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
+  return map(s:wrappers, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
 endfunction
 
 " ----------------------------------------------------------------------------
