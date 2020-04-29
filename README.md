@@ -1,6 +1,6 @@
 ![CI](https://github.com/voldikss/vim-floaterm/workflows/CI/badge.svg)
 
-【[Introduction in Chinese|中文文档](https://zhuanlan.zhihu.com/p/107749687)】
+【[Introduction in Chinese|中文介绍](https://zhuanlan.zhihu.com/p/107749687)】
 
 Use (neo)vim terminal in the floating/popup window.
 
@@ -78,7 +78,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 #### `:FloatermNew[!] [options] [cmd]` Open a floaterm window.
 
 - If `!` exists, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
-- If `cmd` exists, it will be executed automatically after the shell startup.
+- If `cmd` doesn't exist, open `$SHELL`.
 - The `options` is formed as `--key[=value]`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
@@ -110,11 +110,11 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
 - Use `<TAB>` to get completion.
 
-#### `:FloatermShow [floaterm_name]` Show the current floaterm
+#### `:FloatermShow [floaterm_name]` Show the current floaterm window.
 
 - If `floaterm_name` exists, show the floaterm named `floaterm_name`.
 
-#### `:FloatermHide [floaterm_name]` Hide the current floaterms
+#### `:FloatermHide [floaterm_name]` Hide the current floaterms window.
 
 - If `floaterm_name` exists, hide the floaterm named `floaterm_name`.
 
@@ -124,11 +124,11 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
-- If `--name=floaterm_name` exists, send to the floaterm instance whose `name` is `floaterm_name`. Otherwise use current floaterm.
-- If `cmd` exists, it will be sent and selected lines will be ignored.
+- If `--name=floaterm_name` exists, send lines to the floaterm instance whose `name` is `floaterm_name`. Otherwise use the current floaterm.
+- If `cmd` exists, it will be sent to floaterm and selected lines will be ignored.
 - This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
   - If `cmd` exists, the selected lines will be ignored.
-  - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed but the relative indent between lines will still be kept.
+  - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed while the relative indent between lines will still be kept.
 - Use `<TAB>` to get completion.
 - Examples
   ```vim
@@ -419,9 +419,13 @@ Then your task will be ran in the floaterm instance. See asynctasks.vim [Wiki](h
 
 ## How to define more wrappers
 
+Once you've find a nice command line program which can be used as a wrapper of this plugin, you can either send me a PR or define a personal wrapper for yourself.
+
+The wrapper script must be located in `autoload/floaterm/wrapper/` directory, e.g., `autoload/floaterm/wrapper/fzf.vim`.
+
 There are two ways for a command to be spawned:
 
-- To be executed after `&shell` was startup. see [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
+- To be executed after spawning `$SHELL`. Here is the old implementation of [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
 
   ```vim
   function! floaterm#wrapper#fzf#() abort
@@ -429,36 +433,41 @@ There are two ways for a command to be spawned:
   endfunction
   ```
 
-  The code above returns an array. `floaterm $(fzf)` is the command to be executed. `v:true` means the command will be executed after the `&shell` startup.
+  The code above returns a list. `floaterm $(fzf)` is the command to be executed. `v:true` means the command will be executed after the `&shell` startup. In this way, the second element of the list must be `{}`.
 
-- To be executed through `termopen()`/`term_start()` function, in that case, a callback function is can be provided. See [ranger wrapper](./autoload/floaterm/wrapper/ranger.vim)
+- To be executed through `termopen()`/`term_start()` function, in that case, a callback option can be provided. See [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
 
   ```vim
-  function! floaterm#wrapper#ranger#() abort
-    let s:ranger_tmpfile = tempname()
-    let cmd = 'ranger --choosefiles=' . s:ranger_tmpfile
-    return [cmd, {'on_exit': funcref('s:ranger_callback')}, v:false]
+  function! floaterm#wrapper#fzf#(cmd) abort
+    let s:fzf_tmpfile = tempname()
+    let cmd = a:cmd . ' > ' . s:fzf_tmpfile
+    return [cmd, {'on_exit': funcref('s:fzf_callback')}, v:false]
   endfunction
 
-  function! s:ranger_callback(...) abort
-    if filereadable(s:ranger_tmpfile)
-      let filenames = readfile(s:ranger_tmpfile)
+  function! s:fzf_callback(...) abort
+    if filereadable(s:fzf_tmpfile)
+      let filenames = readfile(s:fzf_tmpfile)
       if !empty(filenames)
+        if has('nvim')
+          call floaterm#window#hide_floaterm(bufnr('%'))
+        endif
         for filename in filenames
-          execute 'edit ' . fnameescape(filename)
+          execute g:floaterm_open_command . ' ' . fnameescape(filename)
         endfor
       endif
     endif
   endfunction
   ```
 
-  Here `v:false` means `cmd` will be passed through `termopen()`(neovim) or `term_start()`(vim). Function `s:ranger_callback()` will be invoked when `cmd` exits.
+  In the example above, after executing `:FloatermNew fzf`, function `floaterm#wrapper#fzf#` will return `['fzf > /tmp/atmpfilename', {'on_exit': funcref('s:fzf_callback')}, v:false]`.
+
+  Here `v:false` means `cmd`(`fzf > /tmp/atmpfilename`) will be passed through `termopen()`(neovim) or `term_start()`(vim). As a result, an fzf interactive will be opened in a floaterm window. After choosing a file using `<CR>`, fzf exits and the filepath will be written in `/tmp/atmpfilename`. Then the function `s:fzf_callback()` will be invoked to open the file.
 
 ## How to write sources for fuzzy finder plugins
 
 Function `floaterm#buflist#gather()` returns a list contains all the floaterm buffers.
 
-Function `floaterm#terminal#open({bufnr})` opens the floaterm whose buffer number is `bufnr`.
+Function `floaterm#terminal#open_existing({bufnr})` opens the floaterm whose buffer number is `{bufnr}`.
 
 For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
 
@@ -513,7 +522,7 @@ There are some other functions which can be served as APIs, for detail infomatio
   set shell=/path/to/shell
   ```
 
-- #### I would like to customize the style of the floaterm window
+- #### How to customize the style of the floaterm window?
 
   Use `autocmd`. For example
 
@@ -531,7 +540,7 @@ There are some other functions which can be served as APIs, for detail infomatio
   Use `:FloatermUpdate`
 
   ```vim
-  :FloatermUpdate wintype=normal position=right
+  :FloatermUpdate --wintype=normal position=right
   ```
 
 - #### Can not enter insert mode after creating a new floaterm...
