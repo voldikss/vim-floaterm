@@ -540,7 +540,7 @@ There are some other functions which can be served as APIs, for detail infomatio
   Use `:FloatermUpdate`
 
   ```vim
-  :FloatermUpdate --wintype=normal position=right
+  :FloatermUpdate --wintype=normal --position=right
   ```
 
 - #### Can not enter insert mode after creating a new floaterm...
