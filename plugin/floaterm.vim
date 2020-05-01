@@ -44,6 +44,7 @@ command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
 
 hi def link Floaterm       Normal
+hi def link FloatermNC     Normal
 hi def link FloatermBorder Normal
 
 function! s:install_keymap()

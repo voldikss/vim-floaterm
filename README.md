@@ -256,6 +256,15 @@ hi Floaterm guibg=black
 hi FloatermBorder guibg=orange guifg=cyan
 ```
 
+Besides, there is a neovim only `hi-group` which can be used to configure no-current window(`:help NormalNC`). It's also linked to `Normal` by default.
+
+```vim
+" Configuration example
+
+" Set floaterm window background to skyblue once the cursor moves out from it
+hi FloatermNC guibg=skyblue
+```
+
 ![](https://user-images.githubusercontent.com/20282795/74794098-42d9e080-52fd-11ea-9ccf-661dd748aa03.png)
 
 ## More use cases and demos
@@ -556,7 +565,6 @@ There are some other functions which can be served as APIs, for detail infomatio
 - Command `:FloatermSend [floaterm_name]` --> `:FloatermSend [--name=floaterm_name] [cmd]`
 - Use GNU style for cmdline arguments. e.g., `wintype=normal` --> `--wintype=normal`
 - Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
-- Command `FloatermSend` must be used with a range
 - Rename: `g:floaterm_type` --> `g:floaterm_wintype`
 - Rename: `FloatermNF` --> `Floaterm`
 - Rename: `FloatermBorderNF` --> `FloatermBorder`
