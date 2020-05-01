@@ -142,7 +142,8 @@ function! floaterm#window#open_floating(bufnr, width, height, pos) abort
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, opts)
   call nvim_win_set_option(winid, 'winblend', g:floaterm_winblend)
-  call nvim_win_set_option(winid, 'winhl', 'Normal:Floaterm')
+  call nvim_win_set_option(winid, 'winhl', 'Normal:Floaterm,FoldColumn:Floaterm')
+  call nvim_win_set_option(winid, 'foldcolumn', type(&foldcolumn) == 0 ? 1 : '1')
 
   let border_winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
   " close border that already exists and make a new border
