@@ -29,20 +29,16 @@ else
 endif
 
 function! s:on_floaterm_open(bufnr, winid, winopts) abort
-  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
-  call setbufvar(a:bufnr, 'floaterm_winopts', a:winopts)
   let termname = get(a:winopts, 'name', '')
   if termname != ''
     let termname = 'floaterm://' . termname
     execute 'file ' . termname
   endif
-
+  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
+  call setbufvar(a:bufnr, 'floaterm_winopts', a:winopts)
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
-    let winnr = bufwinnr(a:bufnr)
-    call setwinvar(winnr, '&winblend', g:floaterm_winblend)
-    call setwinvar(winnr, '&winhl', 'NormalFloat:Floaterm,Normal:Floaterm')
     augroup close_floaterm_window
       execute 'autocmd! TermClose <buffer=' . a:bufnr . '> call s:on_floaterm_close(' . a:bufnr .')'
       execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'

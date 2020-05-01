@@ -53,7 +53,7 @@ function! s:add_border(winid, title) abort
   let winopts.style = 'minimal'
   let winopts.focusable = v:false
   let border_winid = nvim_open_win(border_bufnr, v:false, winopts)
-  call nvim_win_set_option(border_winid, 'winhl', 'NormalFloat:FloatermBorder')
+  call nvim_win_set_option(border_winid, 'winhl', 'Normal:FloatermBorder')
   return border_winid
 endfunction
 
@@ -141,6 +141,9 @@ function! floaterm#window#open_floating(bufnr, width, height, pos) abort
     \ 'style':'minimal'
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, opts)
+  call nvim_win_set_option(winid, 'winblend', g:floaterm_winblend)
+  call nvim_win_set_option(winid, 'winhl', 'Normal:Floaterm')
+
   let border_winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
   " close border that already exists and make a new border
   " since `bufhidden` option of floatermborder is set to 'wipe',
