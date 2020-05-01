@@ -11,9 +11,9 @@ Use (neo)vim terminal in the floating/popup window.
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
   - [Commands](#commands)
-  - [Global variables](#global-variables)
+  - [Options](#options)
   - [Keymaps](#keymaps)
-  - [Change highlight](#change-highlight)
+  - [Highlights](#highlights)
 - [More use cases and demos](#more-use-cases-and-demos)
   - [General](#general)
   - [Use as the git editor](#use-as-the-git-editor)
@@ -142,7 +142,7 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
   :%FloatermSend ...                   " Send the whole buffer to floaterm
   ```
 
-### Global variables
+### Options
 
 #### **`g:floaterm_wintype`**
 
@@ -241,7 +241,7 @@ nnoremap   <silent>   <F12>   :FloatermToggle<CR>
 tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 ```
 
-### Change highlight
+### Highlights
 
 This plugin provides two `highlight-groups` to specify the background/foreground color of floaterm (also the border color if `g:floaterm_wintype` is `'floating'` or `'popup'`) window.
 
@@ -256,6 +256,8 @@ hi Floaterm guibg=black
 hi FloatermBorder guibg=orange guifg=cyan
 ```
 
+![](https://user-images.githubusercontent.com/20282795/74794098-42d9e080-52fd-11ea-9ccf-661dd748aa03.png)
+
 Besides, there is a neovim only `hi-group` which can be used to configure no-current window(`:help NormalNC`). It's also linked to `Normal` by default.
 
 ```vim
@@ -264,8 +266,6 @@ Besides, there is a neovim only `hi-group` which can be used to configure no-cur
 " Set floaterm window background to skyblue once the cursor moves out from it
 hi FloatermNC guibg=skyblue
 ```
-
-![](https://user-images.githubusercontent.com/20282795/74794098-42d9e080-52fd-11ea-9ccf-661dd748aa03.png)
 
 ## More use cases and demos
 
