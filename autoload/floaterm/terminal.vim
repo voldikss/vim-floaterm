@@ -46,21 +46,20 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
   call floaterm#util#startinsert()
 endfunction
 
-" this will be invoked only in neovim
-function! s:on_floaterm_close(bufnr, callback, jobid, data, event) abort
-  if getbufvar(a:bufnr, '&filetype') != 'floaterm'
+function! s:on_floaterm_close(callback, job, msg, ...) abort
+  let bufnr = bufnr('%')
+  if getbufvar(bufnr, '&filetype') != 'floaterm'
     return
   endif
-  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
+  let winopts = getbufvar(bufnr, 'floaterm_winopts', {})
   let autoclose = get(winopts, 'autoclose', 0)
-  if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
-    " NOTE: MUST hide border BEFORE deleting floaterm buffer
-    call floaterm#window#hide_floaterm_border(a:bufnr)
+  if (autoclose == 1 && a:msg == 0) || (autoclose == 2) || (a:callback isnot v:null)
+    call floaterm#window#hide_floaterm(bufnr)
     try
-      execute a:bufnr . 'bdelete!'
+      execute bufnr . 'bdelete!'
     catch
     endtry
-    doautocmd BufDelete   " call lightline#update()
+    doautocmd BufDelete   "call lightline#update()
   endif
   if a:callback isnot v:null
     call a:callback()
@@ -110,7 +109,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   if has('nvim')
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#buflist#add(bufnr)
-    let a:jobopts.on_exit = function('s:on_floaterm_close', [bufnr, get(a:jobopts, 'on_exit', v:null)])
+    let a:jobopts.on_exit = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
     if wintype == 'floating'
       let winid = floaterm#window#open_floating(bufnr, width, height, position)
       call nvim_set_current_win(winid)
@@ -122,15 +121,14 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
       let s:channel_map[bufnr] = ch
     endif
   else
+    let a:jobopts.exit_cb = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
     if has_key(a:jobopts, 'on_exit')
-      let a:jobopts['exit_cb'] = a:jobopts.on_exit
       unlet a:jobopts.on_exit
     endif
-    let a:jobopts.hidden = 1
-    let a:jobopts.term_finish = 'close'
     if has('patch-8.1.2080')
       let a:jobopts.term_api = 'floaterm#util#edit'
     endif
+    let a:jobopts.hidden = 1
     let bufnr = term_start(a:cmd, a:jobopts)
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
