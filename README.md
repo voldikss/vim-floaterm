@@ -91,7 +91,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 For example, command
 
 ```vim
-:FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose ranger --cmd="cd ~"
+:FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
 ```
 
 will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
@@ -203,9 +203,13 @@ Default: `v:null` which means this is disabled by default(use your own `$GIT_EDI
 
 #### **`g:floaterm_autoclose`**
 
-Type `bool`. If `v:true`, floaterm window will be deleted after job finished. Otherwise the window will keep unclosed with some messages like `[Process exited 0]` and you must type a key to close it. Only works in neovim.
+Type `number`. Decide whether to close floaterm window once job gets finished.
 
-Default: `v:false`.
+- `0`: Always do NOT close floaterm window
+- `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
+- `2`: Always close floaterm window
+
+Default: `0`.
 
 ### Keymaps
 

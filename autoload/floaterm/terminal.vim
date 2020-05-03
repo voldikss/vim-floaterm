@@ -40,28 +40,31 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
     augroup close_floaterm_window
-      execute 'autocmd! TermClose <buffer=' . a:bufnr . '> call s:on_floaterm_close(' . a:bufnr .')'
       execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
     augroup END
   endif
   call floaterm#util#startinsert()
 endfunction
 
-function! s:on_floaterm_close(bufnr) abort
-  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
-  if !get(winopts, 'autoclose', 0)
-    return
-  endif
+" this will be invoked only in neovim
+function! s:on_floaterm_close(bufnr, callback, jobid, data, event) abort
   if getbufvar(a:bufnr, '&filetype') != 'floaterm'
     return
   endif
-  " NOTE: MUST hide border BEFORE deleting floaterm buffer
-  call floaterm#window#hide_floaterm_border(a:bufnr)
-  try
-    execute a:bufnr . 'bdelete!'
-  catch
-  endtry
-  doautocmd BufDelete   " call lightline#update()
+  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
+  let autoclose = get(winopts, 'autoclose', 0)
+  if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
+    " NOTE: MUST hide border BEFORE deleting floaterm buffer
+    call floaterm#window#hide_floaterm_border(a:bufnr)
+    try
+      execute a:bufnr . 'bdelete!'
+    catch
+    endtry
+    doautocmd BufDelete   " call lightline#update()
+  endif
+  if a:callback isnot v:null
+    call a:callback()
+  endif
 endfunction
 
 function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
@@ -107,6 +110,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   if has('nvim')
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#buflist#add(bufnr)
+    let a:jobopts.on_exit = function('s:on_floaterm_close', [bufnr, get(a:jobopts, 'on_exit', v:null)])
     if wintype == 'floating'
       let winid = floaterm#window#open_floating(bufnr, width, height, position)
       call nvim_set_current_win(winid)

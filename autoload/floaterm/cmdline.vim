@@ -19,7 +19,7 @@ function! floaterm#cmdline#parse(arglist) abort
         let opt = split(arg, '=')
         if len(opt) == 2
           let [key, value] = [opt[0][2:], opt[1]]
-          if key == 'height' || key == 'width'
+          if index(['height', 'width', 'autoclose'], key) > -1
             let value = eval(value)
           endif
           let winopts[key] = value
@@ -41,7 +41,7 @@ endfunction
 " used for `:FloatermNew` and `:FloatermUpdate`
 " ----------------------------------------------------------------------------
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let winopts_key = ['--height=', '--width=', '--wintype=', '--name=', '--position=', '--autoclose']
+  let winopts_key = ['--height=', '--width=', '--wintype=', '--name=', '--position=', '--autoclose=']
   if a:cmd_line =~ '^FloatermNew'
     let candidates = winopts_key + sort(getcompletion('', 'shellcmd'))
   elseif a:cmd_line =~ '^FloatermUpdate'
@@ -65,22 +65,26 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return candidates
   endif
 
-  if match(prefix, '--wintype=') > -1
+  let val = []
+  if prefix == '--wintype='
     if has('nvim')
-      let wintypes = ['normal', 'floating']
+      let val = ['normal', 'floating']
     else
-      let wintypes = ['normal', 'popup']
+      let val = ['normal', 'popup']
     endif
-    let candidates = map(wintypes, {idx -> '--wintype=' . wintypes[idx]})
-  elseif match(prefix, '--position=') > -1
-    let position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
-    let candidates = map(position, {idx -> '--position=' . position[idx]})
+  elseif prefix == '--position='
+    let val = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
+  elseif prefix == '--autoclose='
+    let val = [0, 1, 2]
+  endif
+  if !empty(val)
+    let candidates = map(val, {idx -> prefix . val[idx]})
   endif
   return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
 endfunction
 
 " ----------------------------------------------------------------------------
-" used for `:FloatermToggle`
+" used for `:FloatermToggle`, `:FloatermHide`, `:FloatermShow`, `:FloatermKill`
 " ----------------------------------------------------------------------------
 function! floaterm#cmdline#floaterm_names(...) abort
   let buflist = floaterm#buflist#gather()

@@ -1,12 +1,12 @@
 Execute(Test floaterm#cmdline#parse):
-  let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose ranger --cmd="cd ~"'
+  let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
   let arglist = split(argstr)
   let [cmd, opts] = floaterm#cmdline#parse(arglist)
   AssertEqual 'ranger --cmd="cd ~"', cmd
   AssertEqual {
     \'wintype': 'floating',
     \'name': 'floaterm1',
-    \'autoclose': v:true,
+    \'autoclose': 2,
     \'width': 0.4,
     \'height': 0.6,
     \'position': 'topleft'
@@ -19,7 +19,7 @@ Execute(Test floaterm#cmdline#complete):
     \'--wintype=',
     \'--name=',
     \'--position=',
-    \'--autoclose'
+    \'--autoclose='
     \], floaterm#cmdline#complete(v:null, 'FloatermNew ', 12)[:5]
   AssertEqual [
     \'--wintype=normal',
@@ -43,7 +43,7 @@ Execute(Test floaterm#cmdline#complete):
     \'--wintype=',
     \'--name=',
     \'--position=',
-    \'--autoclose'
+    \'--autoclose='
     \], floaterm#cmdline#complete(v:null, 'FloatermUpdate ', 15)
 
 Execute(Test floaterm#cmdline#floaterm_names):
