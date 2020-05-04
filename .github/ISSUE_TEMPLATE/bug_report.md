@@ -7,7 +7,11 @@ assignees: ''
 
 ---
 
-Make sure you have looked through the [F.A.Q.](https://github.com/voldikss/vim-floaterm/#faq) first.
+- Please make sure you have looked through the [F.A.Q.](https://github.com/voldikss/vim-floaterm/#faq) first.
+
+- Please make sure you are using the latest version of the plugin.
+
+- Please use English as far as possible.
 
 ### Describe the bug
 
