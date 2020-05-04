@@ -39,7 +39,7 @@ Use (neo)vim terminal in the floating/popup window.
 
 ## Features
 
-- NeoVim floatwin and Vim8 popup support
+- NeoVim floatwin and Vim8 popupwin support
 - Open and toggle terminal window quickly
 - Multiple terminal instances
 - Customizable floating terminal style
@@ -404,6 +404,10 @@ Use CocList to switch/preview/open floating terminal buffers.
 Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocList floaterm`
 
 ![](https://user-images.githubusercontent.com/20282795/75005925-fcc27f80-54aa-11ea-832e-59ea5b02fc04.gif)
+
+### Integrate with other fuzzy finders
+
+Please refer to the [Wiki](https://github.com/voldikss/vim-floaterm/wiki/Integration-with-other-fuzzy-finders)
 
 ### Integrate with [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
