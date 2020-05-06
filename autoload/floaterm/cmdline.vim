@@ -65,20 +65,19 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return candidates
   endif
 
-  let val = []
-  if prefix == '--wintype='
+  if match(prefix, '--wintype=') > -1
     if has('nvim')
-      let val = ['normal', 'floating']
+      let vals = ['normal', 'floating']
     else
-      let val = ['normal', 'popup']
+      let vals = ['normal', 'popup']
     endif
-  elseif prefix == '--position='
-    let val = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
-  elseif prefix == '--autoclose='
-    let val = [0, 1, 2]
-  endif
-  if !empty(val)
-    let candidates = map(val, {idx -> prefix . val[idx]})
+    let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
+  elseif match(prefix, '--position=') > -1
+    let vals = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
+    let candidates = map(vals, {idx -> '--position=' . vals[idx]})
+  elseif match(prefix, '--autoclose') > -1
+    let vals = [0, 1, 2]
+    let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
   endif
   return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
 endfunction

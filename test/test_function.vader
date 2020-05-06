@@ -19,12 +19,15 @@ Execute(Test floaterm#cmdline#complete):
     \'--wintype=',
     \'--name=',
     \'--position=',
-    \'--autoclose='
+    \'--autoclose=',
     \], floaterm#cmdline#complete(v:null, 'FloatermNew ', 12)[:5]
   AssertEqual [
     \'--wintype=normal',
     \'--wintype=floating'
     \], floaterm#cmdline#complete(v:null, 'FloatermNew --wintype=', 22)
+  AssertEqual [
+    \'--wintype=normal',
+    \], floaterm#cmdline#complete(v:null, 'FloatermNew --wintype=n', 23)
   AssertEqual [
     \'--position=top',
     \'--position=right',
@@ -35,15 +38,20 @@ Execute(Test floaterm#cmdline#complete):
     \'--position=topright',
     \'--position=bottomleft',
     \'--position=bottomright',
-    \'--position=auto'
+    \'--position=auto',
     \], floaterm#cmdline#complete(v:null, 'FloatermNew --position=', 23)
+  AssertEqual [
+    \'--position=top',
+    \'--position=topleft',
+    \'--position=topright',
+    \], floaterm#cmdline#complete(v:null, 'FloatermNew --position=t', 24)
   AssertEqual [
     \'--height=',
     \'--width=',
     \'--wintype=',
     \'--name=',
     \'--position=',
-    \'--autoclose='
+    \'--autoclose=',
     \], floaterm#cmdline#complete(v:null, 'FloatermUpdate ', 15)
 
 Execute(Test floaterm#cmdline#floaterm_names):
@@ -53,11 +61,11 @@ Execute(Test floaterm#cmdline#floaterm_names):
 Execute(Test floaterm#cmdline#floaterm_names2):
   FloatermNew --name=floaterm2
   AssertEqual [
-    \'--name='
+    \'--name=',
     \], floaterm#cmdline#floaterm_names2(v:null, 'FloatermSend ', 13)
   AssertEqual [
     \'--name=floaterm1',
-    \'--name=floaterm2'
+    \'--name=floaterm2',
     \], floaterm#cmdline#floaterm_names2(v:null, 'FloatermSend --name=', 20)
 
 Execute(Exit):
