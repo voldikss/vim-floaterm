@@ -68,19 +68,19 @@ function! floaterm#new(cmd, winopts, jobopts, shell) abort
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
       let [name, jobopts, send2shell] = WrapFunc(a:cmd)
       if send2shell
-        let bufnr = floaterm#terminal#open(-1, &shell, {}, a:winopts)
+        let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, {}, a:winopts)
         call floaterm#terminal#send(bufnr, [name])
       else
         let bufnr = floaterm#terminal#open(-1, name, jobopts, a:winopts)
       endif
     elseif a:shell
-      let bufnr = floaterm#terminal#open(-1, &shell, a:jobopts, a:winopts)
+      let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:winopts)
       call floaterm#terminal#send(bufnr, [a:cmd])
     else
       let bufnr = floaterm#terminal#open(-1, a:cmd, a:jobopts, a:winopts)
     endif
   else
-    let bufnr = floaterm#terminal#open(-1, &shell, a:jobopts, a:winopts)
+    let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:winopts)
   endif
   return bufnr
 endfunction

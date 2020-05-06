@@ -144,6 +144,10 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 ### Options
 
+#### **`g:floaterm_shell`**
+
+Type `string`. Default: `&shell`
+
 #### **`g:floaterm_wintype`**
 
 Type `string`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
@@ -529,14 +533,6 @@ There are some other functions which can be served as APIs, for detail infomatio
 
   ```vim
   autocmd User Startified setlocal buflisted
-  ```
-
-- #### I want to use another shell in the terminal. (e.g., Use fish instead of bash)
-
-  Set `shell` option in your `vimrc`:
-
-  ```vim
-  set shell=/path/to/shell
   ```
 
 - #### How to customize the style of the floaterm window?
