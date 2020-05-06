@@ -220,11 +220,10 @@ Default: `0`.
 This plugin doesn't supply any default mappings. To use a recommended mappings, put the following code in your `vimrc`.
 
 ```vim
-""" Configuration example
+" Configuration example
 let g:floaterm_keymap_new    = '<F7>'
 let g:floaterm_keymap_prev   = '<F8>'
 let g:floaterm_keymap_next   = '<F9>'
-let g:floaterm_keymap_hide   = '<F10>'
 let g:floaterm_keymap_toggle = '<F12>'
 ```
 
@@ -234,7 +233,19 @@ You can also use other keys as shown below:
 let g:floaterm_keymap_new = '<Leader>fn'
 ```
 
-Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugins-managers, the keymap above won't take effect(`:help load-plugins`). Then you have to define the key bindings yourself by putting the code used to define the key bindings in your `vimrc`. For example,
+All options for the mappings are listed below:
+
+- `g:floaterm_keymap_new`
+- `g:floaterm_keymap_prev`
+- `g:floaterm_keymap_next`
+- `g:floaterm_keymap_hide`
+- `g:floaterm_keymap_show`
+- `g:floaterm_keymap_kill`
+- `g:floaterm_keymap_toggle`
+
+Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugin-managers, the keymap above won't take effect(`:help load-plugins`). Then you have to define the key bindings yourself by putting the code used to define the key bindings in your `vimrc`. For example,
+
+For example,
 
 ```vim
 nnoremap   <silent>   <F7>    :FloatermNew<CR>
@@ -243,8 +254,6 @@ nnoremap   <silent>   <F8>    :FloatermPrev<CR>
 tnoremap   <silent>   <F8>    <C-\><C-n>:FloatermPrev<CR>
 nnoremap   <silent>   <F9>    :FloatermNext<CR>
 tnoremap   <silent>   <F9>    <C-\><C-n>:FloatermNext<CR>
-nnoremap   <silent>   <F10>    :FloatermHide<CR>
-tnoremap   <silent>   <F10>    <C-\><C-n>:FloatermHide<CR>
 nnoremap   <silent>   <F12>   :FloatermToggle<CR>
 tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 ```

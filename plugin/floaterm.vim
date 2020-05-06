@@ -25,6 +25,8 @@ let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', v:null)
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', v:null)
 let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', v:null)
 let g:floaterm_keymap_hide   = get(g:, 'floaterm_keymap_hide', v:null)
+let g:floaterm_keymap_show   = get(g:, 'floaterm_keymap_show', v:null)
+let g:floaterm_keymap_kill   = get(g:, 'floaterm_keymap_kill', v:null)
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', v:null)
 
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang
@@ -64,6 +66,14 @@ function! s:install_keymap()
   if g:floaterm_keymap_hide != v:null
     exe printf('nnoremap  <silent> %s :FloatermHide<CR>', g:floaterm_keymap_hide)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermHide<CR>', g:floaterm_keymap_hide)
+  endif
+  if g:floaterm_keymap_show != v:null
+    exe printf('nnoremap  <silent> %s :FloatermShow<CR>', g:floaterm_keymap_show)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermShow<CR>', g:floaterm_keymap_show)
+  endif
+  if g:floaterm_keymap_kill != v:null
+    exe printf('nnoremap  <silent> %s :FloatermKill<CR>', g:floaterm_keymap_kill)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermKill<CR>', g:floaterm_keymap_kill)
   endif
   if g:floaterm_keymap_toggle != v:null
     exe printf('nnoremap  <silent> %s :FloatermToggle<CR>', g:floaterm_keymap_toggle)
