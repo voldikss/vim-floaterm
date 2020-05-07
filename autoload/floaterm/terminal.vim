@@ -29,15 +29,17 @@ else
 endif
 
 function! s:on_floaterm_open(bufnr, winid, winopts) abort
+  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
+  call setbufvar(a:bufnr, 'floaterm_winopts', a:winopts)
+  call setbufvar(a:bufnr, '&buflisted', 0)
+  call setbufvar(a:bufnr, '&filetype', 'floaterm')
+
   let termname = get(a:winopts, 'name', '')
   if termname != ''
     let termname = 'floaterm://' . termname
     execute 'file ' . termname
   endif
-  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
-  call setbufvar(a:bufnr, 'floaterm_winopts', a:winopts)
-  call setbufvar(a:bufnr, '&buflisted', 0)
-  call setbufvar(a:bufnr, '&filetype', 'floaterm')
+
   if has('nvim')
     augroup close_floaterm_window
       execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
@@ -66,28 +68,13 @@ function! s:on_floaterm_close(callback, job, msg, ...) abort
   endif
 endfunction
 
-function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
-  " for vim's popup, must close popup can we open and jump to a new window
-  if !has('nvim')
-    call floaterm#window#hide_floaterm(bufnr('%'))
-  endif
-
-  " change to root directory
-  if !empty(g:floaterm_rootmarkers)
-    let dest = floaterm#resolver#get_root()
-    if dest !=# ''
-      call floaterm#resolver#chdir(dest)
-    endif
-  endif
-
+function! s:update_winopts(winopts) abort
   if has_key(a:winopts, 'width')
     let width = a:winopts.width
   else
     let width = type(g:floaterm_width) == 7 ? 0.6 : g:floaterm_width
     let a:winopts.width = width
   endif
-  if type(width) == v:t_float | let width = width * &columns | endif
-  let width = float2nr(width)
 
   if has_key(a:winopts, 'height')
     let height = a:winopts.height
@@ -95,8 +82,6 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     let height = type(g:floaterm_height) == 7 ? 0.6 : g:floaterm_height
     let a:winopts.height = height
   endif
-  if type(height) == v:t_float | let height = height * &lines | endif
-  let height = float2nr(height)
 
   if has_key(a:winopts, 'wintype')
     let wintype = a:winopts.wintype
@@ -118,6 +103,34 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     let autoclose = g:floaterm_autoclose
     let a:winopts.autoclose = autoclose
   endif
+  return a:winopts
+endfunction
+
+function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
+  " for vim's popup, must close popup can we open and jump to a new window
+  if !has('nvim')
+    call floaterm#window#hide_floaterm(bufnr('%'))
+  endif
+
+  " change to root directory
+  if !empty(g:floaterm_rootmarkers)
+    let dest = floaterm#resolver#get_root()
+    if dest !=# ''
+      call floaterm#resolver#chdir(dest)
+    endif
+  endif
+
+  let winopts = s:update_winopts(a:winopts)
+  let wintype = a:winopts.wintype
+  let position = a:winopts.position
+
+  let width = winopts.width
+  if type(width) == v:t_float | let width = width * &columns | endif
+  let width = float2nr(width)
+
+  let height = winopts.height
+  if type(height) == v:t_float | let height = height * &lines | endif
+  let height = float2nr(height)
 
   if a:bufnr > 0
     if wintype == 'floating'
