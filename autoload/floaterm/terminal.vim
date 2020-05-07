@@ -80,19 +80,44 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     endif
   endif
 
-  let width = type(g:floaterm_width) == 7 ? 0.6 : g:floaterm_width
-  let width = get(a:winopts, 'width', width)
+  if has_key(a:winopts, 'width')
+    let width = a:winopts.width
+  else
+    let width = type(g:floaterm_width) == 7 ? 0.6 : g:floaterm_width
+    let a:winopts.width = width
+  endif
   if type(width) == v:t_float | let width = width * &columns | endif
   let width = float2nr(width)
 
-  let height = type(g:floaterm_height) == 7 ? 0.6 : g:floaterm_height
-  let height = get(a:winopts, 'height', height)
+  if has_key(a:winopts, 'height')
+    let height = a:winopts.height
+  else
+    let height = type(g:floaterm_height) == 7 ? 0.6 : g:floaterm_height
+    let a:winopts.height = height
+  endif
   if type(height) == v:t_float | let height = height * &lines | endif
   let height = float2nr(height)
 
-  let wintype = get(a:winopts, 'wintype', s:wintype)
-  let position = get(a:winopts, 'position', g:floaterm_position)
-  let autoclose = get(a:winopts, 'autoclose', g:floaterm_autoclose)
+  if has_key(a:winopts, 'wintype')
+    let wintype = a:winopts.wintype
+  else
+    let wintype = s:wintype
+    let a:winopts.wintype = wintype
+  endif
+
+  if has_key(a:winopts, 'position')
+    let position = a:winopts.position
+  else
+    let position = g:floaterm_position
+    let a:winopts.position = position
+  endif
+
+  if has_key(a:winopts, 'autoclose')
+    let autoclose = a:winopts.autoclose
+  else
+    let autoclose = g:floaterm_autoclose
+    let a:winopts.autoclose = autoclose
+  endif
 
   if a:bufnr > 0
     if wintype == 'floating'
@@ -139,12 +164,6 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
       let winid = floaterm#window#open_split(bufnr, height, width, position)
     endif
   endif
-
-  let a:winopts.width = width
-  let a:winopts.height = height
-  let a:winopts.wintype = wintype
-  let a:winopts.position = position
-  let a:winopts.autoclose = autoclose
   call s:on_floaterm_open(bufnr, winid, a:winopts)
   return bufnr
 endfunction
