@@ -129,7 +129,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   let width = float2nr(width)
 
   let height = winopts.height
-  if type(height) == v:t_float | let height = height * &lines | endif
+  if type(height) == v:t_float | let height = height * (&lines - &cmdheight - 1) | endif
   let height = float2nr(height)
 
   if a:bufnr > 0

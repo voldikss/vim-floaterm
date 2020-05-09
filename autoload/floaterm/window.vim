@@ -67,11 +67,11 @@ function! s:floatwin_pos(width, height, pos) abort
     let col = 1
     let anchor = 'NW'
   elseif a:pos == 'bottomright'
-    let row = &lines - 3
+    let row = &lines - &cmdheight - 2
     let col = &columns - 1
     let anchor = 'SE'
   elseif a:pos == 'bottomleft'
-    let row = &lines - 3
+    let row = &lines - &cmdheight - 2
     let col = 1
     let anchor = 'SW'
   elseif a:pos == 'top'
@@ -83,7 +83,7 @@ function! s:floatwin_pos(width, height, pos) abort
     let col = &columns - 1
     let anchor = 'NE'
   elseif a:pos == 'bottom'
-    let row = &lines - 3
+    let row = &lines - &cmdheight - 2
     let col = (&columns - a:width)/2
     let anchor = 'SW'
   elseif a:pos == 'left'
@@ -104,7 +104,7 @@ function! s:floatwin_pos(width, height, pos) abort
     let curr_pos = getpos('.')
     let row = curr_pos[1] - line('w0')
     let col = curr_pos[2]
-    if row + a:height <= &lines
+    if row + a:height <= &lines - &cmdheight - 1
       let vert = 'N'
     else
       let vert = 'S'

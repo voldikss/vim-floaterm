@@ -8,7 +8,7 @@ Execute(Test floaterm winopts before and after FloatermToggle):
   AssertEqual b:floaterm_winopts.width, 0.6
   AssertEqual float2nr(0.6*&columns), winwidth(0)
   AssertEqual b:floaterm_winopts.height, 0.6
-  AssertEqual float2nr(0.6*&lines), winheight(0)
+  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1)), winheight(0)
 
   FloatermHide
   let &columns = float2nr(&columns/2)
@@ -17,7 +17,7 @@ Execute(Test floaterm winopts before and after FloatermToggle):
   AssertEqual b:floaterm_winopts.width, 0.6
   AssertEqual float2nr(0.6*&columns), winwidth(0)
   AssertEqual b:floaterm_winopts.height, 0.6
-  AssertEqual float2nr(0.6*&lines), winheight(0)
+  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1)), winheight(0)
 
   let &columns = columns_origin
 
