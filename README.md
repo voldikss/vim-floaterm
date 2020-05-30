@@ -203,6 +203,8 @@ Type `string`. Opening strategy for running `git commit` in floaterm window. Onl
 
 Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
 
+Recommended: `'split'` or `'vsplit'`.
+
 Default: `v:null` which means this is disabled by default(use your own `$GIT_EDITOR`).
 
 #### **`g:floaterm_autoclose`**
@@ -213,7 +215,7 @@ Type `number`. Decide whether to close floaterm window once job gets finished.
 - `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
 - `2`: Always close floaterm window
 
-Default: `0`.
+Default: `1`.
 
 ### Keymaps
 
