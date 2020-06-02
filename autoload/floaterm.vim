@@ -88,7 +88,21 @@ endfunction
 " ----------------------------------------------------------------------------
 " toggle on/off the floaterm named `name`
 " ----------------------------------------------------------------------------
-function! floaterm#toggle(...)  abort
+function! floaterm#toggle(bang, ...)  abort
+  if a:bang
+    let found_winnr = floaterm#window#find_floaterm_window()
+    if found_winnr > 0
+      for bufnr in floaterm#buflist#gather()
+        call floaterm#window#hide_floaterm(bufnr)
+      endfor
+    else
+      for bufnr in floaterm#buflist#gather()
+        call floaterm#terminal#open_existing(bufnr)
+      endfor
+    endif
+    return
+  endif
+
   let name = get(a:, 1, '')
   if name != ''
     let bufnr = floaterm#terminal#get_bufnr(name)
@@ -162,7 +176,14 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-function! floaterm#kill(...) abort
+function! floaterm#kill(bang, ...) abort
+  if a:bang
+    for bufnr in floaterm#buflist#gather()
+      call floaterm#terminal#kill(bufnr)
+    endfor
+    return
+  endif
+
   let name = get(a:, 1, '')
   if !empty(name)
     let bufnr = floaterm#terminal#get_bufnr(name)
@@ -171,26 +192,18 @@ function! floaterm#kill(...) abort
   endif
   if bufnr == -1
     call floaterm#util#show_msg('The floaterm does not exist', 'warning')
-    return
-  endif
-  call floaterm#window#hide_floaterm(bufnr)
-  if has('nvim')
-    let jobid = getbufvar(bufnr, '&channel')
-    if jobwait([jobid], 0)[0] == -1
-      call jobstop(jobid)
-    endif
   else
-    let job = term_getjob(bufnr)
-    if job_status(job) !=# 'dead'
-      call job_stop(job)
-    endif
-  endif
-  if bufexists(bufnr)
-    execute bufnr . 'bwipeout!'
+    call floaterm#terminal#kill(bufnr)
   endif
 endfunction
 
-function! floaterm#show(...) abort
+function! floaterm#show(bang, ...) abort
+  if a:bang
+    for bufnr in floaterm#buflist#gather()
+      call floaterm#terminal#open_existing(bufnr)
+    endfor
+  endif
+
   let name = get(a:, 1, '')
   if !empty(name)
     let bufnr = floaterm#terminal#get_bufnr(name)
@@ -204,7 +217,14 @@ function! floaterm#show(...) abort
   endif
 endfunction
 
-function! floaterm#hide(...) abort
+function! floaterm#hide(bang, ...) abort
+  if a:bang
+    for bufnr in floaterm#buflist#gather()
+      call floaterm#window#hide_floaterm(bufnr)
+    endfor
+    return
+  endif
+
   let name = get(a:, 1, '')
   if !empty(name)
     let bufnr = floaterm#terminal#get_bufnr(name)
