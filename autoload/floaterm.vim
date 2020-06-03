@@ -138,11 +138,9 @@ function! floaterm#next()  abort
   else
     let next_winnr = bufwinnr(next_bufnr)
     if next_winnr > -1
-      execute next_winnr . 'wincmd w'
-      call floaterm#util#startinsert()
-    else
-      call floaterm#terminal#open_existing(next_bufnr)
+      execute next_winnr . 'hide'
     endif
+    call floaterm#terminal#open_existing(next_bufnr)
   endif
 endfunction
 
@@ -154,11 +152,9 @@ function! floaterm#prev()  abort
   else
     let prev_winnr = bufwinnr(prev_bufnr)
     if prev_winnr > -1
-      execute prev_winnr . 'wincmd w'
-      call floaterm#util#startinsert()
-    else
-      call floaterm#terminal#open_existing(prev_bufnr)
+      execute prev_winnr . 'hide'
     endif
+    call floaterm#terminal#open_existing(prev_bufnr)
   endif
 endfunction
 
