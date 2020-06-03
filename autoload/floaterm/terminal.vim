@@ -41,9 +41,7 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
   endif
 
   if has('nvim')
-    augroup close_floaterm_window
-      execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
-    augroup END
+    execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> ++once call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
   endif
 endfunction
 
