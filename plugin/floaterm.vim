@@ -50,6 +50,12 @@ hi def link Floaterm       Normal
 hi def link FloatermNC     Floaterm
 hi def link FloatermBorder Floaterm
 
+augroup floaterm_enter_insertmode
+  autocmd!
+  autocmd BufEnter * if &ft == 'floaterm' | call floaterm#util#startinsert() | endif
+  autocmd FileType floaterm call floaterm#util#startinsert()
+augroup END
+
 function! s:install_keymap()
   if g:floaterm_keymap_new != v:null
     exe printf('nnoremap  <silent> %s :FloatermNew<CR>', g:floaterm_keymap_new)

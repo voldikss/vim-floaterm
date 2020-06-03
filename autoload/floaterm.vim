@@ -108,7 +108,6 @@ function! floaterm#toggle(...)  abort
     let found_winnr = floaterm#window#find_floaterm_window()
     if found_winnr > 0
       execute found_winnr . 'wincmd w'
-      call floaterm#util#startinsert()
     else
       call floaterm#curr()
     endif
