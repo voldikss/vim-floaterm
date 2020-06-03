@@ -42,5 +42,5 @@ Execute(FloatermSend):
 
 Execute (Exit):
   stopinsert
-  call floaterm#hide()
+  call floaterm#hide(1, '')
   sleep 100m

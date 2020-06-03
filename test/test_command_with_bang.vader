@@ -1,0 +1,55 @@
+Execute(FloatermNew!):
+  FloatermNew! ls
+  let buffer1 = bufnr('%')
+  FloatermNew! ls
+  let buffer2 = bufnr('%')
+
+  " both those two floaterm windows should be opened, though they overlap
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+Execute(FloatermShow!):
+  FloatermShow!
+
+  " both two floaterm windows should be opened
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+Execute(FloatermHide!):
+  FloatermHide!
+
+  " both those two floaterm windows should be closed
+  Assert bufwinnr(buffer1) == -1
+  Assert bufwinnr(buffer2) == -1
+
+Execute(FloatermShow!):
+  FloatermShow!
+
+  " both two floaterm windows should be opened
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+Execute(FloatermToggle!):
+  FloatermToggle!
+
+  " both those two floaterm windows should be closed
+  Assert bufwinnr(buffer1) == -1
+  Assert bufwinnr(buffer2) == -1
+
+  FloatermToggle!
+
+  " both those two floaterm windows should be closed
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+Execute(FloatermKill!):
+  FloatermKill!
+
+  " both those two floaterm windows should be closed
+  Assert bufexists(buffer1) == v:false
+  Assert bufexists(buffer2) == v:false
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, '')
+  sleep 100m
