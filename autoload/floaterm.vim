@@ -135,10 +135,6 @@ function! floaterm#next()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    let next_winnr = bufwinnr(next_bufnr)
-    if next_winnr > -1
-      execute next_winnr . 'hide'
-    endif
     call floaterm#terminal#open_existing(next_bufnr)
   endif
 endfunction
@@ -149,10 +145,6 @@ function! floaterm#prev()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    let prev_winnr = bufwinnr(prev_bufnr)
-    if prev_winnr > -1
-      execute prev_winnr . 'hide'
-    endif
     call floaterm#terminal#open_existing(prev_bufnr)
   endif
 endfunction

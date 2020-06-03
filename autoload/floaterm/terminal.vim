@@ -179,6 +179,10 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
+  let winnr = bufwinnr(a:bufnr)
+  if winnr > -1
+    execute winnr . 'hide'
+  endif
   let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
   call floaterm#terminal#open(a:bufnr, '', {}, winopts)
 endfunction
