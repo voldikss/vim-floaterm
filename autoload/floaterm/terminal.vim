@@ -213,3 +213,22 @@ endfunction
 function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
 endfunction
+
+
+function! floaterm#terminal#kill(bufnr) abort
+  call floaterm#window#hide_floaterm(a:bufnr)
+  if has('nvim')
+    let jobid = getbufvar(a:bufnr, '&channel')
+    if jobwait([jobid], 0)[0] == -1
+      call jobstop(jobid)
+    endif
+  else
+    let job = term_getjob(a:bufnr)
+    if job_status(job) !=# 'dead'
+      call job_stop(job)
+    endif
+  endif
+  if bufexists(a:bufnr)
+    execute a:bufnr . 'bwipeout!'
+  endif
+endfunction

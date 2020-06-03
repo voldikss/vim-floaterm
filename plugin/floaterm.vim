@@ -33,14 +33,14 @@ command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang
                           \ FloatermNew    call floaterm#run('new', <bang>0, <f-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
                           \ FloatermUpdate call floaterm#run('update', 0, <f-args>)
-command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermShow   call floaterm#show(<f-args>)
-command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermHide   call floaterm#hide(<f-args>)
-command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermKill   call floaterm#kill(<f-args>)
-command! -nargs=? -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermToggle call floaterm#toggle(<f-args>)
+command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermShow   call floaterm#show(<bang>0, <q-args>)
+command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermHide   call floaterm#hide(<bang>0, <q-args>)
+command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermKill   call floaterm#kill(<bang>0, <q-args>)
+command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermToggle call floaterm#toggle(<bang>0, <q-args>)
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names2
                           \ FloatermSend   call floaterm#send(<bang>0, <range>, <line1>, <line2>, <q-args>)
 command! -nargs=0           FloatermPrev   call floaterm#prev()

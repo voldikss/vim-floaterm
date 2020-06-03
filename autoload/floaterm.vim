@@ -88,12 +88,25 @@ endfunction
 " ----------------------------------------------------------------------------
 " toggle on/off the floaterm named `name`
 " ----------------------------------------------------------------------------
-function! floaterm#toggle(...)  abort
-  let name = get(a:, 1, '')
-  if name != ''
-    let bufnr = floaterm#terminal#get_bufnr(name)
+function! floaterm#toggle(bang, name)  abort
+  if a:bang
+    let found_winnr = floaterm#window#find_floaterm_window()
+    if found_winnr > 0
+      for bufnr in floaterm#buflist#gather()
+        call floaterm#window#hide_floaterm(bufnr)
+      endfor
+    else
+      for bufnr in floaterm#buflist#gather()
+        call floaterm#terminal#open_existing(bufnr)
+      endfor
+    endif
+    return
+  endif
+
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
     if bufnr == -1
-      call floaterm#util#show_msg('No floaterm found with name: ' . name, 'error')
+      call floaterm#util#show_msg('No floaterm found with name: ' . a:name, 'error')
       return
     elseif bufnr == bufnr('%')
       call floaterm#window#hide_floaterm(bufnr)
@@ -159,10 +172,16 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
-function! floaterm#kill(...) abort
-  let name = get(a:, 1, '')
-  if !empty(name)
-    let bufnr = floaterm#terminal#get_bufnr(name)
+function! floaterm#kill(bang, name) abort
+  if a:bang
+    for bufnr in floaterm#buflist#gather()
+      call floaterm#terminal#kill(bufnr)
+    endfor
+    return
+  endif
+
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
   else
     let bufnr = floaterm#buflist#find_curr()
   endif
@@ -187,10 +206,16 @@ function! floaterm#kill(...) abort
   endif
 endfunction
 
-function! floaterm#show(...) abort
-  let name = get(a:, 1, '')
-  if !empty(name)
-    let bufnr = floaterm#terminal#get_bufnr(name)
+function! floaterm#show(bang, name) abort
+  if a:bang
+    for bufnr in floaterm#buflist#gather()
+      call floaterm#terminal#open_existing(bufnr)
+    endfor
+    return
+  endif
+
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
   else
     let bufnr = floaterm#buflist#find_curr()
   endif
@@ -201,10 +226,16 @@ function! floaterm#show(...) abort
   endif
 endfunction
 
-function! floaterm#hide(...) abort
-  let name = get(a:, 1, '')
-  if !empty(name)
-    let bufnr = floaterm#terminal#get_bufnr(name)
+function! floaterm#hide(bang, name) abort
+  if a:bang
+    for bufnr in floaterm#buflist#gather()
+      call floaterm#window#hide_floaterm(bufnr)
+    endfor
+    return
+  endif
+
+  if !empty(a:name)
+    let bufnr = floaterm#terminal#get_bufnr(a:name)
   else
     let bufnr = bufnr('%')
   endif
