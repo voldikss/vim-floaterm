@@ -136,7 +136,13 @@ function! floaterm#next()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    call floaterm#terminal#open_existing(next_bufnr)
+    let next_winnr = bufwinnr(next_bufnr)
+    if next_winnr > -1
+      execute next_winnr . 'wincmd w'
+      call floaterm#util#startinsert()
+    else
+      call floaterm#terminal#open_existing(next_bufnr)
+    endif
   endif
 endfunction
 
@@ -146,7 +152,13 @@ function! floaterm#prev()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    call floaterm#terminal#open_existing(prev_bufnr)
+    let prev_winnr = bufwinnr(prev_bufnr)
+    if prev_winnr > -1
+      execute prev_winnr . 'wincmd w'
+      call floaterm#util#startinsert()
+    else
+      call floaterm#terminal#open_existing(prev_bufnr)
+    endif
   endif
 endfunction
 
