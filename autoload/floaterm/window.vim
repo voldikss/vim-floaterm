@@ -214,7 +214,7 @@ function! floaterm#window#hide_floaterm(bufnr) abort
     try      " there should be a function like `win_type()`
       call popup_close(winid)
     catch
-      hide
+      execute a:bufnr . 'hide'
     endtry
   endif
 endfunction

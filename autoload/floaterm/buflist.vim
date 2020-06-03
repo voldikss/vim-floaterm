@@ -139,7 +139,7 @@ function! s:buflist.to_string() dict abort
     let curr = curr.next
   endwhile
   let str .= '-]'
-  let str .= ' current index: ' . self.index.bufnr
+  let str .= ' current floaterm buffer number: ' . self.index.bufnr
   return str
 endfunction
 

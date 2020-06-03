@@ -27,8 +27,8 @@ jobs:
         run: |
           $VIM_EXEC --version
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command.vader'
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_keymap.vader'
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_function.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command_with_bang.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_cmdline.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_floaterm_size.vader'
 
   vint:

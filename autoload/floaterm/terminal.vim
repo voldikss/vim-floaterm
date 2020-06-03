@@ -41,11 +41,8 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
   endif
 
   if has('nvim')
-    augroup close_floaterm_window
-      execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
-    augroup END
+    execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> ++once call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
   endif
-  call floaterm#util#startinsert()
 endfunction
 
 function! s:on_floaterm_close(callback, job, msg, ...) abort
@@ -182,6 +179,10 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
+  let winnr = bufwinnr(a:bufnr)
+  if winnr > -1
+    execute winnr . 'hide'
+  endif
   let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
   call floaterm#terminal#open(a:bufnr, '', {}, winopts)
 endfunction
@@ -211,4 +212,23 @@ endfunction
 
 function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
+endfunction
+
+
+function! floaterm#terminal#kill(bufnr) abort
+  call floaterm#window#hide_floaterm(a:bufnr)
+  if has('nvim')
+    let jobid = getbufvar(a:bufnr, '&channel')
+    if jobwait([jobid], 0)[0] == -1
+      call jobstop(jobid)
+    endif
+  else
+    let job = term_getjob(a:bufnr)
+    if job_status(job) !=# 'dead'
+      call job_stop(job)
+    endif
+  endif
+  if bufexists(a:bufnr)
+    execute a:bufnr . 'bwipeout!'
+  endif
 endfunction
