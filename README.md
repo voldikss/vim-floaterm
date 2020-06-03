@@ -31,7 +31,6 @@ Use (neo)vim terminal in the floating/popup window.
   - [Integrate with asynctasks.vim](#integrate-with-asynctasksvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
-- [APIs](#apis)
 - [F.A.Q](#f.a.q)
 - [Break changes](#break-changes)
 - [Credits](#credits)
@@ -502,39 +501,6 @@ Function `floaterm#buflist#gather()` returns a list contains all the floaterm bu
 Function `floaterm#terminal#open_existing({bufnr})` opens the floaterm whose buffer number is `{bufnr}`.
 
 For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
-
-## APIs
-
-- `floaterm#new({cmd}, {win_opts}, {job_opts}, {shell})` create a new floaterm instance and return the bufnum
-
-  - `{cmd}` type `string`, if empty, will use `&shell`
-  - `{win_opts}` type `dict`. See [FloatermNew options](#floatermnew-options-cmd-open-a-floaterm-window), e.g., `{'name': 'floaterm1', 'wintype': 'floating', 'position': 'top'}`
-  - `{job_opts}` type `dict`. For reference, see `:help job-options`(for vim) or `:help jobstart-options`(for nvim)
-  - `{shell}` type `bool`. Whether to run `{cmd}` in `$SHELL`
-
-- `floaterm#buflist#find_curr()` return current floaterm buffer number
-
-- `floaterm#prev()` switch to the previous floaterm buffeum and return the bufnum
-
-- `floaterm#next()` switch to the next floaterm buffer and return the bufnum
-
-- `floaterm#update({win_opts})` update floaterm window attributes
-
-- `floaterm#toggle([name])` toggle on/off a floaterm
-
-- `floaterm#show([name])` show the floaterms (named `{name}`)
-
-- `floaterm#hide([name])` hide the floaterms (named `{name}`)
-
-- `floaterm#kill([name])` kill the floaterms (named `{name}`)
-
-- `floaterm#window#hide_floaterm({bufnr})` hide the floaterm whose bufnum is `bufnr`
-
-- `floaterm#terminal#send({bufnr}, {cmdlist})` send commands to a terminal whose bufnum is `bufnr`
-
-  - `{cmdlist}`: a list contains some commands
-
-There are some other functions which can be served as APIs, for detail infomation, go and check source files yourself.
 
 ## F.A.Q
 
