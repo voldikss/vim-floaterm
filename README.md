@@ -577,6 +577,7 @@ There are some other functions which can be served as APIs, for detail infomatio
 
 ## Break Changes
 
+- Current floaterm won't be closed before switching to prev/next one using `:FloatermPrev` or `:FloatermNext`
 - Command `:FloatermSend [floaterm_name]` --> `:FloatermSend [--name=floaterm_name] [cmd]`
 - Use GNU style for cmdline arguments. e.g., `wintype=normal` --> `--wintype=normal`
 - Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
