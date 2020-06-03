@@ -209,7 +209,7 @@ function! floaterm#hide(...) abort
   if !empty(name)
     let bufnr = floaterm#terminal#get_bufnr(name)
   else
-    let bufnr = floaterm#buflist#find_curr()
+    let bufnr = bufnr('%')
   endif
   if bufnr != -1
     call floaterm#window#hide_floaterm(bufnr)
