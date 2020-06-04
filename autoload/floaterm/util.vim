@@ -46,7 +46,7 @@ function! floaterm#util#show_msg(message, ...) abort
 endfunction
 
 function! floaterm#util#edit(_bufnr, filename) abort
-  call floaterm#hide()
+  call floaterm#hide(1, '')
   silent execute g:floaterm_open_command . ' ' . a:filename
 endfunction
 
