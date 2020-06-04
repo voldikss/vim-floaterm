@@ -104,22 +104,26 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - The `options` is the same as in `:FloatermNew`.
 - Use `<TAB>` to get completion.
 
-#### `:FloatermToggle [floaterm_name]` Open or hide the floaterm window.
+#### `:FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.
 
 - If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
 - Use `<TAB>` to get completion.
+- If `!` exists, toggle all floaterms
 
-#### `:FloatermShow [floaterm_name]` Show the current floaterm window.
+#### `:FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
 - If `floaterm_name` exists, show the floaterm named `floaterm_name`.
+- If `!` exists, show all floaterms
 
-#### `:FloatermHide [floaterm_name]` Hide the current floaterms window.
+#### `:FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
-- If `floaterm_name` exists, hide the floaterm named `floaterm_name`.
+- If `floaterm_name` exists, show the floaterm named `floaterm_name`.
+- If `!` exists, hide all floaterms
 
-#### `:FloatermKill [floaterm_name]` Kill the current floaterm instance
+#### `:FloatermKill[!] [floaterm_name]` Kill the current floaterm instance
 
 - If `floaterm_name` exists, kill the floaterm instance named `floaterm_name`.
+- If `!` exists, kill all floaterms
 
 #### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
