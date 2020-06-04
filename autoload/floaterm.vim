@@ -185,24 +185,10 @@ function! floaterm#kill(bang, name) abort
   else
     let bufnr = floaterm#buflist#find_curr()
   endif
-  if bufnr == -1
-    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
-    return
-  endif
-  call floaterm#window#hide_floaterm(bufnr)
-  if has('nvim')
-    let jobid = getbufvar(bufnr, '&channel')
-    if jobwait([jobid], 0)[0] == -1
-      call jobstop(jobid)
-    endif
+  if bufnr != -1
+    call floaterm#terminal#kill(bufnr)
   else
-    let job = term_getjob(bufnr)
-    if job_status(job) !=# 'dead'
-      call job_stop(job)
-    endif
-  endif
-  if bufexists(bufnr)
-    execute bufnr . 'bwipeout!'
+    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
   endif
 endfunction
 
