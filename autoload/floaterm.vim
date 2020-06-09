@@ -30,7 +30,7 @@ if g:floaterm_gitcommit != v:null
     let $GIT_EDITOR = 'nvr --remote-wait'
   else
     let $GIT_EDITOR = printf(
-      \ 'nvr -cc "call floaterm#hide() | %s" --remote-wait',
+      \ 'nvr -cc "call floaterm#hide(1, \"\") | %s" --remote-wait',
       \ g:floaterm_gitcommit
       \ )
   endif
