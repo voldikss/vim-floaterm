@@ -1,3 +1,5 @@
+" vim:ft=vim
+
 Execute(FloatermNew!):
   FloatermNew! ls
   let buffer1 = bufnr('%')

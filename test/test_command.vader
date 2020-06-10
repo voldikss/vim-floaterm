@@ -1,3 +1,5 @@
+" vim:ft=vim
+
 Execute(FloatermNew):
   FloatermNew
   AssertEqual 'floaterm', &filetype

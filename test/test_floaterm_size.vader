@@ -1,3 +1,5 @@
+" vim:ft=vim
+
 # related: #115
 Execute(Test floaterm winopts before and after FloatermToggle):
   let g:floaterm_height = 0.6

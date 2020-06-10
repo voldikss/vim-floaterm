@@ -1,3 +1,5 @@
+" vim:ft=vim
+
 Execute(Enable autohide):
   let g:floaterm_autohide = v:true
 
