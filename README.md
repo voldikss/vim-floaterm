@@ -553,14 +553,15 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## Break Changes
 
+- Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`
 - Current floaterm will be hidden by default before opening a new one or switching to prev/next one using `:FloatermPrev` or `:FloatermNext`. See `g:floaterm_autohide` to get more info.
 - Current floaterm won't be hidden before switching to prev/next one using `:FloatermPrev` or `:FloatermNext`
-- Command `:FloatermSend [floaterm_name]` --> `:FloatermSend [--name=floaterm_name] [cmd]`
-- Use GNU style for cmdline arguments. e.g., `wintype=normal` --> `--wintype=normal`
+- Command `:FloatermSend [floaterm_name]` => `:FloatermSend [--name=floaterm_name] [cmd]`
+- Use GNU style for cmdline arguments. e.g., `wintype=normal` => `--wintype=normal`
 - Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
-- Rename: `g:floaterm_type` --> `g:floaterm_wintype`
-- Rename: `FloatermNF` --> `Floaterm`
-- Rename: `FloatermBorderNF` --> `FloatermBorder`
+- Rename: `g:floaterm_type` => `g:floaterm_wintype`
+- Rename: `FloatermNF` => `Floaterm`
+- Rename: `FloatermBorderNF` => `FloatermBorder`
 
 ## Credits
 
