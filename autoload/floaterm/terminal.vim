@@ -109,11 +109,6 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     call floaterm#window#hide_floaterm(bufnr('%'))
   endif
 
-  " hide all floaterms before opening a new floaterm
-  if g:floaterm_autohide
-    call floaterm#hide(1, '')
-  endif
-
   " change to root directory
   if !empty(g:floaterm_rootmarkers)
     let dest = floaterm#resolver#get_root()

@@ -61,6 +61,7 @@ endfunction
 " reserved for outer invoke
 " ----------------------------------------------------------------------------
 function! floaterm#new(cmd, winopts, jobopts, shell) abort
+  call floaterm#util#autohide()
   if a:cmd != ''
     let wrappers = s:get_wrappers()
     let maybe_wrapper = split(a:cmd, '\s')[0]
@@ -148,6 +149,7 @@ function! floaterm#next()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
+    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(next_bufnr)
   endif
 endfunction
@@ -158,6 +160,7 @@ function! floaterm#prev()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
+    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(prev_bufnr)
   endif
 endfunction
@@ -206,6 +209,7 @@ function! floaterm#show(bang, name) abort
     let bufnr = floaterm#buflist#find_curr()
   endif
   if bufnr != -1
+    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(bufnr)
   else
     call floaterm#util#show_msg('The floaterm does not exist', 'warning')

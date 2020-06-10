@@ -60,6 +60,13 @@ function! floaterm#util#startinsert() abort
   endif
 endfunction
 
+function! floaterm#util#autohide() abort
+  " hide all floaterms before opening a new floaterm
+  if g:floaterm_autohide
+    call floaterm#hide(1, '')
+  endif
+endfunction
+
 "-----------------------------------------------------------------------------
 " compose two string(thank skywind3000/vim-quickui)
 "-----------------------------------------------------------------------------
