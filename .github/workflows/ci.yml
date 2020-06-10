@@ -31,6 +31,9 @@ jobs:
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_cmdline.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_floaterm_size.vader'
 
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_g_autohide/v_true.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_g_autohide/v_false.vader'
+
   vint:
     name: Run vint
     runs-on: ubuntu-latest

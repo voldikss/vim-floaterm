@@ -1,22 +1,53 @@
+Execute(Enable autohide):
+  let g:floaterm_autohide = v:true
+
+
 Execute(FloatermNew!):
   FloatermNew! ls
   let buffer1 = bufnr('%')
   FloatermNew! ls
   let buffer2 = bufnr('%')
 
+  " open buffer2, hide buffer1
+  Assert bufwinnr(buffer1) == -1
+  Assert bufwinnr(buffer2) > -1
+
+
+Execute(FloatermPrev):
+  FloatermPrev
+
+  " open buffer1, hide buffer2
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) == -1
+
+
+Execute(FloatermNext):
+  FloatermNext
+
+  " open buffer2, hide buffer1
+  Assert bufwinnr(buffer1) == -1
+  Assert bufwinnr(buffer2) > -1
+
+
+"-----------------------------------------------------------------------------
+# FloatermShow/FloatermHide/FloatermToggle should works normally regardless of this option
+"-----------------------------------------------------------------------------
+
 Execute(FloatermShow!):
   FloatermShow!
 
   " both two floaterm windows should be opened
   Assert bufwinnr(buffer1) > -1
   Assert bufwinnr(buffer2) > -1
+
 
 Execute(FloatermHide!):
   FloatermHide!
 
-  " both those two floaterm windows should be closed
+  " both those two floaterm windows should be hidden
   Assert bufwinnr(buffer1) == -1
   Assert bufwinnr(buffer2) == -1
+
 
 Execute(FloatermShow!):
   FloatermShow!
@@ -25,10 +56,11 @@ Execute(FloatermShow!):
   Assert bufwinnr(buffer1) > -1
   Assert bufwinnr(buffer2) > -1
 
+
 Execute(FloatermToggle!):
   FloatermToggle!
 
-  " both those two floaterm windows should be closed
+  " both those two floaterm windows should be opened
   Assert bufwinnr(buffer1) == -1
   Assert bufwinnr(buffer2) == -1
 
@@ -38,12 +70,6 @@ Execute(FloatermToggle!):
   Assert bufwinnr(buffer1) > -1
   Assert bufwinnr(buffer2) > -1
 
-Execute(FloatermKill!):
-  FloatermKill!
-
-  " both those two floaterm windows should be closed
-  Assert bufexists(buffer1) == v:false
-  Assert bufexists(buffer2) == v:false
 
 Execute (Exit):
   stopinsert
