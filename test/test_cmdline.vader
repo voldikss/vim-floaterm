@@ -1,3 +1,5 @@
+" vim:ft=vim
+
 Execute(Test floaterm#cmdline#parse):
   let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
   let arglist = split(argstr)

@@ -220,6 +220,12 @@ Type `number`. Decide whether to close floaterm window once job gets finished.
 
 Default: `1`.
 
+#### **`g:floaterm_autohide`**
+
+Type `boolean`. Decide whether to hide previous floaterms before switching to or opening a new one.
+
+Default: `v:true`.
+
 ### Keymaps
 
 This plugin doesn't supply any default mappings. To use a recommended mappings, put the following code in your `vimrc`.
@@ -547,7 +553,8 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## Break Changes
 
-- Current floaterm won't be closed before switching to prev/next one using `:FloatermPrev` or `:FloatermNext`
+- Current floaterm will be hidden by default before opening a new one or switching to prev/next one using `:FloatermPrev` or `:FloatermNext`. See `g:floaterm_autohide` to get more info.
+- Current floaterm won't be hidden before switching to prev/next one using `:FloatermPrev` or `:FloatermNext`
 - Command `:FloatermSend [floaterm_name]` --> `:FloatermSend [--name=floaterm_name] [cmd]`
 - Use GNU style for cmdline arguments. e.g., `wintype=normal` --> `--wintype=normal`
 - Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`

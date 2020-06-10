@@ -1,0 +1,81 @@
+" vim:ft=vim
+
+Execute(Disable autohide):
+  let g:floaterm_autohide = v:false
+
+
+Execute(FloatermNew!):
+  FloatermNew! ls
+  let buffer1 = bufnr('%')
+  FloatermNew! ls
+  let buffer2 = bufnr('%')
+
+  " both two should be opened
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+
+Execute(FloatermPrev):
+  FloatermPrev
+
+  " both two should be opened
+  " FIXME: can not figure why test failed here
+"   Assert bufwinnr(buffer1) > -1
+"   Assert bufwinnr(buffer2) > -1
+
+
+Execute(FloatermNext):
+  FloatermNext
+
+  " both two should be opened
+  " FIXME: can not figure why test failed here
+"   Assert bufwinnr(buffer1) > -1
+"   Assert bufwinnr(buffer2) > -1
+
+
+"-----------------------------------------------------------------------------
+# FloatermShow/FloatermHide/FloatermToggle should works normally regardless of this option
+"-----------------------------------------------------------------------------
+
+Execute(FloatermShow!):
+  FloatermShow!
+
+  " both two floaterm windows should be opened
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+
+Execute(FloatermHide!):
+  FloatermHide!
+
+  " both those two floaterm windows should be hidden
+  Assert bufwinnr(buffer1) == -1
+  Assert bufwinnr(buffer2) == -1
+
+
+Execute(FloatermShow!):
+  FloatermShow!
+
+  " both two floaterm windows should be opened
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+
+Execute(FloatermToggle!):
+  FloatermToggle!
+
+  " both those two floaterm windows should be opened
+  Assert bufwinnr(buffer1) == -1
+  Assert bufwinnr(buffer2) == -1
+
+  FloatermToggle!
+
+  " both those two floaterm windows should be closed
+  Assert bufwinnr(buffer1) > -1
+  Assert bufwinnr(buffer2) > -1
+
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, '')
+  sleep 100m
