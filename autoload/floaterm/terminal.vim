@@ -45,14 +45,14 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
   endif
 endfunction
 
-function! s:on_floaterm_close(callback, job, msg, ...) abort
+function! s:on_floaterm_close(callback, job, data, ...) abort
   let bufnr = bufnr('%')
   if getbufvar(bufnr, '&filetype') != 'floaterm'
     return
   endif
   let winopts = getbufvar(bufnr, 'floaterm_winopts', {})
   let autoclose = get(winopts, 'autoclose', 0)
-  if (autoclose == 1 && a:msg == 0) || (autoclose == 2) || (a:callback isnot v:null)
+  if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
     call floaterm#window#hide_floaterm(bufnr)
     try
       execute bufnr . 'bdelete!'
@@ -61,7 +61,7 @@ function! s:on_floaterm_close(callback, job, msg, ...) abort
     doautocmd BufDelete   "call lightline#update()
   endif
   if a:callback isnot v:null
-    call a:callback()
+    call a:callback(a:job, a:data, 'exit')
   endif
 endfunction
 
