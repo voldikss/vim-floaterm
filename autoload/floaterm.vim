@@ -50,7 +50,7 @@ endfunction
 function! floaterm#run(action, bang, ...) abort
   let [cmd, winopts] = floaterm#cmdline#parse(a:000)
   if a:action == 'new'
-    call floaterm#new(cmd, winopts, {}, a:bang)
+    call floaterm#new(a:bang, cmd, winopts, {})
   elseif a:action == 'update'
     call floaterm#update(winopts)
   endif
@@ -60,7 +60,7 @@ endfunction
 " create a floaterm. `jobopts` is not used inside this pugin actually, it's
 " reserved for outer invoke
 " ----------------------------------------------------------------------------
-function! floaterm#new(cmd, winopts, jobopts, shell) abort
+function! floaterm#new(bang, cmd, winopts, jobopts) abort
   call floaterm#util#autohide()
   if a:cmd != ''
     let wrappers = s:get_wrappers()
@@ -74,7 +74,7 @@ function! floaterm#new(cmd, winopts, jobopts, shell) abort
       else
         let bufnr = floaterm#terminal#open(-1, name, jobopts, a:winopts)
       endif
-    elseif a:shell
+    elseif a:bang
       let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:winopts)
       call floaterm#terminal#send(bufnr, [a:cmd])
     else
@@ -168,7 +168,7 @@ endfunction
 function! floaterm#curr() abort
   let curr_bufnr = floaterm#buflist#find_curr()
   if curr_bufnr == -1
-    let curr_bufnr = floaterm#new('', {}, {}, v:true)
+    let curr_bufnr = floaterm#new(v:true, '', {}, {})
   else
     call floaterm#terminal#open_existing(curr_bufnr)
   endif
@@ -254,7 +254,7 @@ function! floaterm#send(bang, range, line1, line2, argstr) abort
   else
     let bufnr = floaterm#buflist#find_curr()
     if bufnr == -1
-      let bufnr = floaterm#new('', {}, {}, v:true)
+      let bufnr = floaterm#new(v:true, '', {}, {})
       call floaterm#toggle('')
       call floaterm#send(a:bang, a:range, a:line1, a:line2, a:argstr)
       call floaterm#toggle('')
