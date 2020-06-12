@@ -14,21 +14,26 @@ Use (neo)vim terminal in the floating/popup window.
   - [Options](#options)
   - [Keymaps](#keymaps)
   - [Highlights](#highlights)
-- [More use cases and demos](#more-use-cases-and-demos)
-  - [General](#general)
-  - [Use as the git editor](#use-as-the-git-editor)
-  - [Use as an fzf plugin](#use-as-an-fzf-plugin)
-  - [Use as an fff plugin](#use-as-an-fff-plugin)
-  - [Use as an nnn plugin](#use-as-an-nnn-plugin)
-  - [Use as an lf plugin](#use-as-an-lf-plugin)
-  - [Use as a ranger plugin](#use-as-a-ranger-plugin)
-  - [Use as a vifm plugin](#use-as-a-vifm-plugin)
-  - [Use as a Python REPL plugin](#use-as-a-python-repl-plugin)
-  - [Use with other command line tools](#use-with-other-command-line-tools)
-  - [Integrate with vim-clap](#integrate-with-vim-clap)
-  - [Integrate with denite.nvim](#integrate-with-denitenvim)
-  - [Integrate with coc.nvim](#integrate-with-cocnvim)
-  - [Integrate with asynctasks.vim](#integrate-with-asynctasksvim)
+- [Integrate with command line tools](#integrate-with-command-line-tools)
+  - [floaterm](#floaterm)
+  - [git](#git)
+  - [fzf](#fzf)
+  - [fff](#fff)
+  - [nnn](#nnn)
+  - [lf](#lf)
+  - [ranger](#ranger)
+  - [vifm](#vifm)
+  - [lazygit](#lazygit)
+  - [python](#python)
+- [Integrate with other plugins](#integrate-with-other-plugins)
+  - [vim-clap](#vim-clap)
+  - [denite.nvim](#denitenvim)
+  - [coc.nvim](#cocnvim)
+  - [other fuzzy finder plugins](#other-fuzzy-finders)
+  - [asynctasks.vim](#asynctasksvim)
+- [Use API](#use-api)
+  - [API list](#API-list)
+  - [Use cases](#use-cases)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [F.A.Q](#f.a.q)
@@ -295,29 +300,31 @@ Besides, there is a neovim only `hi-group` which can be used to configure no-cur
 hi FloatermNC guibg=skyblue
 ```
 
-## More use cases and demos
+## Integrate with command line tools
 
-vim-floaterm is a nvim/vim terminal plugin, it can run all the command-line programs in the terminal even `nvim/vim` itself.
+Before you start, if you are using neovim, please make sure that `nvr` is required, please install it via pip using `pip3 install neovim-remote`.
 
-**❗️Note**: The following cases should work both in Vim and NeoVim unless otherwise specifically noted.
+The following cases should work both in Vim and NeoVim unless otherwise specifically noted.
 
-### General
-
-Requirements: For neovim users, `nvr` is required, please install it via pip using `pip3 install neovim-remote`.
+### floaterm
 
 Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will get another nvim/vim instance running in the subprocess. This plugin allows you to open files from within `:terminal` without starting a nested nvim process. To archive that, just replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
+**❗️Note**: This is neovim only
+
 ![](https://user-images.githubusercontent.com/20282795/74755351-06cb5f00-52ae-11ea-84ba-d0b3e88e9377.gif)
 
-### Use as the git editor
+### git
 
 See `g:floaterm_gitcommit` option.
 
 Execute `git commit` in the terminal window without starting a nested nvim.
 
+**❗️Note**: This is neovim only
+
 ![](https://user-images.githubusercontent.com/20282795/76213003-b0b26180-6244-11ea-85ad-1632adfd07d9.gif)
 
-### Use as an fzf plugin
+### fzf
 
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim) for fzf command. So it can be used as a tiny fzf plugin.
 
@@ -329,7 +336,7 @@ command! FZF FloatermNew fzf
 
 ![](https://user-images.githubusercontent.com/20282795/78089550-60b95b80-73fa-11ea-8ac8-8fab2025b4d8.gif)
 
-### Use as an fff plugin
+### fff
 
 There is also an [fff wrapper](./autoload/floaterm/wrapper/fff.vim)
 
@@ -341,7 +348,7 @@ command! FFF FloatermNew fff
 
 ![](https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif)
 
-### Use as an nnn plugin
+### nnn
 
 There is also an [nnn wrapper](./autoload/floaterm/wrapper/nnn.vim)
 
@@ -353,7 +360,7 @@ command! NNN FloatermNew nnn
 
 ![](https://user-images.githubusercontent.com/20282795/75599726-7a594180-5ae2-11ea-80e2-7a33df1433f6.gif)
 
-### Use as an lf plugin
+### lf
 
 There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim)
 
@@ -365,7 +372,7 @@ command! LF FloatermNew lf
 
 ![](https://user-images.githubusercontent.com/20282795/77142551-6e4a1980-6abb-11ea-9525-73e1a1844e83.gif)
 
-### Use as a ranger plugin
+### ranger
 
 This plugin can also be a handy ranger plugin since it also has a [ranger wrapper](./autoload/floaterm/wrapper/ranger.vim)
 
@@ -377,7 +384,7 @@ command! Ranger FloatermNew ranger
 
 ![](https://user-images.githubusercontent.com/20282795/74800026-2e054900-530d-11ea-8e2a-67168a9532a9.gif)
 
-### Use as a Vifm plugin
+### vifm
 
 There is also a [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
 
@@ -389,15 +396,7 @@ command! Vifm FloatermNew vifm
 
 ![](https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif)
 
-### Use as a Python REPL plugin
-
-Use `:FloatermNew python` to open a python shell. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
-
-This can also work for other languages which have interactive shells, such as lua, node, etc.
-
-![](https://user-images.githubusercontent.com/20282795/78530892-0c0d4a80-7817-11ea-8934-835a6e6d0628.gif)
-
-### Use with other command line tools
+### lazygit
 
 Furthermore, you can also use other command-line programs, such as lazygit, htop, ncdu, etc.
 
@@ -405,7 +404,17 @@ Use `lazygit` for instance:
 
 ![](https://user-images.githubusercontent.com/20282795/74755376-0f239a00-52ae-11ea-9261-44d94abe5924.png)
 
-### Integrate with [vim-clap](https://github.com/liuchengxu/vim-clap)
+### python
+
+Use `:FloatermNew python` to open a python shell. After that you can use `:FloatermSend` to send lines to the Python interactive shell.
+
+This can also work for other languages which have interactive shells, such as lua, node, etc.
+
+![](https://user-images.githubusercontent.com/20282795/78530892-0c0d4a80-7817-11ea-8934-835a6e6d0628.gif)
+
+## Integrate with other plugins
+
+### [vim-clap](https://github.com/liuchengxu/vim-clap)
 
 Use vim-clap to switch/preview floating terminal buffers.
 
@@ -413,7 +422,7 @@ Try `:Clap floaterm`
 
 ![](https://user-images.githubusercontent.com/20282795/74755336-00d57e00-52ae-11ea-8afc-030ff55c2145.gif)
 
-### Integrate with [denite.nvim](https://github.com/Shougo/denite.nvim)
+### [denite.nvim](https://github.com/Shougo/denite.nvim)
 
 Use denite to switch/preview/open floating terminal buffers.
 
@@ -421,7 +430,7 @@ Try `:Denite floaterm`
 
 ![](https://user-images.githubusercontent.com/1239245/73604753-17ef4d00-45d9-11ea-967f-ef75927e2beb.gif)
 
-### Integrate with [coc.nvim](https://github.com/neoclide/coc.nvim)
+### [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 Use CocList to switch/preview/open floating terminal buffers.
 
@@ -429,11 +438,11 @@ Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocLi
 
 ![](https://user-images.githubusercontent.com/20282795/75005925-fcc27f80-54aa-11ea-832e-59ea5b02fc04.gif)
 
-### Integrate with other fuzzy finders
+### other fuzzy finders
 
 Please refer to the [Wiki](https://github.com/voldikss/vim-floaterm/wiki/Integration-with-other-fuzzy-finders)
 
-### Integrate with [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
+### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/). To use it, copy the following code to your `vimrc` set `g:asynctasks_term_pos` to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks configuration files.
 
@@ -457,6 +466,49 @@ let g:asyncrun_runner.floaterm = function('s:runner_proc')
 ```
 
 Then your task will be ran in the floaterm instance. See asynctasks.vim [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
+
+## Use API
+
+### API list
+
+- `floaterm#new(bang, cmd, winopts, jobopts)`
+- `floaterm#toggle(bang, name)`
+- `floaterm#update(winopts)`
+- `floaterm#next()`
+- `floaterm#prev()`
+- `floaterm#show(bang, name)`
+- `floaterm#hide(bang, name)`
+- `floaterm#kill(bang, name)`
+- `floaterm#terminal#send(bufnr, cmds)`
+
+### Use cases
+
+- Use `yarn watch build` in floaterm
+
+  ```vim
+  command! YarnWatch call floaterm#new(0, 'yarn watch', {}, {
+    \ 'on_stdout': function('WatchCallback'),
+    \ 'on_stderr': function('WatchCallback'),
+    \ 'on_exit': function('WatchCallback'),
+    \ })
+  function! WatchCallback(job, data, event) abort
+    if a:event == 'stdout'
+      if match(a:data, '\CERROR') > -1
+        let g:watch_status = 'yarn watch error'
+      else
+        let g:watch_status = 'yarn watching'
+      endif
+    elseif a:event == 'stderr'
+      let g:watch_status = ''
+    else
+      let g:watch_status = 'yarn watch failed'
+    endif
+  endfunction
+  ```
+
+  Then you have floaterm running `yarn watch` in the background. By adding `g:watch_status` to your statusline, you can see the build status without opening the floaterm.
+
+  ![](https://user-images.githubusercontent.com/20282795/84460614-fc8a0200-ac9c-11ea-9713-d6f131552967.gif)
 
 ## How to define more wrappers
 
