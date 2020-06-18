@@ -18,7 +18,7 @@ class Source(Base):
         self._is_nvim = bool(vim.funcs.has("nvim"))
 
     def on_init(self, context: UserContext) -> None:
-        self.vim.call("floaterm#hide")
+        self.vim.call("floaterm#hide", 1, "")
 
     def gather_candidates(self, context: UserContext) -> Candidates:
         return (
