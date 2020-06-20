@@ -31,11 +31,9 @@ Use (neo)vim terminal in the floating/popup window.
   - [coc.nvim](#cocnvim)
   - [other fuzzy finder plugins](#other-fuzzy-finders)
   - [asynctasks.vim](#asynctasksvim)
-- [Use API](#use-api)
-  - [API list](#API-list)
-  - [Use cases](#use-cases)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
+- [Wiki](#wiki)
 - [F.A.Q](#f.a.q)
 - [Break changes](#break-changes)
 - [Credits](#credits)
@@ -450,7 +448,7 @@ This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/
 function! s:runner_proc(opts)
   let curr_bufnr = floaterm#curr()
   if has_key(a:opts, 'silent') && a:opts.silent == 1
-    call floaterm#hide(1, '')
+    FloatermHide!
   endif
   let cmd = 'cd ' . shellescape(getcwd())
   call floaterm#terminal#send(curr_bufnr, [cmd])
@@ -466,49 +464,6 @@ let g:asyncrun_runner.floaterm = function('s:runner_proc')
 ```
 
 Then your task will be ran in the floaterm instance. See asynctasks.vim [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
-
-## Use API
-
-### API list
-
-- `floaterm#new(bang, cmd, winopts, jobopts)`
-- `floaterm#toggle(bang, name)`
-- `floaterm#update(winopts)`
-- `floaterm#next()`
-- `floaterm#prev()`
-- `floaterm#show(bang, name)`
-- `floaterm#hide(bang, name)`
-- `floaterm#kill(bang, name)`
-- `floaterm#terminal#send(bufnr, cmds)`
-
-### Use cases
-
-- Use `yarn watch build` in floaterm
-
-  ```vim
-  command! YarnWatch call floaterm#new(0, 'yarn watch', {}, {
-    \ 'on_stdout': function('WatchCallback'),
-    \ 'on_stderr': function('WatchCallback'),
-    \ 'on_exit': function('WatchCallback'),
-    \ })
-  function! WatchCallback(job, data, event) abort
-    if a:event == 'stdout'
-      if match(a:data, '\CERROR') > -1
-        let g:watch_status = 'yarn watch error'
-      else
-        let g:watch_status = 'yarn watching'
-      endif
-    elseif a:event == 'stderr'
-      let g:watch_status = ''
-    else
-      let g:watch_status = 'yarn watch failed'
-    endif
-  endfunction
-  ```
-
-  Then you have floaterm running `yarn watch` in the background. By adding `g:watch_status` to your statusline, you can see the build status without opening the floaterm.
-
-  ![](https://user-images.githubusercontent.com/20282795/84460614-fc8a0200-ac9c-11ea-9713-d6f131552967.gif)
 
 ## How to define more wrappers
 
@@ -563,6 +518,10 @@ Function `floaterm#buflist#gather()` returns a list contains all the floaterm bu
 Function `floaterm#terminal#open_existing({bufnr})` opens the floaterm whose buffer number is `{bufnr}`.
 
 For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
+
+## Wiki
+
+[Here you go](https://github.com/voldikss/vim-floaterm/wiki)
 
 ## F.A.Q
 
