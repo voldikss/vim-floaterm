@@ -1,6 +1,6 @@
 " vim:sw=2:
 " ============================================================================
-" FileName: resolver.vim
+" FileName: path.vim
 " Author: voldikss <dyzplus@gmail.com>
 " GitHub: https://github.com/voldikss
 " Description: This is modified from part of skywind3000/asyncrun
@@ -16,9 +16,6 @@ endif
 function! s:find_root(path, markers, strict) abort
   function! s:guess_root(filename, markers) abort
     let fullname = s:fullname(a:filename)
-    if exists('b:asyncrun_root')
-      return b:asyncrun_root
-    endif
     if fullname =~ '^fugitive:/'
       if exists('b:git_dir')
         return fnamemodify(b:git_dir, ':h')
@@ -129,7 +126,7 @@ function! s:path_join(home, name) abort
   endif
 endfunction
 
-function! floaterm#resolver#get_root() abort
+function! floaterm#path#get_root() abort
   let markers = g:floaterm_rootmarkers
   let strict = 0
   let l:hr = s:find_root(getcwd(), markers, strict)
@@ -139,7 +136,7 @@ function! floaterm#resolver#get_root() abort
   return l:hr
 endfunction
 
-function! floaterm#resolver#chdir(path) abort
+function! floaterm#path#chdir(path) abort
   if has('nvim')
     let cmd = haslocaldir()? 'lcd' : (haslocaldir(-1, 0)? 'tcd' : 'cd')
   else

@@ -111,9 +111,9 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
 
   " change to root directory
   if !empty(g:floaterm_rootmarkers)
-    let dest = floaterm#resolver#get_root()
+    let dest = floaterm#path#get_root()
     if dest !=# ''
-      call floaterm#resolver#chdir(dest)
+      call floaterm#path#chdir(dest)
     endif
   endif
 
