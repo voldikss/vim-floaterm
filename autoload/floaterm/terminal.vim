@@ -21,7 +21,7 @@ if g:floaterm_wintype == v:null
 elseif g:floaterm_wintype == 'floating' && !s:has_float
   call floaterm#util#show_msg("floating window is not supported in your nvim, fall back to normal window", 'warning')
   let s:wintype = 'normal'
-elseif g:floaterm_wintype == 'popup' && !s:popup
+elseif g:floaterm_wintype == 'popup' && !s:has_popup
   call floaterm#util#show_msg("popup window is not supported in your vim, fall back to normal window", 'warning')
   let s:wintype = 'normal'
 else
