@@ -25,7 +25,7 @@ function! s:check_nvr() abort
   if executable('nvr')
     call health#report_ok('nvr is OK')
   else
-    call health#report_error('nvr executable is not found, run `pip install neovim-remote` to install')
+    call health#report_error('nvr executable is not found, run `pip3 install neovim-remote` to install')
   endif
 endfunction
 
