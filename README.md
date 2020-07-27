@@ -135,10 +135,11 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
   - If `cmd` exists, the selected lines will be ignored.
   - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed while the relative indent between lines will still be kept.
+- If there are no floaterms opened, `:FloatermSend` will open a floaterm and execute lines automatically for you.
 - Use `<TAB>` to get completion.
 - Examples
   ```vim
-  :FloatermSend                        " Send current line to the current floaterm
+  :FloatermSend                        " Send current line to the current floaterm (execute the line in the terminal)
   :FloatermSend --name=ft1             " Send current line to the floaterm named ft1
   :FloatermSend ls -la                 " Send `ls -la` to the current floaterm
   :FloatermSend --name=ft1 ls -la      " Send `ls -la` to the floaterm named ft1
