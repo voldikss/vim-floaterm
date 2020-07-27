@@ -255,9 +255,9 @@ function! floaterm#send(bang, range, line1, line2, argstr) abort
     let bufnr = floaterm#buflist#find_curr()
     if bufnr == -1
       let bufnr = floaterm#new(v:true, '', {}, {})
-      call floaterm#toggle('')
+      call floaterm#toggle(0, '')
       call floaterm#send(a:bang, a:range, a:line1, a:line2, a:argstr)
-      call floaterm#toggle('')
+      call floaterm#toggle(0, '')
       return
     endif
   endif
