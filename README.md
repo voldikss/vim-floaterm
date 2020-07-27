@@ -563,6 +563,14 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
   Because this was firstly developed based on nvim's floating window. But now it supports both floaterm and popup, you can get similar experience in both.
 
+- #### How to execute command in the TERMINAL mode?
+
+  Go back to the NORMAL mode using `<C-\><C-N>` and type `:` to do that.
+
+- #### How to go back to the former windows?
+
+  First go back to the NORMAL mode using `<C-\><C-N>`, and then use `<C-W>W` to switch among windows. Also you can use `:FloatermToggle` or `:FloatermHide`.
+
 ## Break Changes
 
 - Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`
