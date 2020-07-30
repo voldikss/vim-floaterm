@@ -7,3 +7,5 @@ nvim +'Vader test/test_floaterm_size.vader'
 
 nvim +'Vader test/test_g_autohide/v_true.vader'
 nvim +'Vader test/test_g_autohide/v_false.vader'
+
+nvim +'Vader test/test_floaterm_cli.vader'
