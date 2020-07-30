@@ -55,6 +55,7 @@ function! s:add_border(winid, title) abort
   let border_winid = nvim_open_win(border_bufnr, v:false, winopts)
   call nvim_win_set_option(border_winid, 'winhl', 'Normal:FloatermBorder')
   call nvim_win_set_option(border_winid, 'cursorcolumn', v:false)
+  call nvim_win_set_option(border_winid, 'colorcolumn', '')
   return border_winid
 endfunction
 
