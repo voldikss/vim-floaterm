@@ -27,6 +27,9 @@ jobs:
         id: vim
         with:
           neovim: ${{ matrix.neovim }}
+      - uses: actions/setup-python@v1
+      - name: Install nvr
+        run: pip install neovim-remote
       - name: Run vader tests
         env:
           VIM_EXEC: ${{ steps.vim.outputs.executable }}
