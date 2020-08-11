@@ -222,7 +222,7 @@ Type `number`. Decide whether to close floaterm window once job gets finished.
 - `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
 - `2`: Always close floaterm window
 
-Default: `1`.
+Default: `0`.
 
 #### **`g:floaterm_autohide`**
 
@@ -573,6 +573,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## Break Changes
 
+- Change `g:floaterm_autoclose` default value to `0`
 - Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`
 - Current floaterm will be hidden by default before opening a new one or switching to prev/next one using `:FloatermPrev` or `:FloatermNext`. See `g:floaterm_autohide` to get more info.
 - Current floaterm won't be hidden before switching to prev/next one using `:FloatermPrev` or `:FloatermNext`
