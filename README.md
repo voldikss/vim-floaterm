@@ -301,7 +301,7 @@ hi FloatermNC guibg=skyblue
 
 ## Integrate with command line tools
 
-Before you start, if you are using neovim, please make sure that `nvr` is required, please install it via pip using `pip3 install neovim-remote`.
+Before you start, if you are using neovim, you had better make sure that `nvr` executable is installed([why do we need that?](https://github.com/voldikss/vim-floaterm/issues/148)), please install it via pip using `pip3 install neovim-remote`.
 
 The following cases should work both in Vim and NeoVim unless otherwise specifically noted.
 
