@@ -236,7 +236,7 @@ function! floaterm#hide(bang, name) abort
   endif
 endfunction
 
-function! floaterm#send(bang, range, line1, line2, argstr) abort
+function! floaterm#send(bang, mode, range, line1, line2, argstr) abort
   if &filetype ==# 'floaterm'
     let msg = "FloatermSend can't be used in the floaterm window"
     call floaterm#util#show_msg(msg, 'warning')
@@ -256,7 +256,7 @@ function! floaterm#send(bang, range, line1, line2, argstr) abort
     if bufnr == -1
       let bufnr = floaterm#new(v:true, '', {}, {})
       call floaterm#toggle(0, '')
-      call floaterm#send(a:bang, a:range, a:line1, a:line2, a:argstr)
+      call floaterm#send(a:bang, a:mode, a:range, a:line1, a:line2, a:argstr)
       call floaterm#toggle(0, '')
       return
     endif
@@ -271,19 +271,24 @@ function! floaterm#send(bang, range, line1, line2, argstr) abort
   elseif a:range == 1
     let lines = [getline(a:line1)]
   else
-    if a:line1 == a:line2
-      " https://vi.stackexchange.com/a/11028/17515
-      let [lnum1, col1] = getpos("'<")[1:2]
-      let [lnum2, col2] = getpos("'>")[1:2]
-      let lines = getline(lnum1, lnum2)
-      if empty(lines)
-        call floaterm#util#show_msg('No lines were selected', 'error')
-        return
-      endif
-      let lines[-1] = lines[-1][: col2 - 1]
+    " https://stackoverflow.com/a/61486601/8554147
+    let [lnum1, col1] = getpos("'<")[1:2]
+    let [lnum2, col2] = getpos("'>")[1:2]
+    let lines = getline(lnum1, lnum2)
+    if empty(lines)
+      call floaterm#util#show_msg('No lines were selected', 'error')
+      return
+    endif
+    if a:mode ==# 'v'
+      let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
       let lines[0] = lines[0][col1 - 1:]
-    else
-      let lines = getline(a:line1, a:line2)
+    elseif a:mode ==# 'V'
+    elseif a:mode == "\<c-v>"
+      let i = 0
+      for line in lines
+        let lines[i] = line[col1 - 1: col2 - (&selection == 'inclusive' ? 1 : 2)]
+        let i = i + 1
+      endfor
     endif
   endif
 

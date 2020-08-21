@@ -145,7 +145,7 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
   :FloatermSend --name=ft1 ls -la      " Send `ls -la` to the floaterm named ft1
   :23FloatermSend ...                  " Send the line 23 to floaterm
   :1,23FloatermSend ...                " Send lines between line 1 and line 23 to floaterm
-  :'<,'>FloatermSend ...               " Send lines selected to floaterm
+  :'<,'>FloatermSend ...               " Send lines selected to floaterm(visual block selection are supported)
   :%FloatermSend ...                   " Send the whole buffer to floaterm
   ```
 

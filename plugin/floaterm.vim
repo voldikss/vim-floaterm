@@ -43,7 +43,7 @@ command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
 command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
                           \ FloatermToggle call floaterm#toggle(<bang>0, <q-args>)
 command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names2
-                          \ FloatermSend   call floaterm#send(<bang>0, <range>, <line1>, <line2>, <q-args>)
+                          \ FloatermSend   call floaterm#send(<bang>0, visualmode(), <range>, <line1>, <line2>, <q-args>)
 command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
 
