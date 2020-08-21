@@ -34,7 +34,7 @@ Use (neo)vim terminal in the floating/popup window.
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [Wiki](#wiki)
-- [F.A.Q](#f.a.q)
+- [F.A.Q](#faq)
 - [Break changes](#break-changes)
 - [Credits](#credits)
 - [License](#license)
