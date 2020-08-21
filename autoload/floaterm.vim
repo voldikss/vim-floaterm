@@ -107,7 +107,7 @@ function! floaterm#toggle(bang, name)  abort
   if !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
     if bufnr == -1
-      call floaterm#util#show_msg('No floaterm found with name: ' . a:name, 'error')
+      call floaterm#new(a:bang, '', {'name': a:name}, {})
       return
     elseif bufnr == bufnr('%')
       call floaterm#window#hide_floaterm(bufnr)

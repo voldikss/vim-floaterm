@@ -109,7 +109,7 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.
 
-- If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`.
+- If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`. Otherwise create a new floaterm named `floaterm_name`.
 - Use `<TAB>` to get completion.
 - If `!` exists, toggle all floaterms
 
@@ -135,7 +135,7 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
   - If `cmd` exists, the selected lines will be ignored.
   - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed while the relative indent between lines will still be kept.
-- If there are no floaterms opened, `:FloatermSend` will open a floaterm and execute lines automatically for you.
+- If there are no floaterms opened, `:FloatermSend` will open a floaterm and execute lines for you.
 - Use `<TAB>` to get completion.
 - Examples
   ```vim
