@@ -269,7 +269,7 @@ function! floaterm#send(bang, range, line1, line2, argstr) abort
   if a:range == 0
     let lines = [getline('.')]
   elseif a:range == 1
-    let lines = [getline('.')]
+    let lines = [getline(a:line1)]
   else
     if a:line1 == a:line2
       " https://vi.stackexchange.com/a/11028/17515
