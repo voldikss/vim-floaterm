@@ -571,6 +571,10 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
   First go back to the NORMAL mode using `<C-\><C-N>`, and then use `<C-W>W` to switch among windows. Also you can use `:FloatermToggle` or `:FloatermHide`.
 
+- #### Incorrect indent when using `:FloatermSend` with Ipython
+
+  Turn off Ipython's autoindent, see [#150](https://github.com/voldikss/vim-floaterm/issues/150).
+
 ## Break Changes
 
 - Change `g:floaterm_autoclose` default value to `0`

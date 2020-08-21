@@ -193,9 +193,7 @@ function! floaterm#terminal#send(bufnr, cmds) abort
     return
   endif
   if has('nvim')
-    if !empty(a:cmds[len(a:cmds) - 1])
-      call add(a:cmds, '')
-    endif
+    call add(a:cmds, '')
     call chansend(ch, a:cmds)
     let curr_winnr = winnr()
     let ch_winnr = bufwinnr(a:bufnr)
