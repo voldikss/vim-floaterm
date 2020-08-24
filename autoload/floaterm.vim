@@ -24,7 +24,7 @@ if stridx($PATH, s:script) < 0
   endif
 endif
 
-if g:floaterm_gitcommit != v:null
+if !empty(g:floaterm_gitcommit)
   autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
   if g:floaterm_gitcommit == 'floaterm'
     let $GIT_EDITOR = 'nvr --remote-wait'

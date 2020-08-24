@@ -10,7 +10,7 @@ let s:is_win = has('win32') || has('win64')
 let s:has_popup = has('textprop') && has('patch-8.2.0286')
 let s:has_float = has('nvim') && exists('*nvim_win_set_config')
 
-if g:floaterm_wintype == v:null
+if empty(g:floaterm_wintype)
   if s:has_float
     let s:wintype = 'floating'
   elseif s:has_popup
@@ -69,14 +69,14 @@ function! s:update_winopts(winopts) abort
   if has_key(a:winopts, 'width')
     let width = a:winopts.width
   else
-    let width = type(g:floaterm_width) == 7 ? 0.6 : g:floaterm_width
+    let width = g:floaterm_width
     let a:winopts.width = width
   endif
 
   if has_key(a:winopts, 'height')
     let height = a:winopts.height
   else
-    let height = type(g:floaterm_height) == 7 ? 0.6 : g:floaterm_height
+    let height = g:floaterm_height
     let a:winopts.height = height
   endif
 

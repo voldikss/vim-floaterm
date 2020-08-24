@@ -212,7 +212,7 @@ Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`
 
 Recommended: `'split'` or `'vsplit'`.
 
-Default: `v:null` which means this is disabled by default(use your own `$GIT_EDITOR`).
+Default: `''` which means this is disabled by default(use your own `$GIT_EDITOR`).
 
 #### **`g:floaterm_autoclose`**
 
