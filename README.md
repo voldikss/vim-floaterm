@@ -195,10 +195,6 @@ Type `array of string`. If not empty, floaterm will be opened in the project roo
 
 Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
 
-#### **`g:floaterm_autoinsert`**
-
-Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
-
 #### **`g:floaterm_open_command`**
 
 Type `string`. Command used for opening a file from within `:terminal`.
@@ -224,6 +220,10 @@ Type `number`. Decide whether to close floaterm window once job gets finished.
 - `2`: Always close floaterm window
 
 Default: `0`.
+
+#### **`g:floaterm_autoinsert`**
+
+Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
 
 #### **`g:floaterm_autohide`**
 
@@ -310,8 +310,6 @@ The following cases should work both in Vim and NeoVim unless otherwise specific
 
 Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will get another nvim/vim instance running in the subprocess. This plugin allows you to open files from within `:terminal` without starting a nested nvim process. To archive that, just replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
-**❗️Note**: This is neovim only
-
 ![](https://user-images.githubusercontent.com/20282795/74755351-06cb5f00-52ae-11ea-84ba-d0b3e88e9377.gif)
 
 ### git
@@ -320,7 +318,7 @@ See `g:floaterm_gitcommit` option.
 
 Execute `git commit` in the terminal window without starting a nested nvim.
 
-**❗️Note**: This is neovim only
+**❗️Note**: neovim only
 
 ![](https://user-images.githubusercontent.com/20282795/76213003-b0b26180-6244-11ea-85ad-1632adfd07d9.gif)
 
