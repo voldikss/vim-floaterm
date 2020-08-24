@@ -36,6 +36,7 @@ Use (neo)vim terminal in the floating/popup window.
 - [Wiki](#wiki)
 - [F.A.Q](#faq)
 - [Break changes](#break-changes)
+- [Feedback](#feedback)
 - [Credits](#credits)
 - [License](#license)
 
@@ -588,11 +589,21 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 - Rename: `FloatermNF` => `Floaterm`
 - Rename: `FloatermBorderNF` => `FloatermBorder`
 
+## Feedback
+
+If you like this plugin, please star it or sponsor the project.
+
+It's a great way of getting feedback.
+
+The same goes for reporting issues or feature requests.
+
 ## Credits
 
 - [floaterm executable](https://github.com/voldikss/vim-floaterm/blob/master/bin/floaterm) is modified from [vim-terminal-help](https://github.com/skywind3000/vim-terminal-help/blob/master/tools/utils/drop)
 
 - Some features require [neovim-remote](https://github.com/mhinz/neovim-remote)
+
+- Become a [contributor](https://github.com/voldikss/vim-floaterm/graphs/contributors) of this project, or even help improve this documentation(correct some grammar mistakes or polish the sentences).
 
 ## License
 
