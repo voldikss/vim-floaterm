@@ -8,10 +8,10 @@
 scriptencoding utf-8
 
 let g:floaterm_shell         = get(g:, 'floaterm_shell', &shell)
+let g:floaterm_title         = get(g:, 'floaterm_title', 'floaterm: %s/%s')
 let g:floaterm_width         = get(g:, 'floaterm_width', 0.6)
 let g:floaterm_height        = get(g:, 'floaterm_height', 0.6)
 let g:floaterm_wintype       = get(g:, 'floaterm_wintype', '')
-let g:floaterm_wintitle      = get(g:, 'floaterm_wintitle', v:true)
 let g:floaterm_winblend      = get(g:, 'floaterm_winblend', 0)
 let g:floaterm_autoclose     = get(g:, 'floaterm_autoclose', 0)
 let g:floaterm_autoinsert    = get(g:, 'floaterm_autoinsert', v:true)

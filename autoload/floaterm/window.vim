@@ -6,13 +6,13 @@
 " ============================================================================
 
 function! s:build_title(bufnr) abort
-  if !g:floaterm_wintitle
+  if empty(g:floaterm_title)
     return ''
   endif
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
   let idx = index(buffers, a:bufnr) + 1
-  return printf(' floaterm: %s/%s', idx, cnt)
+  return printf(' '.g:floaterm_title, idx, cnt)
 endfunction
 
 function! s:draw_border(title, width, height) abort
