@@ -144,7 +144,7 @@ function! floaterm#update(winopts) abort
 endfunction
 
 function! floaterm#next()  abort
-  let next_bufnr = floaterm#buflist#find_next()
+  let next_bufnr = floaterm#buflist#next()
   if next_bufnr == -1
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
@@ -155,7 +155,7 @@ function! floaterm#next()  abort
 endfunction
 
 function! floaterm#prev()  abort
-  let prev_bufnr = floaterm#buflist#find_prev()
+  let prev_bufnr = floaterm#buflist#prev()
   if prev_bufnr == -1
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
@@ -166,13 +166,33 @@ function! floaterm#prev()  abort
 endfunction
 
 function! floaterm#curr() abort
-  let curr_bufnr = floaterm#buflist#find_curr()
+  let curr_bufnr = floaterm#buflist#curr()
   if curr_bufnr == -1
     let curr_bufnr = floaterm#new(v:true, '', {}, {})
   else
     call floaterm#terminal#open_existing(curr_bufnr)
   endif
   return curr_bufnr
+endfunction
+
+function! floaterm#first() abort
+  let first_bufnr = floaterm#buflist#first()
+  if first_bufnr == -1
+    call floaterm#util#show_msg('No more floaterms', 'warning')
+  else
+    call floaterm#util#autohide()
+    call floaterm#terminal#open_existing(first_bufnr)
+  endif
+endfunction
+
+function! floaterm#last() abort
+  let last_bufnr = floaterm#buflist#last()
+  if last_bufnr == -1
+    call floaterm#util#show_msg('No more floaterms', 'warning')
+  else
+    call floaterm#util#autohide()
+    call floaterm#terminal#open_existing(last_bufnr)
+  endif
 endfunction
 
 function! floaterm#kill(bang, name) abort
@@ -186,7 +206,7 @@ function! floaterm#kill(bang, name) abort
   if !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
   else
-    let bufnr = floaterm#buflist#find_curr()
+    let bufnr = floaterm#buflist#curr()
   endif
   if bufnr != -1
     call floaterm#terminal#kill(bufnr)
@@ -206,7 +226,7 @@ function! floaterm#show(bang, name) abort
   if !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
   else
-    let bufnr = floaterm#buflist#find_curr()
+    let bufnr = floaterm#buflist#curr()
   endif
   if bufnr != -1
     call floaterm#util#autohide()
@@ -252,7 +272,7 @@ function! floaterm#send(bang, mode, range, line1, line2, argstr) abort
       return
     endif
   else
-    let bufnr = floaterm#buflist#find_curr()
+    let bufnr = floaterm#buflist#curr()
     if bufnr == -1
       let bufnr = floaterm#new(v:true, '', {}, {})
       call floaterm#toggle(0, '')
