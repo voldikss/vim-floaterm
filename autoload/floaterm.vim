@@ -175,6 +175,26 @@ function! floaterm#curr() abort
   return curr_bufnr
 endfunction
 
+function! floaterm#first() abort
+  let first_bufnr = floaterm#buflist#first()
+  if first_bufnr == -1
+    call floaterm#util#show_msg('No more floaterms', 'warning')
+  else
+    call floaterm#util#autohide()
+    call floaterm#terminal#open_existing(first_bufnr)
+  endif
+endfunction
+
+function! floaterm#last() abort
+  let last_bufnr = floaterm#buflist#last()
+  if last_bufnr == -1
+    call floaterm#util#show_msg('No more floaterms', 'warning')
+  else
+    call floaterm#util#autohide()
+    call floaterm#terminal#open_existing(last_bufnr)
+  endif
+endfunction
+
 function! floaterm#kill(bang, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()

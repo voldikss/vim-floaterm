@@ -128,6 +128,16 @@ function! s:buflist.curr() dict abort
   return node.bufnr
 endfunction
 
+function! s:buflist.first() dict abort
+  let self.index = self.head.next
+  return self.index.bufnr
+endfunction
+
+function! s:buflist.last() dict abort
+  let self.index = self.head.prev
+  return self.index.bufnr
+endfunction
+
 " Return buflist str, note that node.bufnr may not exist
 function! s:buflist.to_string() dict abort
   let str = '[-'
@@ -174,6 +184,12 @@ function! floaterm#buflist#prev() abort
 endfunction
 function! floaterm#buflist#curr() abort
   return s:buflist.curr()
+endfunction
+function! floaterm#buflist#first() abort
+  return s:buflist.first()
+endfunction
+function! floaterm#buflist#last() abort
+  return s:buflist.last()
 endfunction
 function! floaterm#buflist#info() abort
   echom s:buflist.to_string()

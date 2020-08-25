@@ -46,6 +46,8 @@ command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_na
                           \ FloatermSend   call floaterm#send(<bang>0, visualmode(), <range>, <line1>, <line2>, <q-args>)
 command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
+command! -nargs=0           FloatermFirst  call floaterm#first()
+command! -nargs=0           FloatermLast   call floaterm#last()
 
 hi def link Floaterm       Normal
 hi def link FloatermNC     Floaterm
