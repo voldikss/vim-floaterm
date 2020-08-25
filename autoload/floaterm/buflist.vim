@@ -83,7 +83,7 @@ endfunction
 " Find next bufnr with bufexists(bufnr) == v:true
 " If not found, return -1
 " If bufexists(bufnr) != v:true, remove that node
-function! s:buflist.find_next() dict abort
+function! s:buflist.next() dict abort
   let node = self.index.next
   while !node.is_valid()
     call self.remove(node)
@@ -99,7 +99,7 @@ endfunction
 " Find prev bufnr with bufexists(bufnr) == v:true
 " If not found, return -1
 " If bufexists(bufnr) != v:true, remove that node
-function! s:buflist.find_prev() dict abort
+function! s:buflist.prev() dict abort
   let node = self.index.prev
   while !node.is_valid()
     call self.remove(node)
@@ -115,7 +115,7 @@ endfunction
 " Find current bufnr with bufexists(bufnr) == v:true
 " If not found, find next and next
 " If bufexists(bufnr) != v:true, remove that node
-function! s:buflist.find_curr() dict abort
+function! s:buflist.curr() dict abort
   let node = self.index
   while !node.is_valid()
     call self.remove(node)
@@ -166,14 +166,14 @@ function! floaterm#buflist#add(bufnr) abort
   let node = s:node.new(a:bufnr)
   call s:buflist.insert(node)
 endfunction
-function! floaterm#buflist#find_next() abort
-  return s:buflist.find_next()
+function! floaterm#buflist#next() abort
+  return s:buflist.next()
 endfunction
-function! floaterm#buflist#find_prev() abort
-  return s:buflist.find_prev()
+function! floaterm#buflist#prev() abort
+  return s:buflist.prev()
 endfunction
-function! floaterm#buflist#find_curr() abort
-  return s:buflist.find_curr()
+function! floaterm#buflist#curr() abort
+  return s:buflist.curr()
 endfunction
 function! floaterm#buflist#info() abort
   echom s:buflist.to_string()
