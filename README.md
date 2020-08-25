@@ -103,6 +103,10 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 #### `:FloatermNext` Switch to the next floaterm instance
 
+#### `:FloatermFirst` Switch to the first floaterm instance
+
+#### `:FloatermLast` Switch to the last floaterm instance
+
 #### `:FloatermUpdate [options]` Update floaterm window attributes(`height`, `width`, etc.).
 
 - The `options` is the same as in `:FloatermNew`.
@@ -258,6 +262,8 @@ All options for the mappings are listed below:
 - `g:floaterm_keymap_new`
 - `g:floaterm_keymap_prev`
 - `g:floaterm_keymap_next`
+- `g:floaterm_keymap_first`
+- `g:floaterm_keymap_last`
 - `g:floaterm_keymap_hide`
 - `g:floaterm_keymap_show`
 - `g:floaterm_keymap_kill`
