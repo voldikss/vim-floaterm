@@ -156,13 +156,17 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 
 Type `string`. Default: `&shell`
 
+#### **`g:floaterm_title`**
+
+Type `string`. Show floaterm info(e.g., `'floaterm: 1/3'` implies there are 3 floaterms in total and the current is the first one) at the top left corner of floaterm window.
+
+Default: `'floaterm: %s/%s'`
+
+Example: `'floaterm(%s|%s)'`
+
 #### **`g:floaterm_wintype`**
 
 Type `string`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
-
-#### **`g:floaterm_wintitle`**
-
-Type `bool`. Whether to show floaterm info(e.g., `'floaterm: 1/3'`) at the top left corner of floaterm window. Default: `v:true`
 
 #### **`g:floaterm_width`**
 
@@ -576,6 +580,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## Break Changes
 
+- Rename `g:floaterm_wintitle` to `g:floaterm_title` and change its value type to `string`
 - Change `g:floaterm_autoclose` default value to `0`
 - Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`
 - Current floaterm will be hidden by default before opening a new one or switching to prev/next one using `:FloatermPrev` or `:FloatermNext`. See `g:floaterm_autohide` to get more info.
