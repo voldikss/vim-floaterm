@@ -128,14 +128,34 @@ function! s:buflist.curr() dict abort
   return node.bufnr
 endfunction
 
+" Find the first bufnr with bufexists(bufnr) == v:true
+" If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.first() dict abort
-  let self.index = self.head.next
-  return self.index.bufnr
+  let node = self.head.next
+  while !node.is_valid()
+    call self.remove(node)
+    if self.empty()
+      return -1
+    endif
+    let node = node.next
+  endwhile
+  let self.index = node
+  return node.bufnr
 endfunction
 
+" Find the last bufnr with bufexists(bufnr) == v:true
+" If bufexists(bufnr) != v:true, remove that node
 function! s:buflist.last() dict abort
-  let self.index = self.head.prev
-  return self.index.bufnr
+  let node = self.head.prev
+  while !node.is_valid()
+    call self.remove(node)
+    if self.empty()
+      return -1
+    endif
+    let node = node.prev
+  endwhile
+  let self.index = node
+  return node.bufnr
 endfunction
 
 " Return buflist str, note that node.bufnr may not exist
