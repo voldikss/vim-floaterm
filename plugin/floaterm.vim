@@ -25,6 +25,8 @@ let g:floaterm_gitcommit     = get(g:, 'floaterm_gitcommit', '')
 let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', '')
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', '')
 let g:floaterm_keymap_next   = get(g:, 'floaterm_keymap_next', '')
+let g:floaterm_keymap_first  = get(g:, 'floaterm_keymap_first', '')
+let g:floaterm_keymap_last   = get(g:, 'floaterm_keymap_last', '')
 let g:floaterm_keymap_hide   = get(g:, 'floaterm_keymap_hide', '')
 let g:floaterm_keymap_show   = get(g:, 'floaterm_keymap_show', '')
 let g:floaterm_keymap_kill   = get(g:, 'floaterm_keymap_kill', '')
@@ -61,31 +63,39 @@ augroup END
 
 function! s:install_keymap()
   if !empty(g:floaterm_keymap_new)
-    exe printf('nnoremap  <silent> %s :FloatermNew<CR>', g:floaterm_keymap_new)
+    exe printf('nnoremap <silent> %s :FloatermNew<CR>', g:floaterm_keymap_new)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNew<CR>', g:floaterm_keymap_new)
   endif
   if !empty(g:floaterm_keymap_prev)
-    exe printf('nnoremap  <silent> %s :FloatermPrev<CR>', g:floaterm_keymap_prev)
+    exe printf('nnoremap <silent> %s :FloatermPrev<CR>', g:floaterm_keymap_prev)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermPrev<CR>', g:floaterm_keymap_prev)
   endif
   if !empty(g:floaterm_keymap_next)
-    exe printf('nnoremap  <silent> %s :FloatermNext<CR>', g:floaterm_keymap_next)
+    exe printf('nnoremap <silent> %s :FloatermNext<CR>', g:floaterm_keymap_next)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermNext<CR>', g:floaterm_keymap_next)
   endif
+  if !empty(g:floaterm_keymap_first)
+    exe printf('nnoremap <silent> %s :FloatermFirst<CR>', g:floaterm_keymap_first)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermFirst<CR>', g:floaterm_keymap_first)
+  endif
+  if !empty(g:floaterm_keymap_last)
+    exe printf('nnoremap <silent> %s :FloatermLast<CR>', g:floaterm_keymap_last)
+    exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermLast<CR>', g:floaterm_keymap_last)
+  endif
   if !empty(g:floaterm_keymap_hide)
-    exe printf('nnoremap  <silent> %s :FloatermHide<CR>', g:floaterm_keymap_hide)
+    exe printf('nnoremap <silent> %s :FloatermHide<CR>', g:floaterm_keymap_hide)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermHide<CR>', g:floaterm_keymap_hide)
   endif
   if !empty(g:floaterm_keymap_show)
-    exe printf('nnoremap  <silent> %s :FloatermShow<CR>', g:floaterm_keymap_show)
+    exe printf('nnoremap <silent> %s :FloatermShow<CR>', g:floaterm_keymap_show)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermShow<CR>', g:floaterm_keymap_show)
   endif
   if !empty(g:floaterm_keymap_kill)
-    exe printf('nnoremap  <silent> %s :FloatermKill<CR>', g:floaterm_keymap_kill)
+    exe printf('nnoremap <silent> %s :FloatermKill<CR>', g:floaterm_keymap_kill)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermKill<CR>', g:floaterm_keymap_kill)
   endif
   if !empty(g:floaterm_keymap_toggle)
-    exe printf('nnoremap  <silent> %s :FloatermToggle<CR>', g:floaterm_keymap_toggle)
+    exe printf('nnoremap <silent> %s :FloatermToggle<CR>', g:floaterm_keymap_toggle)
     exe printf('tnoremap <silent> %s <C-\><C-n>:FloatermToggle<CR>', g:floaterm_keymap_toggle)
   endif
 endfunction
