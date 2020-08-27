@@ -2,7 +2,7 @@ Use (neo)vim terminal in the floating/popup window.
 
 [![CI](https://github.com/voldikss/vim-floaterm/workflows/CI/badge.svg)](https://github.com/voldikss/vim-floaterm/actions?query=workflow%3ACI) [![GitHub license](https://img.shields.io/github/license/voldikss/vim-floaterm.svg)](https://github.com/voldikss/vim-floaterm/blob/master/LICENSE) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/voldikss/vim-floaterm/graphs/commit-activity) [![Join the chat at https://gitter.im/voldikss/vim-floaterm](https://badges.gitter.im/voldikss/vim-floaterm.svg)](https://gitter.im/voldikss/vim-floaterm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-![](https://user-images.githubusercontent.com/20282795/74799912-de268200-530c-11ea-9831-d412a7700505.png)
+![](https://user-images.githubusercontent.com/20282795/91376670-2db3b080-e850-11ea-9991-efa4f4da6f44.png)
 
 - [Features](#features)
 - [Requirements](#requirements)
@@ -172,11 +172,15 @@ Type `string`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to `'no
 
 #### **`g:floaterm_width`**
 
-Type `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`. Default: `0.6`
+Type `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`.
+
+Default: `0.6`(why? [😅](https://en.wikipedia.org/wiki/Golden_ratio))
 
 #### **`g:floaterm_height`**
 
-Type `int` (number of lines) or `float` (between 0 and 1). If `float`, the height is relative to `&lines`. Default: `0.6`
+Type `int` (number of lines) or `float` (between 0 and 1). If `float`, the height is relative to `&lines`.
+
+Default: `0.6`
 
 #### **`g:floaterm_winblend`**
 
@@ -269,8 +273,6 @@ All options for the mappings are listed below:
 
 Note that this key mapping is installed from the [plugin](./plugin) directory, so if you use on-demand loading provided by some plugin-managers, the keymap above won't take effect(`:help load-plugins`). Then you have to define the key bindings yourself by putting the code used to define the key bindings in your `vimrc`. For example,
 
-For example,
-
 ```vim
 nnoremap   <silent>   <F7>    :FloatermNew<CR>
 tnoremap   <silent>   <F7>    <C-\><C-n>:FloatermNew<CR>
@@ -297,7 +299,7 @@ hi Floaterm guibg=black
 hi FloatermBorder guibg=orange guifg=cyan
 ```
 
-![](https://user-images.githubusercontent.com/20282795/74794098-42d9e080-52fd-11ea-9ccf-661dd748aa03.png)
+![](https://user-images.githubusercontent.com/20282795/91368959-fee00f00-e83c-11ea-9002-cab992d30794.png)
 
 Besides, there is a neovim only `hi-group` which can be used to configure no-current window(`:help NormalNC`). It's also linked to `Normal` by default.
 
@@ -310,15 +312,21 @@ hi FloatermNC guibg=skyblue
 
 ## Integrate with command line tools
 
-Before you start, if you are using neovim, you had better make sure that `nvr` executable is installed([why do we need that?](https://github.com/voldikss/vim-floaterm/issues/148)), please install it via pip using `pip3 install neovim-remote`.
-
 The following cases should work both in Vim and NeoVim unless otherwise specifically noted.
 
 ### floaterm
 
-Normally if you run `vim/nvim somefile.txt` within a builtin terminal, you will get another nvim/vim instance running in the subprocess. This plugin allows you to open files from within `:terminal` without starting a nested nvim process. To archive that, just replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
+Normally if you run `vim/nvim somefile.txt` within the builtin terminal, you would get another nvim/vim instance running in the subprocess.
 
-![](https://user-images.githubusercontent.com/20282795/74755351-06cb5f00-52ae-11ea-84ba-d0b3e88e9377.gif)
+[Floaterm](https://github.com/voldikss/vim-floaterm/tree/master/bin), which is a builtin script in this plugin, allows you to open files from within `:terminal` without starting a nested nvim. To archive that, just literally replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
+
+**❗️Note**: This should works both in neovim and vim, but if you are using neovim, please make sure [neovim-remote](https://github.com/mhinz/neovim-remote) has been installed. You can install it via pip:
+
+```sh
+pip install neovim-remote
+```
+
+![](https://user-images.githubusercontent.com/20282795/91368956-fab3f180-e83c-11ea-9b47-20caeb65b84f.gif)
 
 ### git
 
@@ -326,13 +334,13 @@ See `g:floaterm_gitcommit` option.
 
 Execute `git commit` in the terminal window without starting a nested nvim.
 
-**❗️Note**: neovim only
+**❗️Note**: neovim only feature. Moreover, it also requires [neovim-remote](https://github.com/mhinz/neovim-remote), please install it using `pip3 install neovim-remote`.
 
-![](https://user-images.githubusercontent.com/20282795/76213003-b0b26180-6244-11ea-85ad-1632adfd07d9.gif)
+![](https://user-images.githubusercontent.com/20282795/91370222-52a02780-e840-11ea-9f7a-b536b2b6af70.gif)
 
 ### fzf
 
-This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim) for fzf command. So it can be used as a tiny fzf plugin.
+This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim) for `fzf` command. So it can be used as a tiny fzf plugin.
 
 Try `:FloatermNew fzf` or even wrap this to a new command like this:
 
@@ -340,7 +348,7 @@ Try `:FloatermNew fzf` or even wrap this to a new command like this:
 command! FZF FloatermNew fzf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/78089550-60b95b80-73fa-11ea-8ac8-8fab2025b4d8.gif)
+![](https://user-images.githubusercontent.com/20282795/91370760-c42ca580-e841-11ea-86ac-1234694041ca.gif)
 
 ### fff
 
@@ -364,7 +372,7 @@ Try `:FloatermNew nnn` or define a new command:
 command! NNN FloatermNew nnn
 ```
 
-![](https://user-images.githubusercontent.com/20282795/75599726-7a594180-5ae2-11ea-80e2-7a33df1433f6.gif)
+![](https://user-images.githubusercontent.com/20282795/91370883-1a99e400-e842-11ea-837d-1313ab209c8f.gif)
 
 ### lf
 
@@ -376,7 +384,7 @@ Try `:FloatermNew lf` or define a new command:
 command! LF FloatermNew lf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/77142551-6e4a1980-6abb-11ea-9525-73e1a1844e83.gif)
+![](https://user-images.githubusercontent.com/20282795/91370935-461cce80-e842-11ea-9f18-22c0574dd2d2.gif)
 
 ### ranger
 
@@ -388,7 +396,7 @@ Try `:FloatermNew ranger` or define a new command:
 command! Ranger FloatermNew ranger
 ```
 
-![](https://user-images.githubusercontent.com/20282795/74800026-2e054900-530d-11ea-8e2a-67168a9532a9.gif)
+![](https://user-images.githubusercontent.com/20282795/91371144-c93e2480-e842-11ea-90d2-36634f5619ba.gif)
 
 ### vifm
 
@@ -416,7 +424,7 @@ Use `:FloatermNew python` to open a python shell. After that you can use `:Float
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 
-![](https://user-images.githubusercontent.com/20282795/78530892-0c0d4a80-7817-11ea-8934-835a6e6d0628.gif)
+![](https://user-images.githubusercontent.com/20282795/91372295-de688280-e845-11ea-8b93-25f089fce1ce.gif)
 
 ## Integrate with other plugins
 
@@ -426,7 +434,7 @@ Use vim-clap to switch/preview floating terminal buffers.
 
 Try `:Clap floaterm`
 
-![](https://user-images.githubusercontent.com/20282795/74755336-00d57e00-52ae-11ea-8afc-030ff55c2145.gif)
+![](https://user-images.githubusercontent.com/20282795/91372546-7c5c4d00-e846-11ea-8d18-6d97480d57a4.gif)
 
 ### [denite.nvim](https://github.com/Shougo/denite.nvim)
 
@@ -442,7 +450,7 @@ Use CocList to switch/preview/open floating terminal buffers.
 
 Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocList floaterm`
 
-![](https://user-images.githubusercontent.com/20282795/75005925-fcc27f80-54aa-11ea-832e-59ea5b02fc04.gif)
+![](https://user-images.githubusercontent.com/20282795/91372703-ebd23c80-e846-11ea-90b7-241a60170702.gif)
 
 ### other fuzzy finders
 
