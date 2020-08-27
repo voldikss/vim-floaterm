@@ -310,7 +310,7 @@ Besides, there is a neovim only `hi-group` which can be used to configure no-cur
 hi FloatermNC guibg=gray
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91378186-66548980-e852-11ea-813a-562340b16560.gif)
+![](https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif)
 
 ## Integrate with command line tools
 
@@ -328,7 +328,7 @@ Normally if you run `vim/nvim somefile.txt` within the builtin terminal, you wou
 pip install neovim-remote
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91368956-fab3f180-e83c-11ea-9b47-20caeb65b84f.gif)
+![](https://user-images.githubusercontent.com/20282795/91380257-27750280-e857-11ea-8d49-d760c009fee0.gif)
 
 ### git
 
@@ -338,7 +338,7 @@ Execute `git commit` in the terminal window without starting a nested nvim.
 
 **❗️Note**: neovim only feature. Moreover, it also requires [neovim-remote](https://github.com/mhinz/neovim-remote), please install it using `pip3 install neovim-remote`.
 
-![](https://user-images.githubusercontent.com/20282795/91370222-52a02780-e840-11ea-9f7a-b536b2b6af70.gif)
+![](https://user-images.githubusercontent.com/20282795/91380268-2cd24d00-e857-11ea-8dbd-d39a0bbb105e.gif)
 
 ### fzf
 
@@ -350,7 +350,7 @@ Try `:FloatermNew fzf` or even wrap this to a new command like this:
 command! FZF FloatermNew fzf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91370760-c42ca580-e841-11ea-86ac-1234694041ca.gif)
+![](https://user-images.githubusercontent.com/20282795/91380264-2b088980-e857-11ea-80ff-062b3d3bbf12.gif)
 
 ### fff
 
@@ -374,7 +374,7 @@ Try `:FloatermNew nnn` or define a new command:
 command! NNN FloatermNew nnn
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91370883-1a99e400-e842-11ea-837d-1313ab209c8f.gif)
+![](https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif)
 
 ### lf
 
@@ -386,7 +386,7 @@ Try `:FloatermNew lf` or define a new command:
 command! LF FloatermNew lf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91370935-461cce80-e842-11ea-9f18-22c0574dd2d2.gif)
+![](https://user-images.githubusercontent.com/20282795/91380274-3065d400-e857-11ea-86df-981adddc04c6.gif)
 
 ### ranger
 
@@ -398,7 +398,7 @@ Try `:FloatermNew ranger` or define a new command:
 command! Ranger FloatermNew ranger
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91371144-c93e2480-e842-11ea-90d2-36634f5619ba.gif)
+![](https://user-images.githubusercontent.com/20282795/91380284-3360c480-e857-11ea-9966-34856592d487.gif)
 
 ### vifm
 
@@ -426,7 +426,7 @@ Use `:FloatermNew python` to open a python shell. After that you can use `:Float
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 
-![](https://user-images.githubusercontent.com/20282795/91372295-de688280-e845-11ea-8b93-25f089fce1ce.gif)
+![](https://user-images.githubusercontent.com/20282795/91380286-352a8800-e857-11ea-800c-ac54efa7dd72.gif)
 
 ## Integrate with other plugins
 
@@ -436,7 +436,7 @@ Use vim-clap to switch/preview floating terminal buffers.
 
 Try `:Clap floaterm`
 
-![](https://user-images.githubusercontent.com/20282795/91372546-7c5c4d00-e846-11ea-8d18-6d97480d57a4.gif)
+![](https://user-images.githubusercontent.com/20282795/91380243-217f2180-e857-11ea-9f64-46e8676adc11.gif)
 
 ### [denite.nvim](https://github.com/Shougo/denite.nvim)
 
@@ -452,7 +452,7 @@ Use CocList to switch/preview/open floating terminal buffers.
 
 Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocList floaterm`
 
-![](https://user-images.githubusercontent.com/20282795/91372703-ebd23c80-e846-11ea-90b7-241a60170702.gif)
+![](https://user-images.githubusercontent.com/20282795/91380254-25ab3f00-e857-11ea-9733-d0ae5a954848.gif)
 
 ### other fuzzy finders
 
