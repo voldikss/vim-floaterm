@@ -301,14 +301,16 @@ hi FloatermBorder guibg=orange guifg=cyan
 
 ![](https://user-images.githubusercontent.com/20282795/91368959-fee00f00-e83c-11ea-9002-cab992d30794.png)
 
-Besides, there is a neovim only `hi-group` which can be used to configure no-current window(`:help NormalNC`). It's also linked to `Normal` by default.
+Besides, there is a neovim only `hi-group` which can be used to configure no-current-focused window(`:help NormalNC`). It's also linked to `Normal` by default.
 
 ```vim
 " Configuration example
 
-" Set floaterm window background to skyblue once the cursor moves out from it
-hi FloatermNC guibg=skyblue
+" Set floaterm window background to gray once the cursor moves out from it
+hi FloatermNC guibg=gray
 ```
+
+![](https://user-images.githubusercontent.com/20282795/91378186-66548980-e852-11ea-813a-562340b16560.gif)
 
 ## Integrate with command line tools
 
