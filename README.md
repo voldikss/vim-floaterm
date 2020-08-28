@@ -591,6 +591,9 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 - #### Incorrect indent when using `:FloatermSend` with Ipython
 
   Turn off Ipython's autoindent, see [#150](https://github.com/voldikss/vim-floaterm/issues/150).
+  
+- #### Open floaterm in the current directory?
+  Either `set autochdir` or use autocmd. See [152](https://github.com/voldikss/vim-floaterm/issues/152).
 
 ## Break Changes
 
