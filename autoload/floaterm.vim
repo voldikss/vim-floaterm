@@ -274,8 +274,10 @@ function! floaterm#send(bang, mode, range, line1, line2, argstr) abort
   else
     let bufnr = floaterm#buflist#curr()
     if bufnr == -1
+      let winnr = winnr()
       let bufnr = floaterm#new(v:true, '', {}, {})
       call floaterm#toggle(0, '')
+      execute winnr . 'wincmd w'
       call floaterm#send(a:bang, a:mode, a:range, a:line1, a:line2, a:argstr)
       call floaterm#toggle(0, '')
       return
