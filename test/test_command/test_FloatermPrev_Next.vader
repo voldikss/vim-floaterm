@@ -1,0 +1,46 @@
+" vim:ft=vim
+
+Execute(create 4 floaterms):
+  FloatermNew
+  let bufnr1 = bufnr()
+  FloatermNew
+  let bufnr2 = bufnr()
+  FloatermNew
+  let bufnr3 = bufnr()
+  FloatermNew
+  let bufnr4 = bufnr()
+
+Execute(execute `:FloatermPrev`):
+  FloatermPrev
+  AssertEqual bufnr3, bufnr()
+  FloatermPrev
+  AssertEqual bufnr2, bufnr()
+  FloatermPrev
+  AssertEqual bufnr1, bufnr()
+  FloatermPrev
+  AssertEqual bufnr4, bufnr()
+
+Execute(execute `:FloatermNext`):
+  FloatermNext
+  AssertEqual bufnr1, bufnr()
+  FloatermNext
+  AssertEqual bufnr2, bufnr()
+  FloatermNext
+  AssertEqual bufnr3, bufnr()
+  FloatermNext
+  AssertEqual bufnr4, bufnr()
+
+Execute(kill the prev floaterm and execute `:FloatermPrev`):
+  execute bufnr3 . 'FloatermKill'
+  FloatermPrev
+  AssertEqual bufnr2, bufnr()
+
+Execute(kill the next floaterm and execute `:FloatermPrev`):
+  execute bufnr4 . 'FloatermKill'
+  FloatermNext
+  AssertEqual bufnr1, bufnr()
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, 0, '')
+  sleep 100m

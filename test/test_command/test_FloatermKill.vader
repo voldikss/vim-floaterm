@@ -1,0 +1,48 @@
+" vim:ft=vim
+
+Execute(FloatermKill):
+  FloatermNew
+  AssertEqual 'floaterm', &filetype
+  FloatermKill
+  AssertEqual '', &filetype
+
+Execute(FloatermKill!):
+  FloatermNew
+  let bufnr1 = bufnr()
+  FloatermNew
+  let bufnr2 = bufnr()
+
+  FloatermKill!
+  AssertEqual 0, bufexists(bufnr1)
+  AssertEqual 0, bufexists(bufnr2)
+
+Execute([N]FloatermKill):
+  FloatermNew
+  let bufnr1 = bufnr()
+  FloatermNew
+  let bufnr2 = bufnr()
+
+  execute bufnr1 . 'FloatermKill'
+  AssertEqual 0, bufexists(bufnr1)
+  AssertEqual 1, bufexists(bufnr2)
+  execute bufnr2 . 'FloatermKill'
+  AssertEqual 0, bufexists(bufnr1)
+  AssertEqual 0, bufexists(bufnr2)
+
+Execute(FloatermKill --name):
+  FloatermNew --name=ft1
+  let bufnr1 = bufnr()
+  FloatermNew --name=ft2
+  let bufnr2 = bufnr()
+
+  FloatermKill ft1
+  AssertEqual 0, bufexists(bufnr1)
+  AssertEqual 1, bufexists(bufnr2)
+  FloatermKill ft2
+  AssertEqual 0, bufexists(bufnr1)
+  AssertEqual 0, bufexists(bufnr2)
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, 0, '')
+  sleep 100m

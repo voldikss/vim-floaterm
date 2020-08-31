@@ -1,0 +1,58 @@
+" vim:ft=vim
+
+Execute(FloatermToggle):
+  FloatermToggle
+  AssertEqual 'floaterm', &filetype
+  FloatermToggle
+  AssertEqual '', &filetype
+
+Execute(create 2 floaterms):
+  FloatermKill!
+  FloatermNew
+  let bufnr1 = bufnr()
+  FloatermToggle
+  FloatermNew
+  let bufnr2 = bufnr()
+  FloatermToggle
+
+Execute(FloatermToggle! to show):
+  FloatermToggle!
+  AssertNotEqual -1,bufwinnr(bufnr1)
+  AssertNotEqual -1,bufwinnr(bufnr2)
+
+Execute(FloatermToggle! to hide):
+  FloatermToggle!
+  AssertEqual -1,bufwinnr(bufnr1)
+  AssertEqual -1,bufwinnr(bufnr2)
+
+Execute([N]FloatermToggle):
+  FloatermKill!
+  FloatermNew
+  let bufnr1 = bufnr()
+  FloatermToggle
+  FloatermNew
+  let bufnr2 = bufnr()
+  FloatermToggle
+
+  execute bufnr1 . 'FloatermToggle'
+  AssertEqual bufnr1, bufnr()
+  execute bufnr2 . 'FloatermToggle'
+  AssertEqual bufnr2, bufnr()
+
+Execute(FloatermToggle --name):
+  FloatermKill!
+  FloatermNew --name=ft1
+  FloatermToggle
+  FloatermNew --name=ft2
+  FloatermToggle
+
+  FloatermToggle ft1
+  AssertEqual 'floaterm://ft1', bufname()
+  FloatermToggle ft2
+  AssertEqual 'floaterm://ft2', bufname()
+  FloatermKill!
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, 0, '')
+  sleep 100m

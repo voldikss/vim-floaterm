@@ -1,0 +1,11 @@
+" vim:ft=vim
+
+Execute(FloatermUpdate):
+  FloatermNew
+  FloatermUpdate --name=floaterm
+  AssertEqual 'floaterm', b:floaterm_winopts['name']
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, 0, '')
+  sleep 100m
