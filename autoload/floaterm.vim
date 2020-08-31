@@ -277,7 +277,7 @@ function! floaterm#send(bang, mode, range, line1, line2, argstr) abort
       let winnr = winnr()
       let bufnr = floaterm#new(v:true, '', {}, {})
       call floaterm#toggle(0, '')
-      execute winnr . 'wincmd w'
+      noautocmd execute winnr . 'wincmd w'
       call floaterm#send(a:bang, a:mode, a:range, a:line1, a:line2, a:argstr)
       call floaterm#toggle(0, '')
       return
