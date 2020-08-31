@@ -39,10 +39,15 @@ jobs:
           VIM_EXEC: ${{ steps.vim.outputs.executable }}
         run: |
           $VIM_EXEC --version
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command.vader'
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command_with_bang.vader'
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_cmdline.vader'
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_floaterm_size.vader'
+
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermFirst_Last.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermKill.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermNew.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermPrev_Next.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermSend.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermShow_Hide.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermToggle.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_command/test_FloatermUpdate.vader'
 
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_g_autohide/v_true.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_g_autohide/v_false.vader'

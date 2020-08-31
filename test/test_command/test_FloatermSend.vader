@@ -1,0 +1,18 @@
+" vim:ft=vim
+
+Execute(FloatermSend):
+  FloatermNew
+  FloatermSend
+
+Execute(execute `:FloatermSend` without having opened any floaterms):
+  FloatermKill!
+  FloatermSend
+  AssertEqual 'floaterm', &filetype
+
+Execute(FloatermSend with argument):
+  FloatermSend ls
+
+Execute (Exit):
+  stopinsert
+  call floaterm#hide(1, 0, '')
+  sleep 100m
