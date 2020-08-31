@@ -110,24 +110,28 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - The `options` is the same as in `:FloatermNew`.
 - Use `<TAB>` to get completion.
 
-#### `:FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.
+#### `:[N]FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.
 
+- If `N` exists, toggle the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`. Otherwise create a new floaterm named `floaterm_name`.
 - Use `<TAB>` to get completion.
 - If `!` exists, toggle all floaterms
 
 #### `:FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
+- If `N` exists, show the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, show the floaterm named `floaterm_name`.
 - If `!` exists, show all floaterms
 
 #### `:FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
+- If `N` exists, hide the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, show the floaterm named `floaterm_name`.
 - If `!` exists, hide all floaterms
 
 #### `:FloatermKill[!] [floaterm_name]` Kill the current floaterm instance
 
+- If `N` exists, kill the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, kill the floaterm instance named `floaterm_name`.
 - If `!` exists, kill all floaterms
 
@@ -591,7 +595,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 - #### Incorrect indent when using `:FloatermSend` with Ipython
 
   Turn off Ipython's autoindent, see [#150](https://github.com/voldikss/vim-floaterm/issues/150).
-  
+
 - #### Open floaterm in the current directory?
   Either `set autochdir` or use autocmd. See [152](https://github.com/voldikss/vim-floaterm/issues/152).
 
