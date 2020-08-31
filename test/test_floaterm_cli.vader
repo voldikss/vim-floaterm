@@ -1,18 +1,18 @@
 " vim:ft=vim
 
-Execute(FloatermNew floaterm ../README.md):
-  FloatermNew floaterm ../README.md
+Execute(FloatermNew floaterm ../LICENSE):
+  FloatermNew floaterm ../LICENSE
   sleep 1000m
   " strange... why it's the full path in github action?
   Log expand('%')
-  Assert match(expand('%'), 'README.md') > -1
+  Assert match(expand('%'), 'LICENSE') > -1
   " floating window is closed
   for winnr in range(1, winnr('$'))
     Assert empty(nvim_win_get_config(win_getid())['relative'])
   endfor
 
-Execute(FloatermNew cat ../README.md | floaterm):
-  FloatermNew cat ../README.md | floaterm
+Execute(FloatermNew cat ../LICENSE | floaterm):
+  FloatermNew cat ../LICENSE | floaterm
   sleep 1000m
   " floating window is closed
   for winnr in range(1, winnr('$'))
@@ -21,5 +21,5 @@ Execute(FloatermNew cat ../README.md | floaterm):
 
 Execute (Exit):
   stopinsert
-  call floaterm#hide(1, '')
+  call floaterm#hide(1, 0, '')
   sleep 100m

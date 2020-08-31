@@ -25,5 +25,5 @@ Execute(Test floaterm winopts before and after FloatermToggle):
 
 Execute(Exit):
   stopinsert
-  call floaterm#hide(1, '')
+  call floaterm#hide(1, 0, '')
   sleep 100m

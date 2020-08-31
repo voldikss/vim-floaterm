@@ -30,7 +30,7 @@ if !empty(g:floaterm_gitcommit)
     let $GIT_EDITOR = 'nvr --remote-wait'
   else
     let $GIT_EDITOR = printf(
-      \ 'nvr -cc "call floaterm#hide(1, \"\") | %s" --remote-wait',
+      \ 'nvr -cc "call floaterm#hide(1, 0, \"\") | %s" --remote-wait',
       \ g:floaterm_gitcommit
       \ )
   endif
@@ -89,7 +89,7 @@ endfunction
 " ----------------------------------------------------------------------------
 " toggle on/off the floaterm named `name`
 " ----------------------------------------------------------------------------
-function! floaterm#toggle(bang, name)  abort
+function! floaterm#toggle(bang, bufnr, name)  abort
   if a:bang
     let found_winnr = floaterm#window#find_floaterm_window()
     if found_winnr > 0
@@ -104,27 +104,34 @@ function! floaterm#toggle(bang, name)  abort
     return
   endif
 
-  if !empty(a:name)
+  let bufnr = a:bufnr
+  if bufnr == 0 && !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
-    if bufnr == -1
-      call floaterm#new(a:bang, '', {'name': a:name}, {})
-      return
-    elseif bufnr == bufnr('%')
+  endif
+
+  if bufnr == -1
+    call floaterm#new(a:bang, '', {'name': a:name}, {})
+  elseif bufnr == 0
+    if &filetype == 'floaterm'
+      call floaterm#window#hide_floaterm(bufnr('%'))
+    else
+      let found_winnr = floaterm#window#find_floaterm_window()
+      if found_winnr > 0
+        noautocmd execute found_winnr . 'wincmd w'
+      else
+        call floaterm#curr()
+      endif
+    endif
+  elseif getbufvar(bufnr, 'floaterm_winid', -1) != -1
+    if bufnr == bufnr('%')
       call floaterm#window#hide_floaterm(bufnr)
     elseif bufwinnr(bufnr) > -1
-      execute bufwinnr(bufnr) . 'wincmd w'
+      noautocmd execute bufwinnr(bufnr) . 'wincmd w'
     else
       call floaterm#terminal#open_existing(bufnr)
     endif
-  elseif &filetype == 'floaterm'
-    call floaterm#window#hide_floaterm(bufnr('%'))
   else
-    let found_winnr = floaterm#window#find_floaterm_window()
-    if found_winnr > 0
-      execute found_winnr . 'wincmd w'
-    else
-      call floaterm#curr()
-    endif
+    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
   endif
 endfunction
 
@@ -195,7 +202,7 @@ function! floaterm#last() abort
   endif
 endfunction
 
-function! floaterm#kill(bang, name) abort
+function! floaterm#kill(bang, bufnr, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()
       call floaterm#terminal#kill(bufnr)
@@ -203,19 +210,22 @@ function! floaterm#kill(bang, name) abort
     return
   endif
 
-  if !empty(a:name)
+  let bufnr = a:bufnr
+  if bufnr == 0 && !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
-  else
+  endif
+  if bufnr == 0 || bufnr == -1
     let bufnr = floaterm#buflist#curr()
   endif
-  if bufnr != -1
+
+  if bufnr > 0
     call floaterm#terminal#kill(bufnr)
   else
-    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
+    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
   endif
 endfunction
 
-function! floaterm#show(bang, name) abort
+function! floaterm#show(bang, bufnr, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()
       call floaterm#terminal#open_existing(bufnr)
@@ -223,20 +233,23 @@ function! floaterm#show(bang, name) abort
     return
   endif
 
-  if !empty(a:name)
+  let bufnr = a:bufnr
+  if bufnr == 0 && !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
-  else
+  endif
+  if bufnr == 0 || bufnr == -1
     let bufnr = floaterm#buflist#curr()
   endif
-  if bufnr != -1
+
+  if bufnr > 0
     call floaterm#util#autohide()
     call floaterm#terminal#open_existing(bufnr)
   else
-    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
+    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
   endif
 endfunction
 
-function! floaterm#hide(bang, name) abort
+function! floaterm#hide(bang, bufnr, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()
       call floaterm#window#hide_floaterm(bufnr)
@@ -244,15 +257,18 @@ function! floaterm#hide(bang, name) abort
     return
   endif
 
-  if !empty(a:name)
+  let bufnr = a:bufnr
+  if bufnr == 0 && !empty(a:name)
     let bufnr = floaterm#terminal#get_bufnr(a:name)
-  else
+  endif
+  if bufnr == 0 || bufnr == -1
     let bufnr = bufnr('%')
   endif
-  if bufnr != -1
+
+  if bufnr > 0
     call floaterm#window#hide_floaterm(bufnr)
   else
-    call floaterm#util#show_msg('The floaterm does not exist', 'warning')
+    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
   endif
 endfunction
 
@@ -276,10 +292,10 @@ function! floaterm#send(bang, mode, range, line1, line2, argstr) abort
     if bufnr == -1
       let winnr = winnr()
       let bufnr = floaterm#new(v:true, '', {}, {})
-      call floaterm#toggle(0, '')
+      call floaterm#toggle(0, 0, '')
       noautocmd execute winnr . 'wincmd w'
       call floaterm#send(a:bang, a:mode, a:range, a:line1, a:line2, a:argstr)
-      call floaterm#toggle(0, '')
+      call floaterm#toggle(0, 0, '')
       return
     endif
   endif
