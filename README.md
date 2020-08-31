@@ -117,19 +117,19 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 - Use `<TAB>` to get completion.
 - If `!` exists, toggle all floaterms
 
-#### `:FloatermShow[!] [floaterm_name]` Show the current floaterm window.
+#### `:[N]FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
 - If `N` exists, show the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, show the floaterm named `floaterm_name`.
 - If `!` exists, show all floaterms
 
-#### `:FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
+#### `:[N]FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
 - If `N` exists, hide the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, show the floaterm named `floaterm_name`.
 - If `!` exists, hide all floaterms
 
-#### `:FloatermKill[!] [floaterm_name]` Kill the current floaterm instance
+#### `:[N]FloatermKill[!] [floaterm_name]` Kill the current floaterm instance
 
 - If `N` exists, kill the floaterm whose buffer number is `N`
 - If `floaterm_name` exists, kill the floaterm instance named `floaterm_name`.
