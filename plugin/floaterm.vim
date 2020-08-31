@@ -32,19 +32,19 @@ let g:floaterm_keymap_show   = get(g:, 'floaterm_keymap_show', '')
 let g:floaterm_keymap_kill   = get(g:, 'floaterm_keymap_kill', '')
 let g:floaterm_keymap_toggle = get(g:, 'floaterm_keymap_toggle', '')
 
-command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang
+command! -nargs=* -bang -complete=customlist,floaterm#cmdline#complete
                           \ FloatermNew    call floaterm#run('new', <bang>0, <f-args>)
-command! -nargs=* -complete=customlist,floaterm#cmdline#complete
+command! -nargs=*       -complete=customlist,floaterm#cmdline#complete
                           \ FloatermUpdate call floaterm#run('update', 0, <f-args>)
-command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermShow   call floaterm#show(<bang>0, <q-args>)
-command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermHide   call floaterm#hide(<bang>0, <q-args>)
-command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermKill   call floaterm#kill(<bang>0, <q-args>)
-command! -nargs=? -bang -complete=customlist,floaterm#cmdline#floaterm_names
-                          \ FloatermToggle call floaterm#toggle(<bang>0, <q-args>)
-command! -nargs=? -range -bang -complete=customlist,floaterm#cmdline#floaterm_names2
+command! -nargs=? -range=0 -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermShow   call floaterm#show(<bang>0, <count>, <q-args>)
+command! -nargs=? -range=0 -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermHide   call floaterm#hide(<bang>0, <count>, <q-args>)
+command! -nargs=? -range=0 -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermKill   call floaterm#kill(<bang>0, <count>, <q-args>)
+command! -nargs=? -range=0 -bang -complete=customlist,floaterm#cmdline#floaterm_names
+                          \ FloatermToggle call floaterm#toggle(<bang>0, <count>, <q-args>)
+command! -nargs=? -range   -bang -complete=customlist,floaterm#cmdline#floaterm_names2
                           \ FloatermSend   call floaterm#send(<bang>0, visualmode(), <range>, <line1>, <line2>, <q-args>)
 command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()

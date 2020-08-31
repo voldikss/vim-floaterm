@@ -46,7 +46,7 @@ function! floaterm#util#show_msg(message, ...) abort
 endfunction
 
 function! floaterm#util#edit(_bufnr, filename) abort
-  call floaterm#hide(1, '')
+  call floaterm#hide(1, 0, '')
   silent execute g:floaterm_open_command . ' ' . a:filename
 endfunction
 
@@ -63,7 +63,7 @@ endfunction
 function! floaterm#util#autohide() abort
   " hide all floaterms before opening a new floaterm
   if g:floaterm_autohide
-    call floaterm#hide(1, '')
+    call floaterm#hide(1, 0, '')
   endif
 endfunction
 
