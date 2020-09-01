@@ -44,31 +44,30 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
 
   if a:bufnr > 0
     call floaterm#window#open(a:bufnr, a:opts)
-    return
-  endif
-
-  if has('nvim')
-    let bufnr = nvim_create_buf(v:false, v:true)
-    call floaterm#buflist#add(bufnr)
-    let a:jobopts.on_exit = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
-    let winid = floaterm#window#open(bufnr, a:opts)
-    call nvim_set_current_win(winid)
-    let ch = termopen(a:cmd, a:jobopts)
-    let s:channel_map[bufnr] = ch
+    let bufnr_res = a:bufnr
   else
-    let a:jobopts.exit_cb = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
-    if has_key(a:jobopts, 'on_exit')
-      unlet a:jobopts.on_exit
+    if has('nvim')
+      let bufnr_res = nvim_create_buf(v:false, v:true)
+      call floaterm#buflist#add(bufnr_res)
+      let a:jobopts.on_exit = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
+      let winid = floaterm#window#open(bufnr_res, a:opts)
+      let ch = termopen(a:cmd, a:jobopts)
+      let s:channel_map[bufnr_res] = ch
+    else
+      let a:jobopts.exit_cb = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
+      if has_key(a:jobopts, 'on_exit')
+        unlet a:jobopts.on_exit
+      endif
+      if has('patch-8.1.2080')
+        let a:jobopts.term_api = 'floaterm#util#edit'
+      endif
+      let a:jobopts.hidden = 1
+      let bufnr_res = term_start(a:cmd, a:jobopts)
+      call floaterm#buflist#add(bufnr_res)
+      let job = term_getjob(bufnr_res)
+      let s:channel_map[bufnr_res] = job_getchannel(job)
+      let winid = floaterm#window#open(bufnr_res, a:opts)
     endif
-    if has('patch-8.1.2080')
-      let a:jobopts.term_api = 'floaterm#util#edit'
-    endif
-    let a:jobopts.hidden = 1
-    let bufnr = term_start(a:cmd, a:jobopts)
-    call floaterm#buflist#add(bufnr)
-    let job = term_getjob(bufnr)
-    let s:channel_map[bufnr] = job_getchannel(job)
-    let winid = floaterm#window#open(bufnr, a:opts)
   endif
 
   let termname = get(a:opts, 'name', '')
@@ -76,7 +75,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
     let termname = 'floaterm://' . termname
     execute 'file ' . termname
   endif
-  return bufnr
+  return bufnr_res
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
@@ -112,7 +111,6 @@ endfunction
 function! floaterm#terminal#get_bufnr(termname) abort
   return bufnr('floaterm://' . a:termname)
 endfunction
-
 
 function! floaterm#terminal#kill(bufnr) abort
   call floaterm#window#hide_floaterm(a:bufnr)

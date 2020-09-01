@@ -50,7 +50,7 @@ endfunction
 function! floaterm#run(action, bang, ...) abort
   let [cmd, opts] = floaterm#cmdline#parse(a:000)
   if a:action == 'new'
-    call floaterm#new(a:bang, cmd, opts, {})
+    call floaterm#new(a:bang, cmd, {}, opts)
   elseif a:action == 'update'
     call floaterm#update(opts)
   endif
@@ -60,7 +60,7 @@ endfunction
 " create a floaterm. `jobopts` is not used inside this pugin actually, it's
 " reserved for outer invoke
 " ----------------------------------------------------------------------------
-function! floaterm#new(bang, cmd, opts, jobopts) abort
+function! floaterm#new(bang, cmd, jobopts, opts) abort
   call floaterm#util#autohide()
   if a:cmd != ''
     let wrappers = s:get_wrappers()
