@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         neovim: [true] # only test on neovim currently
-        version: [nightly, v0.4.3]
+        version: [nightly, stable]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
