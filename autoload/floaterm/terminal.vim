@@ -13,8 +13,8 @@ function! s:on_floaterm_close(callback, job, data, ...) abort
   if getbufvar(bufnr, '&filetype') != 'floaterm'
     return
   endif
-  let winopts = getbufvar(bufnr, 'floaterm_winopts', {})
-  let autoclose = get(winopts, 'autoclose', 0)
+  let opts = getbufvar(bufnr, 'floaterm_opts', {})
+  let autoclose = get(opts, 'autoclose', 0)
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
     call floaterm#window#hide_floaterm(bufnr)
     try
@@ -28,7 +28,7 @@ function! s:on_floaterm_close(callback, job, data, ...) abort
   endif
 endfunction
 
-function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
+function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
   " for vim's popup, must close popup can we open and jump to a new window
   if !has('nvim')
     call floaterm#window#hide_floaterm(bufnr('%'))
@@ -43,7 +43,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
   endif
 
   if a:bufnr > 0
-    call floaterm#window#open(a:bufnr, a:winopts)
+    call floaterm#window#open(a:bufnr, a:opts)
     return
   endif
 
@@ -51,7 +51,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#buflist#add(bufnr)
     let a:jobopts.on_exit = function('s:on_floaterm_close', [get(a:jobopts, 'on_exit', v:null)])
-    let winid = floaterm#window#open(bufnr, a:winopts)
+    let winid = floaterm#window#open(bufnr, a:opts)
     call nvim_set_current_win(winid)
     let ch = termopen(a:cmd, a:jobopts)
     let s:channel_map[bufnr] = ch
@@ -68,10 +68,10 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
-    let winid = floaterm#window#open(bufnr, a:winopts)
+    let winid = floaterm#window#open(bufnr, a:opts)
   endif
 
-  let termname = get(a:winopts, 'name', '')
+  let termname = get(a:opts, 'name', '')
   if termname != ''
     let termname = 'floaterm://' . termname
     execute 'file ' . termname
@@ -84,8 +84,8 @@ function! floaterm#terminal#open_existing(bufnr) abort
   if winnr > -1
     execute winnr . 'hide'
   endif
-  let winopts = getbufvar(a:bufnr, 'floaterm_winopts', {})
-  call floaterm#terminal#open(a:bufnr, '', {}, winopts)
+  let opts = getbufvar(a:bufnr, 'floaterm_opts', {})
+  call floaterm#terminal#open(a:bufnr, '', {}, opts)
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort

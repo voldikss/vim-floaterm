@@ -3,7 +3,7 @@
 Execute(FloatermUpdate):
   FloatermNew
   FloatermUpdate --name=floaterm
-  AssertEqual 'floaterm', b:floaterm_winopts['name']
+  AssertEqual 'floaterm', b:floaterm_opts['name']
 
 Execute (Exit):
   stopinsert
