@@ -164,49 +164,37 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
   endif
 endfunction
 
-function! s:update_opts(opts) abort
-  if has_key(a:opts, 'width')
-    let width = a:opts.width
-  else
-    let width = g:floaterm_width
-    let a:opts.width = width
+function! s:parse_opts(opts) abort
+  if !has_key(a:opts, 'width')
+    let a:opts.width = g:floaterm_width
   endif
 
-  if has_key(a:opts, 'height')
-    let height = a:opts.height
-  else
-    let height = g:floaterm_height
-    let a:opts.height = height
+  if !has_key(a:opts, 'height')
+    let a:opts.height = g:floaterm_height
   endif
 
-  if has_key(a:opts, 'wintype')
-    let wintype = a:opts.wintype
-  else
-    let wintype = s:get_wintype()
-    let a:opts.wintype = wintype
+  if !has_key(a:opts, 'wintype')
+    let a:opts.wintype = s:get_wintype()
   endif
 
-  if has_key(a:opts, 'position')
-    let position = a:opts.position
-  else
-    let position = g:floaterm_position
-    let a:opts.position = position
+  if !has_key(a:opts, 'position')
+    let a:opts.position = g:floaterm_position
   endif
 
-  if has_key(a:opts, 'autoclose')
-    let autoclose = a:opts.autoclose
-  else
-    let autoclose = g:floaterm_autoclose
-    let a:opts.autoclose = autoclose
+  if !has_key(a:opts, 'autoclose')
+    let a:opts.autoclose = g:floaterm_autoclose
   endif
   return a:opts
 endfunction
 
 function! floaterm#window#open(bufnr, opts) abort
-  let opts = s:update_opts(a:opts)
+  let opts = s:parse_opts(a:opts)
   let wintype = a:opts.wintype
   let position = a:opts.position
 
+  " NOTE: these lines can not be moved into s:parse_opts() cause floaterm size
+  " should be resized dynamically according to the terminal-app's size
+  " See 'test/test_options/test_width_height.vader'
   let width = opts.width
   if type(width) == v:t_float | let width = width * &columns | endif
   let width = float2nr(width)
@@ -255,16 +243,14 @@ endfunction
 
 function! floaterm#window#open_popup(bufnr, width, height, pos) abort
   let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
-  let width =  a:width
-  let height =  a:height
   let opts = {
     \ 'pos': anchor,
     \ 'line': row,
     \ 'col': col,
-    \ 'maxwidth': width,
-    \ 'minwidth': width,
-    \ 'maxheight': height,
-    \ 'minheight': height,
+    \ 'maxwidth': a:width,
+    \ 'minwidth': a:width,
+    \ 'maxheight': a:height,
+    \ 'minheight': a:height,
     \ 'border': [1, 1, 1, 1],
     \ 'borderchars': g:floaterm_borderchars,
     \ 'borderhighlight': ['FloatermBorder'],
