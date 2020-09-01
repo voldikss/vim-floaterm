@@ -28,13 +28,22 @@ function! floaterm#cmdline#parse(arglist) abort
           let opts[key] = v:true
         endif
       else
-        let cmd = join(a:arglist[c:])
+        let cmd = s:expand(join(a:arglist[c:]))
         break
       endif
       let c += 1
     endfor
   endif
   return [cmd, opts]
+endfunction
+
+" say thanks to the neoterm project
+function! s:expand(cmd) abort
+  let cmd = substitute(a:cmd, '[^\\]\zs%\(:[phtre]\)\+', '\=expand(submatch(0))', 'g')
+  let cmd = substitute(cmd, '\c\\<cr>', '', 'g')
+  let cmd = substitute(cmd, '[^\\]\zs%', expand('%:p'), 'g')
+  let cmd = substitute(cmd, '\\%', '%', 'g')
+  return cmd
 endfunction
 
 " ----------------------------------------------------------------------------
