@@ -14,9 +14,9 @@ Execute(Set autoinsert to 1):
   " FloatermNew --autoinsert=1 ls
   " AssertEqual 'floaterm',&filetype
 
+  let g:floaterm_autoinsert = 1
+  FloatermNew! ls
   " FIXME
-  " let g:floaterm_autoinsert = 1
-  " FloatermNew! ls
   " AssertEqual 'i',mode()
 
 Execute (Exit):
