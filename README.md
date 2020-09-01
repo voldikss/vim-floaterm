@@ -88,11 +88,18 @@ If you've opened multiple floaterm instances, they will be attached to a double-
   - `name` name of the floaterm
   - `autoclose` close the window after finishing job, see `g:floaterm_autoclose`
 - Use `<TAB>` to get completion.
+- `%` in `cmd` will be expanded to the absolute path of the current file, to get standalone `%`, use `\%`.
 
 For example, command
 
 ```vim
 :FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
+```
+
+And the following command allows you to compile and run your code in the floaterm window
+
+```vim
+:FloatermNew --autoclose=0 g++ -c % && ./a.out`
 ```
 
 will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
