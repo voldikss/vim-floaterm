@@ -34,11 +34,16 @@ jobs:
         run: |
           pip install neovim-remote
           nvr --version
+      - name: Config git # otherwise test_gitcommit will fail
+        run: |
+          git config --global user.email "dyzplus@gmail.com"
+          git config --global user.name "voldikss"
       - name: Run vader tests
         env:
           VIM_EXEC: ${{ steps.vim.outputs.executable }}
         run: |
           $VIM_EXEC --version
+          # $VIM_EXEC -u test/vimrc -c 'Vader! test/*/*.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_commands/test_FloatermFirst_Last.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_commands/test_FloatermKill.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_commands/test_FloatermNew.vader'
@@ -47,7 +52,7 @@ jobs:
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_commands/test_FloatermShow_Hide.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_commands/test_FloatermToggle.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_commands/test_FloatermUpdate.vader'
-          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_functions/test_floaterm#cmdline#*.vader'
+          $VIM_EXEC -u test/vimrc -c 'Vader! test/test_functions/test_floaterm_cmdline.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_options/test_autoclose.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_options/test_autohide.vader'
           $VIM_EXEC -u test/vimrc -c 'Vader! test/test_options/test_autoinsert.vader'
