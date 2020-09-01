@@ -2,6 +2,7 @@
 
 Execute(FloatermSend):
   FloatermNew
+  FloatermToggle
   FloatermSend
 
 Execute(execute `:FloatermSend` without having opened any floaterms):
@@ -10,9 +11,10 @@ Execute(execute `:FloatermSend` without having opened any floaterms):
   AssertEqual 'floaterm', &filetype
 
 Execute(FloatermSend with argument):
+  FloatermKill!
   FloatermSend ls
 
 Execute (Exit):
   stopinsert
-  call floaterm#hide(1, 0, '')
+  FloatermKill!
   sleep 100m

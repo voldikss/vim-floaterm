@@ -1,0 +1,47 @@
+" vim:ft=vim
+
+Execute(Set autoclose to 0):
+  FloatermNew --autoclose=0 ls
+  sleep 100m
+  AssertEqual 'floaterm',&filetype
+
+  let g:floaterm_autoclose = 0
+  FloatermNew ls
+  sleep 100m
+  AssertEqual 'floaterm',&filetype
+
+Execute(Set autoclose to 1 with normal command):
+  FloatermNew --autoclose=1 ls
+  sleep 100m
+  AssertEqual '',&filetype
+
+  let g:floaterm_autoclose = 1
+  FloatermNew ls
+  sleep 100m
+  AssertEqual '',&filetype
+
+Execute(Set autoclose to 1 with error command):
+  FloatermNew --autoclose=1 xxx
+  sleep 100m
+  AssertEqual 'floaterm',&filetype
+
+  let g:floaterm_autoclose = 1
+  FloatermNew xxx
+  sleep 100m
+  AssertEqual 'floaterm',&filetype
+
+Execute(Set autoclose to 2):
+  FloatermNew --autoclose=2 ls
+  sleep 100m
+  AssertEqual '',&filetype
+
+  let g:floaterm_autoclose = 2
+  FloatermNew ls
+  sleep 100m
+  AssertEqual '',&filetype
+
+
+Execute (Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m

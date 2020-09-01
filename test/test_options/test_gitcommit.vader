@@ -1,0 +1,18 @@
+" vim:ft=vim
+
+Execute(FloatermNew git commit --amend):
+  FloatermKill!
+  let g:floaterm_gitcommit = 'split'
+  let pwd = $PWD
+  silent execute printf('!touch %s/afile && git add afile', pwd)
+  FloatermNew git commit
+  sleep 500m
+  Log expand('%')
+  Log &ft
+  AssertNotEqual 'floaterm',&filetype
+  silent execute printf('!cd %s && rm afile && git add afile', pwd)
+
+Execute (Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m

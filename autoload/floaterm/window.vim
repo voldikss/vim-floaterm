@@ -8,23 +8,25 @@
 let s:has_popup = has('textprop') && has('patch-8.2.0286')
 let s:has_float = has('nvim') && exists('*nvim_win_set_config')
 
-if empty(g:floaterm_wintype)
-  if s:has_float
-    let s:wintype = 'floating'
-  elseif s:has_popup
-    let s:wintype = 'popup'
+function! s:get_wintype() abort
+  if empty(g:floaterm_wintype)
+    if s:has_float
+      return 'floating'
+    elseif s:has_popup
+      return 'popup'
+    else
+      return 'normal'
+    endif
+  elseif g:floaterm_wintype == 'floating' && !s:has_float
+    call floaterm#util#show_msg("floating window is not supported in your nvim, fall back to normal window", 'warning')
+    return 'normal'
+  elseif g:floaterm_wintype == 'popup' && !s:has_popup
+    call floaterm#util#show_msg("popup window is not supported in your vim, fall back to normal window", 'warning')
+    return 'normal'
   else
-    let s:wintype = 'normal'
+    return g:floaterm_wintype
   endif
-elseif g:floaterm_wintype == 'floating' && !s:has_float
-  call floaterm#util#show_msg("floating window is not supported in your nvim, fall back to normal window", 'warning')
-  let s:wintype = 'normal'
-elseif g:floaterm_wintype == 'popup' && !s:has_popup
-  call floaterm#util#show_msg("popup window is not supported in your vim, fall back to normal window", 'warning')
-  let s:wintype = 'normal'
-else
-  let s:wintype = g:floaterm_wintype
-endif
+endfunction
 
 function! s:build_title(bufnr) abort
   if empty(g:floaterm_title)
@@ -180,7 +182,7 @@ function! s:update_opts(opts) abort
   if has_key(a:opts, 'wintype')
     let wintype = a:opts.wintype
   else
-    let wintype = s:wintype
+    let wintype = s:get_wintype()
     let a:opts.wintype = wintype
   endif
 

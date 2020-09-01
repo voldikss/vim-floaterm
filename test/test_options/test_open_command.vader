@@ -1,0 +1,34 @@
+" vim:ft=vim
+
+Execute(FloatermNew floaterm ../../LICENSE):
+  wincmd o
+  FloatermNew floaterm ../../LICENSE
+  sleep 1000m
+  Log expand('%')
+  Log &ft
+  AssertEqual 'LICENSE',expand('%:t')
+  AssertNotEqual 'floaterm',&ft
+  " floating window is closed
+  for winnr in range(1, winnr('$'))
+    let winid = win_getid(winnr)
+    if !empty(getwininfo(winid))
+      Assert !has_key(nvim_win_get_config(winid), 'anchor')
+    endif
+  endfor
+
+Execute(FloatermNew cat ../../LICENSE | floaterm):
+  FloatermNew cat ../../LICENSE | floaterm
+  sleep 1000m
+  AssertNotEqual 'floaterm',&ft
+  " floating window is closed
+  for winnr in range(1, winnr('$'))
+    let winid = win_getid(winnr)
+    if !empty(getwininfo(winid))
+      Assert !has_key(nvim_win_get_config(winid), 'anchor')
+    endif
+  endfor
+
+Execute (Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m

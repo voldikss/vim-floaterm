@@ -1,0 +1,25 @@
+" vim:ft=vim
+
+Execute(Function IsFloating):
+  function! IsFloating(winid) abort
+    return has_key(nvim_win_get_config(a:winid), 'anchor')
+  endfunction
+
+Execute(Test1):
+  let g:floaterm_wintype = 'normal'
+  FloatermNew
+  AssertEqual 0,IsFloating(win_getid())
+  FloatermNew --wintype=floating
+  AssertEqual 1,IsFloating(win_getid())
+
+Execute(Test2):
+  let g:floaterm_wintype = 'floating'
+  FloatermNew
+  AssertEqual 1,IsFloating(win_getid())
+  FloatermNew --wintype=normal
+  AssertEqual 0,IsFloating(win_getid())
+
+Execute(Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m
