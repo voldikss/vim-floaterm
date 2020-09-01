@@ -97,13 +97,13 @@ For example, command
 :FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
 ```
 
+will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
+
 And the following command allows you to compile and run your code in the floaterm window
 
 ```vim
 :FloatermNew --autoclose=0 g++ -c % && ./a.out`
 ```
-
-will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
 
 #### `:FloatermPrev` Switch to the previous floaterm instance
 
