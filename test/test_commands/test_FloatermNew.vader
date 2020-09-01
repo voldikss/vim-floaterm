@@ -14,20 +14,7 @@ Execute(FloatermNew with arguments):
   FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=test --position=topleft --autoclose=0 ls
   AssertEqual 'floaterm', &filetype
 
-Execute(FloatermNew with autoclose):
-  FloatermKill!
-  FloatermNew --autoclose=0 ls
-  AssertEqual 'floaterm', &filetype
-
-  " FIXME
-  " FloatermNew --autoclose=1 ls
-  " AssertEqual '', &filetype
-
-  " FIXME
-  " FloatermNew --autoclose=2 ls
-  " AssertEqual '', &filetype
-
 Execute (Exit):
   stopinsert
-  call floaterm#hide(1, 0, '')
+  FloatermKill!
   sleep 100m

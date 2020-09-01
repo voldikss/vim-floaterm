@@ -1,0 +1,81 @@
+" vim:ft=vim
+
+"=============================================================================
+" let g:floaterm_autohide = v:true
+"=============================================================================
+Execute(Enable autohide):
+  let g:floaterm_autohide = v:true
+
+Execute(FloatermNew: the first should be closed, the second should be opened):
+  FloatermNew
+  let buffer1 = bufnr('%')
+  FloatermNew
+  let buffer2 = bufnr('%')
+  AssertEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+Execute(FloatermPrev: the first should be opened, the second should be closed):
+  FloatermPrev
+  AssertNotEqual -1,bufwinnr(buffer1)
+  AssertEqual -1,bufwinnr(buffer2)
+
+Execute(FloatermNext: the first should be closed, the second should be opened):
+  FloatermNext
+  AssertEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+
+"-----------------------------------------------------------------------------
+# FloatermShow/FloatermHide/FloatermToggle should works normally regardless of this option
+"-----------------------------------------------------------------------------
+
+Execute(FloatermShow!: both floaterms should be opened):
+  FloatermShow!
+  AssertNotEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+Execute(FloatermHide!: both floaterms should be closed):
+  FloatermHide!
+  AssertEqual -1,bufwinnr(buffer1)
+  AssertEqual -1,bufwinnr(buffer2)
+
+Execute(FloatermToggle!: both floaterms should be opened):
+  FloatermToggle!
+  AssertNotEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+Execute(FloatermToggle!: both floaterms should be closed):
+  FloatermToggle!
+  AssertEqual -1,bufwinnr(buffer1)
+  AssertEqual -1,bufwinnr(buffer2)
+
+Execute(FloatermKill!: kill all floaterms):
+  FloatermKill!
+
+
+"=============================================================================
+" let g:floaterm_autohide = v:false
+"=============================================================================
+Execute(Disable autohide):
+  let g:floaterm_autohide = v:false
+
+Execute(FloatermNew && FloatermPrev && FloatermNext: both floaterms should always be opened):
+  FloatermNew
+  let buffer1 = bufnr('%')
+  FloatermNew
+  let buffer2 = bufnr('%')
+  AssertNotEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+  FloatermPrev
+  AssertNotEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+  FloatermNext
+  AssertNotEqual -1,bufwinnr(buffer1)
+  AssertNotEqual -1,bufwinnr(buffer2)
+
+Execute (Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m

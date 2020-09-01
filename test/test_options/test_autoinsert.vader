@@ -1,0 +1,25 @@
+" vim:ft=vim
+
+Execute(Set autoinsert to 0):
+  " TODO
+  " FloatermNew --autoinsert=0 ls
+  " AssertEqual 'floaterm',&filetype
+
+  let g:floaterm_autoinsert = 0
+  FloatermNew! ls
+  AssertEqual 'n',mode()
+
+Execute(Set autoinsert to 1):
+  " TODO
+  " FloatermNew --autoinsert=1 ls
+  " AssertEqual 'floaterm',&filetype
+
+  " FIXME
+  " let g:floaterm_autoinsert = 1
+  " FloatermNew! ls
+  " AssertEqual 'i',mode()
+
+Execute (Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m

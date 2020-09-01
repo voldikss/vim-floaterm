@@ -29,6 +29,6 @@ Execute(kill the last floaterm and execute `:FloatermLast`):
   AssertEqual bufnr3, bufnr()
 
 Execute (Exit):
+  FloatermKill!
   stopinsert
-  call floaterm#hide(1, 0, '')
   sleep 100m

@@ -25,5 +25,6 @@ Execute(Test floaterm opts before and after FloatermToggle):
 
 Execute(Exit):
   stopinsert
-  call floaterm#hide(1, 0, '')
+  FloatermKill!
   sleep 100m
+

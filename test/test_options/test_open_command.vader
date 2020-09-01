@@ -1,11 +1,20 @@
 " vim:ft=vim
 
+Execute(Function WindowCount):
+  function! WindowCount(winid) abort
+    let count = 1
+    for i in range(1, winnr('$'))
+      if !empty(getwininfo(win_getid(i)))
+        let count += 1
+      endif
+    endfor
+    return count
+  endfunction
+
 Execute(FloatermNew floaterm ../LICENSE):
   FloatermNew floaterm ../LICENSE
-  sleep 1000m
-  " strange... why it's the full path in github action?
-  Log expand('%')
-  Assert match(expand('%'), 'LICENSE') > -1
+  sleep 100m
+  Assert expand('%:t') == 'LICENSE'
   " floating window is closed
   for winnr in range(1, winnr('$'))
     Assert empty(nvim_win_get_config(win_getid())['relative'])
@@ -13,7 +22,7 @@ Execute(FloatermNew floaterm ../LICENSE):
 
 Execute(FloatermNew cat ../LICENSE | floaterm):
   FloatermNew cat ../LICENSE | floaterm
-  sleep 1000m
+  sleep 100m
   " floating window is closed
   for winnr in range(1, winnr('$'))
     Assert empty(nvim_win_get_config(win_getid())['relative'])
@@ -21,5 +30,5 @@ Execute(FloatermNew cat ../LICENSE | floaterm):
 
 Execute (Exit):
   stopinsert
-  call floaterm#hide(1, 0, '')
+  FloatermKill!
   sleep 100m

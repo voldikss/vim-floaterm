@@ -42,5 +42,5 @@ Execute(kill the next floaterm and execute `:FloatermPrev`):
 
 Execute (Exit):
   stopinsert
-  call floaterm#hide(1, 0, '')
+  FloatermKill!
   sleep 100m

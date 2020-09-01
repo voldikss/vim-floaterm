@@ -1,0 +1,19 @@
+" vim:ft=vim
+
+Execute(Function GetTitleLine):
+  function! GetTitleLine(winid) abort
+    return getbufline(winbufnr(a:winid), 1)[0]
+  endfunction
+
+Execute(Set g:floaterm_title):
+  let g:floaterm_title = 'floaterm (%s/%s)'
+  FloatermNew
+  Assert GetTitleLine(b:floatermborder_winid) =~ 'floaterm (1/1)'
+  let g:floaterm_title = ''
+  FloatermNew
+  Assert GetTitleLine(b:floatermborder_winid) =~ '┌─*┐'
+
+Execute(Exit):
+  stopinsert
+  FloatermKill!
+  sleep 100m
