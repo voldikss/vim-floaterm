@@ -8,7 +8,7 @@
 scriptencoding utf-8
 
 let g:floaterm_shell         = get(g:, 'floaterm_shell', &shell)
-let g:floaterm_title         = get(g:, 'floaterm_title', 'floaterm: %s/%s')
+let g:floaterm_title         = get(g:, 'floaterm_title', 'floaterm($1/$2)')
 let g:floaterm_width         = get(g:, 'floaterm_width', 0.6)
 let g:floaterm_height        = get(g:, 'floaterm_height', 0.6)
 let g:floaterm_wintype       = get(g:, 'floaterm_wintype', '')

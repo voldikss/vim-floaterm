@@ -28,14 +28,14 @@ function! s:get_wintype() abort
   endif
 endfunction
 
-function! s:build_title(bufnr) abort
-  if empty(g:floaterm_title)
-    return ''
-  endif
+function! s:build_title(bufnr, text) abort
+  if empty(a:text) | return '' | endif
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
   let idx = index(buffers, a:bufnr) + 1
-  return printf(' '.g:floaterm_title, idx, cnt)
+  let title = substitute(a:text, '$1', idx, 'gm')
+  let title = substitute(title, '$2', cnt, 'gm')
+  return ' ' . title
 endfunction
 
 function! s:draw_border(title, width, height) abort
@@ -184,6 +184,10 @@ function! s:parse_opts(opts) abort
   if !has_key(a:opts, 'autoclose')
     let a:opts.autoclose = g:floaterm_autoclose
   endif
+
+  if !has_key(a:opts, 'title')
+    let a:opts.title = g:floaterm_title
+  endif
   return a:opts
 endfunction
 
@@ -191,6 +195,7 @@ function! floaterm#window#open(bufnr, opts) abort
   let opts = s:parse_opts(a:opts)
   let wintype = a:opts.wintype
   let position = a:opts.position
+  let title = a:opts.title
 
   " NOTE: these lines can not be moved into s:parse_opts() cause floaterm size
   " should be resized dynamically according to the terminal-app's size
@@ -204,16 +209,16 @@ function! floaterm#window#open(bufnr, opts) abort
   let height = float2nr(height)
 
   if wintype == 'floating'
-    let winid = floaterm#window#open_floating(a:bufnr, width, height, position)
+    let winid = floaterm#window#open_floating(a:bufnr, width, height, position, title)
   elseif wintype == 'popup'
-    let winid = floaterm#window#open_popup(a:bufnr, width, height, position)
+    let winid = floaterm#window#open_popup(a:bufnr, width, height, position, title)
   else
     let winid = floaterm#window#open_split(a:bufnr, height, width, position)
   endif
   call s:on_floaterm_open(a:bufnr, winid, a:opts)
 endfunction
 
-function! floaterm#window#open_floating(bufnr, width, height, pos) abort
+function! floaterm#window#open_floating(bufnr, width, height, pos, title) abort
   let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'relative': 'editor',
@@ -235,13 +240,13 @@ function! floaterm#window#open_floating(bufnr, width, height, pos) abort
   if s:winexists(border_winid)
     call nvim_win_close(border_winid, v:true)
   endif
-  let title = s:build_title(a:bufnr)
+  let title = s:build_title(a:bufnr, a:title)
   let border_winid = s:add_border(winid, title)
   call setbufvar(a:bufnr, 'floatermborder_winid', border_winid)
   return winid
 endfunction
 
-function! floaterm#window#open_popup(bufnr, width, height, pos) abort
+function! floaterm#window#open_popup(bufnr, width, height, pos, title) abort
   let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'pos': anchor,
@@ -257,7 +262,7 @@ function! floaterm#window#open_popup(bufnr, width, height, pos) abort
     \ 'padding': [0,1,0,1],
     \ 'highlight': 'Floaterm'
     \ }
-  let opts.title = s:build_title(a:bufnr)
+  let opts.title = s:build_title(a:bufnr, a:title)
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')

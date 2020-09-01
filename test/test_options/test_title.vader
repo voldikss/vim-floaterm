@@ -6,7 +6,7 @@ Execute(Function GetTitleLine):
   endfunction
 
 Execute(Set g:floaterm_title):
-  let g:floaterm_title = 'floaterm (%s/%s)'
+  let g:floaterm_title = 'floaterm ($1/$2)'
   FloatermNew
   Assert GetTitleLine(b:floatermborder_winid) =~ 'floaterm (1/1)'
   let g:floaterm_title = ''

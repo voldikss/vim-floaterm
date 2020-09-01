@@ -81,11 +81,12 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 - If `!` exists, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If `cmd` doesn't exist, open `$SHELL`.
 - The `options` is formed as `--key[=value]`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
+  - `name` name of the floaterm
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
+  - `title` see `g:floaterm_title`
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
-  - `name` name of the floaterm
   - `autoclose` close the window after finishing job, see `g:floaterm_autoclose`
 - Use `<TAB>` to get completion.
 - `%` in `cmd` will be expanded to the absolute path of the current file, to get standalone `%`, use `\%`.
@@ -173,9 +174,9 @@ Type `string`. Default: `&shell`
 
 Type `string`. Show floaterm info(e.g., `'floaterm: 1/3'` implies there are 3 floaterms in total and the current is the first one) at the top left corner of floaterm window.
 
-Default: `'floaterm: %s/%s'`
+Default: `'floaterm: $1/$2'`(`$1` will be replace by 'the index of the current floaterm' and `$2` by 'the total floaterms count')
 
-Example: `'floaterm(%s|%s)'`
+Example: `'floaterm($1|$2)'`
 
 #### **`g:floaterm_wintype`**
 
@@ -608,6 +609,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## Break Changes
 
+- Change `g:floaterm_title` value format, i.e., `floaterm(%s/%s)` => `floaterm($1/$2)`
 - Rename `g:floaterm_wintitle` to `g:floaterm_title` and change its value type to `string`
 - Change `g:floaterm_autoclose` default value to `0`
 - Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`

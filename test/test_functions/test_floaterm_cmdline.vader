@@ -16,13 +16,14 @@ Execute(Test floaterm#cmdline#parse):
 
 Execute(Test floaterm#cmdline#complete):
   AssertEqual [
+    \'--name=',
     \'--height=',
     \'--width=',
+    \'--title=',
     \'--wintype=',
-    \'--name=',
     \'--position=',
     \'--autoclose=',
-    \], floaterm#cmdline#complete(v:null, 'FloatermNew ', 12)[:5]
+    \], floaterm#cmdline#complete(v:null, 'FloatermNew ', 12)[:6]
   AssertEqual [
     \'--wintype=normal',
     \'--wintype=floating'
@@ -48,10 +49,11 @@ Execute(Test floaterm#cmdline#complete):
     \'--position=topright',
     \], floaterm#cmdline#complete(v:null, 'FloatermNew --position=t', 24)
   AssertEqual [
+    \'--name=',
     \'--height=',
     \'--width=',
+    \'--title=',
     \'--wintype=',
-    \'--name=',
     \'--position=',
     \'--autoclose=',
     \], floaterm#cmdline#complete(v:null, 'FloatermUpdate ', 15)

@@ -50,7 +50,15 @@ endfunction
 " used for `:FloatermNew` and `:FloatermUpdate`
 " ----------------------------------------------------------------------------
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let opts_key = ['--height=', '--width=', '--wintype=', '--name=', '--position=', '--autoclose=']
+  let opts_key = [
+    \'--name=',
+    \'--height=',
+    \'--width=',
+    \'--title=',
+    \'--wintype=',
+    \'--position=',
+    \'--autoclose=',
+    \]
   if a:cmd_line =~ '^FloatermNew'
     let candidates = opts_key + sort(getcompletion('', 'shellcmd'))
   elseif a:cmd_line =~ '^FloatermUpdate'
@@ -82,7 +90,18 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     endif
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(prefix, '--position=') > -1
-    let vals = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto']
+    let vals = [
+      \'top',
+      \'right',
+      \'bottom',
+      \'left',
+      \'center',
+      \'topleft',
+      \'topright',
+      \'bottomleft',
+      \'bottomright',
+      \'auto',
+      \]
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
   elseif match(prefix, '--autoclose') > -1
     let vals = [0, 1, 2]
