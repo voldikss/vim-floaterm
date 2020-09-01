@@ -5,6 +5,27 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+let s:has_popup = has('textprop') && has('patch-8.2.0286')
+let s:has_float = has('nvim') && exists('*nvim_win_set_config')
+
+if empty(g:floaterm_wintype)
+  if s:has_float
+    let s:wintype = 'floating'
+  elseif s:has_popup
+    let s:wintype = 'popup'
+  else
+    let s:wintype = 'normal'
+  endif
+elseif g:floaterm_wintype == 'floating' && !s:has_float
+  call floaterm#util#show_msg("floating window is not supported in your nvim, fall back to normal window", 'warning')
+  let s:wintype = 'normal'
+elseif g:floaterm_wintype == 'popup' && !s:has_popup
+  call floaterm#util#show_msg("popup window is not supported in your vim, fall back to normal window", 'warning')
+  let s:wintype = 'normal'
+else
+  let s:wintype = g:floaterm_wintype
+endif
+
 function! s:build_title(bufnr) abort
   if empty(g:floaterm_title)
     return ''
@@ -32,27 +53,27 @@ endfunction
 
 " winid: floaterm window id
 function! s:add_border(winid, title) abort
-  let winopts = nvim_win_get_config(a:winid)
-  let border = s:draw_border(a:title, winopts.width, winopts.height)
+  let opts = nvim_win_get_config(a:winid)
+  let border = s:draw_border(a:title, opts.width, opts.height)
   let bufopts = {}
   let bufopts.synmaxcol = 3000 " #17
   let bufopts.filetype = 'floatermborder'
   let bufopts.bufhidden = 'wipe'
   let border_bufnr = floaterm#buffer#create(border, bufopts)
-  " update winopts which will be used to config floatermborder window
-  let winopts.row -= (winopts.anchor[0] == 'N' ? 1 : -1)
+  " update opts which will be used to config floatermborder window
+  let opts.row -= (opts.anchor[0] == 'N' ? 1 : -1)
   " adjust offset
-  if winopts.row < 0
-    let winopts.row = 1
-    call nvim_win_set_config(a:winid, winopts)
-    let winopts.row = 0
+  if opts.row < 0
+    let opts.row = 1
+    call nvim_win_set_config(a:winid, opts)
+    let opts.row = 0
   endif
-  let winopts.col -= (winopts.anchor[1] == 'W' ? 1 : -1)
-  let winopts.width += 2
-  let winopts.height += 2
-  let winopts.style = 'minimal'
-  let winopts.focusable = v:false
-  let border_winid = nvim_open_win(border_bufnr, v:false, winopts)
+  let opts.col -= (opts.anchor[1] == 'W' ? 1 : -1)
+  let opts.width += 2
+  let opts.height += 2
+  let opts.style = 'minimal'
+  let opts.focusable = v:false
+  let border_winid = nvim_open_win(border_bufnr, v:false, opts)
   call nvim_win_set_option(border_winid, 'winhl', 'Normal:FloatermBorder')
   call nvim_win_set_option(border_winid, 'cursorcolumn', v:false)
   call nvim_win_set_option(border_winid, 'colorcolumn', '')
@@ -129,6 +150,77 @@ endfunction
 
 function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
+endfunction
+
+function! s:on_floaterm_open(bufnr, winid, opts) abort
+  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
+  call setbufvar(a:bufnr, 'floaterm_opts', a:opts)
+  call setbufvar(a:bufnr, '&buflisted', 0)
+  call setbufvar(a:bufnr, '&filetype', 'floaterm')
+  if has('nvim')
+    execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> ++once call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
+  endif
+endfunction
+
+function! s:update_opts(opts) abort
+  if has_key(a:opts, 'width')
+    let width = a:opts.width
+  else
+    let width = g:floaterm_width
+    let a:opts.width = width
+  endif
+
+  if has_key(a:opts, 'height')
+    let height = a:opts.height
+  else
+    let height = g:floaterm_height
+    let a:opts.height = height
+  endif
+
+  if has_key(a:opts, 'wintype')
+    let wintype = a:opts.wintype
+  else
+    let wintype = s:wintype
+    let a:opts.wintype = wintype
+  endif
+
+  if has_key(a:opts, 'position')
+    let position = a:opts.position
+  else
+    let position = g:floaterm_position
+    let a:opts.position = position
+  endif
+
+  if has_key(a:opts, 'autoclose')
+    let autoclose = a:opts.autoclose
+  else
+    let autoclose = g:floaterm_autoclose
+    let a:opts.autoclose = autoclose
+  endif
+  return a:opts
+endfunction
+
+function! floaterm#window#open(bufnr, opts) abort
+  let opts = s:update_opts(a:opts)
+  let wintype = a:opts.wintype
+  let position = a:opts.position
+
+  let width = opts.width
+  if type(width) == v:t_float | let width = width * &columns | endif
+  let width = float2nr(width)
+
+  let height = opts.height
+  if type(height) == v:t_float | let height = height * (&lines - &cmdheight - 1) | endif
+  let height = float2nr(height)
+
+  if wintype == 'floating'
+    let winid = floaterm#window#open_floating(a:bufnr, width, height, position)
+  elseif wintype == 'popup'
+    let winid = floaterm#window#open_popup(a:bufnr, width, height, position)
+  else
+    let winid = floaterm#window#open_split(a:bufnr, height, width, position)
+  endif
+  call s:on_floaterm_open(a:bufnr, winid, a:opts)
 endfunction
 
 function! floaterm#window#open_floating(bufnr, width, height, pos) abort

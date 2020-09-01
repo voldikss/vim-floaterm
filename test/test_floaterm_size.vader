@@ -1,24 +1,24 @@
 " vim:ft=vim
 
 # related: #115
-Execute(Test floaterm winopts before and after FloatermToggle):
+Execute(Test floaterm opts before and after FloatermToggle):
   let g:floaterm_height = 0.6
   let g:floaterm_width = 0.6
   let columns_origin = &columns
 
   FloatermNew
-  AssertEqual b:floaterm_winopts.width, 0.6
+  AssertEqual b:floaterm_opts.width, 0.6
   AssertEqual float2nr(0.6*&columns), winwidth(0)
-  AssertEqual b:floaterm_winopts.height, 0.6
+  AssertEqual b:floaterm_opts.height, 0.6
   AssertEqual float2nr(0.6*(&lines - &cmdheight - 1)), winheight(0)
 
   FloatermHide
   let &columns = float2nr(&columns/2)
 
   FloatermShow
-  AssertEqual b:floaterm_winopts.width, 0.6
+  AssertEqual b:floaterm_opts.width, 0.6
   AssertEqual float2nr(0.6*&columns), winwidth(0)
-  AssertEqual b:floaterm_winopts.height, 0.6
+  AssertEqual b:floaterm_opts.height, 0.6
   AssertEqual float2nr(0.6*(&lines - &cmdheight - 1)), winheight(0)
 
   let &columns = columns_origin
