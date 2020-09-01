@@ -157,13 +157,6 @@ function! s:on_floaterm_open(bufnr, winid, winopts) abort
   call setbufvar(a:bufnr, 'floaterm_winopts', a:winopts)
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
-
-  let termname = get(a:winopts, 'name', '')
-  if termname != ''
-    let termname = 'floaterm://' . termname
-    execute 'file ' . termname
-  endif
-
   if has('nvim')
     execute 'autocmd! BufHidden <buffer=' . a:bufnr . '> ++once call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
   endif

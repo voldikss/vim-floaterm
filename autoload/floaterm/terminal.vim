@@ -70,6 +70,12 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, winopts) abort
     let s:channel_map[bufnr] = job_getchannel(job)
     let winid = floaterm#window#open(bufnr, a:winopts)
   endif
+
+  let termname = get(a:winopts, 'name', '')
+  if termname != ''
+    let termname = 'floaterm://' . termname
+    execute 'file ' . termname
+  endif
   return bufnr
 endfunction
 
