@@ -145,7 +145,7 @@ And the following command allows you to compile and run your code in the floater
 
 #### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
-- If `--name=floaterm_name` exists, send lines to the floaterm instance whose `name` is `floaterm_name`. Otherwise use the current floaterm.
+- If `--name=floaterm_name` is given, send lines to the floaterm instance whose `name` is `floaterm_name`. Otherwise use the current floaterm.
 - If `cmd` exists, it will be sent to floaterm and selected lines will be ignored.
 - This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
   - If `cmd` exists, the selected lines will be ignored.
