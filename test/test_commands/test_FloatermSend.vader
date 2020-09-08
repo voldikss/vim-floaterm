@@ -5,11 +5,6 @@ Execute(FloatermSend):
   FloatermToggle
   FloatermSend
 
-Execute(execute `:FloatermSend` without having opened any floaterms):
-  FloatermKill!
-  FloatermSend
-  AssertEqual 'floaterm', &filetype
-
 Execute(FloatermSend with argument):
   FloatermKill!
   FloatermSend ls
