@@ -150,7 +150,6 @@ And the following command allows you to compile and run your code in the floater
 - This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
   - If `cmd` exists, the selected lines will be ignored.
   - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed while the relative indent between lines will still be kept.
-- If there are no floaterms opened, `:FloatermSend` will open a floaterm and execute lines for you.
 - Use `<TAB>` to get completion.
 - Examples
   ```vim
