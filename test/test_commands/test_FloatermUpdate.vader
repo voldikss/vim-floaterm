@@ -4,7 +4,6 @@ Execute(FloatermUpdate):
   FloatermNew
   FloatermUpdate --name=ft
   AssertEqual 'ft', b:floaterm_opts['name']
-  AssertEqual 'floaterm://ft', bufname()
 
 Execute (Exit):
   stopinsert
