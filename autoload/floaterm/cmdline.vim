@@ -15,18 +15,17 @@ function! floaterm#cmdline#parse(arglist) abort
   if a:arglist != []
     let c = 0
     for arg in a:arglist
-      if arg =~ '^--.*$'
+      if arg =~ '^--\S.*=.*$'
         let opt = split(arg, '=')
-        if len(opt) == 2
-          let [key, value] = [opt[0][2:], opt[1]]
-          if index(['height', 'width', 'autoclose'], key) > -1
-            let value = eval(value)
-          endif
-          let opts[key] = value
-        else
-          let key = opt[0][2:]
-          let opts[key] = v:true
+        if len(opt) != 2
+          call floaterm#util#show_msg('No value given to option: ' . opt[0], 'warning')
+          continue
         endif
+        let [key, value] = [opt[0][2:], opt[1]]
+        if index(['height', 'width', 'autoclose'], key) > -1
+          let value = eval(value)
+        endif
+        let opts[key] = value
       else
         let cmd = s:expand(join(a:arglist[c:]))
         break
