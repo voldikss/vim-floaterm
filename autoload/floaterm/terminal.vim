@@ -70,11 +70,6 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
     endif
   endif
 
-  let termname = get(a:opts, 'name', '')
-  if termname != ''
-    let termname = 'floaterm://' . termname
-    execute 'file ' . termname
-  endif
   return bufnr_res
 endfunction
 
@@ -109,7 +104,15 @@ function! floaterm#terminal#send(bufnr, cmds) abort
 endfunction
 
 function! floaterm#terminal#get_bufnr(termname) abort
-  return bufnr('floaterm://' . a:termname)
+  let buflist = floaterm#buflist#gather()
+  for bufnr in buflist
+    let opts = getbufvar(bufnr, 'floaterm_opts', {})
+    let name = get(opts, 'name', '')
+    if name ==# a:termname
+      return bufnr
+    endif
+  endfor
+  return -1
 endfunction
 
 function! floaterm#terminal#kill(bufnr) abort
