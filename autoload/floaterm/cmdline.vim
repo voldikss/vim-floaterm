@@ -18,7 +18,7 @@ function! floaterm#cmdline#parse(arglist) abort
       if arg =~ '^--\S.*=.*$'
         let opt = split(arg, '=')
         if len(opt) != 2
-          call floaterm#util#show_msg('No value given to option: ' . opt[0], 'warning')
+          call floaterm#util#show_msg('Argument Error: No value given to option: ' . opt[0], 'error')
           return
         endif
         let [key, value] = [opt[0][2:], opt[1]]
