@@ -80,7 +80,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 - If `!` exists, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If `cmd` doesn't exist, open `$SHELL`.
-- The `options` is formed as `--key[=value]`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
+- The `options` is formed as `--key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `name` name of the floaterm
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
