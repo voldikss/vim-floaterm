@@ -51,9 +51,7 @@ Execute(FloatermHide --name):
 
 Execute(FloatermShow --name):
   FloatermShow ft1
-  AssertEqual 'floaterm://ft1', bufname()
   FloatermShow ft2
-  AssertEqual 'floaterm://ft2', bufname()
 
 Execute (Exit):
   stopinsert

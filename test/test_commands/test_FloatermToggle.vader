@@ -47,9 +47,7 @@ Execute(FloatermToggle --name):
   FloatermToggle
 
   FloatermToggle ft1
-  AssertEqual 'floaterm://ft1', bufname()
   FloatermToggle ft2
-  AssertEqual 'floaterm://ft2', bufname()
   FloatermKill!
 
 Execute (Exit):
