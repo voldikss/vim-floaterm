@@ -27,7 +27,8 @@ Use (neo)vim terminal in the floating/popup window.
   - [vim-clap](#vim-clap)
   - [denite.nvim](#denitenvim)
   - [coc.nvim](#cocnvim)
-  - [other fuzzy finder plugins](#other-fuzzy-finders)
+  - [fzf](#fzf)
+  - [LeaderF](#leaderf)
   - [asynctasks.vim](#asynctasksvim)
 - [How to define more wrappers](#how-to-define-more-wrappers)
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
@@ -465,9 +466,13 @@ Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocLi
 
 ![](https://user-images.githubusercontent.com/20282795/91380254-25ab3f00-e857-11ea-9733-d0ae5a954848.gif)
 
-### other fuzzy finders
+### [fzf](https://github.com/junegunn/fzf)
 
-Please refer to the [Wiki](https://github.com/voldikss/vim-floaterm/wiki/Integration-with-other-fuzzy-finders)
+Install [fzf-floaterm](https://github.com/voldikss/fzf-floaterm) and try `:Floaterms`
+
+### [LeaderF](https://github.com/Yggdroot/LeaderF)
+
+Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try `:Leaderf floaterm`
 
 ### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
