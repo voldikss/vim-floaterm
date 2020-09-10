@@ -303,6 +303,7 @@ function! floaterm#window#hide_floaterm(bufnr) abort
     catch
       execute a:bufnr . 'hide'
     endtry
+    silent checktime
   endif
 endfunction
 
