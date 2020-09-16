@@ -79,7 +79,7 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 
 #### `:FloatermNew[!] [options] [cmd]` Open a floaterm window.
 
-- If `!` exists, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
+- If `!` is given, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If `cmd` doesn't exist, open `$SHELL`.
 - The `options` is formed as `--key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `name` name of the floaterm
@@ -121,35 +121,35 @@ And the following command allows you to compile and run your code in the floater
 
 #### `:[N]FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.
 
-- If `N` exists, toggle the floaterm whose buffer number is `N`
-- If `floaterm_name` exists, toggle the floaterm instance whose `name` attribute is `floaterm_name`. Otherwise create a new floaterm named `floaterm_name`.
+- If `N` is given, toggle the floaterm whose buffer number is `N`
+- If `floaterm_name` is given, toggle the floaterm instance whose `name` attribute is `floaterm_name`. Otherwise create a new floaterm named `floaterm_name`.
 - Use `<TAB>` to get completion.
-- If `!` exists, toggle all floaterms
+- If `!` is given, toggle all floaterms
 
 #### `:[N]FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
-- If `N` exists, show the floaterm whose buffer number is `N`
-- If `floaterm_name` exists, show the floaterm named `floaterm_name`.
-- If `!` exists, show all floaterms
+- If `N` is given, show the floaterm whose buffer number is `N`
+- If `floaterm_name` is given, show the floaterm named `floaterm_name`.
+- If `!` is given, show all floaterms
 
 #### `:[N]FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
-- If `N` exists, hide the floaterm whose buffer number is `N`
-- If `floaterm_name` exists, show the floaterm named `floaterm_name`.
-- If `!` exists, hide all floaterms
+- If `N` is given, hide the floaterm whose buffer number is `N`
+- If `floaterm_name` is given, show the floaterm named `floaterm_name`.
+- If `!` is given, hide all floaterms
 
 #### `:[N]FloatermKill[!] [floaterm_name]` Kill the current floaterm instance
 
-- If `N` exists, kill the floaterm whose buffer number is `N`
-- If `floaterm_name` exists, kill the floaterm instance named `floaterm_name`.
-- If `!` exists, kill all floaterms
+- If `N` is given, kill the floaterm whose buffer number is `N`
+- If `floaterm_name` is given, kill the floaterm instance named `floaterm_name`.
+- If `!` is given, kill all floaterms
 
 #### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
 - If `--name=floaterm_name` is given, send lines to the floaterm instance whose `name` is `floaterm_name`. Otherwise use the current floaterm.
-- If `cmd` exists, it will be sent to floaterm and selected lines will be ignored.
+- If `cmd` is given, it will be sent to floaterm and selected lines will be ignored.
 - This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
-  - If `cmd` exists, the selected lines will be ignored.
+  - If `cmd` is given, the selected lines will be ignored.
   - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines will be trimmed while the relative indent between lines will still be kept.
 - Use `<TAB>` to get completion.
 - Examples
@@ -217,25 +217,25 @@ Type `array of string`. If not empty, floaterm will be opened in the project roo
 
 Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
 
+Default: `[]`(means floaterm will be opened just at the current directory)
+
 #### **`g:floaterm_open_command`**
 
-Type `string`. Command used for opening a file from within `:terminal`.
+Type `string`. Command used for opening a file in the outside nvim from within `:terminal`.
 
 Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
 
 #### **`g:floaterm_gitcommit`**
 
-Type `string`. Opening strategy for running `git commit` in floaterm window. Only works in neovim.
+Type `string`. Opening strategy for `COMMIT_EDITMSG` window by running `git commit` in the floaterm window. Only works in neovim.
 
-Available: `'floaterm'`(open `gitcommit` file in the floaterm window), `'split'`, `'vsplit'`, `'tabe'`.
+Available: `'floaterm'`(open `gitcommit` in the floaterm window), `'split'`(recommended), `'vsplit'`, `'tabe'`.
 
-Recommended: `'split'` or `'vsplit'`.
-
-Default: `''` which means this is disabled by default(use your own `$GIT_EDITOR`).
+Default: `''`, which means this is disabled by default(use your own `$GIT_EDITOR`).
 
 #### **`g:floaterm_autoclose`**
 
-Type `number`. Decide whether to close floaterm window once job gets finished.
+Type `number`. Whether to close floaterm window once a job gets finished.
 
 - `0`: Always do NOT close floaterm window
 - `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
@@ -245,7 +245,7 @@ Default: `0`.
 
 #### **`g:floaterm_autoinsert`**
 
-Type `bool`. Enter terminal mode after opening a floaterm. Default: `v:true`
+Type `bool`. Whether to enter Terminal-mode after opening a floaterm. Default: `v:true`
 
 #### **`g:floaterm_autohide`**
 
@@ -573,7 +573,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
   ```vim
   function s:floatermSettings()
-      setlocal number
+      setlocal nonumber norelativenumber
       " more settings
   endfunction
 
@@ -598,7 +598,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 - #### How to execute command in the TERMINAL mode?
 
-  Go back to the NORMAL mode using `<C-\><C-N>` and type `:` to do that.
+  Go back to the NORMAL mode using `<C-\><C-N>` and type `:`.
 
 - #### How to go back to the former windows?
 
@@ -609,6 +609,7 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
   Turn off Ipython's autoindent, see [#150](https://github.com/voldikss/vim-floaterm/issues/150).
 
 - #### Open floaterm in the current directory?
+
   Either `set autochdir` or use autocmd. See [152](https://github.com/voldikss/vim-floaterm/issues/152).
 
 ## Break Changes
