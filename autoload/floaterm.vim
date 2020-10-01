@@ -110,7 +110,7 @@ function! floaterm#toggle(bang, bufnr, name)  abort
   endif
 
   if bufnr == -1
-    call floaterm#new(a:bang, '', {'name': a:name}, {})
+    call floaterm#new(a:bang, '', {}, {'name': a:name})
   elseif bufnr == 0
     if &filetype == 'floaterm'
       call floaterm#window#hide_floaterm(bufnr('%'))
