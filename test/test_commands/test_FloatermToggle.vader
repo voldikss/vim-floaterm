@@ -39,7 +39,7 @@ Execute([N]FloatermToggle):
   execute bufnr2 . 'FloatermToggle'
   AssertEqual bufnr2, bufnr()
 
-Execute(FloatermToggle --name):
+Execute(FloatermToggle name, named floaterm exists):
   FloatermKill!
   FloatermNew --name=ft1
   FloatermToggle
@@ -47,8 +47,12 @@ Execute(FloatermToggle --name):
   FloatermToggle
 
   FloatermToggle ft1
+  AssertEqual 'ft1', b:floaterm_opts['name']
   FloatermToggle ft2
-  FloatermKill!
+  AssertEqual 'ft2', b:floaterm_opts['name']
+  FloatermToggle ft3
+  AssertEqual 'ft3', b:floaterm_opts['name']
+
 
 Execute (Exit):
   stopinsert
