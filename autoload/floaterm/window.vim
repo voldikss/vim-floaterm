@@ -52,17 +52,23 @@ function! s:get_border_winconfig(winid) abort
     let options.row = 0
   endif
 
-  " Same as above case, but for left overflow. However, it seems left overflow
-  " won't occur, even `set nonumber norelativenumber signcolumn=no`!
-  " That is to say, this code have no effect totally
-  let options.col -= (options.anchor[1] == 'W' ? 1 : -1)
+  let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = g:floaterm_borderchars
+  let char_maxwidth_left = max(map([c_left, c_topleft, c_botleft], {_,c -> strwidth(c)}))
+  let char_maxwidth_right = max(map([c_right, c_topright, c_botright], {_,c -> strwidth(c)}))
+
+  " Same as above case, but for left overflow, which is possible.
+  " To observe the overflow(options.col becomes negative after executing the following one line):
+  " First `let g:floaterm_borderchars = ['的','的','的','的','的','的','的','的']`
+  " Then open nvim and `:set nonumber norelativenumber signcolumn=no`
+  " Use `echom` to monitor `options.col`, which will become `-1` after offsetting.
+  let options.col -= (options.anchor[1] == 'W' ? char_maxwidth_left : -char_maxwidth_left)
   if options.col < 0
-    let options.col = 1
+    let options.col = char_maxwidth_left
     call nvim_win_set_config(a:winid, options)
     let options.col = 0
   endif
 
-  let options.width += 2
+  let options.width += (char_maxwidth_left + char_maxwidth_right)
   let options.height += 2
   let options.style = 'minimal'
   let options.focusable = v:false
@@ -73,9 +79,12 @@ endfunction
 function! s:render_border(title, options) abort
   let title = empty(a:title) ? a:title : (' ' . a:title . ' ')
   let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = g:floaterm_borderchars
-  let content = [c_topleft . title . repeat(c_top, a:options.width - 2 - strwidth(title)) . c_topright]
-  let content += repeat([c_left . repeat(' ', a:options.width - 2) . c_right], a:options.height - 2)
-  let content += [c_botleft . repeat(c_bottom, a:options.width - 2) . c_botright]
+  let repeat_top = (a:options.width - strwidth(c_topleft) - strwidth(c_topright) - strwidth(title)) / strwidth(c_top)
+  let repeat_mid = (a:options.width - strwidth(c_left) - strwidth(c_right))
+  let repeat_bot = (a:options.width - strwidth(c_botleft) - strwidth(c_botright)) / strwidth(c_bottom)
+  let content = [c_topleft . title . repeat(c_top, repeat_top) . c_topright]
+  let content += repeat([c_left . repeat(' ', repeat_mid) . c_right], a:options.height - 2)
+  let content += [c_botleft . repeat(c_bottom, repeat_bot) . c_botright]
   let border_bufnr = nvim_create_buf(v:false, v:true)
   call nvim_buf_set_lines(border_bufnr, 0, -1, v:true, content)
   call nvim_buf_set_option(border_bufnr, 'filetype', 'floatermborder')
@@ -132,8 +141,9 @@ function! s:get_floatwin_pos(width, height, pos) abort
     endif
   else " at the cursor place
     let winpos = win_screenpos(0)
-    let row = winpos[0] + winline()
-    let col = winpos[1] + wincol()
+    " `- 1`: subtract the coordination of the window itself
+    let row = winpos[0] - 1 + winline()
+    let col = winpos[1] - 1 + wincol()
     if row + a:height <= &lines - &cmdheight - 1
       let vert = 'N'
     else
