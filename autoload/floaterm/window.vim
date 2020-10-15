@@ -131,9 +131,9 @@ function! s:get_floatwin_pos(width, height, pos) abort
       let col = 0
     endif
   else " at the cursor place
-    let curr_pos = getpos('.')
-    let row = curr_pos[1] - line('w0')
-    let col = curr_pos[2]
+    let winpos = win_screenpos(0)
+    let row = winpos[0] + winline()
+    let col = winpos[1] + wincol()
     if row + a:height <= &lines - &cmdheight - 1
       let vert = 'N'
     else
