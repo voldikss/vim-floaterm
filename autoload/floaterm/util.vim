@@ -67,27 +67,10 @@ function! floaterm#util#autohide() abort
   endif
 endfunction
 
-"-----------------------------------------------------------------------------
-" compose two string(thank skywind3000/vim-quickui)
-"-----------------------------------------------------------------------------
-function! floaterm#util#string_compose(target, pos, source)
-  if a:source == ''
-    return a:target
-  endif
-  let pos = a:pos
-  let source = a:source
-  if pos < 0
-    let source = strcharpart(a:source, -pos)
-    let pos = 0
-  endif
-  let target = strcharpart(a:target, 0, pos)
-  if strchars(target) < pos
-    let target .= repeat(' ', pos - strchars(target))
-  endif
-  let target .= source
-  " vim popup will pad the end of title but not begin part
-  " so we build the title as ' floaterm idx/cnt'
-  " therefore, we need to add a space here
-  let target .= ' ' . strcharpart(a:target, pos + strchars(source) + 1)
-  return target
+function! floaterm#util#update_opts(bufnr, opts) abort
+  let opts = getbufvar(a:bufnr, 'floaterm_opts', {})
+  for item in items(a:opts)
+    let opts[item[0]] = item[1]
+  endfor
+  call setbufvar(a:bufnr, 'floaterm_opts', opts)
 endfunction

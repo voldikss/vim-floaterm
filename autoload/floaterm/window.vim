@@ -28,61 +28,66 @@ function! s:get_wintype() abort
   endif
 endfunction
 
-function! s:build_title(bufnr, text) abort
+function! s:format_title(bufnr, text) abort
   if empty(a:text) | return '' | endif
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
   let idx = index(buffers, a:bufnr) + 1
   let title = substitute(a:text, '$1', idx, 'gm')
   let title = substitute(title, '$2', cnt, 'gm')
-  return ' ' . title
+  return title
 endfunction
 
-function! s:draw_border(title, width, height) abort
-  let top = g:floaterm_borderchars[4] .
-          \ repeat(g:floaterm_borderchars[0], a:width) .
-          \ g:floaterm_borderchars[5]
-  let mid = g:floaterm_borderchars[3] .
-          \ repeat(' ', a:width) .
-          \ g:floaterm_borderchars[1]
-  let bot = g:floaterm_borderchars[7] .
-          \ repeat(g:floaterm_borderchars[2], a:width) .
-          \ g:floaterm_borderchars[6]
-  let top = floaterm#util#string_compose(top, 1, a:title)
-  let lines = [top] + repeat([mid], a:height) + [bot]
-  return lines
+" Generate floaterm border window configuration from floaterm winid
+function! s:get_border_winconfig(winid) abort
+  let options = nvim_win_get_config(a:winid)
+
+  " After offsetting optration, if border window is over the top of the
+  " editor, i.e., it's row becomes negative To avoid the window overflow,
+  " reset the vertical position of **floaterm window**
+  let options.row -= (options.anchor[0] == 'N' ? 1 : -1)
+  if options.row < 0
+    let options.row = 1
+    call nvim_win_set_config(a:winid, options)
+    let options.row = 0
+  endif
+
+  " Same as above case, but for left overflow. However, it seems left overflow
+  " won't occur, even `set nonumber norelativenumber signcolumn=no`!
+  " That is to say, this code have no effect totally
+  let options.col -= (options.anchor[1] == 'W' ? 1 : -1)
+  if options.col < 0
+    let options.col = 1
+    call nvim_win_set_config(a:winid, options)
+    let options.col = 0
+  endif
+
+  let options.width += 2
+  let options.height += 2
+  let options.style = 'minimal'
+  let options.focusable = v:false
+  return options
 endfunction
 
 " winid: floaterm window id
-function! s:add_border(winid, title) abort
-  let opts = nvim_win_get_config(a:winid)
-  let border = s:draw_border(a:title, opts.width, opts.height)
-  let bufopts = {}
-  let bufopts.synmaxcol = 3000 " #17
-  let bufopts.filetype = 'floatermborder'
-  let bufopts.bufhidden = 'wipe'
-  let border_bufnr = floaterm#buffer#create(border, bufopts)
-  " update opts which will be used to config floatermborder window
-  let opts.row -= (opts.anchor[0] == 'N' ? 1 : -1)
-  " adjust offset
-  if opts.row < 0
-    let opts.row = 1
-    call nvim_win_set_config(a:winid, opts)
-    let opts.row = 0
-  endif
-  let opts.col -= (opts.anchor[1] == 'W' ? 1 : -1)
-  let opts.width += 2
-  let opts.height += 2
-  let opts.style = 'minimal'
-  let opts.focusable = v:false
-  let border_winid = nvim_open_win(border_bufnr, v:false, opts)
+function! s:render_border(title, options) abort
+  let title = empty(a:title) ? a:title : (' ' . a:title . ' ')
+  let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = g:floaterm_borderchars
+  let content = [c_topleft . title . repeat(c_top, a:options.width - 2 - strwidth(title)) . c_topright]
+  let content += repeat([c_left . repeat(' ', a:options.width - 2) . c_right], a:options.height - 2)
+  let content += [c_botleft . repeat(c_bottom, a:options.width - 2) . c_botright]
+  let border_bufnr = nvim_create_buf(v:false, v:true)
+  call nvim_buf_set_lines(border_bufnr, 0, -1, v:true, content)
+  call nvim_buf_set_option(border_bufnr, 'filetype', 'floatermborder')
+  call nvim_buf_set_option(border_bufnr, 'bufhidden', 'wipe')
+  let border_winid = nvim_open_win(border_bufnr, v:false, a:options)
   call nvim_win_set_option(border_winid, 'winhl', 'Normal:FloatermBorder')
   call nvim_win_set_option(border_winid, 'cursorcolumn', v:false)
   call nvim_win_set_option(border_winid, 'colorcolumn', '')
   return border_winid
 endfunction
 
-function! s:floatwin_pos(width, height, pos) abort
+function! s:get_floatwin_pos(width, height, pos) abort
   if a:pos == 'topright'
     let row = 2
     let col = &columns - 1
@@ -219,7 +224,7 @@ function! floaterm#window#open(bufnr, opts) abort
 endfunction
 
 function! floaterm#window#open_floating(bufnr, width, height, pos, title) abort
-  let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
+  let [row, col, anchor] = s:get_floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'relative': 'editor',
     \ 'anchor': anchor,
@@ -240,14 +245,15 @@ function! floaterm#window#open_floating(bufnr, width, height, pos, title) abort
   if s:winexists(border_winid)
     call nvim_win_close(border_winid, v:true)
   endif
-  let title = s:build_title(a:bufnr, a:title)
-  let border_winid = s:add_border(winid, title)
+  let title = s:format_title(a:bufnr, a:title)
+  let options = s:get_border_winconfig(winid)
+  let border_winid = s:render_border(title, options)
   call setbufvar(a:bufnr, 'floatermborder_winid', border_winid)
   return winid
 endfunction
 
 function! floaterm#window#open_popup(bufnr, width, height, pos, title) abort
-  let [row, col, anchor] = s:floatwin_pos(a:width, a:height, a:pos)
+  let [row, col, anchor] = s:get_floatwin_pos(a:width, a:height, a:pos)
   let opts = {
     \ 'pos': anchor,
     \ 'line': row,
@@ -262,7 +268,11 @@ function! floaterm#window#open_popup(bufnr, width, height, pos, title) abort
     \ 'padding': [0,1,0,1],
     \ 'highlight': 'Floaterm'
     \ }
-  let opts.title = s:build_title(a:bufnr, a:title)
+
+  " vim will pad the end of title but not begin part
+  " so we build the title as ' floaterm (idx/cnt)'
+  " therefore, we need to add a space here
+  let opts.title = ' ' . s:format_title(a:bufnr, a:title)
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')

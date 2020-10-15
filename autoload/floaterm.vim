@@ -146,7 +146,7 @@ function! floaterm#update(opts) abort
 
   let bufnr = bufnr('%')
   call floaterm#window#hide_floaterm(bufnr)
-  call floaterm#buffer#update_opts(bufnr, a:opts)
+  call floaterm#util#update_opts(bufnr, a:opts)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
 
