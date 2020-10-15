@@ -13,7 +13,6 @@ let $VIM_EXE = v:progpath
 
 let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let s:script = fnamemodify(s:home . '/../bin', ':p')
-let s:wrappers = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
 let s:windows = has('win32') || has('win64')
 
 if stridx($PATH, s:script) < 0
@@ -36,13 +35,6 @@ if !empty(g:floaterm_gitcommit)
   endif
 endif
 
-"-----------------------------------------------------------------------------
-" script level functions
-"-----------------------------------------------------------------------------
-function! s:get_wrappers() abort
-  return map(s:wrappers, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
-endfunction
-
 " ----------------------------------------------------------------------------
 " wrapper function for `floaterm#new()` and `floaterm#update()` since they
 " share the same argument: `opts`
@@ -63,7 +55,8 @@ endfunction
 function! floaterm#new(bang, cmd, jobopts, opts) abort
   call floaterm#util#autohide()
   if a:cmd != ''
-    let wrappers = s:get_wrappers()
+    let wrappers_path = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
+    let wrappers = map(wrappers_path, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
     let maybe_wrapper = split(a:cmd, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
