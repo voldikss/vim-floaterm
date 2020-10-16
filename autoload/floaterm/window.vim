@@ -75,7 +75,6 @@ function! s:get_border_winconfig(winid) abort
   return options
 endfunction
 
-" winid: floaterm window id
 function! s:render_border(title, options) abort
   let title = empty(a:title) ? a:title : (' ' . a:title . ' ')
   let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = g:floaterm_borderchars
@@ -179,7 +178,7 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
   endif
 endfunction
 
-function! s:parse_opts(opts) abort
+function! s:update_options(opts) abort
   if !has_key(a:opts, 'width')
     let a:opts.width = g:floaterm_width
   endif
@@ -207,12 +206,12 @@ function! s:parse_opts(opts) abort
 endfunction
 
 function! floaterm#window#open(bufnr, opts) abort
-  let opts = s:parse_opts(a:opts)
+  let opts = s:update_options(a:opts)
   let wintype = a:opts.wintype
   let position = a:opts.position
   let title = a:opts.title
 
-  " NOTE: these lines can not be moved into s:parse_opts() cause floaterm size
+  " NOTE: these lines can not be moved into s:update_options() cause floaterm size
   " should be resized dynamically according to the terminal-app's size
   " See 'test/test_options/test_width_height.vader'
   let width = opts.width
@@ -249,8 +248,8 @@ function! floaterm#window#open_floating(bufnr, width, height, pos, title) abort
   call nvim_win_set_option(winid, 'winhl', 'Normal:Floaterm,NormalNC:FloatermNC')
 
   let border_winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
-  " close border that already exists and make a new border
-  " since `bufhidden` option of floatermborder is set to 'wipe',
+  " Close border that already exists and make a new border
+  " Since `bufhidden` option of floatermborder is set to 'wipe',
   " the border_bufnr will be wiped out once the window was closed
   if s:winexists(border_winid)
     call nvim_win_close(border_winid, v:true)
@@ -281,11 +280,9 @@ function! floaterm#window#open_popup(bufnr, width, height, pos, title) abort
 
   " vim will pad the end of title but not begin part
   " so we build the title as ' floaterm (idx/cnt)'
-  " therefore, we need to add a space here
   let opts.title = ' ' . s:format_title(a:bufnr, a:title)
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
-  call setbufvar(a:bufnr, '&filetype', 'floaterm')
   return winid
 endfunction
 
