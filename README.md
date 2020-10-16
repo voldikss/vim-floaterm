@@ -7,12 +7,12 @@ Use (neo)vim terminal in the floating/popup window.
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Basic Usage](#basic-usage)
+- [Get started](#basic-usage)
   - [Commands](#commands)
   - [Options](#options)
   - [Keymaps](#keymaps)
   - [Highlights](#highlights)
-- [Integrate with command line tools](#integrate-with-command-line-tools)
+- [Use with command line tools](#use-with-command-line-tools)
   - [floaterm](#floaterm)
   - [git](#git)
   - [fzf](#fzf)
@@ -23,7 +23,7 @@ Use (neo)vim terminal in the floating/popup window.
   - [vifm](#vifm)
   - [lazygit](#lazygit)
   - [python](#python)
-- [Integrate with other plugins](#integrate-with-other-plugins)
+- [Use with other plugins](#use-with-other-plugins)
   - [vim-clap](#vim-clap)
   - [denite.nvim](#denitenvim)
   - [coc.nvim](#cocnvim)
@@ -45,7 +45,7 @@ Use (neo)vim terminal in the floating/popup window.
 - Multiple terminal instances
 - Customizable floating terminal style
 - Switch/preview floating terminal buffers using fuzzy-finder plugins such as [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
-- Integrate with other external command-line tools(ranger, lf, fzf, etc.)
+- Use with other external command-line tools(ranger, lf, fzf, etc.)
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 ## Requirements
@@ -327,7 +327,7 @@ hi FloatermNC guibg=gray
 
 ![](https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif)
 
-## Integrate with command line tools
+## Use with command line tools
 
 The following cases should work both in Vim and NeoVim unless otherwise specifically noted.
 
@@ -443,7 +443,7 @@ This can also work for other languages which have interactive shells, such as lu
 
 ![](https://user-images.githubusercontent.com/20282795/91380286-352a8800-e857-11ea-800c-ac54efa7dd72.gif)
 
-## Integrate with other plugins
+## Use with other plugins
 
 ### [vim-clap](https://github.com/liuchengxu/vim-clap)
 
