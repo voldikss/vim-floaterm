@@ -41,11 +41,10 @@ Use (neo)vim terminal in the floating/popup window.
 
 ## Features
 
-- NeoVim floatwin and Vim8 popupwin support
-- Open and toggle terminal window quickly
+- Support neoVim floatwin and vim8 popupwin feature
 - Multiple terminal instances
 - Customizable floating terminal style
-- Switch/Preview floating terminal buffers using [vim-clap](https://github.com/liuchengxu/vim-clap), [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim)
+- Switch/preview floating terminal buffers using fuzzy-finder plugins such as [denite.nvim](https://github.com/Shougo/denite.nvim) or [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
 - Integrate with other external command-line tools(ranger, lf, fzf, etc.)
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
@@ -53,7 +52,7 @@ Use (neo)vim terminal in the floating/popup window.
 
 - Vim or NeoVim with `terminal` feature
 
-Run `:checkhealth` to check the environment.
+Run `:checkhealth` for more info.
 
 ## Installation
 
@@ -71,7 +70,7 @@ call dein#add('voldikss/vim-floaterm')
 
 ## Basic Usage
 
-Use `:FloatermNew` command to open a terminal window, use `:FloatermToggle` to hide/reopen that. The filetype of the terminal buffer is set to `floaterm`.
+Use `:FloatermNew` command to open a terminal window, use `:FloatermToggle` to hide/reopen that. The filetype of the terminal buffer is `floaterm`.
 
 If you've opened multiple floaterm instances, they will be attached to a double-circular-linkedlist. Then you can use `:FloatermNext` or `:FloatermPrev` to switch between them.
 
@@ -80,8 +79,8 @@ If you've opened multiple floaterm instances, they will be attached to a double-
 #### `:FloatermNew[!] [options] [cmd]` Open a floaterm window.
 
 - If `!` is given, run program in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
-- If `cmd` doesn't exist, open `$SHELL`.
-- The `options` is formed as `--key=value`, it is used to specify some attributes of the floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
+- If `cmd` isn't given, open `$SHELL`.
+- The `options` is formed as `--key=value`, it is used to specify some attributes of a specific floaterm instance, including `height`, `width`, `wintype`, `position`, `name` and `autoclose`.
   - `name` name of the floaterm
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
@@ -168,66 +167,68 @@ And the following command allows you to compile and run your code in the floater
 
 #### **`g:floaterm_shell`**
 
-Type `string`. Default: `&shell`
+Type `String`. Default: `&shell`
 
 #### **`g:floaterm_title`**
 
-Type `string`. Show floaterm info(e.g., `'floaterm: 1/3'` implies there are 3 floaterms in total and the current is the first one) at the top left corner of floaterm window.
+Type `String`. Show floaterm info(e.g., `'floaterm: 1/3'` implies there are 3 floaterms in total and the current is the first one) at the top left corner of floaterm window.
 
-Default: `'floaterm: $1/$2'`(`$1` will be replace by 'the index of the current floaterm' and `$2` by 'the total floaterms count')
+Default: `'floaterm: $1/$2'`(`$1` and `$2` will be replaced by 'the index of the current floaterm' and 'total floaterms count' respectively)
 
 Example: `'floaterm($1|$2)'`
 
 #### **`g:floaterm_wintype`**
 
-Type `string`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
+Type `String`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to `'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
 
 #### **`g:floaterm_width`**
 
-Type `int` (number of columns) or `float` (between 0 and 1). If `float`, the width is relative to `&columns`.
+Type `Number` (number of columns) or `Float` (between 0 and 1). If `Float`, the width is relative to `&columns`.
 
-Default: `0.6`(why? [😅](https://en.wikipedia.org/wiki/Golden_ratio))
+Default: `0.6`
 
 #### **`g:floaterm_height`**
 
-Type `int` (number of lines) or `float` (between 0 and 1). If `float`, the height is relative to `&lines`.
+Type `Number` (number of lines) or `Float` (between 0 and 1). If `Float`, the height is relative to `&lines`.
 
 Default: `0.6`
 
 #### **`g:floaterm_winblend`**
 
-Type `int`. The transparency of the floating terminal. Only works in neovim. Default: `0`
+Type `Number`. The transparency of the floating terminal. Only works in neovim.
+
+Default: `0`
 
 #### **`g:floaterm_position`**
 
-Type `string`. The position of the floating window. Available values:
+Type `String`. The position of the floating window. Available values:
 
 - If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
 - If `wintype` is `floating` or `popup`: `'top'`, `'right'`, `'bottom'`, `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
 #### **`g:floaterm_borderchars`**
 
-Type `array of string`. Characters of the floating window border.
+Type `List` of `String`. Characters of the floating window border.
 
 Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
 
 #### **`g:floaterm_rootmarkers`**
 
-Type `array of string`. If not empty, floaterm will be opened in the project root directory.
+Type `List` of `String`. If not empty, floaterm will be opened in the project root directory.
 
-Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`, Default: `[]`
+Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`
 
-Default: `[]`(means floaterm will be opened just at the current directory)
+Default: `[]`, which means floaterm will be opened just at the current directory
 
 #### **`g:floaterm_open_command`**
 
-Type `string`. Command used for opening a file in the outside nvim from within `:terminal`.
+Type `String`. Command used for opening a file in the outside nvim from within `:terminal`.
 
 Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
 
 #### **`g:floaterm_gitcommit`**
 
-Type `string`. Opening strategy for `COMMIT_EDITMSG` window by running `git commit` in the floaterm window. Only works in neovim.
+Type `String`. Opening strategy for `COMMIT_EDITMSG` window by running `git commit` in the floaterm window. Only works in neovim.
 
 Available: `'floaterm'`(open `gitcommit` in the floaterm window), `'split'`(recommended), `'vsplit'`, `'tabe'`.
 
@@ -235,7 +236,7 @@ Default: `''`, which means this is disabled by default(use your own `$GIT_EDITOR
 
 #### **`g:floaterm_autoclose`**
 
-Type `number`. Whether to close floaterm window once a job gets finished.
+Type `Number`. Whether to close floaterm window once the job gets finished.
 
 - `0`: Always do NOT close floaterm window
 - `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
@@ -245,17 +246,19 @@ Default: `0`.
 
 #### **`g:floaterm_autoinsert`**
 
-Type `bool`. Whether to enter Terminal-mode after opening a floaterm. Default: `v:true`
+Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
+
+Default: `v:true`
 
 #### **`g:floaterm_autohide`**
 
-Type `boolean`. Decide whether to hide previous floaterms before switching to or opening a new one.
+Type `Boolean`. Decide whether to hide previous floaterms before switching to or opening a new one.
 
 Default: `v:true`.
 
 ### Keymaps
 
-This plugin doesn't supply any default mappings. To use a recommended mappings, put the following code in your `vimrc`.
+This plugin doesn't supply any default mappings. The following is a configuration example.
 
 ```vim
 " Configuration example
@@ -313,7 +316,7 @@ hi FloatermBorder guibg=orange guifg=cyan
 
 ![](https://user-images.githubusercontent.com/20282795/91368959-fee00f00-e83c-11ea-9002-cab992d30794.png)
 
-Besides, there is a neovim only `hi-group` which can be used to configure no-current-focused window(`:help NormalNC`). It's also linked to `Normal` by default.
+Besides, there is a neovim only highlight group which can be used to configure no-current-focused window(`:help NormalNC`). It's also linked to `Normal` by default.
 
 ```vim
 " Configuration example
@@ -612,10 +615,14 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
   Either `set autochdir` or use autocmd. See [152](https://github.com/voldikss/vim-floaterm/issues/152).
 
+- #### Open vim-floaterm in background on startup?
+
+  See [#191](https://github.com/voldikss/vim-floaterm/issues/191)
+
 ## Break Changes
 
 - Change `g:floaterm_title` value format, i.e., `floaterm(%s/%s)` => `floaterm($1/$2)`
-- Rename `g:floaterm_wintitle` to `g:floaterm_title` and change its value type to `string`
+- Rename `g:floaterm_wintitle` to `g:floaterm_title` and change its value type to `String`
 - Change `g:floaterm_autoclose` default value to `0`
 - Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`
 - Current floaterm will be hidden by default before opening a new one or switching to prev/next one using `:FloatermPrev` or `:FloatermNext`. See `g:floaterm_autohide` to get more info.
