@@ -2,8 +2,7 @@
 
 Execute(Test floaterm#cmdline#parse):
   let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
-  let arglist = split(argstr)
-  let [cmd, opts] = floaterm#cmdline#parse(arglist)
+  let [cmd, opts] = floaterm#cmdline#parse(split(argstr))
   AssertEqual 'ranger --cmd="cd ~"', cmd
   AssertEqual {
     \'wintype': 'floating',
@@ -13,6 +12,29 @@ Execute(Test floaterm#cmdline#parse):
     \'height': 0.6,
     \'position': 'topleft'
     \}, opts
+
+Execute(Test floaterm#cmdline#parse expand feature):
+  edit ./README.md
+  normal! gg0
+  let argstr = 'xxx%'
+  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
+  AssertEqual 'xxxREADME.md', cmd
+  let argstr = 'xxx%:p:e'
+  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
+  AssertEqual 'xxxmd', cmd
+  let argstr = 'xxx\%:p:e'
+  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
+  AssertEqual argstr, cmd
+
+  let argstr = 'xxxx<cfile>'
+  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
+  AssertEqual 'xxxxUse', cmd
+  let argstr = 'xxxx<cfile>:p:e'
+  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
+  AssertEqual 'xxxx', cmd
+  let argstr = 'xxxx\<cfile>:p:e'
+  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
+  AssertEqual argstr, cmd
 
 Execute(Test floaterm#cmdline#complete):
   AssertEqual [
