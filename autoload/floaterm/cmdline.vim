@@ -36,12 +36,10 @@ function! floaterm#cmdline#parse(arglist) abort
   return [cmd, opts]
 endfunction
 
-" say thanks to the neoterm project
 function! s:expand(cmd) abort
-  let cmd = substitute(a:cmd, '[^\\]\zs%\(:[phtre]\)\+', '\=expand(submatch(0))', 'g')
-  let cmd = substitute(cmd, '\c\\<cr>', '', 'g')
-  let cmd = substitute(cmd, '[^\\]\zs%', expand('%:p'), 'g')
-  let cmd = substitute(cmd, '\\%', '%', 'g')
+  let wildchars = '\(%\|#\|#\d\|<cfile>\|<afile>\|<abuf>\|<amatch>\|<cexpr>\|<sfile>\|<slnum>\|<sflnum>\|<SID>\|<stack>\|<cword>\|<cWORD>\|<client>\)'
+  let cmd = substitute(a:cmd, '[^\\]\zs' . wildchars . '\(:[phtre]\)*\ze', '\=expand(submatch(0))', 'g')
+  let cmd = substitute(cmd, '\zs\\' . wildchars, '\=submatch(0)', 'g')
   return cmd
 endfunction
 
