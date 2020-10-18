@@ -1,12 +1,13 @@
 " vim:ft=vim
 
 Execute(FloatermNew floaterm ../../LICENSE):
+  silent !touch test.txt
   wincmd o
-  FloatermNew floaterm ../../LICENSE
+  FloatermNew floaterm test.txt
   sleep 1000m
   Log expand('%')
   Log &ft
-  AssertEqual 'LICENSE',expand('%:t')
+  AssertEqual 'test.txt',expand('%:t')
   AssertNotEqual 'floaterm',&ft
   " floating window is closed
   for winnr in range(1, winnr('$'))
@@ -15,9 +16,11 @@ Execute(FloatermNew floaterm ../../LICENSE):
       Assert !has_key(nvim_win_get_config(winid), 'anchor')
     endif
   endfor
+  silent !rm test.txt
 
 Execute(FloatermNew cat ../../LICENSE | floaterm):
-  FloatermNew cat ../../LICENSE | floaterm
+  silent !touch test.txt
+  FloatermNew cat test.txt | floaterm
   sleep 1000m
   AssertNotEqual 'floaterm',&ft
   " floating window is closed
@@ -27,6 +30,7 @@ Execute(FloatermNew cat ../../LICENSE | floaterm):
       Assert !has_key(nvim_win_get_config(winid), 'anchor')
     endif
   endfor
+  silent !rm test.txt
 
 Execute (Exit):
   stopinsert
