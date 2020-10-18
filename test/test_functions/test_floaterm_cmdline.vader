@@ -14,27 +14,29 @@ Execute(Test floaterm#cmdline#parse):
     \}, opts
 
 Execute(Test floaterm#cmdline#parse expand feature):
-  edit ./README.md
+  silent !touch test.txt && echo first.line > test.txt
+  edit ./test.txt
   normal! gg0
-  let argstr = 'xxx%'
-  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
-  AssertEqual 'xxxREADME.md', cmd
-  let argstr = 'xxx%:p:e'
-  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
-  AssertEqual 'xxxmd', cmd
-  let argstr = 'xxx\%:p:e'
-  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
-  AssertEqual argstr, cmd
 
-  let argstr = 'xxxx<cfile>'
-  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
-  AssertEqual 'xxxxUse', cmd
-  let argstr = 'xxxx<cfile>:p:e'
-  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
-  AssertEqual 'xxxx', cmd
-  let argstr = 'xxxx\<cfile>:p:e'
-  let [cmd, _] = floaterm#cmdline#parse(split(argstr))
-  AssertEqual argstr, cmd
+  AssertEqual 'test.txt', floaterm#cmdline#parse(split('%'))[0]
+  AssertEqual 'txt', floaterm#cmdline#parse(split('%:p:e'))[0]
+  AssertEqual '\%', floaterm#cmdline#parse(split('\%'))[0]
+  AssertEqual '\%:p:e', floaterm#cmdline#parse(split('\%:p:e'))[0]
+  AssertEqual 'xtest.txtx', floaterm#cmdline#parse(split('x%x'))[0]
+  AssertEqual 'xtxtx', floaterm#cmdline#parse(split('x%:p:ex'))[0]
+  AssertEqual 'x\%x', floaterm#cmdline#parse(split('x\%x'))[0]
+  AssertEqual 'x\%:p:ex', floaterm#cmdline#parse(split('x\%:p:ex'))[0]
+
+  AssertEqual 'first.line', floaterm#cmdline#parse(split('<cfile>'))[0]
+  AssertEqual 'line', floaterm#cmdline#parse(split('<cfile>:p:e'))[0]
+  AssertEqual '\<cfile>', floaterm#cmdline#parse(split('\<cfile>'))[0]
+  AssertEqual '\<cfile>:p:e', floaterm#cmdline#parse(split('\<cfile>:p:e'))[0]
+  AssertEqual 'xfirst.linex', floaterm#cmdline#parse(split('x<cfile>x'))[0]
+  AssertEqual 'xlinex', floaterm#cmdline#parse(split('x<cfile>:p:ex'))[0]
+  AssertEqual 'x\<cfile>x', floaterm#cmdline#parse(split('x\<cfile>x'))[0]
+  AssertEqual 'x\<cfile>:p:ex', floaterm#cmdline#parse(split('x\<cfile>:p:ex'))[0]
+
+  silent !rm test.txt
 
 Execute(Test floaterm#cmdline#complete):
   AssertEqual [
