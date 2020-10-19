@@ -315,30 +315,19 @@ function! floaterm#window#hide_floaterm(bufnr) abort
     if !s:winexists(winid) | return | endif
     call nvim_win_close(winid, v:true)
   else
-    let l:bufnr_to_winnr_dic = {}
-    for i in range(1, winnr('$'))
-      let l:bufnr_to_winnr_dic[winbufnr(i)] = i
-    endfor
-
     if exists('*win_gettype')
       if win_gettype() == 'popup'
         call popup_close(winid)
-      else
-        try
-          let l:winnr = l:bufnr_to_winnr_dic[a:bufnr]
-          execute l:winnr . 'hide'
-        catch
-        endtry
+      elseif bufwinnr(a:bufnr) > 0
+        silent! execute bufwinnr(a:bufnr) . 'hide'
       endif
     else
-      try      " there should be a function like `win_type()`
+      try
         call popup_close(winid)
       catch
-        try
-          let l:winnr = l:bufnr_to_winnr_dic[a:bufnr]
-          execute l:winnr . 'hide'
-        catch
-        endtry
+        if bufwinnr(a:bufnr) > 0
+          silent! execute bufwinnr(a:bufnr) . 'hide'
+        endif
       endtry
     endif
   endif
