@@ -18,11 +18,19 @@ Execute(Test floaterm#cmdline#parse expand feature):
   edit ./test.txt
   normal! gg0
 
-  AssertEqual 'test.txt', floaterm#cmdline#parse(split('%'))[0]
+  if $USER == 'runner'
+    AssertEqual './test.txt', floaterm#cmdline#parse(split('%'))[0]
+  else
+    AssertEqual 'test.txt', floaterm#cmdline#parse(split('%'))[0]
+  endif
   AssertEqual 'txt', floaterm#cmdline#parse(split('%:p:e'))[0]
   AssertEqual '\%', floaterm#cmdline#parse(split('\%'))[0]
   AssertEqual '\%:p:e', floaterm#cmdline#parse(split('\%:p:e'))[0]
-  AssertEqual 'xtest.txtx', floaterm#cmdline#parse(split('x%x'))[0]
+  if $USER == 'runner'
+    AssertEqual 'x./test.txtx', floaterm#cmdline#parse(split('x%x'))[0]
+  else
+    AssertEqual 'xtest.txtx', floaterm#cmdline#parse(split('x%x'))[0]
+  endif
   AssertEqual 'xtxtx', floaterm#cmdline#parse(split('x%:p:ex'))[0]
   AssertEqual 'x\%x', floaterm#cmdline#parse(split('x\%x'))[0]
   AssertEqual 'x\%:p:ex', floaterm#cmdline#parse(split('x\%:p:ex'))[0]
