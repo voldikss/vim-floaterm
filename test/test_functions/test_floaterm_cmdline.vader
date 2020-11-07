@@ -18,31 +18,49 @@ Execute(Test floaterm#cmdline#parse expand feature):
   edit ./test.txt
   normal! gg0
 
-  if $USER == 'runner'
-    AssertEqual './test.txt', floaterm#cmdline#parse(split('%'))[0]
-  else
-    AssertEqual 'test.txt', floaterm#cmdline#parse(split('%'))[0]
-  endif
-  AssertEqual 'txt', floaterm#cmdline#parse(split('%:p:e'))[0]
+  " %<
+  AssertEqual expand('%<'), floaterm#cmdline#parse(split('%<'))[0]
+  " %\(:[phtreS8\~\.]\)
+  AssertEqual expand('%'), floaterm#cmdline#parse(split('%'))[0]
+  AssertEqual expand('%:p'), floaterm#cmdline#parse(split('%:p'))[0]
+  AssertEqual expand('%:h'), floaterm#cmdline#parse(split('%:h'))[0]
+  AssertEqual expand('%:t'), floaterm#cmdline#parse(split('%:t'))[0]
+  AssertEqual expand('%:r'), floaterm#cmdline#parse(split('%:r'))[0]
+  AssertEqual expand('%:e'), floaterm#cmdline#parse(split('%:e'))[0]
+  AssertEqual expand('%:S'), floaterm#cmdline#parse(split('%:S'))[0]
+  AssertEqual expand('%:8'), floaterm#cmdline#parse(split('%:8'))[0]
+  AssertEqual expand('%:~'), floaterm#cmdline#parse(split('%:~'))[0]
+  AssertEqual expand('%:.'), floaterm#cmdline#parse(split('%:.'))[0]
+  " %\(:g\=s?.*?.*?\)
+  AssertEqual expand('%:s?test?main?'), floaterm#cmdline#parse(split('%:s?test?main?'))[0]
+  AssertEqual expand('%:gs?test?main?'), floaterm#cmdline#parse(split('%:gs?test?main?'))[0]
   AssertEqual '\%', floaterm#cmdline#parse(split('\%'))[0]
-  AssertEqual '\%:p:e', floaterm#cmdline#parse(split('\%:p:e'))[0]
-  if $USER == 'runner'
-    AssertEqual 'x./test.txtx', floaterm#cmdline#parse(split('x%x'))[0]
-  else
-    AssertEqual 'xtest.txtx', floaterm#cmdline#parse(split('x%x'))[0]
-  endif
-  AssertEqual 'xtxtx', floaterm#cmdline#parse(split('x%:p:ex'))[0]
-  AssertEqual 'x\%x', floaterm#cmdline#parse(split('x\%x'))[0]
-  AssertEqual 'x\%:p:ex', floaterm#cmdline#parse(split('x\%:p:ex'))[0]
+  AssertEqual '\%:p', floaterm#cmdline#parse(split('\%:p'))[0]
+  " %\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*
+  AssertEqual expand('%:p:h'), floaterm#cmdline#parse(split('%:p:h'))[0]
+  AssertEqual expand('%:p:s?test?main?'), floaterm#cmdline#parse(split('%:p:s?test?main?'))[0]
 
-  AssertEqual 'first.line', floaterm#cmdline#parse(split('<cfile>'))[0]
-  AssertEqual 'line', floaterm#cmdline#parse(split('<cfile>:p:e'))[0]
+  " <cfile><
+  AssertEqual expand('<cfile><'), floaterm#cmdline#parse(split('<cfile><'))[0]
+  " <cfile>\(:[phtreS8\~\.]\)
+  AssertEqual expand('<cfile>'), floaterm#cmdline#parse(split('<cfile>'))[0]
+  AssertEqual expand('<cfile>:p'), floaterm#cmdline#parse(split('<cfile>:p'))[0]
+  AssertEqual expand('<cfile>:h'), floaterm#cmdline#parse(split('<cfile>:h'))[0]
+  AssertEqual expand('<cfile>:t'), floaterm#cmdline#parse(split('<cfile>:t'))[0]
+  AssertEqual expand('<cfile>:r'), floaterm#cmdline#parse(split('<cfile>:r'))[0]
+  AssertEqual expand('<cfile>:e'), floaterm#cmdline#parse(split('<cfile>:e'))[0]
+  AssertEqual expand('<cfile>:S'), floaterm#cmdline#parse(split('<cfile>:S'))[0]
+  AssertEqual expand('<cfile>:8'), floaterm#cmdline#parse(split('<cfile>:8'))[0]
+  AssertEqual expand('<cfile>:~'), floaterm#cmdline#parse(split('<cfile>:~'))[0]
+  AssertEqual expand('<cfile>:.'), floaterm#cmdline#parse(split('<cfile>:.'))[0]
+  " <cfile>\(:g\=s?.*?.*?\)
+  AssertEqual expand('<cfile>:s?test?main?'), floaterm#cmdline#parse(split('<cfile>:s?test?main?'))[0]
+  AssertEqual expand('<cfile>:gs?test?main?'), floaterm#cmdline#parse(split('<cfile>:gs?test?main?'))[0]
   AssertEqual '\<cfile>', floaterm#cmdline#parse(split('\<cfile>'))[0]
-  AssertEqual '\<cfile>:p:e', floaterm#cmdline#parse(split('\<cfile>:p:e'))[0]
-  AssertEqual 'xfirst.linex', floaterm#cmdline#parse(split('x<cfile>x'))[0]
-  AssertEqual 'xlinex', floaterm#cmdline#parse(split('x<cfile>:p:ex'))[0]
-  AssertEqual 'x\<cfile>x', floaterm#cmdline#parse(split('x\<cfile>x'))[0]
-  AssertEqual 'x\<cfile>:p:ex', floaterm#cmdline#parse(split('x\<cfile>:p:ex'))[0]
+  AssertEqual '\<cfile>:p', floaterm#cmdline#parse(split('\<cfile>:p'))[0]
+  " <cfile>\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*
+  AssertEqual expand('<cfile>:p:h'), floaterm#cmdline#parse(split('<cfile>:p:h'))[0]
+  AssertEqual expand('<cfile>:p:s?test?main?'), floaterm#cmdline#parse(split('<cfile>:p:s?test?main?'))[0]
 
   silent !rm test.txt
 

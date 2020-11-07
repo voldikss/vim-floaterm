@@ -38,7 +38,7 @@ endfunction
 
 function! s:expand(cmd) abort
   let wildchars = '\(%\|#\|#\d\|<cfile>\|<afile>\|<abuf>\|<amatch>\|<cexpr>\|<sfile>\|<slnum>\|<sflnum>\|<SID>\|<stack>\|<cword>\|<cWORD>\|<client>\)'
-  let cmd = substitute(a:cmd, '\([^\\]\|^\)\zs' . wildchars . '\(:[phtre]\)*\ze', '\=expand(submatch(0))', 'g')
+  let cmd = substitute(a:cmd, '\([^\\]\|^\)\zs' . wildchars . '\(<\|\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*\)\ze', '\=expand(submatch(0))', 'g')
   let cmd = substitute(cmd, '\zs\\' . wildchars, '\=submatch(0)', 'g')
   return cmd
 endfunction
