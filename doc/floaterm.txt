@@ -342,58 +342,8 @@ https://github.com/voldikss/vim-floaterm#integrate-with-command-line-tools
 ==============================================================================
 FAQ                                              *floaterm-faq*
 
-- This plugin leaves an empty buffer on startify window
+https://github.com/voldikss/vim-floaterm/issues?q=label%3AFAQ
 
-	Put this code in `vimrc` >
-	autocmd User Startified setlocal buflisted
-<
-- I want to use another shell in the terminal. (e.g. Use fish instead of bash)
-
-	Set 'shell' option in your `vimrc`: >
-	set shell=/path/to/shell
-
-- I would like to customize the style of the floating terminal window
-
-	Use |autocmd|. >
-	function s:floatermSettings()
-		setlocal nonumber norelativenumber
-		" more settings
-	endfunction
-	autocmd FileType floaterm call s:floatermSettings()
-
-- I want to open normal(non-floating) floaterm in a vsplit window.
-
-	Use |FloatermUpdate|, >
-	:FloatermUpdate --wintype=normal --position=right
-
-- Can not enter insert mode after creating a new floaterm...
-
-	See option |g:floaterm_autoinsert|, also
-	https://github.com/voldikss/vim-floaterm/issues/52 might be helpful.
-
-- Why the plugin is named "vim-floaterm" instead of "vim-popterm" or others?
-
-	Because this was firstly developed based on nvim's floating window. But
-	now it supports both floaterm and popup, you can get similar experience in
-	both.
-
-- How to execute command in the TERMINAL mode?
-	Go back to the NORMAL mode using `<C-\><C-N>` and type `:`.
-
-- How to go back to the former windows?
-	First go back to the |Normal| mode using `<C-\><C-N>`, and then use `<C-W>W`
-	to switch among windows. Also you can use |FloatermToggle| or
-	|FloatermHide|.
-
-- Incorrect indent when using `:FloatermSend` with Ipython
-
-	Turn off Ipython's autoindent, also see
-	https://github.com/voldikss/vim-floaterm/issues/150.
-
-- Open floaterm in the current directory?
-
-	Either set 'autochdir' or use |autocmd|. See
-	https://github.com/voldikss/vim-floaterm/issues/152.
 ==============================================================================
 REPOSITORY                                          *floaterm-repository-page*
 
