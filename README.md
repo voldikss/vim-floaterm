@@ -34,7 +34,7 @@ Use (neo)vim terminal in the floating/popup window.
 - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [Wiki](#wiki)
 - [F.A.Q](#faq)
-- [Break changes](#break-changes)
+- [Breaking changes](#breaking-changes)
 - [Feedback](#feedback)
 - [Credits](#credits)
 - [License](#license)
@@ -608,27 +608,15 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 ## Wiki
 
-[Here you go](https://github.com/voldikss/vim-floaterm/wiki)
+https://github.com/voldikss/vim-floaterm/wiki
 
 ## F.A.Q
 
 https://github.com/voldikss/vim-floaterm/issues?q=label%3AFAQ
 
-## Break Changes
+## Breaking Changes
 
-- Change `g:floaterm_title` value format, i.e., `floaterm(%s/%s)` => `floaterm($1/$2)`
-- Rename `g:floaterm_wintitle` to `g:floaterm_title` and change its value type to `String`
-- Change `g:floaterm_autoclose` default value to `0`
-- Change in asynctasks.runner_proc: `call floaterm#hide()` => `call floaterm#hide(1, '')`
-- Current floaterm will be hidden by default before opening a new one or
-  switching to prev/next one using `:FloatermPrev` or `:FloatermNext`. See `g: floaterm_autohide` to get more info.
-- Current floaterm won't be hidden before switching to prev/next one using `:FloatermPrev` or `:FloatermNext`
-- Command `:FloatermSend [floaterm_name]` => `:FloatermSend [--name=floaterm_name] [cmd]`
-- Use GNU style for cmdline arguments. e.g., `wintype=normal` => `--wintype=normal`
-- Floaterm window won't be closed automatically after finishing job by default, see `g:floaterm_autoclose`
-- Rename: `g:floaterm_type` => `g:floaterm_wintype`
-- Rename: `FloatermNF` => `Floaterm`
-- Rename: `FloatermBorderNF` => `FloatermBorder`
+https://github.com/voldikss/vim-floaterm/issues?q=label%3A%22breaking+change%22
 
 ## Feedback
 
