@@ -108,7 +108,7 @@ will open a new `floating` floaterm instance named `floaterm1` running `ranger -
 The following command allows you to compile and run your C code in the floaterm window:
 
 ```vim
-:FloatermNew --autoclose=0 gcc % -o %< && ./%<`
+:FloatermNew --autoclose=0 gcc % -o %< && ./%<
 ```
 
 #### `:FloatermPrev` Switch to the previous floaterm instance
