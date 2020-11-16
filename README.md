@@ -48,7 +48,8 @@ Use (neo)vim terminal in the floating/popup window.
   [denite.nvim](https://github.com/Shougo/denite.nvim) or
   [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
 - Use with other external command-line tools(ranger, lf, fzf, etc.)
-- Autocompletion from within floaterms(require [coc.nvim](https://github.com/neoclide/coc.nvim))
+- Autocompletion from within floaterms(require [coc.nvim](https://github.com/neoclide/coc.nvim)
+  or [deoplete](https://github.com/Shougo/deoplete.nvim))
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 ## Requirements
@@ -278,15 +279,13 @@ Default: `v:true`.
 
 #### **`g:floaterm_complete_options`**
 
-Type `Dict`. Autocompletion options used for coc.nvim.
+Type `Dict`. Autocompletion options
 
 Available options:
 
 - `shortcut`: a string
 - `priority`: number between 0-99
 - `filetypes`: array of filetype names this source should be triggered by. Available for all filetypes when ommited and for no filetypes when empty
-- `firstMatch`: if not falsy, only the completion item that has the first letter matching the user input will be shown
-- `triggerCharacters`: trigger characters for this source.
 
 Default value: `{'shortcut': 'floaterm', 'priority': 5}`
 

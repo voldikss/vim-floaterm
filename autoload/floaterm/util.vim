@@ -74,3 +74,17 @@ function! floaterm#util#update_opts(bufnr, opts) abort
   endfor
   call setbufvar(a:bufnr, 'floaterm_opts', opts)
 endfunction
+
+function! floaterm#util#getbufline(bufnr, length) abort
+  let lines = []
+  if a:bufnr == -1
+    for bufnr in floaterm#buflist#gather()
+      let lnum = getbufinfo(bufnr)[0]['lnum']
+      let lines += getbufline(bufnr, max([lnum - a:length, 0]), '$')
+    endfor
+  else
+    let lnum = getbufinfo(a:bufnr)[0]['lnum']
+    let lines += getbufline(a:bufnr, max([lnum - a:length, 0]), '$')
+  endif
+  return lines
+endfunction

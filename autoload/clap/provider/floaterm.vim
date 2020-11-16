@@ -29,9 +29,7 @@ function! s:floaterm.on_move() abort
     return
   endif
   let bufnr = str2nr(matchstr(curline, '\S'))
-  let lnum = getbufinfo(bufnr)[0]['lnum']
-  let lines = getbufline(bufnr, max([lnum-s:preview_height, 0]), '$')
-  let lines = lines[max([len(lines)-s:preview_height, 0]):]
+  let lines = floaterm#util#getbufline(bufnr, s:preview_height)
   call g:clap.preview.show(lines)
 endfunction
 
