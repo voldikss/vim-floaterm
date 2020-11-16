@@ -288,7 +288,7 @@ Available options:
 - `priority`: Number between 0-99.
 - `filetypes`: Array of filetype names this source should be triggered by.
   Available for all filetypes when ommited and for no filetypes when empty
-- `filter_length`: Array of 2 numbers. Candidates whose length is not.
+- `filter_length`: Array of 2 numbers. Candidates whose length is not
   in the range will be removed.
 
 Default value: `{'shortcut': 'floaterm', 'priority': 5, 'filter_length': [5, 20]}`
