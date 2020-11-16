@@ -25,11 +25,12 @@ Use (neo)vim terminal in the floating/popup window.
 
 - NeoVim |api-floatwin| and Vim8 |popup-window| support
 - Open and toggle terminal window quickly
-- Multiple terminal instances
+- Manage multiple terminal instances
 - Customizable floating terminal style
 - Switch/Preview floating terminal buffers using fuzzy finder plugins such as
   |vim-clap|, |denite.nvim|, |coc.nvim|, |fzf.vim| and |LeaderF|.
 - Integrate with other external command-line tools(ranger, lf, fzf, etc.)
+- Autocompletion from within floaterms(require |coc.nvim|)
 - Use as a custom task runner for |asynctasks.vim|
 ==============================================================================
 OPTIONS                                          *floaterm-options*
@@ -120,6 +121,20 @@ g:floaterm_autohide                              *g:floaterm_autohide*
 	Decide whether to hide previous floaterms before switching to or opening
 	another one.
 	Default value is |v:true|.
+
+g:floaterm_complete_options                      *g:floaterm_complete_options*
+    Type |Dict|.
+    Autocompletion options used for coc.nvim.
+    Available options:
+        - `shortcut`: a string
+        - `priority`: number between 0-99
+        - `filetypes`: array of filetype names this source should be triggered
+            by.  Available for all filetypes when ommited and for no filetypes
+            when empty
+        - `firstMatch`: if not falsy, only the completion item that has the
+            first letter matching the user input will be shown
+        - `triggerCharacters`: trigger characters for this source.
+    Default value: `{'shortcut': 'floaterm', 'priority': 5}`
 
 ==============================================================================
 MAPPINGS                                         *floaterm-mappings*
