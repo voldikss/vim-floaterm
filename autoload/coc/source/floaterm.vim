@@ -9,7 +9,6 @@ function! coc#source#floaterm#init() abort
 endfunction
 
 function! coc#source#floaterm#complete(opt, cb) abort
-  echom 'a'
   if exists("*floaterm#buflist#gather")
     let completion = []
     for bufnr in floaterm#buflist#gather()
