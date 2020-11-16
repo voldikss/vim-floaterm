@@ -20,6 +20,7 @@ class Source(Base):
             self.filetypes = complete_options["filetypes"]
         self.mark = complete_options["shortcut"]
         self.rank = complete_options["priority"]
+        [self.minlength, self.maxlength] = complete_options["filter_length"]
         self.matchers = ["matcher_length", "matcher_full_fuzzy"]
         self.name = "floaterm"
         self.max_candidates = 0
@@ -29,5 +30,6 @@ class Source(Base):
         candidates = []
         for line in lines:
             for word in line.split(" "):
-                candidates.append({"word": word, "dup": 0})
+                if self.minlength <= len(word) <= self.maxlength:
+                    candidates.append({"word": word, "dup": 0})
         return candidates

@@ -24,7 +24,7 @@ let g:floaterm_borderchars      = get(g:, 'floaterm_borderchars', ['─', '│',
 let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', [])
 let g:floaterm_open_command     = get(g:, 'floaterm_open_command', 'edit')
 let g:floaterm_gitcommit        = get(g:, 'floaterm_gitcommit', '')
-let g:floaterm_complete_options = get(g:, 'floaterm_complete_options', {'shortcut': 'floaterm', 'priority': 5})
+let g:floaterm_complete_options = get(g:, 'floaterm_complete_options', {'shortcut': 'floaterm', 'priority': 5, 'filter_length': [5, 20]})
 
 let g:floaterm_keymap_new    = get(g:, 'floaterm_keymap_new', '')
 let g:floaterm_keymap_prev   = get(g:, 'floaterm_keymap_prev', '')
