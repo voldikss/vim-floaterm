@@ -36,6 +36,7 @@ Use (neo)vim terminal in the floating/popup window.
 - [F.A.Q](#faq)
 - [Breaking changes](#breaking-changes)
 - [Feedback](#feedback)
+- [Related projects](#related-projects)
 - [Credits](#credits)
 - [License](#license)
 
@@ -639,6 +640,14 @@ If you like this plugin, please star it or sponsor the project.
 It's a great way of getting feedback.
 
 The same goes for reporting issues or feature requests.
+
+## Related projects
+
+- [vim-floaterm-repl](https://github.com/windwp/vim-floaterm-repl)
+- [coc-floaterm](https://github.com/voldikss/coc-floaterm)
+- [fzf-floaterm](https://github.com/voldikss/fzf-floaterm)
+- [popc-floaterm](https://github.com/yehuohan/popc-floaterm)
+- [Leader-floaterm](https://github.com/voldikss/LeaderF-floaterm)
 
 ## Credits
 
