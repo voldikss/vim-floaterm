@@ -50,7 +50,7 @@ Use (neo)vim terminal in the floating/popup window.
   [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
 - Use with other external command-line tools(ranger, lf, fzf, etc.)
 - Autocompletion from within floaterms(require [coc.nvim](https://github.com/neoclide/coc.nvim)
-  or [deoplete](https://github.com/Shougo/deoplete.nvim))
+  or [deoplete.nvim](https://github.com/Shougo/deoplete.nvim))
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 ## Requirements
