@@ -104,7 +104,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   " commands(e.g. `nvim-qt.exe`). It comes from the `a:arg_lead` which is
   " generated from split of `cmd_line_before_cursor`. So if `a:arg_lead` matches 1
   " or 2 dash, the user wants to complete options.
-  elseif match(a:arg_lead, '--\=') > -1
+  elseif match(a:arg_lead, '--\=$') > -1
     return options
   else
     if a:cmd_line =~ '^FloatermNew'
@@ -119,7 +119,6 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
       return candidates
     endif
   endif
-  " return filter(candidates, {_, val -> val[:len(a:arg_lead) - 1] == a:arg_lead})
   return filter(candidates, 'v:val[:len(a:arg_lead) - 1] == a:arg_lead')
 endfunction
 

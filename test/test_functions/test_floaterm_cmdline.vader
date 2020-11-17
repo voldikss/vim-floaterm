@@ -119,6 +119,7 @@ Execute(Test floaterm#cmdline#complete):
     \'--autoclose='
     \])
   call Test__floaterm_cmdline_complete('FloatermNew --n', ['--name='])
+  call Test__floaterm_cmdline_complete('FloatermNew --w', ['--width=', '--wintype='])
   call Test__floaterm_cmdline_complete('FloatermNew --name=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --width=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --height=', [])
