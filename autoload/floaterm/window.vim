@@ -27,6 +27,7 @@ function! s:get_wintype() abort
     return g:floaterm_wintype
   endif
 endfunction
+let s:wintype = s:get_wintype()
 
 function! s:format_title(bufnr, text) abort
   if empty(a:text) | return '' | endif
@@ -178,69 +179,77 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
   endif
 endfunction
 
-function! s:update_options(opts) abort
+" TODO: give this function a better name
+" @argument: opts, a floaterm local variable, will be stored as a `b:` variable
+" @return: options, generated from `opts`, has more additional info, used to
+"   config the floaterm style
+function! s:parse_options(opts) abort
   if !has_key(a:opts, 'width')
     let a:opts.width = g:floaterm_width
   endif
-
   if !has_key(a:opts, 'height')
     let a:opts.height = g:floaterm_height
   endif
-
   if !has_key(a:opts, 'wintype')
-    let a:opts.wintype = s:get_wintype()
+    let a:opts.wintype = s:wintype
   endif
-
   if !has_key(a:opts, 'position')
     let a:opts.position = g:floaterm_position
   endif
-
   if !has_key(a:opts, 'autoclose')
     let a:opts.autoclose = g:floaterm_autoclose
   endif
-
   if !has_key(a:opts, 'title')
     let a:opts.title = g:floaterm_title
   endif
-  return a:opts
+
+  " generate and return window configs based on a:opts
+  let configs = deepcopy(a:opts)
+
+  let width = configs.width
+  if type(width) == v:t_float | let width = width * &columns | endif
+  let configs.width = float2nr(width)
+
+  let height = configs.height
+  if type(height) == v:t_float | let height = height * (&lines - &cmdheight - 1) | endif
+  let configs.height = float2nr(height)
+
+  if configs.position == 'random'
+    let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
+    if s:wintype == 'normal'
+      let configs.position = ['top', 'right', 'bottom', 'left'][randnum % 4]
+    else
+      let configs.position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto'][randnum % 10]
+    endif
+  endif
+
+  let [row, col, anchor] = s:get_floatwin_pos(configs.width, configs.height, configs.position)
+  let configs['anchor'] = anchor
+  let configs['row'] = row
+  let configs['col'] = col
+  return configs
 endfunction
 
 function! floaterm#window#open(bufnr, opts) abort
-  let opts = s:update_options(a:opts)
-  let wintype = a:opts.wintype
-  let position = a:opts.position
-  let title = a:opts.title
-
-  " NOTE: these lines can not be moved into s:update_options() cause floaterm size
-  " should be resized dynamically according to the terminal-app's size
-  " See 'test/test_options/test_width_height.vader'
-  let width = opts.width
-  if type(width) == v:t_float | let width = width * &columns | endif
-  let width = float2nr(width)
-
-  let height = opts.height
-  if type(height) == v:t_float | let height = height * (&lines - &cmdheight - 1) | endif
-  let height = float2nr(height)
-
-  if wintype == 'floating'
-    let winid = floaterm#window#open_floating(a:bufnr, width, height, position, title)
-  elseif wintype == 'popup'
-    let winid = floaterm#window#open_popup(a:bufnr, width, height, position, title)
+  let configs = s:parse_options(a:opts)
+  if configs.wintype == 'floating'
+    let winid = floaterm#window#open_floating(a:bufnr, configs)
+  elseif configs.wintype == 'popup'
+    let winid = floaterm#window#open_popup(a:bufnr, configs)
   else
-    let winid = floaterm#window#open_split(a:bufnr, height, width, position)
+    let winid = floaterm#window#open_split(a:bufnr, configs)
   endif
   call s:on_floaterm_open(a:bufnr, winid, a:opts)
 endfunction
 
-function! floaterm#window#open_floating(bufnr, width, height, pos, title) abort
-  let [row, col, anchor] = s:get_floatwin_pos(a:width, a:height, a:pos)
+function! floaterm#window#open_floating(bufnr, options) abort
   let opts = {
     \ 'relative': 'editor',
-    \ 'anchor': anchor,
-    \ 'row': row,
-    \ 'col': col,
-    \ 'width': a:width,
-    \ 'height': a:height,
+    \ 'anchor': a:options.anchor,
+    \ 'row': a:options.row,
+    \ 'col': a:options.col,
+    \ 'width': a:options.width,
+    \ 'height': a:options.height,
     \ 'style':'minimal'
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, opts)
@@ -254,23 +263,22 @@ function! floaterm#window#open_floating(bufnr, width, height, pos, title) abort
   if s:winexists(border_winid)
     call nvim_win_close(border_winid, v:true)
   endif
-  let title = s:format_title(a:bufnr, a:title)
-  let options = s:get_border_winconfig(winid)
-  let border_winid = s:render_border(title, options)
+  let title = s:format_title(a:bufnr, a:options.title)
+  let border_opts = s:get_border_winconfig(winid)
+  let border_winid = s:render_border(title, border_opts)
   call setbufvar(a:bufnr, 'floatermborder_winid', border_winid)
   return winid
 endfunction
 
-function! floaterm#window#open_popup(bufnr, width, height, pos, title) abort
-  let [row, col, anchor] = s:get_floatwin_pos(a:width, a:height, a:pos)
+function! floaterm#window#open_popup(bufnr, options) abort
   let opts = {
-    \ 'pos': anchor,
-    \ 'line': row,
-    \ 'col': col,
-    \ 'maxwidth': a:width,
-    \ 'minwidth': a:width,
-    \ 'maxheight': a:height,
-    \ 'minheight': a:height,
+    \ 'pos': a:options.anchor,
+    \ 'line': a:options.row,
+    \ 'col': a:options.col,
+    \ 'maxwidth': a:options.width,
+    \ 'minwidth': a:options.width,
+    \ 'maxheight': a:options.height,
+    \ 'minheight': a:options.height,
     \ 'border': [1, 1, 1, 1],
     \ 'borderchars': g:floaterm_borderchars,
     \ 'borderhighlight': ['FloatermBorder'],
@@ -280,21 +288,21 @@ function! floaterm#window#open_popup(bufnr, width, height, pos, title) abort
 
   " vim will pad the end of title but not begin part
   " so we build the title as ' floaterm (idx/cnt)'
-  let opts.title = ' ' . s:format_title(a:bufnr, a:title)
+  let opts.title = ' ' . s:format_title(a:bufnr, a:options.title)
   let opts.zindex = len(floaterm#buflist#gather()) + 1
   let winid = popup_create(a:bufnr, opts)
   return winid
 endfunction
 
-function! floaterm#window#open_split(bufnr, height, width, pos) abort
-  if a:pos == 'top'
-    execute 'topleft' . a:height . 'split'
-  elseif a:pos == 'left'
-    execute 'topleft' . a:width . 'vsplit'
-  elseif a:pos == 'right'
-    execute 'botright' . a:width . 'vsplit'
+function! floaterm#window#open_split(bufnr, options) abort
+  if a:options.position == 'top'
+    execute 'topleft' . a:options.height . 'split'
+  elseif a:options.position == 'left'
+    execute 'topleft' . a:options.width . 'vsplit'
+  elseif a:options.position == 'right'
+    execute 'botright' . a:options.width . 'vsplit'
   else " default position: bottom
-    execute 'botright' . a:height . 'split'
+    execute 'botright' . a:options.height . 'split'
   endif
   execute 'buffer ' . a:bufnr
   return win_getid()

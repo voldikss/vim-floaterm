@@ -228,6 +228,9 @@ Type `String`. The position of the floating window. Available values:
   `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`,
   `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
+In addition, there is another option `'random'` which allows to pick a random
+option from above when (re)opening floaterm.
+
 #### **`g:floaterm_borderchars`**
 
 Type `List` of `String`. Characters of the floating window border.
