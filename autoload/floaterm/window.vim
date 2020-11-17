@@ -27,7 +27,6 @@ function! s:get_wintype() abort
     return g:floaterm_wintype
   endif
 endfunction
-let s:wintype = s:get_wintype()
 
 function! s:format_title(bufnr, text) abort
   if empty(a:text) | return '' | endif
@@ -191,7 +190,7 @@ function! s:parse_options(opts) abort
     let a:opts.height = g:floaterm_height
   endif
   if !has_key(a:opts, 'wintype')
-    let a:opts.wintype = s:wintype
+    let a:opts.wintype = s:get_wintype()
   endif
   if !has_key(a:opts, 'position')
     let a:opts.position = g:floaterm_position
@@ -216,7 +215,7 @@ function! s:parse_options(opts) abort
 
   if configs.position == 'random'
     let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
-    if s:wintype == 'normal'
+    if s:get_wintype() == 'normal'
       let configs.position = ['top', 'right', 'bottom', 'left'][randnum % 4]
     else
       let configs.position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto'][randnum % 10]
