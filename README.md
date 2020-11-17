@@ -7,31 +7,16 @@ Use (neo)vim terminal in the floating/popup window.
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Get started](#basic-usage)
+- [Get started](#get-started)
   - [Commands](#commands)
   - [Options](#options)
   - [Keymaps](#keymaps)
   - [Highlights](#highlights)
-- [Use with command line tools](#use-with-command-line-tools)
-  - [floaterm](#floaterm)
-  - [git](#git)
-  - [fzf](#fzf)
-  - [fff](#fff)
-  - [nnn](#nnn)
-  - [lf](#lf)
-  - [ranger](#ranger)
-  - [vifm](#vifm)
-  - [lazygit](#lazygit)
-  - [python](#python)
-- [Use with other plugins](#use-with-other-plugins)
-  - [vim-clap](#vim-clap)
-  - [denite.nvim](#denitenvim)
-  - [coc.nvim](#cocnvim)
-  - [fzf](#fzf)
-  - [LeaderF](#leaderf)
-  - [asynctasks.vim](#asynctasksvim)
-- [How to define more wrappers](#how-to-define-more-wrappers)
-- [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
+- [Advanced Topics](#advanced-topics)
+  - [Use with command line tools](#use-with-command-line-tools)
+  - [Use with other plugins](#use-with-other-plugins)
+  - [How to define more wrappers](#how-to-define-more-wrappers)
+  - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [Wiki](#wiki)
 - [F.A.Q](#faq)
 - [Breaking changes](#breaking-changes)
@@ -73,7 +58,7 @@ Plug 'voldikss/vim-floaterm'
 call dein#add('voldikss/vim-floaterm')
 ```
 
-## Basic Usage
+## Get Started
 
 Use `:FloatermNew` to open a terminal window, use `:FloatermToggle` to
 hide/reopen that. The filetype of the terminal buffer is `floaterm`.
@@ -376,12 +361,14 @@ hi FloatermNC guibg=gray
 
 ![](https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif)
 
-## Use with command line tools
+## Advanced Topics
+
+### Use with command line tools
 
 The following cases should work both in Vim and NeoVim unless otherwise
 specifically noted.
 
-### floaterm
+#### floaterm
 
 Normally if you run `vim/nvim somefile.txt` within the builtin terminal, you
 would get another nvim/vim instance running in the subprocess.
@@ -401,7 +388,7 @@ pip install neovim-remote
 
 ![](https://user-images.githubusercontent.com/20282795/91380257-27750280-e857-11ea-8d49-d760c009fee0.gif)
 
-### git
+#### git
 
 See `g:floaterm_gitcommit` option.
 
@@ -411,7 +398,7 @@ Execute `git commit` in the terminal window without starting a nested nvim.
 
 ![](https://user-images.githubusercontent.com/20282795/91380268-2cd24d00-e857-11ea-8dbd-d39a0bbb105e.gif)
 
-### fzf
+#### fzf
 
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim)
 for `fzf` command. So it can be used as a tiny fzf plugin.
@@ -424,7 +411,7 @@ command! FZF FloatermNew fzf
 
 ![](https://user-images.githubusercontent.com/20282795/91380264-2b088980-e857-11ea-80ff-062b3d3bbf12.gif)
 
-### fff
+#### fff
 
 There is also an [fff wrapper](./autoload/floaterm/wrapper/fff.vim)
 
@@ -436,7 +423,7 @@ command! FFF FloatermNew fff
 
 ![](https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif)
 
-### nnn
+#### nnn
 
 There is also an [nnn wrapper](./autoload/floaterm/wrapper/nnn.vim)
 
@@ -448,7 +435,7 @@ command! NNN FloatermNew nnn
 
 ![](https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif)
 
-### lf
+#### lf
 
 There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim)
 
@@ -460,7 +447,7 @@ command! LF FloatermNew lf
 
 ![](https://user-images.githubusercontent.com/20282795/91380274-3065d400-e857-11ea-86df-981adddc04c6.gif)
 
-### ranger
+#### ranger
 
 This plugin can also be a handy ranger plugin since it also has a [ranger wrapper](./autoload/floaterm/wrapper/ranger.vim)
 
@@ -472,7 +459,7 @@ command! Ranger FloatermNew ranger
 
 ![](https://user-images.githubusercontent.com/20282795/91380284-3360c480-e857-11ea-9966-34856592d487.gif)
 
-### vifm
+#### vifm
 
 There is also a [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
 
@@ -484,7 +471,7 @@ command! Vifm FloatermNew vifm
 
 ![](https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif)
 
-### lazygit
+#### lazygit
 
 Furthermore, you can also use other command-line programs, such as lazygit, htop, ncdu, etc.
 
@@ -492,7 +479,7 @@ Use `lazygit` for instance:
 
 ![](https://user-images.githubusercontent.com/20282795/74755376-0f239a00-52ae-11ea-9261-44d94abe5924.png)
 
-### python
+#### python
 
 Use `:FloatermNew python` to open a python shell. After that you can use `: FloatermSend` to send lines to the Python interactive shell.
 
@@ -500,9 +487,9 @@ This can also work for other languages which have interactive shells, such as lu
 
 ![](https://user-images.githubusercontent.com/20282795/91380286-352a8800-e857-11ea-800c-ac54efa7dd72.gif)
 
-## Use with other plugins
+### Use with other plugins
 
-### [vim-clap](https://github.com/liuchengxu/vim-clap)
+#### [vim-clap](https://github.com/liuchengxu/vim-clap)
 
 Use vim-clap to switch/preview floating terminal buffers.
 
@@ -510,7 +497,7 @@ Try `:Clap floaterm`
 
 ![](https://user-images.githubusercontent.com/20282795/91380243-217f2180-e857-11ea-9f64-46e8676adc11.gif)
 
-### [denite.nvim](https://github.com/Shougo/denite.nvim)
+#### [denite.nvim](https://github.com/Shougo/denite.nvim)
 
 Use denite to switch/preview/open floating terminal buffers.
 
@@ -518,7 +505,7 @@ Try `:Denite floaterm`
 
 ![](https://user-images.githubusercontent.com/1239245/73604753-17ef4d00-45d9-11ea-967f-ef75927e2beb.gif)
 
-### [coc.nvim](https://github.com/neoclide/coc.nvim)
+#### [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 Use CocList to switch/preview/open floating terminal buffers.
 
@@ -526,15 +513,15 @@ Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocLi
 
 ![](https://user-images.githubusercontent.com/20282795/91380254-25ab3f00-e857-11ea-9733-d0ae5a954848.gif)
 
-### [fzf](https://github.com/junegunn/fzf)
+#### [fzf](https://github.com/junegunn/fzf)
 
 Install [fzf-floaterm](https://github.com/voldikss/fzf-floaterm) and try `:Floaterms`
 
-### [LeaderF](https://github.com/Yggdroot/LeaderF)
+#### [LeaderF](https://github.com/Yggdroot/LeaderF)
 
 Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try `:Leaderf floaterm`
 
-### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
+#### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/).
 To use it, copy the following code to your `vimrc` set `g:asynctasks_term_pos`
@@ -563,7 +550,7 @@ let g:asyncrun_runner.floaterm = function('s:runner_proc')
 Then your task will be ran in the floaterm instance. See asynctasks.vim
 [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
 
-## How to define more wrappers
+### How to define more wrappers
 
 Once you've find a nice command line program which can be used as a wrapper of
 this plugin, you can either send me a PR or define a personal wrapper for
@@ -619,7 +606,7 @@ There are two ways for a command to be spawned:
   exits and the filepath will be written in `/tmp/atmpfilename`. Then the
   function `s:fzf_callback()` will be invoked to open the file.
 
-## How to write sources for fuzzy finder plugins
+### How to write sources for fuzzy finder plugins
 
 Function `floaterm#buflist#gather()` returns a list contains all the floaterm buffers.
 
@@ -653,7 +640,7 @@ The same goes for reporting issues or feature requests.
 - [coc-floaterm](https://github.com/voldikss/coc-floaterm)
 - [fzf-floaterm](https://github.com/voldikss/fzf-floaterm)
 - [popc-floaterm](https://github.com/yehuohan/popc-floaterm)
-- [Leader-floaterm](https://github.com/voldikss/LeaderF-floaterm)
+- [Leaderf-floaterm](https://github.com/voldikss/LeaderF-floaterm)
 
 ## Credits
 
