@@ -537,14 +537,25 @@ function! s:runner_proc(opts)
   let cmd = 'cd ' . shellescape(getcwd())
   call floaterm#terminal#send(curr_bufnr, [cmd])
   call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
+  " Back to normal mode
   stopinsert
-  if &filetype == 'floaterm' && g:floaterm_autoinsert
-    call floaterm#util#startinsert()
-  endif
 endfunction
 
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
 let g:asyncrun_runner.floaterm = function('s:runner_proc')
+```
+
+Another version: run code in floaterm window, close it when cursor moves.
+You can customize the floaterm style by yourself.
+
+```vim
+function! s:runner_proc(opts)
+  let cwd = getcwd()
+  let cmd = 'cd ' . shellescape(cwd) . ' && ' . a:opts.cmd
+  execute 'FloatermNew --position=topright --title=asyncrun_runner_floaterm --autoclose=0 ' . cmd
+  " Back to normal mode
+  stopinsert
+endfunction
 ```
 
 Then your task will be ran in the floaterm instance. See asynctasks.vim
