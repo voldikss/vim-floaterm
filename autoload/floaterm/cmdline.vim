@@ -46,71 +46,87 @@ endfunction
 " ----------------------------------------------------------------------------
 " used for `:FloatermNew` and `:FloatermUpdate`
 " ----------------------------------------------------------------------------
+let s:shellcmds = []
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
-  let opts_key = [
-    \'--name=',
-    \'--height=',
-    \'--width=',
-    \'--title=',
-    \'--wintype=',
-    \'--position=',
-    \'--autoclose=',
-    \]
-  if a:cmd_line =~ '^FloatermNew'
-    let candidates = opts_key + sort(getcompletion('', 'shellcmd'))
-  elseif a:cmd_line =~ '^FloatermUpdate'
-    let candidates = opts_key
-  endif
+  let options = [
+    \ '--name=',
+    \ '--width=',
+    \ '--height=',
+    \ '--title=',
+    \ '--wintype=',
+    \ '--position=',
+    \ '--autoclose=',
+    \ ]
 
   let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
   let args = split(cmd_line_before_cursor, '\v\\@<!(\\\\)*\zs\s+', 1)
   call remove(args, 0)
 
-  for key in opts_key
+  for key in deepcopy(options)
     if match(cmd_line_before_cursor, key) != -1
-      let idx = index(candidates, key)
-      call remove(candidates, idx)
+      call remove(options, index(options, key))
     endif
   endfor
 
-  let prefix = args[-1]
-
-  if prefix ==# ''
-    return candidates
-  endif
-
-  if match(prefix, '--wintype=') > -1
+  if match(a:arg_lead, '--wintype=') > -1
     if has('nvim')
       let vals = ['normal', 'floating']
     else
       let vals = ['normal', 'popup']
     endif
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
-  elseif match(prefix, '--position=') > -1
+  elseif match(a:arg_lead, '--position=') > -1
     let vals = [
-      \'top',
-      \'right',
-      \'bottom',
-      \'left',
-      \'center',
-      \'topleft',
-      \'topright',
-      \'bottomleft',
-      \'bottomright',
-      \'auto',
-      \]
+      \ 'top',
+      \ 'right',
+      \ 'bottom',
+      \ 'left',
+      \ 'center',
+      \ 'topleft',
+      \ 'topright',
+      \ 'bottomleft',
+      \ 'bottomright',
+      \ 'auto',
+      \ ]
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
-  elseif match(prefix, '--autoclose') > -1
+  elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
+  elseif match(a:arg_lead, '--name=') > -1
+    return []
+  elseif match(a:arg_lead, '--width=') > -1
+    return []
+  elseif match(a:arg_lead, '--height=') > -1
+    return []
+  elseif match(a:arg_lead, '--title=') > -1
+    return []
+  " The dash absolutely comes belongs to the `options` instead of executable
+  " commands(e.g. `nvim-qt.exe`). It comes from the `a:arg_lead` which is
+  " generated from split of `cmd_line_before_cursor`. So if `a:arg_lead` matches 1
+  " or 2 dash, the user wants to complete options.
+  elseif match(a:arg_lead, '--\=') > -1
+    return options
+  else
+    if a:cmd_line =~ '^FloatermNew'
+      if empty(s:shellcmds)
+        let s:shellcmds = sort(getcompletion('', 'shellcmd'))
+      endif
+      let candidates = options + s:shellcmds
+    elseif a:cmd_line =~ '^FloatermUpdate'
+      let candidates = options
+    endif
+    if a:arg_lead == ''
+      return candidates
+    endif
   endif
-  return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
+  " return filter(candidates, {_, val -> val[:len(a:arg_lead) - 1] == a:arg_lead})
+  return filter(candidates, 'v:val[:len(a:arg_lead) - 1] == a:arg_lead')
 endfunction
 
 " ----------------------------------------------------------------------------
 " used for `:FloatermToggle`, `:FloatermHide`, `:FloatermShow`, `:FloatermKill`
 " ----------------------------------------------------------------------------
-function! floaterm#cmdline#floaterm_names(...) abort
+function! floaterm#cmdline#complete_names1(...) abort
   let buflist = floaterm#buflist#gather()
   let ret = []
   for bufnr in buflist
@@ -128,7 +144,7 @@ endfunction
 " ----------------------------------------------------------------------------
 " used for `:FloatermSend`
 " ----------------------------------------------------------------------------
-function! floaterm#cmdline#floaterm_names2(arg_lead, cmd_line, cursor_pos) abort
+function! floaterm#cmdline#complete_names2(arg_lead, cmd_line, cursor_pos) abort
   let candidates = ['--name=']
   let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
   let args = split(cmd_line_before_cursor, '\v\\@<!(\\\\)*\zs\s+', 1)
@@ -138,14 +154,13 @@ function! floaterm#cmdline#floaterm_names2(arg_lead, cmd_line, cursor_pos) abort
     let candidates = []
   endif
 
-  let prefix = args[-1]
-  if prefix ==# ''
+  if a:arg_lead == ''
     return candidates
   endif
 
-  if match(prefix, '--name=') > -1
-    let names = floaterm#cmdline#floaterm_names()
+  if match(a:arg_lead, '--name=') > -1
+    let names = floaterm#cmdline#complete_names1()
     let candidates = map(names, {idx -> '--name=' . names[idx]})
   endif
-  return filter(candidates, 'v:val[:len(prefix) - 1] ==# prefix')
+  return filter(candidates, 'v:val[:len(a:arg_lead) - 1] == a:arg_lead')
 endfunction

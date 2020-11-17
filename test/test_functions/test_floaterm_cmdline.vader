@@ -1,5 +1,26 @@
 " vim:ft=vim
 
+Before(Define universal function used to test command completion):
+  function! CmdlineCompleteTestWrapperFunc(command, expected, handler) abort
+    let commands = split(a:command)
+    let arg_lead = commands[0] == commands[-1] ? '' : commands[-1]
+    let command = a:command
+    let cursor_pos = len(a:command)
+    let result = a:handler(arg_lead, command, cursor_pos)
+    let passed = v:true
+    for item in a:expected
+      if index(result, item) < 0
+        Log printf('Command:  `:%s`', a:command)
+        Log printf('Expected: %s', string(a:expected))
+        Log printf("Actual:   %s", result)
+        Log printf("Error:    `%s` doesn't match", item)
+        let passed = v:false
+        break
+      endif
+    endfor
+    Assert passed
+  endfunction
+
 Execute(Test floaterm#cmdline#parse):
   let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
   let [cmd, opts] = floaterm#cmdline#parse(split(argstr))
@@ -65,23 +86,51 @@ Execute(Test floaterm#cmdline#parse expand feature):
   silent !rm test.txt
 
 Execute(Test floaterm#cmdline#complete):
-  AssertEqual [
+  function! Test__floaterm_cmdline_complete(command, expected)
+    call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete'))
+  endfunction
+  call Test__floaterm_cmdline_complete('FloatermNew ', [
     \'--name=',
-    \'--height=',
     \'--width=',
+    \'--height=',
     \'--title=',
     \'--wintype=',
     \'--position=',
     \'--autoclose=',
-    \], floaterm#cmdline#complete(v:null, 'FloatermNew ', 12)[:6]
-  AssertEqual [
+    \'nvim'
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew nv', ['nvim'])
+  call Test__floaterm_cmdline_complete('FloatermNew -', [
+    \'--name=',
+    \'--width=',
+    \'--height=',
+    \'--title=',
+    \'--wintype=',
+    \'--position=',
+    \'--autoclose='
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew --', [
+    \'--name=',
+    \'--width=',
+    \'--height=',
+    \'--title=',
+    \'--wintype=',
+    \'--position=',
+    \'--autoclose='
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew --n', ['--name='])
+  call Test__floaterm_cmdline_complete('FloatermNew --name=', [])
+  call Test__floaterm_cmdline_complete('FloatermNew --width=', [])
+  call Test__floaterm_cmdline_complete('FloatermNew --height=', [])
+  call Test__floaterm_cmdline_complete('FloatermNew --title=', [])
+  call Test__floaterm_cmdline_complete('FloatermNew --wintype=', [
     \'--wintype=normal',
     \'--wintype=floating'
-    \], floaterm#cmdline#complete(v:null, 'FloatermNew --wintype=', 22)
-  AssertEqual [
-    \'--wintype=normal',
-    \], floaterm#cmdline#complete(v:null, 'FloatermNew --wintype=n', 23)
-  AssertEqual [
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew --wintype=n', [
+    \'--wintype=normal'
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew --position=', [
     \'--position=top',
     \'--position=right',
     \'--position=bottom',
@@ -91,36 +140,47 @@ Execute(Test floaterm#cmdline#complete):
     \'--position=topright',
     \'--position=bottomleft',
     \'--position=bottomright',
-    \'--position=auto',
-    \], floaterm#cmdline#complete(v:null, 'FloatermNew --position=', 23)
-  AssertEqual [
+    \'--position=auto'
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew --position=t', [
     \'--position=top',
     \'--position=topleft',
-    \'--position=topright',
-    \], floaterm#cmdline#complete(v:null, 'FloatermNew --position=t', 24)
-  AssertEqual [
+    \'--position=topright'
+    \])
+  call Test__floaterm_cmdline_complete('FloatermUpdate ', [
     \'--name=',
-    \'--height=',
     \'--width=',
+    \'--height=',
     \'--title=',
     \'--wintype=',
     \'--position=',
-    \'--autoclose=',
-    \], floaterm#cmdline#complete(v:null, 'FloatermUpdate ', 15)
-
-Execute(Test floaterm#cmdline#floaterm_names):
-  FloatermNew --name=floaterm1
-  AssertEqual ['floaterm1'], floaterm#cmdline#floaterm_names()
-
-Execute(Test floaterm#cmdline#floaterm_names2):
-  FloatermNew --name=floaterm2
-  AssertEqual [
+    \'--autoclose='
+    \])
+  call Test__floaterm_cmdline_complete('FloatermUpdate -', [
     \'--name=',
-    \], floaterm#cmdline#floaterm_names2(v:null, 'FloatermSend ', 13)
-  AssertEqual [
-    \'--name=floaterm1',
-    \'--name=floaterm2',
-    \], floaterm#cmdline#floaterm_names2(v:null, 'FloatermSend --name=', 20)
+    \'--width=',
+    \'--height=',
+    \'--title=',
+    \'--wintype=',
+    \'--position=',
+    \'--autoclose='
+    \])
+
+Execute(Test floaterm#cmdline#complete_names1):
+  FloatermNew --name=floaterm1
+  function! Test__floaterm_cmdline_complete_names1(command, expected)
+    call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete_names1'))
+  endfunction
+  call Test__floaterm_cmdline_complete_names1('abc', ['floaterm1'])
+
+Execute(Test floaterm#cmdline#complete_names2):
+  FloatermNew --name=floaterm2
+  function! Test__floaterm_cmdline_complete_names2(command, expected)
+    call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete_names2'))
+  endfunction
+  call Test__floaterm_cmdline_complete_names2('FloatermUpdate -', ['--name='])
+  call Test__floaterm_cmdline_complete_names2('FloatermSend ', ['--name='])
+  call Test__floaterm_cmdline_complete_names2('FloatermSend --name=', ['--name=floaterm1', '--name=floaterm2'])
 
 Execute(Exit):
   stopinsert
