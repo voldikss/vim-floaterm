@@ -32,3 +32,4 @@ Execute (Exit):
   FloatermKill!
   stopinsert
   sleep 100m
+  call feedkeys('\<CR>')
