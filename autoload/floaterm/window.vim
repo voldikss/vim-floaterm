@@ -95,6 +95,14 @@ function! s:render_border(title, options) abort
   return border_winid
 endfunction
 
+function! s:hide_border(bufnr, ...) abort
+  let winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
+  if winid != v:null && s:winexists(winid)
+    call nvim_win_close(winid, v:true)
+  endif
+  call setbufvar(a:bufnr, 'floatermborder_winid', -1)
+endfunction
+
 function! s:get_floatwin_pos(width, height, pos) abort
   if a:pos == 'topright'
     let row = 2
@@ -174,7 +182,7 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
-    execute 'autocmd BufHidden <buffer=' . a:bufnr . '> ++once call floaterm#window#hide_floaterm_border(' . a:bufnr . ')'
+    execute 'autocmd BufHidden <buffer=' . a:bufnr . '> ++once call s:hide_border(' . a:bufnr . ')'
   endif
 endfunction
 
@@ -229,19 +237,7 @@ function! s:parse_options(opts) abort
   return configs
 endfunction
 
-function! floaterm#window#open(bufnr, opts) abort
-  let configs = s:parse_options(a:opts)
-  if configs.wintype == 'floating'
-    let winid = floaterm#window#open_floating(a:bufnr, configs)
-  elseif configs.wintype == 'popup'
-    let winid = floaterm#window#open_popup(a:bufnr, configs)
-  else
-    let winid = floaterm#window#open_split(a:bufnr, configs)
-  endif
-  call s:on_floaterm_open(a:bufnr, winid, a:opts)
-endfunction
-
-function! floaterm#window#open_floating(bufnr, options) abort
+function! s:open_float(bufnr, options) abort
   let opts = {
     \ 'relative': 'editor',
     \ 'anchor': a:options.anchor,
@@ -269,7 +265,7 @@ function! floaterm#window#open_floating(bufnr, options) abort
   return winid
 endfunction
 
-function! floaterm#window#open_popup(bufnr, options) abort
+function! s:open_popup(bufnr, options) abort
   let opts = {
     \ 'pos': a:options.anchor,
     \ 'line': a:options.row,
@@ -293,7 +289,7 @@ function! floaterm#window#open_popup(bufnr, options) abort
   return winid
 endfunction
 
-function! floaterm#window#open_split(bufnr, options) abort
+function! s:open_split(bufnr, options) abort
   if a:options.position == 'top'
     execute 'topleft' . a:options.height . 'split'
   elseif a:options.position == 'left'
@@ -307,12 +303,16 @@ function! floaterm#window#open_split(bufnr, options) abort
   return win_getid()
 endfunction
 
-function! floaterm#window#hide_floaterm_border(bufnr, ...) abort
-  let winid = getbufvar(a:bufnr, 'floatermborder_winid', -1)
-  if winid != v:null && s:winexists(winid)
-    call nvim_win_close(winid, v:true)
+function! floaterm#window#open(bufnr, opts) abort
+  let configs = s:parse_options(a:opts)
+  if configs.wintype == 'floating'
+    let winid = s:open_float(a:bufnr, configs)
+  elseif configs.wintype == 'popup'
+    let winid = s:open_popup(a:bufnr, configs)
+  else
+    let winid = s:open_split(a:bufnr, configs)
   endif
-  call setbufvar(a:bufnr, 'floatermborder_winid', -1)
+  call s:on_floaterm_open(a:bufnr, winid, a:opts)
 endfunction
 
 function! floaterm#window#hide_floaterm(bufnr) abort
