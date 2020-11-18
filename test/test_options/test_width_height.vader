@@ -28,7 +28,7 @@ Execute(Restore `&columns`):
   let &columns = columns_origin
 
 Execute(Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

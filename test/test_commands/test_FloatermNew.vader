@@ -15,7 +15,7 @@ Execute(FloatermNew with arguments):
   AssertEqual 'floaterm', &filetype
 
 Execute (Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

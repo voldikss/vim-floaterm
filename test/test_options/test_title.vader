@@ -14,7 +14,7 @@ Execute(Set g:floaterm_title):
   Assert GetTitleLine(b:floatermborder_winid) =~ '┌─*┐'
 
 Execute(Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

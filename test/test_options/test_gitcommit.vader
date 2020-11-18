@@ -19,7 +19,7 @@ Execute(FloatermNew git commit --amend):
   silent execute printf('!cd %s && rm afile && git add afile', pwd)
 
 Execute (Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

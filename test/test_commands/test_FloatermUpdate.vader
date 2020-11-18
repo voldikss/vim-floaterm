@@ -6,7 +6,7 @@ Execute(FloatermUpdate):
   AssertEqual 'ft', b:floaterm_opts['name']
 
 Execute (Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

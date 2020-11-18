@@ -184,7 +184,7 @@ Execute(Test floaterm#cmdline#complete_names2):
   call Test__floaterm_cmdline_complete_names2('FloatermSend --name=', ['--name=floaterm1', '--name=floaterm2'])
 
 Execute(Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

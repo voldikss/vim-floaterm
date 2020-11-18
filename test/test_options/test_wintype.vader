@@ -20,7 +20,7 @@ Execute(Test2):
   AssertEqual 0,IsFloating(win_getid())
 
 Execute(Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

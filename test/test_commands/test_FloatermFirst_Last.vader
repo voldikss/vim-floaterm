@@ -30,6 +30,6 @@ Execute(kill the last floaterm and execute `:FloatermLast`):
 
 Execute (Exit):
   FloatermKill!
-  stopinsert
+  call feedkeys("\<Esc>")
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

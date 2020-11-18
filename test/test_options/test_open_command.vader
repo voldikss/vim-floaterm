@@ -33,7 +33,7 @@ Execute(FloatermNew cat ../../LICENSE | floaterm):
   silent !rm test.txt
 
 Execute (Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

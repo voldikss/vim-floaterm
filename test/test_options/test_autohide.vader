@@ -76,7 +76,7 @@ Execute(FloatermNew && FloatermPrev && FloatermNext: both floaterms should alway
   AssertNotEqual -1,bufwinnr(buffer2)
 
 Execute (Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")

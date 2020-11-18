@@ -20,7 +20,7 @@ Execute(Set autoinsert to 1):
   " AssertEqual 'i',mode()
 
 Execute (Exit):
-  stopinsert
+  call feedkeys("\<Esc>")
   FloatermKill!
   sleep 100m
-  call feedkeys('\<CR>')
+  call feedkeys("\<CR>")
