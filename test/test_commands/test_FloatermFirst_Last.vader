@@ -29,7 +29,7 @@ Execute(kill the last floaterm and execute `:FloatermLast`):
   AssertEqual bufnr3, bufnr()
 
 Execute (Exit):
-  FloatermKill!
   call feedkeys("\<Esc>")
+  FloatermKill!
   sleep 100m
   call feedkeys("\<CR>")

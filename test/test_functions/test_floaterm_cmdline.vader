@@ -7,18 +7,12 @@ Before(Define universal function used to test command completion):
     let command = a:command
     let cursor_pos = len(a:command)
     let result = a:handler(arg_lead, command, cursor_pos)
-    let passed = v:true
-    for item in a:expected
-      if index(result, item) < 0
-        Log printf('Command:  `:%s`', a:command)
-        Log printf('Expected: %s', string(a:expected))
-        Log printf("Actual:   %s", result)
-        Log printf("Error:    `%s` doesn't match", item)
-        let passed = v:false
-        break
-      endif
-    endfor
-    Assert passed
+    if a:expected != result
+      Log printf('Command:  `:%s`', a:command)
+      Log printf('Expected: %s', string(a:expected))
+      Log printf("Actual:   %s", result)
+    endif
+    AssertEqual a:expected, result
   endfunction
 
 Execute(Test floaterm#cmdline#parse):
@@ -89,6 +83,7 @@ Execute(Test floaterm#cmdline#complete):
   function! Test__floaterm_cmdline_complete(command, expected)
     call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete'))
   endfunction
+  let shellcmds = sort(getcompletion('', 'shellcmd'))
   call Test__floaterm_cmdline_complete('FloatermNew ', [
     \'--name=',
     \'--width=',
@@ -97,9 +92,8 @@ Execute(Test floaterm#cmdline#complete):
     \'--wintype=',
     \'--position=',
     \'--autoclose=',
-    \'nvim'
-    \])
-  call Test__floaterm_cmdline_complete('FloatermNew nv', ['nvim'])
+    \] + shellcmds)
+  call Test__floaterm_cmdline_complete('FloatermNew nv', filter(shellcmds, {_, val -> val =~ '^nv.*$'}))
   call Test__floaterm_cmdline_complete('FloatermNew -', [
     \'--name=',
     \'--width=',
@@ -168,13 +162,15 @@ Execute(Test floaterm#cmdline#complete):
     \])
 
 Execute(Test floaterm#cmdline#complete_names1):
-  FloatermNew --name=floaterm1
+  FloatermNew --name=floaterm
   function! Test__floaterm_cmdline_complete_names1(command, expected)
     call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete_names1'))
   endfunction
-  call Test__floaterm_cmdline_complete_names1('abc', ['floaterm1'])
+  call Test__floaterm_cmdline_complete_names1('abc', ['floaterm'])
+  FloatermKill!
 
 Execute(Test floaterm#cmdline#complete_names2):
+  FloatermNew --name=floaterm1
   FloatermNew --name=floaterm2
   function! Test__floaterm_cmdline_complete_names2(command, expected)
     call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete_names2'))
@@ -182,6 +178,7 @@ Execute(Test floaterm#cmdline#complete_names2):
   call Test__floaterm_cmdline_complete_names2('FloatermUpdate -', ['--name='])
   call Test__floaterm_cmdline_complete_names2('FloatermSend ', ['--name='])
   call Test__floaterm_cmdline_complete_names2('FloatermSend --name=', ['--name=floaterm1', '--name=floaterm2'])
+  FloatermKill!
 
 Execute(Exit):
   call feedkeys("\<Esc>")
