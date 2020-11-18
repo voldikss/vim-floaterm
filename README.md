@@ -36,6 +36,7 @@ Use (neo)vim terminal in the floating/popup window.
 - Autocompletion from within floaterms(require [coc.nvim](https://github.com/neoclide/coc.nvim)
   or [deoplete.nvim](https://github.com/Shougo/deoplete.nvim))
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
+  or [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)
 
 ## Requirements
 
@@ -518,9 +519,9 @@ Install [fzf-floaterm](https://github.com/voldikss/fzf-floaterm) and try `:Float
 
 Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try `:Leaderf floaterm`
 
-#### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
+#### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim) | [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)
 
-This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/).
+This plugin can be a runner for asynctasks.vim or asyncrun.vim.
 To use it, put the following code in your `vimrc`.
 
 ```vim
@@ -542,7 +543,6 @@ let g:asynctasks_term_pos = 'floaterm'
 ```
 
 Another version: run code in floaterm window, close it when cursor moves.
-You can customize the floaterm style by yourself.
 
 ```vim
 function! s:run_floaterm(opts)
@@ -557,7 +557,7 @@ endfunction
 Then your task will be run in the floaterm instance. See asynctasks.vim
 [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
 
-You can also modify `s: run_floaterm` by yourself to meet your tastes, which
+You can also modify the code in `s: run_floaterm` by yourself to meet your tastes, which
 is the reason why this runner is not made builtin.
 
 ### How to define more wrappers
