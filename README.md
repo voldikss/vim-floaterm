@@ -521,10 +521,7 @@ Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try
 #### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/).
-To use it, use the following code in your `vimrc`.
-
-You can also modify `s: run_floaterm` by yourself to meet your tastes, which
-is the reason why this is not made builtin.
+To use it, put the following code in your `vimrc`.
 
 ```vim
 function! s:run_floaterm(opts)
@@ -557,8 +554,11 @@ function! s:run_floaterm(opts)
 endfunction
 ```
 
-Then your task will be ran in the floaterm instance. See asynctasks.vim
+Then your task will be run in the floaterm instance. See asynctasks.vim
 [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
+
+You can also modify `s: run_floaterm` by yourself to meet your tastes, which
+is the reason why this runner is not made builtin.
 
 ### How to define more wrappers
 
