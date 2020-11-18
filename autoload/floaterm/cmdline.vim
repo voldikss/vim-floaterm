@@ -101,9 +101,8 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--title=') > -1
     return []
   " The dash absolutely comes belongs to the `options` instead of executable
-  " commands(e.g. `nvim-qt.exe`). It comes from the `a:arg_lead` which is
-  " generated from split of `cmd_line_before_cursor`. So if `a:arg_lead` matches 1
-  " or 2 dash, the user wants to complete options.
+  " commands(e.g. `nvim-qt.exe`). So if `a:arg_lead` matches 1 or 2 dash, the
+  " user wants to complete options.
   elseif match(a:arg_lead, '--\=$') > -1
     return options
   else

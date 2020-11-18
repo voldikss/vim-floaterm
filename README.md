@@ -18,18 +18,17 @@ Use (neo)vim terminal in the floating/popup window.
   - [How to define more wrappers](#how-to-define-more-wrappers)
   - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [Wiki](#wiki)
-- [F.A.Q](#faq)
+- [FAQ](#faq)
 - [Breaking changes](#breaking-changes)
-- [Feedback](#feedback)
 - [Related projects](#related-projects)
 - [Credits](#credits)
 - [License](#license)
 
 ## Features
 
-- Support neovim floatwin and vim8 popupwin feature
+- Support neovim floatwin and vim8 popupwin
 - Manage multiple terminal instances
-- Customizable floating terminal style
+- Customizable terminal window style
 - Switch/preview floating terminal buffers using fuzzy-finder plugins such as
   [denite.nvim](https://github.com/Shougo/denite.nvim) or
   [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
@@ -174,8 +173,8 @@ Type `String`. Show floaterm info(e.g., `'floaterm: 1/3'` implies there are 3
 floaterms in total and the current is the first one) at the top left corner of
 floaterm window.
 
-Default: `'floaterm: $1/$2'`(`$1` and `$2` will be replaced by 'the index of
-the current floaterm' and 'total floaterms count' respectively)
+Default: `'floaterm: $1/$2'`(`$1` and `$2` will be substituted by 'the index of
+the current floaterm' and 'the count of all floaterms' respectively)
 
 Example: `'floaterm($1|$2)'`
 
@@ -214,7 +213,7 @@ Type `String`. The position of the floating window. Available values:
   `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
 
 In addition, there is another option `'random'` which allows to pick a random
-option from above when (re)opening floaterm.
+position from above when (re)opening a floaterm window.
 
 #### **`g:floaterm_borderchars`**
 
@@ -283,7 +282,7 @@ Default value: `{'shortcut': 'floaterm', 'priority': 5, 'filter_length': [5, 20]
 
 ### Keymaps
 
-This plugin doesn't supply any default mappings. The following is a configuration example.
+This plugin doesn't supply any default mappings. Here are the configuration examples.
 
 ```vim
 " Configuration example
@@ -296,7 +295,7 @@ let g:floaterm_keymap_toggle = '<F12>'
 You can also use other keys as shown below:
 
 ```vim
-let g:floaterm_keymap_new = '<Leader>fn'
+let g:floaterm_keymap_new = '<Leader>ft'
 ```
 
 All options for the mappings are listed below:
@@ -311,11 +310,10 @@ All options for the mappings are listed below:
 - `g:floaterm_keymap_kill`
 - `g:floaterm_keymap_toggle`
 
-Note that this key mapping is installed from the [plugin](./plugin) directory,
-so if you are using on-demand loading feature provided by some plugin-managers, the keymap
-above won't take effect(`:help load-plugins`). Then you have to define the key
-bindings yourself by putting the code used to define the key bindings in your
-`vimrc`. For example,
+Note that the key mappings are set from the [plugin/floaterm.vim](./plugin/floaterm.vim),
+so if you are using on-demand loading feature provided by some plugin-managers,
+the keymap above won't take effect(`:help load-plugins`). Then you have to
+define the key bindings by yourself. For example,
 
 ```vim
 nnoremap   <silent>   <F7>    :FloatermNew<CR>
@@ -330,12 +328,11 @@ tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 
 ### Highlights
 
-This plugin provides two `highlight-groups` to specify the
-background/foreground color of floaterm (also the border color if `g: floaterm_wintype` is `'floating'` or `'popup'`) window.
+There are two `highlight-groups` to specify the color of floaterm (also the
+border color if `g: floaterm_wintype` is `'floating'` or `'popup'`) window.
 
-By default, they are both linked to `Normal`(see [detail]
-(./plugin/floaterm.vim)). To customize, use `hi` command together with the
-colors you prefer.
+By default, they are both linked to `Normal`. To customize, use `hi` command
+together with the colors you prefer.
 
 ```vim
 " Configuration example
@@ -524,12 +521,13 @@ Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try
 #### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
 
 This plugin can be a runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim/).
-To use it, copy the following code to your `vimrc` set `g:asynctasks_term_pos`
-to `"floaterm"` or add a `"pos=floaterm"` filed in your asynctasks
-configuration files.
+To use it, use the following code in your `vimrc`.
+
+You can also modify `s: run_floaterm` by yourself to meet your tastes, which
+is the reason why this is not made builtin.
 
 ```vim
-function! s:runner_proc(opts)
+function! s:run_floaterm(opts)
   let curr_bufnr = floaterm#curr()
   if has_key(a:opts, 'silent') && a:opts.silent == 1
     FloatermHide!
@@ -537,24 +535,25 @@ function! s:runner_proc(opts)
   let cmd = 'cd ' . shellescape(getcwd())
   call floaterm#terminal#send(curr_bufnr, [cmd])
   call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
-  " Back to normal mode
+  " Back to the normal mode
   stopinsert
 endfunction
 
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
-let g:asyncrun_runner.floaterm = function('s:runner_proc')
+let g:asyncrun_runner.floaterm = function('s:run_floaterm')
+let g:asynctasks_term_pos = 'floaterm'
 ```
 
 Another version: run code in floaterm window, close it when cursor moves.
 You can customize the floaterm style by yourself.
 
 ```vim
-function! s:runner_proc(opts)
+function! s:run_floaterm(opts)
   let cwd = getcwd()
   let cmd = 'cd ' . shellescape(cwd) . ' && ' . a:opts.cmd
-  execute 'FloatermNew --position=topright --title=asyncrun_runner_floaterm --autoclose=0 ' . cmd
-  " Back to normal mode
-  stopinsert
+  execute 'FloatermNew --position=topright --height=0.4 --width=0.5 --title=floaterm_runner --autoclose=0 ' . cmd
+  " Back to the normal mode
+  " stopinsert
 endfunction
 ```
 
@@ -562,10 +561,6 @@ Then your task will be ran in the floaterm instance. See asynctasks.vim
 [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
 
 ### How to define more wrappers
-
-Once you've find a nice command line program which can be used as a wrapper of
-this plugin, you can either send me a PR or define a personal wrapper for
-yourself.
 
 The wrapper script must be located in `autoload/floaterm/wrapper/` directory, e.g., `autoload/floaterm/wrapper/fzf.vim`.
 
@@ -629,21 +624,13 @@ For reference, see [floaterm source for vim-clap](./autoload/clap/provider/float
 
 https://github.com/voldikss/vim-floaterm/wiki
 
-## F.A.Q
+## FAQ
 
 https://github.com/voldikss/vim-floaterm/issues?q=label%3AFAQ
 
 ## Breaking Changes
 
 https://github.com/voldikss/vim-floaterm/issues?q=label%3A%22breaking+change%22
-
-## Feedback
-
-If you like this plugin, please star it or sponsor the project.
-
-It's a great way of getting feedback.
-
-The same goes for reporting issues or feature requests.
 
 ## Related projects
 
@@ -659,9 +646,6 @@ The same goes for reporting issues or feature requests.
   from [vim-terminal-help](https://github.com/skywind3000/vim-terminal-help/blob/master/tools/utils/drop)
 
 - Some features require [neovim-remote](https://github.com/mhinz/neovim-remote)
-
-- Become a [contributor](https://github.com/voldikss/vim-floaterm/graphs/contributors) of this project, or
-  even help improve this documentation(correct some grammar mistakes).
 
 ## License
 
