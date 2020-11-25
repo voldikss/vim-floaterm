@@ -43,7 +43,7 @@ function! s:get_border_winconfig(winid) abort
   let options = nvim_win_get_config(a:winid)
 
   " After offsetting optration, if border window is over the top of the
-  " editor, i.e., it's row becomes negative To avoid the window overflow,
+  " editor, i.e., its row becomes negative To avoid the window overflow,
   " reset the vertical position of **floaterm window**
   let options.row -= (options.anchor[0] == 'N' ? 1 : -1)
   if options.row < 0

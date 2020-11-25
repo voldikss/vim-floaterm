@@ -81,9 +81,12 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or `: FloatermPrev`
   - `position` see `g:floaterm_position`
   - `autoclose` close the window after finishing job, see `g:floaterm_autoclose`
 - Use `<TAB>` to get completion.
-- The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
-  will be auto-expanded, to get standalone characters, use `\` followed by
-  the corresponding character(e.g., `\%`).
+- This command basically shares the consistent behaviors with the builtin `:terminal` :
+  - The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
+    will be auto-expanded, to get standalone characters, use `\` followed by
+    the corresponding character(e.g., `\%`).
+  - Note that `<bar>`(i.e., `|`) will be seen as an argument of the command,
+    therefore it can not be followed by another Vim command.
 
 For example, the command
 
@@ -376,8 +379,7 @@ a builtin script in this plugin, allows you to open files from within `: termina
 replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
 **❗️Note**: This should works both in neovim and vim, but if you are using
-neovim, please make sure [neovim-remote](https:
-//github.com/mhinz/neovim-remote) has been installed. You can install it via
+neovim, make sure [neovim-remote](https://github.com/mhinz/neovim-remote) has been installed. You can install it via
 pip:
 
 ```sh

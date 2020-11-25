@@ -100,7 +100,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return []
   elseif match(a:arg_lead, '--title=') > -1
     return []
-  " The dash absolutely comes belongs to the `options` instead of executable
+  " The dash absolutely belongs to the `options` instead of executable
   " commands(e.g. `nvim-qt.exe`). So if `a:arg_lead` matches 1 or 2 dash, the
   " user wants to complete options.
   elseif match(a:arg_lead, '^--\=\S*$') > -1
