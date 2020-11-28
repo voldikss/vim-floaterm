@@ -595,7 +595,7 @@ There are two ways for a command to be spawned:
       let filenames = readfile(s:fzf_tmpfile)
       if !empty(filenames)
         if has('nvim')
-          call floaterm#window#hide_floaterm(bufnr('%'))
+          call floaterm#window#hide(bufnr('%'))
         endif
         for filename in filenames
           execute g:floaterm_open_command . ' ' . fnameescape(filename)
