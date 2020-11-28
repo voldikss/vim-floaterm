@@ -9,9 +9,9 @@ Execute(Set g:floaterm_width and g:floaterm_height):
 Execute(FloatermNew):
   FloatermNew
   AssertEqual b:floaterm_opts.width, 0.6
-  AssertEqual float2nr(0.6*&columns), winwidth(0)
+  AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
   AssertEqual b:floaterm_opts.height, 0.6
-  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1)), winheight(0)
+  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
 Execute(FloatermHide and change `&columns`):
   FloatermHide
@@ -20,9 +20,9 @@ Execute(FloatermHide and change `&columns`):
 Execute(FloatermShow: reopen it):
   FloatermShow
   AssertEqual b:floaterm_opts.width, 0.6
-  AssertEqual float2nr(0.6*&columns), winwidth(0)
+  AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
   AssertEqual b:floaterm_opts.height, 0.6
-  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1)), winheight(0)
+  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
 Execute(Restore `&columns`):
   let &columns = columns_origin

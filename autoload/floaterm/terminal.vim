@@ -16,7 +16,7 @@ function! s:on_floaterm_close(callback, job, data, ...) abort
   let opts = getbufvar(bufnr, 'floaterm_opts', {})
   let autoclose = get(opts, 'autoclose', 0)
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
-    call floaterm#window#hide_floaterm(bufnr)
+    call floaterm#window#hide(bufnr)
     try
       execute bufnr . 'bdelete!'
     catch
@@ -31,7 +31,7 @@ endfunction
 function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
   " for vim's popup, must close popup can we open and jump to a new window
   if !has('nvim')
-    call floaterm#window#hide_floaterm(bufnr('%'))
+    call floaterm#window#hide(bufnr('%'))
   endif
 
   " change to root directory
@@ -116,7 +116,7 @@ function! floaterm#terminal#get_bufnr(termname) abort
 endfunction
 
 function! floaterm#terminal#kill(bufnr) abort
-  call floaterm#window#hide_floaterm(a:bufnr)
+  call floaterm#window#hide(a:bufnr)
   if has('nvim')
     let jobid = getbufvar(a:bufnr, '&channel')
     if jobwait([jobid], 0)[0] == -1

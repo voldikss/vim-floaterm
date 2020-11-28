@@ -16,7 +16,7 @@ function! s:rg_callback(...) abort
     let filenames = readfile(s:rg_tmpfile)
     if !empty(filenames)
       if has('nvim')
-        call floaterm#window#hide_floaterm(bufnr('%'))
+        call floaterm#window#hide(bufnr('%'))
       endif
       for filename in filenames
         let realfilename = matchlist(filename, '\(.\{-}\):.*$')[1]

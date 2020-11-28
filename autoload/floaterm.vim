@@ -84,10 +84,10 @@ endfunction
 " ----------------------------------------------------------------------------
 function! floaterm#toggle(bang, bufnr, name)  abort
   if a:bang
-    let found_winnr = floaterm#window#find_floaterm_window()
+    let found_winnr = floaterm#window#find()
     if found_winnr > 0
       for bufnr in floaterm#buflist#gather()
-        call floaterm#window#hide_floaterm(bufnr)
+        call floaterm#window#hide(bufnr)
       endfor
     else
       for bufnr in floaterm#buflist#gather()
@@ -106,9 +106,9 @@ function! floaterm#toggle(bang, bufnr, name)  abort
     call floaterm#new(a:bang, '', {}, {'name': a:name})
   elseif bufnr == 0
     if &filetype == 'floaterm'
-      call floaterm#window#hide_floaterm(bufnr('%'))
+      call floaterm#window#hide(bufnr('%'))
     else
-      let found_winnr = floaterm#window#find_floaterm_window()
+      let found_winnr = floaterm#window#find()
       if found_winnr > 0
         noautocmd execute found_winnr . 'wincmd w'
       else
@@ -117,7 +117,7 @@ function! floaterm#toggle(bang, bufnr, name)  abort
     endif
   elseif getbufvar(bufnr, 'floaterm_winid', -1) != -1
     if bufnr == bufnr('%')
-      call floaterm#window#hide_floaterm(bufnr)
+      call floaterm#window#hide(bufnr)
     elseif bufwinnr(bufnr) > -1
       noautocmd execute bufwinnr(bufnr) . 'wincmd w'
     else
@@ -138,7 +138,7 @@ function! floaterm#update(opts) abort
   endif
 
   let bufnr = bufnr('%')
-  call floaterm#window#hide_floaterm(bufnr)
+  call floaterm#window#hide(bufnr)
   call floaterm#util#update_opts(bufnr, a:opts)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
@@ -245,7 +245,7 @@ endfunction
 function! floaterm#hide(bang, bufnr, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()
-      call floaterm#window#hide_floaterm(bufnr)
+      call floaterm#window#hide(bufnr)
     endfor
     return
   endif
@@ -259,7 +259,7 @@ function! floaterm#hide(bang, bufnr, name) abort
   endif
 
   if bufnr > 0
-    call floaterm#window#hide_floaterm(bufnr)
+    call floaterm#window#hide(bufnr)
   else
     call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
   endif

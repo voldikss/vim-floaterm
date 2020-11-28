@@ -27,7 +27,7 @@ function! s:vifm_callback(...) abort
     let filenames = readfile(s:vifm_tmpfile)
     if !empty(filenames)
       if has('nvim')
-        call floaterm#window#hide_floaterm(bufnr('%'))
+        call floaterm#window#hide(bufnr('%'))
       endif
       for filename in filenames
         execute g:floaterm_open_command . ' ' . fnameescape(filename)

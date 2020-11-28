@@ -40,7 +40,7 @@ function! s:fff_callback(...) abort
 
   if filereadable(file_data[0])
       if has('nvim')
-        call floaterm#window#hide_floaterm(bufnr('%'))
+        call floaterm#window#hide(bufnr('%'))
       endif
     execute g:floaterm_open_command . ' ' . file_data[0]
   endif

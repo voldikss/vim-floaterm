@@ -8,10 +8,10 @@ Execute(Function GetTitleLine):
 Execute(Set g:floaterm_title):
   let g:floaterm_title = 'floaterm ($1/$2)'
   FloatermNew
-  Assert GetTitleLine(b:floatermborder_winid) =~ 'floaterm (1/1)'
+  Assert GetTitleLine(w:floatermborder_winid) =~ 'floaterm (1/1)'
   let g:floaterm_title = ''
   FloatermNew
-  Assert GetTitleLine(b:floatermborder_winid) =~ '┌─*┐'
+  Assert GetTitleLine(w:floatermborder_winid) =~ '┌─*┐'
 
 Execute(Exit):
   call feedkeys("\<Esc>")
