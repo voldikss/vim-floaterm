@@ -49,8 +49,8 @@ Execute(Test floaterm#cmdline#parse expand feature):
   " %\(:g\=s?.*?.*?\)
   AssertEqual expand('%:s?test?main?'), floaterm#cmdline#parse(split('%:s?test?main?'))[0]
   AssertEqual expand('%:gs?test?main?'), floaterm#cmdline#parse(split('%:gs?test?main?'))[0]
-  AssertEqual '\%', floaterm#cmdline#parse(split('\%'))[0]
-  AssertEqual '\%:p', floaterm#cmdline#parse(split('\%:p'))[0]
+  AssertEqual '%', floaterm#cmdline#parse(split('\%'))[0]
+  AssertEqual '%:p', floaterm#cmdline#parse(split('\%:p'))[0]
   " %\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*
   AssertEqual expand('%:p:h'), floaterm#cmdline#parse(split('%:p:h'))[0]
   AssertEqual expand('%:p:s?test?main?'), floaterm#cmdline#parse(split('%:p:s?test?main?'))[0]
@@ -71,8 +71,8 @@ Execute(Test floaterm#cmdline#parse expand feature):
   " <cfile>\(:g\=s?.*?.*?\)
   AssertEqual expand('<cfile>:s?test?main?'), floaterm#cmdline#parse(split('<cfile>:s?test?main?'))[0]
   AssertEqual expand('<cfile>:gs?test?main?'), floaterm#cmdline#parse(split('<cfile>:gs?test?main?'))[0]
-  AssertEqual '\<cfile>', floaterm#cmdline#parse(split('\<cfile>'))[0]
-  AssertEqual '\<cfile>:p', floaterm#cmdline#parse(split('\<cfile>:p'))[0]
+  AssertEqual '<cfile>', floaterm#cmdline#parse(split('\<cfile>'))[0]
+  AssertEqual '<cfile>:p', floaterm#cmdline#parse(split('\<cfile>:p'))[0]
   " <cfile>\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*
   AssertEqual expand('<cfile>:p:h'), floaterm#cmdline#parse(split('<cfile>:p:h'))[0]
   AssertEqual expand('<cfile>:p:s?test?main?'), floaterm#cmdline#parse(split('<cfile>:p:s?test?main?'))[0]
