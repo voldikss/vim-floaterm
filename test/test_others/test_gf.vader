@@ -1,0 +1,21 @@
+" vim:ft=vim
+
+Execute(Open in normal window when using `gf`):
+  silent !touch test.txt
+  FloatermNew
+  stopinsert
+  let @" = 'test.txt'
+  normal! p
+  normal! $
+  sleep 100m
+  normal! gf
+  AssertEqual 'test.txt', bufname()
+  sleep 100m
+  AssertEqual 0, has_key(nvim_win_get_config(win_getid()), 'anchor')
+  silent !rm test.txt
+
+Execute(Exit):
+  call feedkeys("\<Esc>")
+  FloatermKill!
+  sleep 100m
+  call feedkeys("\<CR>")

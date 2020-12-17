@@ -38,13 +38,14 @@ function! s:format_title(bufnr, text) abort
   return title
 endfunction
 
-function! s:hide_border(bufnr, ...) abort
-  let winid = nvim_buf_get_var(a:bufnr, 'floaterm_winid')
-  let bd_winid = getwinvar(winid, 'floatermborder_winid', -1)
-  if s:winexists(bd_winid)
-    call nvim_win_close(bd_winid, v:true)
+function! s:hide_border(winid) abort
+  if s:winexists(a:winid)
+    let bd_winid = getwinvar(a:winid, 'floatermborder_winid', -1)
+    if s:winexists(bd_winid)
+      call nvim_win_close(bd_winid, v:true)
+    endif
+    call nvim_win_set_var(a:winid, 'floatermborder_winid', -1)
   endif
-  call nvim_win_set_var(winid, 'floatermborder_winid', -1)
 endfunction
 
 function! s:get_floatwin_pos(width, height, pos) abort
@@ -120,6 +121,10 @@ function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
+function s:is_floating(winid) abort
+  return s:winexists(a:winid) && has_key(nvim_win_get_config(a:winid), 'anchor')
+endfunction
+
 function! s:on_floaterm_open(bufnr, winid, opts) abort
   call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
   call setbufvar(a:bufnr, 'floaterm_opts', a:opts)
@@ -127,7 +132,11 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
     " TODO: need to be reworked
-    execute printf('autocmd BufHidden <buffer=%s> ++once call s:hide_border(%s)', a:bufnr, a:bufnr)
+    execute printf(
+      \ 'autocmd BufHidden <buffer=%s> ++once call floaterm#window#hide(%s)',
+      \ a:bufnr,
+      \ a:bufnr
+      \ )
   endif
 endfunction
 
@@ -270,8 +279,8 @@ function! floaterm#window#hide(bufnr) abort
   let winid = getbufvar(a:bufnr, 'floaterm_winid', -1)
   if winid == -1 | return | endif
   if has('nvim')
-    if !s:winexists(winid) | return | endif
-    call nvim_win_close(winid, v:true)
+    call s:hide_border(winid)
+    call timer_start(10, { -> s:is_floating(winid) ? nvim_win_close(winid, v:true) : v:null })
   else
     if exists('*win_gettype')
       if win_gettype() == 'popup'
