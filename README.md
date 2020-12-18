@@ -386,6 +386,8 @@ pip:
 pip install neovim-remote
 ```
 
+P.S. [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311) describes how to use `gf` in the floating terminal window.
+
 ![](https://user-images.githubusercontent.com/20282795/91380257-27750280-e857-11ea-8d49-d760c009fee0.gif)
 
 #### git
