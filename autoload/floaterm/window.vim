@@ -121,10 +121,6 @@ function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
-function s:is_floating(winid) abort
-  return s:winexists(a:winid) && has_key(nvim_win_get_config(a:winid), 'anchor')
-endfunction
-
 function! s:on_floaterm_open(bufnr, winid, opts) abort
   call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
   call setbufvar(a:bufnr, 'floaterm_opts', a:opts)
@@ -277,10 +273,10 @@ endfunction
 
 function! floaterm#window#hide(bufnr) abort
   let winid = getbufvar(a:bufnr, 'floaterm_winid', -1)
-  if winid == -1 | return | endif
+  if !s:winexists(winid) | return | endif
   if has('nvim')
+    call nvim_win_close(winid, v:true)
     call s:hide_border(winid)
-    call timer_start(10, { -> s:is_floating(winid) ? nvim_win_close(winid, v:true) : v:null })
   else
     if exists('*win_gettype')
       if win_gettype() == 'popup'
