@@ -201,12 +201,6 @@ height is relative to `&lines`.
 
 Default: `0.6`
 
-#### **`g:floaterm_winblend`**
-
-Type `Number`. The transparency of the floating terminal. Only works in neovim.
-
-Default: `0`
-
 #### **`g:floaterm_position`**
 
 Type `String`. The position of the floating window. Available values:
