@@ -61,11 +61,6 @@ g:floaterm_height                                *g:floaterm_height*
     If |Float|, the height is relative to 'lines'.
     Default value is 0.6.
 
-g:floaterm_winblend                              *g:floaterm_winblend*
-	Type |Number|(0-100).
-	The transparency of the floating terminal. Only works in neovim.
-    Default value is 0.
-
 g:floaterm_position                              *g:floaterm_position*
 	Type |String|.
 	The position of the floaterm window.

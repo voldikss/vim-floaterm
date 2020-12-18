@@ -200,7 +200,6 @@ function! s:open_float(bufnr, configs) abort
     \ 'style':'minimal',
     \ }
   let winid = nvim_open_win(a:bufnr, v:true, options)
-  call nvim_win_set_option(winid, 'winblend', g:floaterm_winblend)
   call nvim_win_set_option(winid, 'winhl', 'Normal:Floaterm,NormalNC:FloatermNC')
 
   let bd_options = {
