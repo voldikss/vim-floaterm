@@ -646,6 +646,8 @@ https://github.com/voldikss/vim-floaterm/issues?q=label%3A%22breaking+change%22
 
 ## Credits
 
+- [Vim](https://github.com/vim/vim/) and [Neovim](https://github.com/neovim/neovim/) the editor God
+
 - [floaterm executable](https://github.com/voldikss/vim-floaterm/blob/master/bin/floaterm) is modified
   from [vim-terminal-help](https://github.com/skywind3000/vim-terminal-help/blob/master/tools/utils/drop)
 
