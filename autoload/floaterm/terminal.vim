@@ -34,18 +34,20 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
     call floaterm#window#hide(bufnr('%'))
   endif
 
-  " change to root directory
-  if !empty(g:floaterm_rootmarkers)
-    let dest = floaterm#path#get_root()
-    if dest !=# ''
-      call floaterm#path#chdir(dest)
-    endif
-  endif
-
   if a:bufnr > 0
     call floaterm#window#open(a:bufnr, a:opts)
     let bufnr_res = a:bufnr
   else
+    " change to root directory
+    let curcwd = getcwd()
+    if !empty(g:floaterm_rootmarkers)
+      let dest = floaterm#path#get_root()
+      if dest !=# ''
+        call floaterm#path#chdir(dest)
+      endif
+    endif
+
+    " spawn terminal
     if has('nvim')
       let bufnr_res = nvim_create_buf(v:false, v:true)
       call floaterm#buflist#add(bufnr_res)
@@ -68,6 +70,9 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
       let s:channel_map[bufnr_res] = job_getchannel(job)
       let winid = floaterm#window#open(bufnr_res, a:opts)
     endif
+
+    " back to previous cwd
+    call floaterm#path#chdir(curcwd)
   endif
 
   return bufnr_res
@@ -124,7 +129,7 @@ function! floaterm#terminal#kill(bufnr) abort
     endif
   else
     let job = term_getjob(a:bufnr)
-    if job_status(job) !=# 'dead'
+    if job && job_status(job) !=# 'dead'
       call job_stop(job)
     endif
   endif
