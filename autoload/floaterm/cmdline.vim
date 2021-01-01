@@ -49,6 +49,7 @@ endfunction
 let s:shellcmds = []
 function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   let options = [
+    \ '--cwd=',
     \ '--name=',
     \ '--width=',
     \ '--height=',
@@ -92,6 +93,10 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
+  elseif match(a:arg_lead, '--cwd=') > -1
+    let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
+    let dirs = getcompletion(prestr, 'dir')
+    return map(dirs, { k,v -> '--cwd=' . v })
   elseif match(a:arg_lead, '--name=') > -1
     return []
   elseif match(a:arg_lead, '--width=') > -1

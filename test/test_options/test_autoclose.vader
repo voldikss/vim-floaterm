@@ -11,12 +11,14 @@ Execute(Set autoclose to 0):
   AssertEqual 'floaterm',&filetype
 
 Execute(Set autoclose to 1 with normal command):
-  FloatermNew --autoclose=1 ls
+  " noa: to pass local test since I have a TermOpen autocmd which contains a
+  " timer_start function in which it has a `set ft`. (fn#terminal#settings())
+  noa FloatermNew --autoclose=1 ls
   sleep 100m
   AssertEqual '',&filetype
 
   let g:floaterm_autoclose = 1
-  FloatermNew ls
+  noa FloatermNew ls
   sleep 100m
   AssertEqual '',&filetype
 
@@ -31,12 +33,12 @@ Execute(Set autoclose to 1 with error command):
   AssertEqual 'floaterm',&filetype
 
 Execute(Set autoclose to 2):
-  FloatermNew --autoclose=2 ls
+  noa FloatermNew --autoclose=2 ls
   sleep 100m
   AssertEqual '',&filetype
 
   let g:floaterm_autoclose = 2
-  FloatermNew ls
+  noa FloatermNew ls
   sleep 100m
   AssertEqual '',&filetype
 

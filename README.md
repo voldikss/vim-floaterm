@@ -73,6 +73,7 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or `: FloatermPrev`
 - If `!` is given, execute `cmd` in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If without `cmd`, open `$SHELL`.
 - The `options` is formed as `--key=value`, it is used to specify attributes of a specific floaterm instance.
+  - `cwd` working directory that floaterm will be opened at
   - `name` name of the floaterm
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`

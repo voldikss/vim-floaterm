@@ -85,6 +85,7 @@ Execute(Test floaterm#cmdline#complete):
   endfunction
   let shellcmds = sort(getcompletion('', 'shellcmd'))
   call Test__floaterm_cmdline_complete('FloatermNew ', [
+    \'--cwd=',
     \'--name=',
     \'--width=',
     \'--height=',
@@ -95,6 +96,7 @@ Execute(Test floaterm#cmdline#complete):
     \] + shellcmds)
   call Test__floaterm_cmdline_complete('FloatermNew nv', filter(shellcmds, {_, val -> val =~ '^nv.*$'}))
   call Test__floaterm_cmdline_complete('FloatermNew -', [
+    \'--cwd=',
     \'--name=',
     \'--width=',
     \'--height=',
@@ -104,6 +106,7 @@ Execute(Test floaterm#cmdline#complete):
     \'--autoclose='
     \])
   call Test__floaterm_cmdline_complete('FloatermNew --', [
+    \'--cwd=',
     \'--name=',
     \'--width=',
     \'--height=',
@@ -143,6 +146,7 @@ Execute(Test floaterm#cmdline#complete):
     \'--position=topright'
     \])
   call Test__floaterm_cmdline_complete('FloatermUpdate ', [
+    \'--cwd=',
     \'--name=',
     \'--width=',
     \'--height=',
@@ -152,6 +156,7 @@ Execute(Test floaterm#cmdline#complete):
     \'--autoclose='
     \])
   call Test__floaterm_cmdline_complete('FloatermUpdate -', [
+    \'--cwd=',
     \'--name=',
     \'--width=',
     \'--height=',

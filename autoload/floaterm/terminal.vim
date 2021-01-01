@@ -38,13 +38,16 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
     call floaterm#window#open(a:bufnr, a:opts)
     let bufnr_res = a:bufnr
   else
-    " change to root directory
+    " change to cwd
     let curcwd = getcwd()
-    if !empty(g:floaterm_rootmarkers)
+    let dest = ''
+    if has_key(a:opts, 'cwd')
+      let dest = a:opts.cwd
+    elseif !empty(g:floaterm_rootmarkers)
       let dest = floaterm#path#get_root()
-      if dest !=# ''
-        call floaterm#path#chdir(dest)
-      endif
+    endif
+    if !empty(dest)
+      call floaterm#path#chdir(dest)
     endif
 
     " spawn terminal
