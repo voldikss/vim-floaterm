@@ -49,7 +49,7 @@ function! s:hide_border(winid) abort
 endfunction
 
 function! s:get_floatwin_pos(width, height, pos) abort
-    if a:pos == 'topright'
+  if a:pos == 'topright'
     let row = 1
     let col = &columns
     let anchor = 'NE'
@@ -129,10 +129,10 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
   if has('nvim')
     " TODO: need to be reworked
     execute printf(
-      \ 'autocmd BufHidden <buffer=%s> ++once call floaterm#window#hide(%s)',
-      \ a:bufnr,
-      \ a:bufnr
-      \ )
+          \ 'autocmd BufHidden <buffer=%s> ++once call floaterm#window#hide(%s)',
+          \ a:bufnr,
+          \ a:bufnr
+          \ )
   endif
 endfunction
 
@@ -191,56 +191,57 @@ endfunction
 
 function! s:open_float(bufnr, configs) abort
   let options = {
-    \ 'relative': 'editor',
-    \ 'anchor': a:configs.anchor,
-    \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
-    \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? 1 : -1),
-    \ 'width': a:configs.width - 2,
-    \ 'height': a:configs.height - 2,
-    \ 'style':'minimal',
-    \ }
+        \ 'relative': 'editor',
+        \ 'anchor': a:configs.anchor,
+        \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
+        \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? 1 : -1),
+        \ 'width': a:configs.width - 2,
+        \ 'height': a:configs.height - 2,
+        \ 'style':'minimal',
+        \ }
   let winid = nvim_open_win(a:bufnr, v:true, options)
-  call nvim_win_set_option(winid, 'winhl', 'Normal:Floaterm,NormalNC:FloatermNC')
+  call s:init_win(winid, v:false)
 
   let bd_options = {
-    \ 'relative': 'editor',
-    \ 'anchor': a:configs.anchor,
-    \ 'row': a:configs.row,
-    \ 'col': a:configs.col,
-    \ 'width': a:configs.width,
-    \ 'height': a:configs.height,
-    \ 'focusable': v:false,
-    \ 'style':'minimal',
-    \ }
+        \ 'relative': 'editor',
+        \ 'anchor': a:configs.anchor,
+        \ 'row': a:configs.row,
+        \ 'col': a:configs.col,
+        \ 'width': a:configs.width,
+        \ 'height': a:configs.height,
+        \ 'focusable': v:false,
+        \ 'style':'minimal',
+        \ }
   let a:configs.title = s:format_title(a:bufnr, a:configs.title)
   let bd_bufnr = floaterm#buffer#create_border_buf(a:configs)
   let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
-  call nvim_win_set_option(bd_winid, 'winhl', 'Normal:FloatermBorder')
   call nvim_win_set_var(winid, 'floatermborder_winid', bd_winid)
+  call s:init_win(bd_winid, v:true)
   return winid
 endfunction
 
 function! s:open_popup(bufnr, configs) abort
   let opts = {
-    \ 'pos': a:configs.anchor,
-    \ 'line': a:configs.row,
-    \ 'col': a:configs.col,
-    \ 'maxwidth': a:configs.width,
-    \ 'minwidth': a:configs.width,
-    \ 'maxheight': a:configs.height,
-    \ 'minheight': a:configs.height,
-    \ 'border': [1, 1, 1, 1],
-    \ 'borderchars': a:configs.borderchars,
-    \ 'borderhighlight': ['FloatermBorder'],
-    \ 'padding': [0,1,0,1],
-    \ 'highlight': 'Floaterm',
-    \ 'zindex': len(floaterm#buflist#gather()) + 1
-    \ }
+        \ 'pos': a:configs.anchor,
+        \ 'line': a:configs.row,
+        \ 'col': a:configs.col,
+        \ 'maxwidth': a:configs.width,
+        \ 'minwidth': a:configs.width,
+        \ 'maxheight': a:configs.height,
+        \ 'minheight': a:configs.height,
+        \ 'border': [1, 1, 1, 1],
+        \ 'borderchars': a:configs.borderchars,
+        \ 'borderhighlight': ['FloatermBorder'],
+        \ 'padding': [0,1,0,1],
+        \ 'highlight': 'Floaterm',
+        \ 'zindex': len(floaterm#buflist#gather()) + 1
+        \ }
 
   " vim will pad the end of title but not begin part
   " so we build the title as ' floaterm (idx/cnt)'
   let opts.title = ' ' . s:format_title(a:bufnr, a:configs.title)
   let winid = popup_create(a:bufnr, opts)
+  call s:init_win(winid, v:false)
   return winid
 endfunction
 
@@ -255,7 +256,21 @@ function! s:open_split(bufnr, configs) abort
     execute 'botright' . a:configs.height . 'split'
   endif
   execute 'buffer ' . a:bufnr
-  return win_getid()
+  let winid = win_getid()
+  call s:init_win(winid, v:false)
+  return winid
+endfunction
+
+function! s:init_win(winid, is_border) abort
+  if has('nvim')
+    call setwinvar(a:winid, '&winhl', 'Normal:Floaterm,NormalNC:FloatermNC')
+    if a:is_border
+      call setwinvar(a:winid, '&winhl', 'Normal:FloatermBorder')
+    endif
+  else
+    call setwinvar(a:winid, 'wincolor', 'Floaterm')
+  endif
+  call setwinvar(a:winid, '&sidescrolloff', 0)
 endfunction
 
 function! floaterm#window#open(bufnr, opts) abort
