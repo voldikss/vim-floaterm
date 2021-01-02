@@ -55,8 +55,8 @@ command! -nargs=0           FloatermFirst  call floaterm#first()
 command! -nargs=0           FloatermLast   call floaterm#last()
 
 hi def link Floaterm       Normal
-hi def link FloatermNC     Floaterm
-hi def link FloatermBorder Floaterm
+hi def link FloatermNC     NormalNC
+hi def link FloatermBorder NormalFloat
 
 augroup floaterm_enter_insertmode
   autocmd!

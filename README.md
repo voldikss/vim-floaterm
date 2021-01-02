@@ -330,8 +330,7 @@ tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 There are two `highlight-groups` to specify the color of floaterm (also the
 border color if `g: floaterm_wintype` is `'floating'` or `'popup'`) window.
 
-By default, they are both linked to `Normal`. To customize, use `hi` command
-together with the colors you prefer.
+To customize, use `hi` command together with the colors you prefer.
 
 ```vim
 " Configuration example
@@ -345,8 +344,7 @@ hi FloatermBorder guibg=orange guifg=cyan
 ![](https://user-images.githubusercontent.com/20282795/91368959-fee00f00-e83c-11ea-9002-cab992d30794.png)
 
 Besides, there is a neovim only highlight group which can be used to configure
-no-current-focused window(`:help NormalNC`). It's also linked to `Normal` by
-default.
+no-current-focused window(`:help NormalNC`).
 
 ```vim
 " Configuration example

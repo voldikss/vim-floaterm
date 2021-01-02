@@ -219,18 +219,15 @@ This plugin provides two |highlight-groups| to specify the bg/fg color of
 floaterm(also the border color if |g:floaterm_wintype| is 'floating' or
 'popup')window.
 
-By default, they are both linked to |hl-Normal|. To customize, use |hi|
-command together with the colors you prefer.  For example,
+To customize, use |hi| command together with the colors you prefer.  For example,
  >
-
 	" Set floaterm window's background to black
 	hi Floaterm guibg=black
 	" Set floating window border line color to cyan, and background to orange
 	hi FloatermBorder guibg=orange guifg=cyan
 <
 Besides, there is a neovim only |hi-group| which can be used to configure
-no-current-focused window(:help |hl-NormalNC|). It's also linked to
-|hi-Normal| by default.
+no-current-focused window(:help |hl-NormalNC|).
 
 ==============================================================================
 EXTENSIONS                                       *floaterm-extensions*
