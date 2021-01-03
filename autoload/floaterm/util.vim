@@ -75,7 +75,7 @@ function! floaterm#util#update_opts(bufnr, opts) abort
   call setbufvar(a:bufnr, 'floaterm_opts', opts)
 endfunction
 
-function! floaterm#util#getbufline(bufnr, length) abort
+function! floaterm#util#getbuflines(bufnr, length) abort
   let lines = []
   if a:bufnr == -1
     for bufnr in floaterm#buflist#gather()

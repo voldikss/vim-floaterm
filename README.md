@@ -266,7 +266,7 @@ Default: `v:true`.
 
 #### **`g:floaterm_complete_options`**
 
-Type `Dict`. Autocompletion options
+Type `Dict`. Autocompletion options (The completion from floaterm is synchronous)
 
 Available options:
 
