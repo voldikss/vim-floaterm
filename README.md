@@ -72,12 +72,14 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or `: FloatermPrev`
 
 - If `!` is given, execute `cmd` in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
 - If without `cmd`, open `$SHELL`.
-- The `options` is formed as `--key=value`, it is used to specify attributes of a specific floaterm instance.
+- The `options` is formed as `--key[=value]`, it is used to specify attributes of a specific floaterm instance.
   - `cwd` working directory that floaterm will be opened at
   - `name` name of the floaterm
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
   - `title` see `g:floaterm_title`
+  - `silent` If `--silent` is given, spawn a floaterm instance but not open
+    the window, you may toggle it afterwards
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
   - `autoclose` close the window after finishing job, see `g:floaterm_autoclose`
@@ -113,7 +115,7 @@ The following command allows you to compile and run your C code in the floaterm 
 
 #### `:FloatermUpdate [options]` Update floaterm window attributes(`height`, `width`, etc.).
 
-- The `options` is the same as in `:FloatermNew`.
+- The `options` is the same as in `:FloatermNew` (except `--silent`).
 - Use `<TAB>` to get completion.
 
 #### `:[N]FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.

@@ -38,16 +38,6 @@ function! s:format_title(bufnr, text) abort
   return title
 endfunction
 
-function! s:hide_border(winid) abort
-  if s:winexists(a:winid)
-    let bd_winid = getwinvar(a:winid, 'floatermborder_winid', -1)
-    if s:winexists(bd_winid)
-      call nvim_win_close(bd_winid, v:true)
-    endif
-    call nvim_win_set_var(a:winid, 'floatermborder_winid', -1)
-  endif
-endfunction
-
 function! s:get_floatwin_pos(width, height, pos) abort
   if a:pos == 'topright'
     let row = 1
@@ -119,21 +109,6 @@ endfunction
 
 function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
-endfunction
-
-function! s:on_floaterm_open(bufnr, winid, opts) abort
-  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
-  call setbufvar(a:bufnr, 'floaterm_opts', a:opts)
-  call setbufvar(a:bufnr, '&buflisted', 0)
-  call setbufvar(a:bufnr, '&filetype', 'floaterm')
-  if has('nvim')
-    " TODO: need to be reworked
-    execute printf(
-          \ 'autocmd BufHidden <buffer=%s> ++once call floaterm#window#hide(%s)',
-          \ a:bufnr,
-          \ a:bufnr
-          \ )
-  endif
 endfunction
 
 " TODO: give this function a better name
@@ -282,15 +257,18 @@ function! floaterm#window#open(bufnr, opts) abort
   else
     let winid = s:open_split(a:bufnr, configs)
   endif
-  call s:on_floaterm_open(a:bufnr, winid, a:opts)
+  return [winid, a:opts]
 endfunction
 
 function! floaterm#window#hide(bufnr) abort
   let winid = getbufvar(a:bufnr, 'floaterm_winid', -1)
   if !s:winexists(winid) | return | endif
   if has('nvim')
+    let bd_winid = getwinvar(winid, 'floatermborder_winid', -1)
+    if s:winexists(bd_winid)
+      call nvim_win_close(bd_winid, v:true)
+    endif
     call nvim_win_close(winid, v:true)
-    call s:hide_border(winid)
   else
     if exists('*win_gettype')
       if win_gettype() == 'popup'

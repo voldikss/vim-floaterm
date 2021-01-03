@@ -15,13 +15,18 @@ function! floaterm#cmdline#parse(arglist) abort
   if a:arglist != []
     let c = 0
     for arg in a:arglist
-      if arg =~ '^--\S.*=.*$'
+      if arg =~ '^--\S.*=\?.*$'
         let opt = split(arg, '=')
         if len(opt) != 2
-          call floaterm#util#show_msg('Argument Error: No value given to option: ' . opt[0], 'error')
-          return
+          if index(['--silent'], opt[0]) >= 0
+            let [key, value] = [opt[0][2:], v:true]
+          else
+            call floaterm#util#show_msg('Argument Error: No value given to option: ' . opt[0], 'error')
+            return
+          endif
+        else
+          let [key, value] = [opt[0][2:], opt[1]]
         endif
-        let [key, value] = [opt[0][2:], opt[1]]
         if index(['height', 'width', 'autoclose'], key) > -1
           let value = eval(value)
         endif
@@ -54,6 +59,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     \ '--width=',
     \ '--height=',
     \ '--title=',
+    \ '--silent',
     \ '--wintype=',
     \ '--position=',
     \ '--autoclose=',
@@ -93,6 +99,8 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
+  elseif match(a:arg_lead, '--silent') > -1
+    return []
   elseif match(a:arg_lead, '--cwd=') > -1
     let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
     let dirs = getcompletion(prestr, 'dir')

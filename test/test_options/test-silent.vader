@@ -1,0 +1,11 @@
+" vim:ft=vim
+
+Execute(FloatermNew --silent):
+  " TODO
+
+
+Execute (Exit):
+  call feedkeys("\<Esc>")
+  FloatermKill!
+  sleep 100m
+  call feedkeys("\<CR>")
