@@ -7,30 +7,30 @@
 
 " ----------------------------------------------------------------------------
 " used for `:FloatermNew` and `:FloatermUpdate`
-" parse argument list to `cmd`(string, default '') and `opts`(dict)
+" parse argument list to `cmd`(string, default '') and `config`(dict)
 " ----------------------------------------------------------------------------
 function! floaterm#cmdline#parse(arglist) abort
-  let opts = {}
+  let config = {}
   let cmd = ''
   if a:arglist != []
     let c = 0
     for arg in a:arglist
       if arg =~ '^--\S.*=\?.*$'
-        let opt = split(arg, '=')
-        if len(opt) != 2
-          if index(['--silent'], opt[0]) >= 0
-            let [key, value] = [opt[0][2:], v:true]
+        let pair = split(arg, '=')
+        if len(pair) != 2
+          if index(['--silent'], pair[0]) >= 0
+            let [key, value] = [pair[0][2:], v:true]
           else
-            call floaterm#util#show_msg('Argument Error: No value given to option: ' . opt[0], 'error')
+            call floaterm#util#show_msg('Argument Error: No value given to option: ' . pair[0], 'error')
             return
           endif
         else
-          let [key, value] = [opt[0][2:], opt[1]]
+          let [key, value] = [pair[0][2:], pair[1]]
         endif
         if index(['height', 'width', 'autoclose'], key) > -1
           let value = eval(value)
         endif
-        let opts[key] = value
+        let config[key] = value
       else
         let cmd = s:expand(join(a:arglist[c:]))
         break
@@ -38,7 +38,7 @@ function! floaterm#cmdline#parse(arglist) abort
       let c += 1
     endfor
   endif
-  return [cmd, opts]
+  return [cmd, config]
 endfunction
 
 function! s:expand(cmd) abort
@@ -141,9 +141,9 @@ function! floaterm#cmdline#complete_names1(...) abort
   let buflist = floaterm#buflist#gather()
   let ret = []
   for bufnr in buflist
-    let opts = getbufvar(bufnr, 'floaterm_opts', {})
-    if !empty(opts)
-      let termname = get(opts, 'name', '')
+    let config = getbufvar(bufnr, 'floaterm_config', {})
+    if !empty(config)
+      let termname = get(config, 'name', '')
       if !empty(termname)
         call add(ret, termname)
       endif

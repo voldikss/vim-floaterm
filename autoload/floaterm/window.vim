@@ -28,7 +28,7 @@ function! s:get_wintype() abort
   endif
 endfunction
 
-function! s:format_title(bufnr, text) abort
+function! s:make_title(bufnr, text) abort
   if empty(a:text) | return '' | endif
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
@@ -112,66 +112,66 @@ function! s:winexists(winid) abort
 endfunction
 
 " TODO: give this function a better name
-" @argument: opts, a floaterm local variable, will be stored as a `b:` variable
-" @return: options, generated from `opts`, has more additional info, used to
+" @argument: config, a floaterm local variable, will be stored as a `b:` variable
+" @return: config, generated from `a:config`, has more additional info, used to
 "   config the floaterm style
-function! s:parse_options(opts) abort
-  if !has_key(a:opts, 'width')
-    let a:opts.width = g:floaterm_width
+function! s:parse_config(config) abort
+  if !has_key(a:config, 'width')
+    let a:config.width = g:floaterm_width
   endif
-  if !has_key(a:opts, 'height')
-    let a:opts.height = g:floaterm_height
+  if !has_key(a:config, 'height')
+    let a:config.height = g:floaterm_height
   endif
-  if !has_key(a:opts, 'wintype')
-    let a:opts.wintype = s:get_wintype()
+  if !has_key(a:config, 'wintype')
+    let a:config.wintype = s:get_wintype()
   endif
-  if !has_key(a:opts, 'position')
-    let a:opts.position = g:floaterm_position
+  if !has_key(a:config, 'position')
+    let a:config.position = g:floaterm_position
   endif
-  if !has_key(a:opts, 'autoclose')
-    let a:opts.autoclose = g:floaterm_autoclose
+  if !has_key(a:config, 'autoclose')
+    let a:config.autoclose = g:floaterm_autoclose
   endif
-  if !has_key(a:opts, 'title')
-    let a:opts.title = g:floaterm_title
+  if !has_key(a:config, 'title')
+    let a:config.title = g:floaterm_title
   endif
 
-  " generate and return window configs based on a:opts
-  let configs = deepcopy(a:opts)
+  " generate and return window configs based on a:config
+  let config = deepcopy(a:config)
 
-  let configs.borderchars = g:floaterm_borderchars
+  let config.borderchars = g:floaterm_borderchars
 
-  let width = configs.width
+  let width = config.width
   if type(width) == v:t_float | let width = width * &columns | endif
-  let configs.width = float2nr(width)
+  let config.width = float2nr(width)
 
-  let height = configs.height
+  let height = config.height
   if type(height) == v:t_float | let height = height * (&lines - &cmdheight - 1) | endif
-  let configs.height = float2nr(height)
+  let config.height = float2nr(height)
 
-  if configs.position == 'random'
+  if config.position == 'random'
     let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
     if s:get_wintype() == 'normal'
-      let configs.position = ['top', 'right', 'bottom', 'left'][randnum % 4]
+      let config.position = ['top', 'right', 'bottom', 'left'][randnum % 4]
     else
-      let configs.position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto'][randnum % 10]
+      let config.position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto'][randnum % 10]
     endif
   endif
 
-  let [row, col, anchor] = s:get_floatwin_pos(configs.width, configs.height, configs.position)
-  let configs['anchor'] = anchor
-  let configs['row'] = row
-  let configs['col'] = col
-  return configs
+  let [row, col, anchor] = s:get_floatwin_pos(config.width, config.height, config.position)
+  let config['anchor'] = anchor
+  let config['row'] = row
+  let config['col'] = col
+  return config
 endfunction
 
-function! s:open_float(bufnr, configs) abort
+function! s:open_float(bufnr, config) abort
   let options = {
         \ 'relative': 'editor',
-        \ 'anchor': a:configs.anchor,
-        \ 'row': a:configs.row + (a:configs.anchor[0] == 'N' ? 1 : -1),
-        \ 'col': a:configs.col + (a:configs.anchor[1] == 'W' ? 1 : -1),
-        \ 'width': a:configs.width - 2,
-        \ 'height': a:configs.height - 2,
+        \ 'anchor': a:config.anchor,
+        \ 'row': a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1),
+        \ 'col': a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1),
+        \ 'width': a:config.width - 2,
+        \ 'height': a:config.height - 2,
         \ 'style':'minimal',
         \ }
   let winid = nvim_open_win(a:bufnr, v:true, options)
@@ -179,33 +179,33 @@ function! s:open_float(bufnr, configs) abort
 
   let bd_options = {
         \ 'relative': 'editor',
-        \ 'anchor': a:configs.anchor,
-        \ 'row': a:configs.row,
-        \ 'col': a:configs.col,
-        \ 'width': a:configs.width,
-        \ 'height': a:configs.height,
+        \ 'anchor': a:config.anchor,
+        \ 'row': a:config.row,
+        \ 'col': a:config.col,
+        \ 'width': a:config.width,
+        \ 'height': a:config.height,
         \ 'focusable': v:false,
         \ 'style':'minimal',
         \ }
-  let a:configs.title = s:format_title(a:bufnr, a:configs.title)
-  let bd_bufnr = floaterm#buffer#create_border_buf(a:configs)
+  let a:config.title = s:make_title(a:bufnr, a:config.title)
+  let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
   let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
   call nvim_win_set_var(winid, 'floatermborder_winid', bd_winid)
   call s:init_win(bd_winid, v:true)
   return winid
 endfunction
 
-function! s:open_popup(bufnr, configs) abort
-  let opts = {
-        \ 'pos': a:configs.anchor,
-        \ 'line': a:configs.row,
-        \ 'col': a:configs.col,
-        \ 'maxwidth': a:configs.width,
-        \ 'minwidth': a:configs.width,
-        \ 'maxheight': a:configs.height,
-        \ 'minheight': a:configs.height,
+function! s:open_popup(bufnr, config) abort
+  let options = {
+        \ 'pos': a:config.anchor,
+        \ 'line': a:config.row,
+        \ 'col': a:config.col,
+        \ 'maxwidth': a:config.width,
+        \ 'minwidth': a:config.width,
+        \ 'maxheight': a:config.height,
+        \ 'minheight': a:config.height,
         \ 'border': [1, 1, 1, 1],
-        \ 'borderchars': a:configs.borderchars,
+        \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
         \ 'padding': [0,1,0,1],
         \ 'highlight': 'Floaterm',
@@ -214,21 +214,21 @@ function! s:open_popup(bufnr, configs) abort
 
   " vim will pad the end of title but not begin part
   " so we build the title as ' floaterm (idx/cnt)'
-  let opts.title = ' ' . s:format_title(a:bufnr, a:configs.title)
-  let winid = popup_create(a:bufnr, opts)
+  let options.title = ' ' . s:make_title(a:bufnr, a:config.title)
+  let winid = popup_create(a:bufnr, options)
   call s:init_win(winid, v:false)
   return winid
 endfunction
 
-function! s:open_split(bufnr, configs) abort
-  if a:configs.position == 'top'
-    execute 'topleft' . a:configs.height . 'split'
-  elseif a:configs.position == 'left'
-    execute 'topleft' . a:configs.width . 'vsplit'
-  elseif a:configs.position == 'right'
-    execute 'botright' . a:configs.width . 'vsplit'
+function! s:open_split(bufnr, config) abort
+  if a:config.position == 'top'
+    execute 'topleft' . a:config.height . 'split'
+  elseif a:config.position == 'left'
+    execute 'topleft' . a:config.width . 'vsplit'
+  elseif a:config.position == 'right'
+    execute 'botright' . a:config.width . 'vsplit'
   else " default position: bottom
-    execute 'botright' . a:configs.height . 'split'
+    execute 'botright' . a:config.height . 'split'
   endif
   execute 'buffer ' . a:bufnr
   let winid = win_getid()
@@ -248,16 +248,16 @@ function! s:init_win(winid, is_border) abort
   call setwinvar(a:winid, '&sidescrolloff', 0)
 endfunction
 
-function! floaterm#window#open(bufnr, opts) abort
-  let configs = s:parse_options(a:opts)
-  if configs.wintype == 'floating'
-    let winid = s:open_float(a:bufnr, configs)
-  elseif configs.wintype == 'popup'
-    let winid = s:open_popup(a:bufnr, configs)
+function! floaterm#window#open(bufnr, config) abort
+  let config = s:parse_config(a:config)
+  if config.wintype == 'floating'
+    let winid = s:open_float(a:bufnr, config)
+  elseif config.wintype == 'popup'
+    let winid = s:open_popup(a:bufnr, config)
   else
-    let winid = s:open_split(a:bufnr, configs)
+    let winid = s:open_split(a:bufnr, config)
   endif
-  return [winid, a:opts]
+  return [winid, a:config]
 endfunction
 
 function! floaterm#window#hide(bufnr) abort

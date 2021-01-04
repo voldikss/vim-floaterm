@@ -8,9 +8,9 @@
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
 
-function! s:on_floaterm_open(bufnr, winid, opts) abort
+function! s:on_floaterm_open(bufnr, winid, config) abort
   call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
-  call setbufvar(a:bufnr, 'floaterm_opts', a:opts)
+  call setbufvar(a:bufnr, 'floaterm_config', a:config)
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
@@ -24,12 +24,17 @@ function! s:on_floaterm_open(bufnr, winid, opts) abort
 endfunction
 
 function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
-  let opts = getbufvar(a:bufnr, 'floaterm_opts', {})
-  let autoclose = get(opts, 'autoclose', 0)
+  if a:bufnr == -1
+    let bufnr = bufnr('%')
+  else
+    let bufnr = a:bufnr
+  endif
+  let config = getbufvar(bufnr, 'floaterm_config', {})
+  let autoclose = get(config, 'autoclose', 0)
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
-    call floaterm#window#hide(a:bufnr)
+    call floaterm#window#hide(bufnr)
     try
-      execute a:bufnr . 'bdelete!'
+      execute bufnr . 'bdelete!'
     catch
     endtry
     " update lightline
@@ -40,23 +45,25 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   endif
 endfunction
 
-function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
-  " for vim's popup, must close popup can we open and jump to a new window
-  if !has('nvim')
+" config: local configuration of a specific floaterm, including:
+" cwd, name, width, height, title, silent, wintype, position, autoclose, etc.
+function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
+  " vim8: must close popup can we open and jump to a new window
+  if !has('nvim') && &filetype == 'floaterm'
     call floaterm#window#hide(bufnr('%'))
   endif
 
   if a:bufnr > 0
-    let [winid, opts] = floaterm#window#open(a:bufnr, a:opts)
-    call s:on_floaterm_open(a:bufnr, winid, opts)
+    let [winid, config] = floaterm#window#open(a:bufnr, a:config)
+    call s:on_floaterm_open(a:bufnr, winid, config)
     return a:bufnr
   endif
 
   " change to cwd
   let curcwd = getcwd()
   let dest = ''
-  if has_key(a:opts, 'cwd')
-    let dest = a:opts.cwd
+  if has_key(a:config, 'cwd')
+    let dest = a:config.cwd
   elseif !empty(g:floaterm_rootmarkers)
     let dest = floaterm#path#get_root()
   endif
@@ -72,13 +79,13 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
           \ 's:on_floaterm_close',
           \ [bufnr, get(a:jobopts, 'on_exit', v:null)]
           \ )
-    let [winid, opts] = floaterm#window#open(bufnr, a:opts)
+    let [winid, config] = floaterm#window#open(bufnr, a:config)
     let ch = termopen(a:cmd, a:jobopts)
     let s:channel_map[bufnr] = ch
   else
     let a:jobopts.exit_cb = function(
           \ 's:on_floaterm_close',
-          \ [bufnr, get(a:jobopts, 'on_exit', v:null)]
+          \ [-1, get(a:jobopts, 'on_exit', v:null)]
           \ )
     if has_key(a:jobopts, 'on_exit')
       unlet a:jobopts.on_exit
@@ -91,12 +98,12 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, opts) abort
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
-    let [winid, opts] = floaterm#window#open(bufnr, a:opts)
+    let [winid, config] = floaterm#window#open(bufnr, a:config)
   endif
 
-  call s:on_floaterm_open(bufnr, winid, opts)
+  call s:on_floaterm_open(bufnr, winid, config)
 
-  if has_key(opts, 'silent') && opts.silent == 1
+  if has_key(config, 'silent') && config.silent == 1
     call floaterm#window#hide(bufnr)
     stopinsert
   endif
@@ -111,8 +118,8 @@ function! floaterm#terminal#open_existing(bufnr) abort
   if winnr > -1
     execute winnr . 'hide'
   endif
-  let opts = getbufvar(a:bufnr, 'floaterm_opts', {})
-  call floaterm#terminal#open(a:bufnr, '', {}, opts)
+  let config = getbufvar(a:bufnr, 'floaterm_config', {})
+  call floaterm#terminal#open(a:bufnr, '', {}, config)
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort
@@ -139,8 +146,8 @@ endfunction
 function! floaterm#terminal#get_bufnr(termname) abort
   let buflist = floaterm#buflist#gather()
   for bufnr in buflist
-    let opts = getbufvar(bufnr, 'floaterm_opts', {})
-    let name = get(opts, 'name', '')
+    let config = getbufvar(bufnr, 'floaterm_config', {})
+    let name = get(config, 'name', '')
     if name ==# a:termname
       return bufnr
     endif

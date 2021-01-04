@@ -17,7 +17,7 @@ Before(Define universal function used to test command completion):
 
 Execute(Test floaterm#cmdline#parse):
   let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
-  let [cmd, opts] = floaterm#cmdline#parse(split(argstr))
+  let [cmd, config] = floaterm#cmdline#parse(split(argstr))
   AssertEqual 'ranger --cmd="cd ~"', cmd
   AssertEqual {
     \'wintype': 'floating',
@@ -26,7 +26,7 @@ Execute(Test floaterm#cmdline#parse):
     \'width': 0.4,
     \'height': 0.6,
     \'position': 'topleft'
-    \}, opts
+    \}, config
 
 Execute(Test floaterm#cmdline#parse expand feature):
   silent !touch test.txt && echo first.line > test.txt

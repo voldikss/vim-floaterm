@@ -3,7 +3,7 @@
 Execute(FloatermUpdate):
   FloatermNew
   FloatermUpdate --name=ft
-  AssertEqual 'ft', b:floaterm_opts['name']
+  AssertEqual 'ft', b:floaterm_config['name']
 
 Execute (Exit):
   call feedkeys("\<Esc>")

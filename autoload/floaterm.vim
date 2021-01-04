@@ -37,22 +37,20 @@ endif
 
 " ----------------------------------------------------------------------------
 " wrapper function for `floaterm#new()` and `floaterm#update()` since they
-" share the same argument: `opts`
+" share the same argument: `config`
 " ----------------------------------------------------------------------------
 function! floaterm#run(action, bang, ...) abort
-  let [cmd, opts] = floaterm#cmdline#parse(a:000)
+  let [cmd, config] = floaterm#cmdline#parse(a:000)
   if a:action == 'new'
-    call floaterm#new(a:bang, cmd, {}, opts)
+    call floaterm#new(a:bang, cmd, {}, config)
   elseif a:action == 'update'
-    call floaterm#update(opts)
+    call floaterm#update(config)
   endif
 endfunction
 
-" ----------------------------------------------------------------------------
-" create a floaterm. `jobopts` is not used inside this pugin actually, it's
-" reserved for outer invoke
-" ----------------------------------------------------------------------------
-function! floaterm#new(bang, cmd, jobopts, opts) abort
+" create a floaterm. return bufnr of the terminal
+" argument `jobopts` is passed by user in the case using this function as API
+function! floaterm#new(bang, cmd, jobopts, config) abort
   call floaterm#util#autohide()
   if a:cmd != ''
     let wrappers_path = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
@@ -62,19 +60,19 @@ function! floaterm#new(bang, cmd, jobopts, opts) abort
       let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
       let [name, jobopts, send2shell] = WrapFunc(a:cmd)
       if send2shell
-        let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, {}, a:opts)
+        let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, {}, a:config)
         call floaterm#terminal#send(bufnr, [name])
       else
-        let bufnr = floaterm#terminal#open(-1, name, jobopts, a:opts)
+        let bufnr = floaterm#terminal#open(-1, name, jobopts, a:config)
       endif
     elseif a:bang
-      let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:opts)
+      let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:config)
       call floaterm#terminal#send(bufnr, [a:cmd])
     else
-      let bufnr = floaterm#terminal#open(-1, a:cmd, a:jobopts, a:opts)
+      let bufnr = floaterm#terminal#open(-1, a:cmd, a:jobopts, a:config)
     endif
   else
-    let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:opts)
+    let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:config)
   endif
   return bufnr
 endfunction
@@ -131,15 +129,15 @@ endfunction
 " ----------------------------------------------------------------------------
 " update the attributes of a floaterm
 " ----------------------------------------------------------------------------
-function! floaterm#update(opts) abort
+function! floaterm#update(config) abort
   if &filetype !=# 'floaterm'
-    call floaterm#util#show_msg('You have to be in a floaterm window to change window opts.', 'error')
+    call floaterm#util#show_msg('You have to be in a floaterm window to change window config.', 'error')
     return
   endif
 
   let bufnr = bufnr('%')
   call floaterm#window#hide(bufnr)
-  call floaterm#util#update_opts(bufnr, a:opts)
+  call floaterm#util#update_config(bufnr, a:config)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
 
@@ -272,8 +270,8 @@ function! floaterm#send(bang, visualmode, range, line1, line2, argstr) abort
     return
   endif
 
-  let [cmd, opts] = floaterm#cmdline#parse(split(a:argstr))
-  let termname = get(opts, 'termname', '')
+  let [cmd, config] = floaterm#cmdline#parse(split(a:argstr))
+  let termname = get(config, 'termname', '')
   if !empty(termname)
     let bufnr = floaterm#terminal#get_bufnr(termname)
     if bufnr == -1

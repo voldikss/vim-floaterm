@@ -47,11 +47,11 @@ Execute(FloatermToggle name, named floaterm exists):
   FloatermToggle
 
   FloatermToggle ft1
-  AssertEqual 'ft1', b:floaterm_opts['name']
+  AssertEqual 'ft1', b:floaterm_config['name']
   FloatermToggle ft2
-  AssertEqual 'ft2', b:floaterm_opts['name']
+  AssertEqual 'ft2', b:floaterm_config['name']
   FloatermToggle ft3
-  AssertEqual 'ft3', b:floaterm_opts['name']
+  AssertEqual 'ft3', b:floaterm_config['name']
 
 
 Execute (Exit):
