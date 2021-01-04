@@ -62,7 +62,7 @@ function! s:find_root(path, markers, strict) abort
 endfunction
 
 " Replace string
-function! s:StringReplace(text, old, new) abort
+function! s:string_replace(text, old, new) abort
   let l:data = split(a:text, a:old, 1)
   return join(l:data, a:new)
 endfunction
@@ -131,7 +131,7 @@ function! floaterm#path#get_root() abort
   let strict = 0
   let l:hr = s:find_root(getcwd(), markers, strict)
   if s:is_windows
-    let l:hr = s:StringReplace(l:hr, '/', "\\")
+    let l:hr = s:string_replace(l:hr, '/', "\\")
   endif
   return l:hr
 endfunction

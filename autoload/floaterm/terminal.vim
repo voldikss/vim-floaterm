@@ -53,14 +53,15 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
     call floaterm#window#hide(bufnr('%'))
   endif
 
+  " just open if floaterm exists
   if a:bufnr > 0
     let [winid, config] = floaterm#window#open(a:bufnr, a:config)
     call s:on_floaterm_open(a:bufnr, winid, config)
     return a:bufnr
   endif
 
-  " change to cwd
-  let curcwd = getcwd()
+  " change cwd
+  let savedcwd = getcwd()
   let dest = ''
   if has_key(a:config, 'cwd')
     let dest = a:config.cwd
@@ -72,6 +73,30 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
   endif
 
   " spawn terminal
+  let [bufnr, config] = s:spawn_terminal(a:cmd, a:jobopts, a:config)
+
+  " hide floaterm immediately if silent
+  if has_key(config, 'silent') && config.silent == 1
+    call floaterm#window#hide(bufnr)
+    stopinsert
+  endif
+
+  " restore cwd
+  call floaterm#path#chdir(savedcwd)
+
+  return bufnr
+endfunction
+
+function! floaterm#terminal#open_existing(bufnr) abort
+  let winnr = bufwinnr(a:bufnr)
+  if winnr > -1
+    execute winnr . 'hide'
+  endif
+  let config = getbufvar(a:bufnr, 'floaterm_config', {})
+  call floaterm#terminal#open(a:bufnr, '', {}, config)
+endfunction
+
+function! s:spawn_terminal(cmd, jobopts, config) abort
   if has('nvim')
     let bufnr = nvim_create_buf(v:false, v:true)
     call floaterm#buflist#add(bufnr)
@@ -100,26 +125,8 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
     let s:channel_map[bufnr] = job_getchannel(job)
     let [winid, config] = floaterm#window#open(bufnr, a:config)
   endif
-
   call s:on_floaterm_open(bufnr, winid, config)
-
-  if has_key(config, 'silent') && config.silent == 1
-    call floaterm#window#hide(bufnr)
-    stopinsert
-  endif
-
-  " back to previous cwd
-  call floaterm#path#chdir(curcwd)
-  return bufnr
-endfunction
-
-function! floaterm#terminal#open_existing(bufnr) abort
-  let winnr = bufwinnr(a:bufnr)
-  if winnr > -1
-    execute winnr . 'hide'
-  endif
-  let config = getbufvar(a:bufnr, 'floaterm_config', {})
-  call floaterm#terminal#open(a:bufnr, '', {}, config)
+  return [bufnr, config]
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort
