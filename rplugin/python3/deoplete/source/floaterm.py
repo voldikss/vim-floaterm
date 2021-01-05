@@ -26,7 +26,7 @@ class Source(Base):
         self.max_candidates = 0
 
     def gather_candidates(self, context):
-        lines: List[str] = self.vim.call("floaterm#util#getbufline", -1, 100)
+        lines: List[str] = self.vim.call("floaterm#util#getbuflines", -1, 100)
         candidates = []
         for line in lines:
             for word in line.split(" "):
