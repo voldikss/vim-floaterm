@@ -171,7 +171,7 @@ function! floaterm#terminal#kill(bufnr) abort
     endif
   else
     let job = term_getjob(a:bufnr)
-    if job && job_status(job) !=# 'dead'
+    if job_status(job) && job_status(job) !=# 'dead'
       call job_stop(job)
     endif
   endif
