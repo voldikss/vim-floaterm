@@ -88,6 +88,10 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
 endfunction
 
 function! floaterm#terminal#open_existing(bufnr) abort
+  if !bufexists(a:bufnr)
+    call floaterm#util#show_msg(printf("Buffer %s doesn't exists", a:bufnr), 'error')
+    return
+  endif
   let winnr = bufwinnr(a:bufnr)
   if winnr > -1
     execute winnr . 'hide'
