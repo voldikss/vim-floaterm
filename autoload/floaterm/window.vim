@@ -246,6 +246,7 @@ function! s:init_win(winid, is_border) abort
     call setwinvar(a:winid, 'wincolor', 'Floaterm')
   endif
   call setwinvar(a:winid, '&sidescrolloff', 0)
+  call setwinvar(a:winid, '&colorcolumn', '')
 endfunction
 
 function! floaterm#window#open(bufnr, config) abort

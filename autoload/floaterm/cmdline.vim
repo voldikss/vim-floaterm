@@ -22,7 +22,7 @@ function! floaterm#cmdline#parse(arglist) abort
             let [key, value] = [pair[0][2:], v:true]
           else
             call floaterm#util#show_msg('Argument Error: No value given to option: ' . pair[0], 'error')
-            return
+            return [cmd, config]
           endif
         else
           let [key, value] = [pair[0][2:], pair[1]]
