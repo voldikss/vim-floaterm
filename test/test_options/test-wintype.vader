@@ -1,26 +1,27 @@
 " vim:ft=vim
 
-Execute(Function IsFloating):
-  function! IsFloating(winid) abort
-    return has_key(nvim_win_get_config(a:winid), 'anchor')
+Execute(test-wintype):
+  function! IsFloatOrPopup(winid) abort
+    if has('nvim')
+      return has_key(nvim_win_get_config(a:winid), 'anchor')
+    else
+      return win_gettype(a:winid) == 'popup'
+    endif
   endfunction
 
-Execute(Test1):
-  let g:floaterm_wintype = 'normal'
-  FloatermNew
-  AssertEqual 0,IsFloating(win_getid())
-  FloatermNew --wintype=floating
-  AssertEqual 1,IsFloating(win_getid())
+  Log '# Set wintype to normal'
+    let g:floaterm_wintype = 'normal'
+    FloatermNew
+    AssertEqual 0,IsFloatOrPopup(win_getid())
+    FloatermNew --wintype=float
+    AssertEqual 1,IsFloatOrPopup(win_getid())
 
-Execute(Test2):
-  let g:floaterm_wintype = 'floating'
-  FloatermNew
-  AssertEqual 1,IsFloating(win_getid())
-  FloatermNew --wintype=normal
-  AssertEqual 0,IsFloating(win_getid())
+  Log '# Set wintype to float'
+    let g:floaterm_wintype = 'float'
+    FloatermNew
+    AssertEqual 1,IsFloatOrPopup(win_getid())
+    FloatermNew --wintype=normal
+    AssertEqual 0,IsFloatOrPopup(win_getid())
 
-Execute(Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

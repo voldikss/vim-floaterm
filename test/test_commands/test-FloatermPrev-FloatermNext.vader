@@ -1,47 +1,44 @@
 " vim:ft=vim
 
-Execute(create 4 floaterms):
+Execute(test-FloatermPrev-FloatermNext):
   FloatermNew
-  let bufnr1 = bufnr()
+  let bufnr1 = bufnr('%')
   FloatermNew
-  let bufnr2 = bufnr()
+  let bufnr2 = bufnr('%')
   FloatermNew
-  let bufnr3 = bufnr()
+  let bufnr3 = bufnr('%')
   FloatermNew
-  let bufnr4 = bufnr()
+  let bufnr4 = bufnr('%')
 
-Execute(execute `:FloatermPrev`):
-  FloatermPrev
-  AssertEqual bufnr3, bufnr()
-  FloatermPrev
-  AssertEqual bufnr2, bufnr()
-  FloatermPrev
-  AssertEqual bufnr1, bufnr()
-  FloatermPrev
-  AssertEqual bufnr4, bufnr()
+  Log '# Execute `:FloatermPrev'
+    FloatermPrev
+    AssertEqual bufnr3, bufnr('%')
+    FloatermPrev
+    AssertEqual bufnr2, bufnr('%')
+    FloatermPrev
+    AssertEqual bufnr1, bufnr('%')
+    FloatermPrev
+    AssertEqual bufnr4, bufnr('%')
 
-Execute(execute `:FloatermNext`):
-  FloatermNext
-  AssertEqual bufnr1, bufnr()
-  FloatermNext
-  AssertEqual bufnr2, bufnr()
-  FloatermNext
-  AssertEqual bufnr3, bufnr()
-  FloatermNext
-  AssertEqual bufnr4, bufnr()
+  Log '# Execute `:FloatermNext'
+    FloatermNext
+    AssertEqual bufnr1, bufnr('%')
+    FloatermNext
+    AssertEqual bufnr2, bufnr('%')
+    FloatermNext
+    AssertEqual bufnr3, bufnr('%')
+    FloatermNext
+    AssertEqual bufnr4, bufnr('%')
 
-Execute(kill the prev floaterm and execute `:FloatermPrev`):
-  execute bufnr3 . 'FloatermKill'
-  FloatermPrev
-  AssertEqual bufnr2, bufnr()
+  Log '# Kill the prev floaterm and execute `:FloatermPrev'
+    execute bufnr3 . 'FloatermKill'
+    FloatermPrev
+    AssertEqual bufnr2, bufnr('%')
 
-Execute(kill the next floaterm and execute `:FloatermPrev`):
-  execute bufnr4 . 'FloatermKill'
-  FloatermNext
-  AssertEqual bufnr1, bufnr()
+  Log '# Kill the next floaterm and execute `:FloatermPrev'
+    execute bufnr4 . 'FloatermKill'
+    FloatermNext
+    AssertEqual bufnr1, bufnr('%')
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

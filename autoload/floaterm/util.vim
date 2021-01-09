@@ -39,12 +39,14 @@ function! floaterm#util#edit(_bufnr, filename) abort
 endfunction
 
 function! floaterm#util#startinsert() abort
-  if !g:floaterm_autoinsert | return | endif
-  if mode() == 'i' | return | endif
-  if has('nvim')
-    startinsert
-  else
-    silent! execute 'normal! i'
+  if !g:floaterm_autoinsert 
+    call feedkeys("\<C-\>\<C-n>", 'n')
+  elseif mode() != 'i'
+    if has('nvim')
+      startinsert
+    else
+      silent! execute 'normal! i'
+    endif
   endif
 endfunction
 

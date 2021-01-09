@@ -6,50 +6,61 @@
 Execute(Enable autohide):
   let g:floaterm_autohide = v:true
 
-Execute(FloatermNew: the first should be closed, the second should be opened):
-  FloatermNew
-  let buffer1 = bufnr('%')
-  FloatermNew
-  let buffer2 = bufnr('%')
-  AssertEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+  Log '# FloatermNew: the first should be closed, the second should be opened'
+    FloatermNew
+    let buffer1 = bufnr('%')
+    FloatermNew
+    let buffer2 = bufnr('%')
+    AssertEqual -1,bufwinnr(buffer1)
+    if has('nvim')
+      AssertNotEqual -1,bufwinnr(buffer2)
+    endif
 
-Execute(FloatermPrev: the first should be opened, the second should be closed):
-  FloatermPrev
-  AssertNotEqual -1,bufwinnr(buffer1)
-  AssertEqual -1,bufwinnr(buffer2)
+  Log '# FloatermPrev: the first should be opened, the second should be closed'
+    FloatermPrev
+    if has('nvim')
+      AssertNotEqual -1,bufwinnr(buffer1)
+    endif
+    AssertEqual -1,bufwinnr(buffer2)
 
-Execute(FloatermNext: the first should be closed, the second should be opened):
-  FloatermNext
-  AssertEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+  Log '# FloatermNext: the first should be closed, the second should be opened'
+    FloatermNext
+    AssertEqual -1,bufwinnr(buffer1)
+    if has('nvim')
+      AssertNotEqual -1,bufwinnr(buffer2)
+    endif
 
 
-"-----------------------------------------------------------------------------
-# FloatermShow/FloatermHide/FloatermToggle should works normally regardless of this option
-"-----------------------------------------------------------------------------
+  " FloatermShow/FloatermHide/FloatermToggle should works normally regardless of this option
 
-Execute(FloatermShow!: both floaterms should be opened):
-  FloatermShow!
-  AssertNotEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+  Log '# FloatermShow!: both floaterms should be opened'
+    if has('nvim')
+      FloatermShow!
+      AssertNotEqual -1,bufwinnr(buffer1)
+      AssertNotEqual -1,bufwinnr(buffer2)
+    endif
 
-Execute(FloatermHide!: both floaterms should be closed):
-  FloatermHide!
-  AssertEqual -1,bufwinnr(buffer1)
-  AssertEqual -1,bufwinnr(buffer2)
+  Log '# FloatermHide!: both floaterms should be closed'
+    FloatermHide!
+    AssertEqual -1,bufwinnr(buffer1)
+    AssertEqual -1,bufwinnr(buffer2)
 
-Execute(FloatermToggle!: both floaterms should be opened):
-  FloatermToggle!
-  AssertNotEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+  Log '# FloatermToggle!: both floaterms should be opened'
+    if has('nvim')
+      FloatermToggle!
+      AssertNotEqual -1,bufwinnr(buffer1)
+      AssertNotEqual -1,bufwinnr(buffer2)
+    endif
 
-Execute(FloatermToggle!: both floaterms should be closed):
-  FloatermToggle!
-  AssertEqual -1,bufwinnr(buffer1)
-  AssertEqual -1,bufwinnr(buffer2)
+  Log '# FloatermToggle!: both floaterms should be closed'
+    if has('nvim')
+      FloatermToggle!
+      AssertEqual -1,bufwinnr(buffer1)
+      AssertEqual -1,bufwinnr(buffer2)
+    endif
 
-Execute(FloatermKill!: kill all floaterms):
+  Log '# FloatermKill!: kill all floaterms'
+
   FloatermKill!
 
 
@@ -59,24 +70,25 @@ Execute(FloatermKill!: kill all floaterms):
 Execute(Disable autohide):
   let g:floaterm_autohide = v:false
 
-Execute(FloatermNew && FloatermPrev && FloatermNext: both floaterms should always be opened):
-  FloatermNew
-  let buffer1 = bufnr('%')
-  FloatermNew
-  let buffer2 = bufnr('%')
-  AssertNotEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+  Log '# FloatermNew && FloatermPrev && FloatermNext: both floaterms should always be opened'
+    if has('nvim')
+      FloatermNew
+      let buffer1 = bufnr('%')
+      FloatermNew
+      let buffer2 = bufnr('%')
+      AssertNotEqual -1,bufwinnr(buffer1)
+      AssertNotEqual -1,bufwinnr(buffer2)
 
-  FloatermPrev
-  AssertNotEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+      FloatermPrev
+      AssertNotEqual -1,bufwinnr(buffer1)
+      AssertNotEqual -1,bufwinnr(buffer2)
 
-  FloatermNext
-  AssertNotEqual -1,bufwinnr(buffer1)
-  AssertNotEqual -1,bufwinnr(buffer2)
+      FloatermNext
+      AssertNotEqual -1,bufwinnr(buffer1)
+      AssertNotEqual -1,bufwinnr(buffer2)
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
+      FloatermKill!
+    endif
+
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

@@ -6,29 +6,24 @@ Execute(Set g:floaterm_width and g:floaterm_height):
   let g:floaterm_width = 0.6
   let columns_origin = &columns
 
-Execute(FloatermNew):
-  FloatermNew
-  AssertEqual b:floaterm_config.width, 0.6
-  AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
-  AssertEqual b:floaterm_config.height, 0.6
-  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
+  Log '# Basic'
+    FloatermNew
+    AssertEqual b:floaterm_config.width, 0.6
+    AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
+    AssertEqual b:floaterm_config.height, 0.6
+    AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
-Execute(FloatermHide and change `&columns`):
-  FloatermHide
-  let &columns = float2nr(&columns/2)
+  Log '# Change `&columns` and reopen'
+    FloatermHide
+    let &columns = float2nr(&columns/2)
 
-Execute(FloatermShow: reopen it):
-  FloatermShow
-  AssertEqual b:floaterm_config.width, 0.6
-  AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
-  AssertEqual b:floaterm_config.height, 0.6
-  AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
+    FloatermShow
+    AssertEqual b:floaterm_config.width, 0.6
+    AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
+    AssertEqual b:floaterm_config.height, 0.6
+    AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
-Execute(Restore `&columns`):
-  let &columns = columns_origin
+    let &columns = columns_origin
 
-Execute(Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

@@ -1,50 +1,53 @@
 " vim:ft=vim
 
-Execute(Set autoclose to 0):
-  FloatermNew --autoclose=0 ls
-  sleep 100m
-  AssertEqual 'floaterm',&filetype
+Execute(test-autoclose):
+  Log '# Set autoclose to 0 with normal exit'
+    FloatermNew --autoclose=0 ls
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertEqual bufnr, bufnr('%')
 
-  let g:floaterm_autoclose = 0
-  FloatermNew ls
-  sleep 100m
-  AssertEqual 'floaterm',&filetype
+    let g:floaterm_autoclose = 0
+    FloatermNew ls
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertEqual bufnr, bufnr('%')
 
-Execute(Set autoclose to 1 with normal command):
-  " noa: to pass local test since I have a TermOpen autocmd which contains a
-  " timer_start function in which it has a `set ft`. (fn#terminal#settings())
-  noa FloatermNew --autoclose=1 ls
-  sleep 100m
-  AssertEqual '',&filetype
+  Log '# Set autoclose to 1 with normal exit'
+    FloatermNew --autoclose=1 ls
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertNotEqual bufnr, bufnr('%')
 
-  let g:floaterm_autoclose = 1
-  noa FloatermNew ls
-  sleep 100m
-  AssertEqual '',&filetype
+    let g:floaterm_autoclose = 1
+    FloatermNew ls
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertNotEqual bufnr, bufnr('%')
 
-Execute(Set autoclose to 1 with error command):
-  FloatermNew --autoclose=1 xxx
-  sleep 100m
-  AssertEqual 'floaterm',&filetype
+  Log '# Set autoclose to 1 with unnormal exit'
+    FloatermNew --autoclose=1 xxx
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertEqual bufnr, bufnr('%')
 
-  let g:floaterm_autoclose = 1
-  FloatermNew xxx
-  sleep 100m
-  AssertEqual 'floaterm',&filetype
+    let g:floaterm_autoclose = 1
+    FloatermNew xxx
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertEqual bufnr, bufnr('%')
 
-Execute(Set autoclose to 2):
-  noa FloatermNew --autoclose=2 ls
-  sleep 100m
-  AssertEqual '',&filetype
+  Log '# Set autoclose to 2 with unnormal exit'
+    FloatermNew --autoclose=2 xxx
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertNotEqual bufnr, bufnr('%')
 
-  let g:floaterm_autoclose = 2
-  noa FloatermNew ls
-  sleep 100m
-  AssertEqual '',&filetype
+    let g:floaterm_autoclose = 2
+    FloatermNew xxx
+    let bufnr = bufnr('%')
+    sleep 100m
+    AssertNotEqual bufnr, bufnr('%')
 
-
-Execute (Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

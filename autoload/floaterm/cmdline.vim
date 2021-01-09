@@ -76,11 +76,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   endfor
 
   if match(a:arg_lead, '--wintype=') > -1
-    if has('nvim')
-      let vals = ['normal', 'floating']
-    else
-      let vals = ['normal', 'popup']
-    endif
+    let vals = ['normal', 'float']
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
     let vals = [

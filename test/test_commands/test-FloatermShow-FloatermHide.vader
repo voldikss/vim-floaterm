@@ -1,0 +1,57 @@
+" vim:ft=vim
+
+Execute(FloatermShow/Hide):
+  Log '# Basic'
+    FloatermNew
+    FloatermHide
+    AssertEqual '', &filetype
+    FloatermShow
+    AssertEqual 'floaterm', &filetype
+
+  Log '# Show or hide between multiple floaterms'
+    FloatermNew
+    let bufnr1 = bufnr('%')
+    FloatermNew
+    let bufnr2 = bufnr('%')
+
+    FloatermHide!
+    AssertEqual -1,bufwinnr(bufnr1)
+    AssertEqual -1,bufwinnr(bufnr2)
+
+    if has('nvim')
+      FloatermShow!
+      AssertNotEqual -1,bufwinnr(bufnr1)
+      AssertNotEqual -1,bufwinnr(bufnr2)
+    endif
+
+  Log '# [N]FloatermHide'
+    FloatermNew
+    let bufnr1 = bufnr('%')
+    execute bufnr1 . 'FloatermHide'
+    AssertEqual -1,bufwinnr(bufnr1)
+
+    FloatermNew
+    let bufnr2 = bufnr('%')
+    execute bufnr2 . 'FloatermHide'
+    AssertEqual -1,bufwinnr(bufnr2)
+
+  Log '# [N]FloatermShow'
+    if has('nvim')
+      execute bufnr1 . 'FloatermShow'
+      AssertEqual bufnr1, bufnr('%')
+      execute bufnr2 . 'FloatermShow'
+      AssertEqual bufnr2, bufnr('%')
+    endif
+
+  Log '# FloatermHide --name'
+    FloatermNew --name=ft1
+    FloatermHide ft1
+    FloatermNew --name=ft2
+    FloatermHide ft2
+
+  Log '# FloatermShow --name'
+    FloatermShow ft1
+    FloatermShow ft2
+
+  FloatermKill!
+  stopinsert

@@ -1,35 +1,32 @@
 " vim:ft=vim
 
-Execute(create 4 floaterms):
+Execute(test-FloatermFirst-FloatermLast):
   FloatermNew
-  let bufnr1 = bufnr()
+  let bufnr1 = bufnr('%')
   FloatermNew
-  let bufnr2 = bufnr()
+  let bufnr2 = bufnr('%')
   FloatermNew
-  let bufnr3 = bufnr()
+  let bufnr3 = bufnr('%')
   FloatermNew
-  let bufnr4 = bufnr()
+  let bufnr4 = bufnr('%')
 
-Execute(execute `:FloatermFirst`):
-  FloatermFirst
-  AssertEqual bufnr1, bufnr()
+  Log '# Execute `:FloatermFirst`'
+    FloatermFirst
+    AssertEqual bufnr1, bufnr('%')
 
-Execute(execute `:FloatermLast`):
-  FloatermLast
-  AssertEqual bufnr4, bufnr()
+  Log '# Execute `:FloatermLast`'
+    FloatermLast
+    AssertEqual bufnr4, bufnr('%')
 
-Execute(kill the last floaterm and execute `:FloatermFirst`):
-  execute bufnr1 . 'FloatermKill'
-  FloatermFirst
-  AssertEqual bufnr2, bufnr()
+  Log '# Kill the last floaterm and execute `:FloatermFirst`'
+    execute bufnr1 . 'FloatermKill'
+    FloatermFirst
+    AssertEqual bufnr2, bufnr('%')
 
-Execute(kill the last floaterm and execute `:FloatermLast`):
-  execute bufnr4 . 'FloatermKill'
-  FloatermLast
-  AssertEqual bufnr3, bufnr()
+  Log '# Kill the last floaterm and execute `:FloatermLast`'
+    execute bufnr4 . 'FloatermKill'
+    FloatermLast
+    AssertEqual bufnr3, bufnr('%')
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

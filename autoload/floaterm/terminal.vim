@@ -169,17 +169,31 @@ endfunction
 function! floaterm#terminal#kill(bufnr) abort
   call floaterm#window#hide(a:bufnr)
   if has('nvim')
-    let jobid = getbufvar(a:bufnr, '&channel')
-    if jobwait([jobid], 0)[0] == -1
-      call jobstop(jobid)
+    let job = getbufvar(a:bufnr, '&channel')
+    if jobwait([job], 0)[0] == -1
+      call jobstop(job)
     endif
   else
     let job = term_getjob(a:bufnr)
     if job != v:null && job_status(job) !=# 'dead'
-      call job_stop(job)
+      call job_stop(job, 'kill')
     endif
   endif
-  if bufexists(a:bufnr)
-    execute a:bufnr . 'bwipeout!'
+  try
+    if bufexists(a:bufnr)
+      execute a:bufnr . 'bwipeout!'
+    endif
+  catch
+    call popup_close(win_getid())
+  endtry
+endfunction
+
+function! floaterm#terminal#jobexists(bufnr) abort
+  if has('nvim')
+    let job = getbufvar(a:bufnr, '&channel')
+    return jobwait([job], 0)[0] == -1
+  else
+    let job = term_getjob(a:bufnr)
+    return job != v:null && job_status(job) != 'dead'
   endif
 endfunction

@@ -1,39 +1,23 @@
 " vim:ft=vim
 
-Execute(FloatermNew floaterm ../../LICENSE):
-  silent !touch test.txt
-  wincmd o
-  FloatermNew floaterm test.txt
-  sleep 1000m
-  Log expand('%')
-  Log &ft
-  AssertEqual 'test.txt',expand('%:t')
-  AssertNotEqual 'floaterm',&ft
-  " floating window is closed
-  for winnr in range(1, winnr('$'))
-    let winid = win_getid(winnr)
-    if !empty(getwininfo(winid))
-      Assert !has_key(nvim_win_get_config(winid), 'anchor')
-    endif
-  endfor
-  silent !rm test.txt
+Execute(test-open_command):
+  Log '# FloatermNew floaterm ../../LICENSE'
+    let original_winid = win_getid()
+    silent !touch test.txt
+    FloatermNew floaterm test.txt
+    sleep 1000m
+    Log expand('%')
+    Log &ft
+    AssertEqual 'test.txt',expand('%:t')
+    AssertNotEqual 'floaterm',&ft
+    Assert win_getid() == original_winid
 
-Execute(FloatermNew cat ../../LICENSE | floaterm):
-  silent !touch test.txt
-  FloatermNew cat test.txt | floaterm
-  sleep 1000m
-  AssertNotEqual 'floaterm',&ft
-  " floating window is closed
-  for winnr in range(1, winnr('$'))
-    let winid = win_getid(winnr)
-    if !empty(getwininfo(winid))
-      Assert !has_key(nvim_win_get_config(winid), 'anchor')
-    endif
-  endfor
-  silent !rm test.txt
+  Log '# FloatermNew cat ../../LICENSE | floaterm'
+    FloatermNew cat test.txt | floaterm
+    sleep 1000m
+    AssertNotEqual 'floaterm',&ft
+    Assert win_getid() == original_winid
+    silent !rm test.txt
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

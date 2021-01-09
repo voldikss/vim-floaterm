@@ -16,11 +16,11 @@ Before(Define universal function used to test command completion):
   endfunction
 
 Execute(Test floaterm#cmdline#parse):
-  let argstr ='--height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
+  let argstr ='--height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
   let [cmd, config] = floaterm#cmdline#parse(split(argstr))
   AssertEqual 'ranger --cmd="cd ~"', cmd
   AssertEqual {
-    \'wintype': 'floating',
+    \'wintype': 'float',
     \'name': 'floaterm1',
     \'autoclose': 2,
     \'width': 0.4,
@@ -127,7 +127,7 @@ Execute(Test floaterm#cmdline#complete):
   call Test__floaterm_cmdline_complete('FloatermNew --silent', [])
   call Test__floaterm_cmdline_complete('FloatermNew --wintype=', [
     \'--wintype=normal',
-    \'--wintype=floating'
+    \'--wintype=float'
     \])
   call Test__floaterm_cmdline_complete('FloatermNew --wintype=n', [
     \'--wintype=normal'
@@ -189,10 +189,6 @@ Execute(Test floaterm#cmdline#complete_names2):
   call Test__floaterm_cmdline_complete_names2('FloatermUpdate -', ['--name='])
   call Test__floaterm_cmdline_complete_names2('FloatermSend ', ['--name='])
   call Test__floaterm_cmdline_complete_names2('FloatermSend --name=', ['--name=floaterm1', '--name=floaterm2'])
-  FloatermKill!
 
-Execute(Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

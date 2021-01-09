@@ -94,10 +94,10 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or `: FloatermPrev`
 For example, the command
 
 ```vim
-:FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
+:FloatermNew --height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
 ```
 
-will open a new `floating` floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
+will open a new floating/popup floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
 
 The following command allows you to compile and run your C code in the floaterm window:
 
@@ -187,8 +187,8 @@ Example: `'floaterm($1|$2)'`
 
 #### **`g:floaterm_wintype`**
 
-Type `String`. `'floating'`(neovim) or `'popup'`(vim) by default. Set it to
-`'normal'` if your vim/nvim doesn't support `floatwin` or `popup`.
+Type `String`. `'float'`(nvim's floating or vim's popup) by default. Set it to
+`'normal'` if your vim/nvim doesn't support `floatwin` or `popupwin` feature.
 
 #### **`g:floaterm_width`**
 
@@ -209,9 +209,9 @@ Default: `0.6`
 Type `String`. The position of the floating window. Available values:
 
 - If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
-- If `wintype` is `floating` or `popup`: `'top'`, `'right'`, `'bottom'`,
-  `'left'`, `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`,
-  `'bottomright'`, `'auto'(at the cursor place)`. Default: `'center'`
+- If `wintype` is `float`: `'top'`, `'right'`, `'bottom'`, `'left'`,
+  `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`,
+  `'auto'(at the cursor place)`. Default: `'center'`
 
 In addition, there is another option `'random'` which allows to pick a random
 position from above when (re)opening a floaterm window.
@@ -330,7 +330,7 @@ tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 ### Highlights
 
 There are two `highlight-groups` to specify the color of floaterm (also the
-border color if `g: floaterm_wintype` is `'floating'` or `'popup'`) window.
+border color if `g: floaterm_wintype` is `'float'`) window.
 
 To customize, use `hi` command together with the colors you prefer.
 

@@ -1,20 +1,18 @@
 " vim:ft=vim
 
-Execute(Function GetTitleLine):
+Execute(test-title):
   function! GetTitleLine(winid) abort
     return getbufline(winbufnr(a:winid), 1)[0]
   endfunction
 
-Execute(Set g:floaterm_title):
-  let g:floaterm_title = 'floaterm ($1/$2)'
-  FloatermNew
-  Assert GetTitleLine(w:floatermborder_winid) =~ 'floaterm (1/1)'
-  let g:floaterm_title = ''
-  FloatermNew
-  Assert GetTitleLine(w:floatermborder_winid) =~ '┌─*┐'
+  if has('nvim')
+    let g:floaterm_title = 'floaterm ($1/$2)'
+    FloatermNew
+    Assert GetTitleLine(w:floatermborder_winid) =~ 'floaterm (1/1)'
+    let g:floaterm_title = ''
+    FloatermNew
+    Assert GetTitleLine(w:floatermborder_winid) =~ '┌─*┐'
+  endif
 
-Execute(Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

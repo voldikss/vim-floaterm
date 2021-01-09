@@ -1,16 +1,29 @@
 " vim:ft=vim
 
-Execute(FloatermSend):
-  FloatermNew
-  FloatermToggle
-  FloatermSend
+Given(One line text):
+  # text to be send
 
-Execute(FloatermSend with argument):
-  FloatermKill!
-  FloatermSend ls
+Execute(test-FloatermSend):
+  Log '# FloatermNew'
+    FloatermNew
+    let bufnr1 = bufnr('%')
+    FloatermHide
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
+  Log '# FloatermSend'
+    FloatermSend
+    sleep 500m
+    let lines = join(getbufline(bufnr1, 0, '$'))
+    Log lines
+    Assert lines =~ '# text to be send'
+
+  Log '# FloatermSend with argument'
+    FloatermNew
+    let bufnr2 = bufnr('%')
+    FloatermHide
+    FloatermSend \# text to be send
+    sleep 500m
+    let lines = join(getbufline(bufnr2, 0, '$'))
+    Assert lines =~ '# text to be send'
+
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

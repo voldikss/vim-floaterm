@@ -1,8 +1,20 @@
+set nocompatible
+
 filetype off
+
 let &runtimepath .= ',' . expand('<sfile>:p:h:h')
-let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/vader.vim'
-echom &runtimepath
+if $USER == 'runner'
+  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/vader.vim'
+  let g:run_in_ci = v:true
+else
+  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../vader.vim'
+  let g:run_in_ci = v:false
+endif
+
+" NOTE: echom will frozen vim8 in GitHub Action
+" echom &runtimepath
+
 filetype plugin indent on
 syntax enable
 
-let g:floaterm_gitcommit = 'split'
+nnoremap <silent>       Q         :qa!<CR>

@@ -10,29 +10,36 @@ let s:has_float = has('nvim') && exists('*nvim_win_set_config')
 
 function! s:get_wintype() abort
   if empty(g:floaterm_wintype)
-    if s:has_float
-      return 'floating'
-    elseif s:has_popup
-      return 'popup'
+    if s:has_float || s:has_popup
+      return 'float'
     else
       return 'normal'
     endif
-  elseif g:floaterm_wintype == 'floating' && !s:has_float
-    call floaterm#util#show_msg("floating window is not supported in your nvim, fall back to normal window", 'warning')
-    return 'normal'
+  elseif g:floaterm_wintype == 'float'
+    if s:has_float || s:has_popup
+      return 'float'
+    else
+      call floaterm#util#show_msg("floating or popup feature is not found, fall back to normal window", 'warning')
+      return 'normal'
+    endif
   elseif g:floaterm_wintype == 'popup' && !s:has_popup
-    call floaterm#util#show_msg("popup window is not supported in your vim, fall back to normal window", 'warning')
+    call floaterm#util#show_msg("popupwin feature is not found, fall back to normal window", 'warning')
     return 'normal'
   else
-    return g:floaterm_wintype
+    return 'normal'
   endif
 endfunction
 
 function! s:make_title(bufnr, text) abort
   if empty(a:text) | return '' | endif
   let buffers = floaterm#buflist#gather()
-  let cnt = len(buffers)
-  let idx = index(buffers, a:bufnr) + 1
+  if empty(buffers)  " the buffer has not attached a job yet, but will do
+    let cnt = 1
+    let idx = 1
+  else
+    let cnt = len(buffers)
+    let idx = index(buffers, a:bufnr) + 1
+  endif
   let title = substitute(a:text, '$1', idx, 'gm')
   let title = substitute(title, '$2', cnt, 'gm')
   return title
@@ -200,10 +207,10 @@ function! s:open_popup(bufnr, config) abort
         \ 'pos': a:config.anchor,
         \ 'line': a:config.row,
         \ 'col': a:config.col,
-        \ 'maxwidth': a:config.width,
-        \ 'minwidth': a:config.width,
-        \ 'maxheight': a:config.height,
-        \ 'minheight': a:config.height,
+        \ 'maxwidth': a:config.width - 2,
+        \ 'minwidth': a:config.width - 2,
+        \ 'maxheight': a:config.height - 2,
+        \ 'minheight': a:config.height - 2,
         \ 'border': [1, 1, 1, 1],
         \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
@@ -251,10 +258,12 @@ endfunction
 
 function! floaterm#window#open(bufnr, config) abort
   let config = s:parse_config(a:config)
-  if config.wintype == 'floating'
-    let winid = s:open_float(a:bufnr, config)
-  elseif config.wintype == 'popup'
-    let winid = s:open_popup(a:bufnr, config)
+  if config.wintype == 'float'
+    if s:has_float
+      let winid = s:open_float(a:bufnr, config)
+    else
+      let winid = s:open_popup(a:bufnr, config)
+    endif
   else
     let winid = s:open_split(a:bufnr, config)
   endif

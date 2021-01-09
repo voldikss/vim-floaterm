@@ -48,8 +48,8 @@ g:floaterm_title                                 *g:floaterm_title*
 
 g:floaterm_wintype                               *g:floaterm_wintype*
     Type |String|.
-	'floating'(neovim) or 'popup'(vim) by default. Set it to 'normal' if your
-	vim/nvim doesn't support |api-floatwin| or |popup-window|.
+    'float'(nvim's floatwin or vim's popupwin) by default. Set it to 'normal'
+    if your vim/nvim doesn't support |api-floatwin| or |popup-window|.
 
 g:floaterm_width                                 *g:floaterm_width*
     Type: |Number| (number of columns) or |Float| (between 0 and 1).
@@ -66,9 +66,9 @@ g:floaterm_position                              *g:floaterm_position*
 	The position of the floaterm window.
 	If |g:floaterm_wintype| is 'normal', the value can be 'top', 'right',
 	'bottom', 'left'. Default value is 'bottom'.
-	If |g:floaterm_wintype| is 'floating' or 'popup', the value can be 'top',
-	'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft',
-	'bottomright', 'auto'(at the cursor place). Default value is 'center'.
+    If |g:floaterm_wintype| is 'popup', the value can be 'top', 'right', 'bottom',
+    'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright',
+    'auto'(at the cursor place). Default value is 'center'.
 
 g:floaterm_borderchars                           *g:floaterm_borderchars*
 	Type |List| of |String|.
@@ -215,9 +215,8 @@ https://github.com/voldikss/vim-floaterm#commands
 ==============================================================================
 HIGHLIGHT                                        *floaterm-highlight*
 
-This plugin provides two |highlight-groups| to specify the bg/fg color of
-floaterm(also the border color if |g:floaterm_wintype| is 'floating' or
-'popup')window.
+This plugin provides two |highlight-groups| to specify the bg/fg color of 
+floaterm (also the border color if |g:floaterm_wintype| is 'float')window.
 
 To customize, use |hi| command together with the colors you prefer.  For example,
  >

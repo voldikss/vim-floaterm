@@ -1,11 +1,14 @@
 " vim:ft=vim
 
-Execute(FloatermNew --silent):
-  " TODO
+Execute(test-silent):
+  Log '# FloatermNew --silent ls'
+    FloatermNew --silent ls
+    sleep 100m
+    AssertEqual 0, len(floaterm#buflist#gather())
 
+  Log '# FloatermNew! --silent ls'
+    FloatermNew! --silent
+    AssertEqual 1, len(floaterm#buflist#gather())
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert

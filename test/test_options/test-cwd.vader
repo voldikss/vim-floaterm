@@ -5,9 +5,3 @@ Execute(Set cwd and open a floaterm):
 
 Execute(Close floaterm and check cwd):
   " TODO
-
-Execute (Exit):
-  call feedkeys("\<Esc>")
-  FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")

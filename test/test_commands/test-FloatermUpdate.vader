@@ -1,12 +1,10 @@
 " vim:ft=vim
 
 Execute(FloatermUpdate):
-  FloatermNew
-  FloatermUpdate --name=ft
-  AssertEqual 'ft', b:floaterm_config['name']
+  Log '# Basic'
+    FloatermNew
+    FloatermUpdate --name=ft
+    AssertEqual 'ft', b:floaterm_config['name']
 
-Execute (Exit):
-  call feedkeys("\<Esc>")
   FloatermKill!
-  sleep 100m
-  call feedkeys("\<CR>")
+  stopinsert
