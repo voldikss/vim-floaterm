@@ -4,7 +4,7 @@ Execute(FloatermUpdate):
   Log '# Basic'
     FloatermNew
     FloatermUpdate --name=ft
-    AssertEqual 'ft', b:floaterm_config['name']
+    AssertEqual 'ft', b:floaterm_name
 
   FloatermKill!
   stopinsert

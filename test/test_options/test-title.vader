@@ -1,18 +1,33 @@
 " vim:ft=vim
 
 Execute(test-title):
-  function! GetTitleLine(winid) abort
-    return getbufline(winbufnr(a:winid), 1)[0]
+  function! GetTitleTopline() abort
+    if has('nvim')
+      let bd_winid = getbufvar(bufnr('%'), 'floaterm_borderwinid')
+      return getbufline(winbufnr(bd_winid), 1)[0]
+    else
+      return popup_getoptions(win_getid()).title
+    endif
   endfunction
 
-  if has('nvim')
-    let g:floaterm_title = 'floaterm ($1/$2)'
+  let g:floaterm_title = 'floaterm ($1/$2)'
+  Log '# 1/1'
     FloatermNew
-    Assert GetTitleLine(w:floatermborder_winid) =~ 'floaterm (1/1)'
+    Assert GetTitleTopline() =~ 'floaterm (1/1)'
+  Log '# 2|2'
+    FloatermNew --title=floaterm\ ($1|$2)
+    Assert GetTitleTopline() =~ 'floaterm (2|2)'
+  Log '# 1/2'
+    FloatermPrev
+    Assert GetTitleTopline() =~ 'floaterm (1/2)'
+  Log '# no title'
     let g:floaterm_title = ''
     FloatermNew
-    Assert GetTitleLine(w:floatermborder_winid) =~ '┌─*┐'
-  endif
+    if has('nvim')
+      Assert GetTitleTopline() =~ '┌─*┐'
+    else
+      Assert GetTitleTopline() == ''
+    endif
 
   FloatermKill!
   stopinsert

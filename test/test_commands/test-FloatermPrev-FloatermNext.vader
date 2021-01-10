@@ -31,12 +31,14 @@ Execute(test-FloatermPrev-FloatermNext):
     AssertEqual bufnr4, bufnr('%')
 
   Log '# Kill the prev floaterm and execute `:FloatermPrev'
+    FloatermHide " otherwise vim8 testing fails
     execute bufnr3 . 'FloatermKill'
     sleep 100m
     FloatermPrev
     AssertEqual bufnr2, bufnr('%')
 
   Log '# Kill the next floaterm and execute `:FloatermPrev'
+    FloatermHide " otherwise vim8 testing fails
     execute bufnr4 . 'FloatermKill'
     sleep 100m
     FloatermNext

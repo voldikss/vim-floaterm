@@ -127,9 +127,8 @@ function! s:path_join(home, name) abort
 endfunction
 
 function! floaterm#path#get_root() abort
-  let markers = g:floaterm_rootmarkers
   let strict = 0
-  let l:hr = s:find_root(getcwd(), markers, strict)
+  let l:hr = s:find_root(getcwd(), g:floaterm_rootmarkers, strict)
   if s:is_windows
     let l:hr = s:string_replace(l:hr, '/', "\\")
   endif

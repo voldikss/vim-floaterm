@@ -63,6 +63,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     \ '--wintype=',
     \ '--position=',
     \ '--autoclose=',
+    \ '--borderchars=',
     \ ]
 
   let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
@@ -99,7 +100,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return []
   elseif match(a:arg_lead, '--cwd=') > -1
     let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
-    let dirs = getcompletion(prestr, 'dir')
+    let dirs = getcompletion(prestr, 'dir') + ['<root>']
     return map(dirs, { k,v -> '--cwd=' . v })
   elseif match(a:arg_lead, '--name=') > -1
     return []
@@ -108,6 +109,8 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--height=') > -1
     return []
   elseif match(a:arg_lead, '--title=') > -1
+    return []
+  elseif match(a:arg_lead, '--borderchars=') > -1
     return []
   " The dash absolutely belongs to the `options` instead of executable
   " commands(e.g. `nvim-qt.exe`). So if `a:arg_lead` matches 1 or 2 dash, the
@@ -137,12 +140,9 @@ function! floaterm#cmdline#complete_names1(...) abort
   let buflist = floaterm#buflist#gather()
   let ret = []
   for bufnr in buflist
-    let config = getbufvar(bufnr, 'floaterm_config', {})
-    if !empty(config)
-      let termname = get(config, 'name', '')
-      if !empty(termname)
-        call add(ret, termname)
-      endif
+    let termname = floaterm#buffer#get_config(bufnr, 'name', '')
+    if !empty(termname)
+      call add(ret, termname)
     endif
   endfor
   return ret

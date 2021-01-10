@@ -137,7 +137,7 @@ function! floaterm#update(config) abort
 
   let bufnr = bufnr('%')
   call floaterm#window#hide(bufnr)
-  call floaterm#util#update_config(bufnr, a:config)
+  call floaterm#buffer#set_config_dict(bufnr, a:config)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
 

@@ -45,11 +45,11 @@ Execute(FloatermToggle):
     FloatermToggle
 
     FloatermToggle ft1
-    AssertEqual 'ft1', b:floaterm_config['name']
+    AssertEqual 'ft1', b:floaterm_name
     FloatermToggle ft2
-    AssertEqual 'ft2', b:floaterm_config['name']
+    AssertEqual 'ft2', b:floaterm_name
     FloatermToggle ft3
-    AssertEqual 'ft3', b:floaterm_config['name']
+    AssertEqual 'ft3', b:floaterm_name
 
   FloatermKill!
   stopinsert

@@ -18,12 +18,14 @@ Execute(test-FloatermFirst-FloatermLast):
     FloatermLast
     AssertEqual bufnr4, bufnr('%')
 
-  Log '# Kill the last floaterm and execute `:FloatermFirst`'
+  Log '# Kill the first floaterm and execute `:FloatermFirst`'
+    FloatermHide " otherwise vim8 testing fails
     execute bufnr1 . 'FloatermKill'
     FloatermFirst
     AssertEqual bufnr2, bufnr('%')
 
   Log '# Kill the last floaterm and execute `:FloatermLast`'
+    FloatermHide " otherwise vim8 testing fails
     execute bufnr4 . 'FloatermKill'
     FloatermLast
     AssertEqual bufnr3, bufnr('%')

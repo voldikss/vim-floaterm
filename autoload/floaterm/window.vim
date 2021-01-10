@@ -15,31 +15,23 @@ function! s:get_wintype() abort
     else
       return 'normal'
     endif
-  elseif g:floaterm_wintype == 'float'
+  elseif g:floaterm_wintype == 'normal'
+    return 'normal'
+  else " backward compatiblity: float|floating|popup -> float
     if s:has_float || s:has_popup
       return 'float'
     else
       call floaterm#util#show_msg("floating or popup feature is not found, fall back to normal window", 'warning')
       return 'normal'
     endif
-  elseif g:floaterm_wintype == 'popup' && !s:has_popup
-    call floaterm#util#show_msg("popupwin feature is not found, fall back to normal window", 'warning')
-    return 'normal'
-  else
-    return 'normal'
   endif
 endfunction
 
 function! s:make_title(bufnr, text) abort
   if empty(a:text) | return '' | endif
   let buffers = floaterm#buflist#gather()
-  if empty(buffers)  " the buffer has not attached a job yet, but will do
-    let cnt = 1
-    let idx = 1
-  else
-    let cnt = len(buffers)
-    let idx = index(buffers, a:bufnr) + 1
-  endif
+  let cnt = len(buffers)
+  let idx = index(buffers, a:bufnr) + 1
   let title = substitute(a:text, '$1', idx, 'gm')
   let title = substitute(title, '$2', cnt, 'gm')
   return title
@@ -122,30 +114,21 @@ endfunction
 " @argument: config, a floaterm local variable, will be stored as a `b:` variable
 " @return: config, generated from `a:config`, has more additional info, used to
 "   config the floaterm style
-function! s:parse_config(config) abort
-  if !has_key(a:config, 'width')
-    let a:config.width = g:floaterm_width
-  endif
-  if !has_key(a:config, 'height')
-    let a:config.height = g:floaterm_height
-  endif
-  if !has_key(a:config, 'wintype')
-    let a:config.wintype = s:get_wintype()
-  endif
-  if !has_key(a:config, 'position')
-    let a:config.position = g:floaterm_position
-  endif
-  if !has_key(a:config, 'autoclose')
-    let a:config.autoclose = g:floaterm_autoclose
-  endif
-  if !has_key(a:config, 'title')
-    let a:config.title = g:floaterm_title
-  endif
+function! s:parse_config(bufnr, config) abort
+  let a:config.title       = get(a:config, 'title', g:floaterm_title)
+  let a:config.width       = get(a:config, 'width', g:floaterm_width)
+  let a:config.height      = get(a:config, 'height', g:floaterm_height)
+  let a:config.wintype     = get(a:config, 'wintype', s:get_wintype())
+  let a:config.position    = get(a:config, 'position', g:floaterm_position)
+  let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)
+  let a:config.borderchars = get(a:config, 'borderchars', g:floaterm_borderchars)
 
-  " generate and return window configs based on a:config
+  " Dump these configs into buffer, they can be reused for reopening
+  call floaterm#buffer#set_config_dict(a:bufnr, a:config)
+
+  " The following configs (width, height, borderchars, position) should be
+  " parsed and become static. After opening windows, the configs are discard
   let config = deepcopy(a:config)
-
-  let config.borderchars = g:floaterm_borderchars
 
   let width = config.width
   if type(width) == v:t_float | let width = width * &columns | endif
@@ -154,6 +137,14 @@ function! s:parse_config(config) abort
   let height = config.height
   if type(height) == v:t_float | let height = height * (&lines - &cmdheight - 1) | endif
   let config.height = float2nr(height)
+
+  let borderchars = config.borderchars
+  " g:floaterm_borderchars is type v:t_list in old version vim-floaterm
+  " strcharpart is useful for multiple-byte characters
+  if type(borderchars) == v:t_string
+    let borderchars = map(range(8), { idx -> strcharpart(borderchars, idx, 1) })
+  endif
+  let config.borderchars = borderchars
 
   if config.position == 'random'
     let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
@@ -183,6 +174,7 @@ function! s:open_float(bufnr, config) abort
         \ }
   let winid = nvim_open_win(a:bufnr, v:true, options)
   call s:init_win(winid, v:false)
+  call floaterm#buffer#set_config(a:bufnr, 'winid', winid)
 
   let bd_options = {
         \ 'relative': 'editor',
@@ -197,8 +189,8 @@ function! s:open_float(bufnr, config) abort
   let a:config.title = s:make_title(a:bufnr, a:config.title)
   let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
   let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
-  call nvim_win_set_var(winid, 'floatermborder_winid', bd_winid)
   call s:init_win(bd_winid, v:true)
+  call floaterm#buffer#set_config(a:bufnr, 'borderwinid', bd_winid)
   return winid
 endfunction
 
@@ -221,9 +213,11 @@ function! s:open_popup(bufnr, config) abort
 
   " vim will pad the end of title but not begin part
   " so we build the title as ' floaterm (idx/cnt)'
-  let options.title = ' ' . s:make_title(a:bufnr, a:config.title)
+  let title =s:make_title(a:bufnr, a:config.title) 
+  let options.title = empty(title) ? '' : ' ' . title
   let winid = popup_create(a:bufnr, options)
   call s:init_win(winid, v:false)
+  call floaterm#buffer#set_config(a:bufnr, 'winid', winid)
   return winid
 endfunction
 
@@ -240,6 +234,7 @@ function! s:open_split(bufnr, config) abort
   execute 'buffer ' . a:bufnr
   let winid = win_getid()
   call s:init_win(winid, v:false)
+  call floaterm#buffer#set_config(a:bufnr, 'winid', winid)
   return winid
 endfunction
 
@@ -257,28 +252,28 @@ function! s:init_win(winid, is_border) abort
 endfunction
 
 function! floaterm#window#open(bufnr, config) abort
-  let config = s:parse_config(a:config)
+  let config = s:parse_config(a:bufnr, a:config)
   if config.wintype == 'float'
     if s:has_float
-      let winid = s:open_float(a:bufnr, config)
+      call s:open_float(a:bufnr, config)
     else
-      let winid = s:open_popup(a:bufnr, config)
+      call s:open_popup(a:bufnr, config)
     endif
   else
-    let winid = s:open_split(a:bufnr, config)
+    call s:open_split(a:bufnr, config)
   endif
-  return [winid, a:config]
 endfunction
 
 function! floaterm#window#hide(bufnr) abort
-  let winid = getbufvar(a:bufnr, 'floaterm_winid', -1)
-  if !s:winexists(winid) | return | endif
+  let winid = floaterm#buffer#get_config(a:bufnr, 'winid', -1)
+  let bd_winid = floaterm#buffer#get_config(a:bufnr, 'borderwinid', -1)
   if has('nvim')
-    let bd_winid = getwinvar(winid, 'floatermborder_winid', -1)
+    if s:winexists(winid) 
+      call nvim_win_close(winid, v:true)
+    endif
     if s:winexists(bd_winid)
       call nvim_win_close(bd_winid, v:true)
     endif
-    call nvim_win_close(winid, v:true)
   else
     if exists('*win_gettype')
       if win_gettype() == 'popup'

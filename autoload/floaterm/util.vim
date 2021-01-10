@@ -57,14 +57,6 @@ function! floaterm#util#autohide() abort
   endif
 endfunction
 
-function! floaterm#util#update_config(bufnr, config) abort
-  let config = getbufvar(a:bufnr, 'floaterm_config', {})
-  for item in items(a:config)
-    let config[item[0]] = item[1]
-  endfor
-  call setbufvar(a:bufnr, 'floaterm_config', config)
-endfunction
-
 function! floaterm#util#getbuflines(bufnr, length) abort
   let lines = []
   if a:bufnr == -1

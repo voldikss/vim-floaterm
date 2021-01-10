@@ -23,5 +23,13 @@ Execute(test-wintype):
     FloatermNew --wintype=normal
     AssertEqual 0,IsFloatOrPopup(win_getid())
 
+  Log '# Independent wintype value for each floaterm'
+    FloatermNew --wintype=normal
+    FloatermNew --wintype=float
+    FloatermPrev
+    AssertEqual 0,IsFloatOrPopup(win_getid())
+    FloatermNext
+    AssertEqual 1,IsFloatOrPopup(win_getid())
+
   FloatermKill!
   stopinsert

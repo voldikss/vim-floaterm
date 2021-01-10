@@ -71,17 +71,18 @@ g:floaterm_position                              *g:floaterm_position*
     'auto'(at the cursor place). Default value is 'center'.
 
 g:floaterm_borderchars                           *g:floaterm_borderchars*
-	Type |List| of |String|.
-	Characters of the floating window border.
-    Default value is ['─', '│', '─', '│', '┌', '┐', '┘', '└'].
+	Type |String|.
+    8 characters of the floating window border(top, right, bottom, left, topleft,
+    topright, botright, botleft).
+    Default value is '─│─│┌┐┘└'.
 
 g:floaterm_rootmarkers                           *g:floaterm_rootmarkers*
-	Type |List| of |String|.
-	Markers used to detect the project root directory. If not empty, floaterm
-	will be opened in the project root directory. For example, ['.project',
-	'.git', '.hg', '.svn', '.root', '.gitignore'].
-	Default value is [], which means the floaterm will be opened just at the
-	current directory.
+    Type |List| of |String|.
+    Markers used to detect the project root directory when running 
+    >
+        :FloatermNew --cwd=<root>
+<
+    Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 g:floaterm_open_command                          *g:floaterm_open_command*
 	Type |String|.
@@ -215,7 +216,7 @@ https://github.com/voldikss/vim-floaterm#commands
 ==============================================================================
 HIGHLIGHT                                        *floaterm-highlight*
 
-This plugin provides two |highlight-groups| to specify the bg/fg color of 
+This plugin provides two |highlight-groups| to specify the bg/fg color of
 floaterm (also the border color if |g:floaterm_wintype| is 'float')window.
 
 To customize, use |hi| command together with the colors you prefer.  For example,
@@ -318,23 +319,41 @@ This plugin can be a runner for |asynctasks.vim|. To use it, copy the
 following code to your `vimrc` set |g:asynctasks_term_pos| to `'floaterm'` or
 add a `pos=floaterm` filed in your asynctasks configuration files.
  >
-	function! s:run_floaterm(opts)
-	let curr_bufnr = floaterm#curr()
-	if has_key(a:opts, 'silent') && a:opts.silent == 1
-		FloatermHide!
-	endif
-	let cmd = 'cd ' . shellescape(getcwd())
-	call floaterm#terminal#send(curr_bufnr, [cmd])
-	call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
-	stopinsert
-	if &filetype == 'floaterm' && g:floaterm_autoinsert
-		call floaterm#util#startinsert()
-	endif
-	endfunction
-
-	let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
-	let g:asyncrun_runner.floaterm = function('s:run_floaterm')
-<
+    function! s:run_in_floaterm(opts)
+        execute 'FloatermNew --position=bottomright' .
+                        \ ' --wintype=float' .
+                        \ ' --height=0.4' .
+                        \ ' --width=0.4' .
+                        \ ' --title=floaterm_runner' .
+                        \ ' --autoclose=0' .
+                        \ ' --silent=' . get(a:opts, 'silent', 0)
+                        \ ' --cwd=' . a:opts.cwd
+                        \ ' ' . a:opts.cmd
+        " Do not focus on floaterm window, and close it once cursor moves
+        " If you want to jump to the floaterm window, use <C-w>p
+        " You can choose whether to use the following code or not
+        stopinsert | noa wincmd p
+        augroup close-floaterm-runner
+            autocmd!
+            autocmd CursorMoved,InsertEnter * ++nested
+                \ call timer_start(100, { -> s:close_floaterm_runner() })
+        augroup END
+    endfunction
+    function! s:close_floaterm_runner() abort
+        if &ft == 'floaterm' | return | endif
+        for b in tabpagebuflist()
+            if getbufvar(b, '&ft') == 'floaterm' &&
+                \ getbufvar(b, 'floaterm_jobexists') == v:false
+            execute b 'bwipeout!'
+            break
+            endif
+        endfor
+        autocmd! close-floaterm-runner
+    endfunction
+    let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
+    let g:asyncrun_runner.floaterm = function('s:run_in_floaterm')
+    let g:asynctasks_term_pos = 'floaterm'
+    <
 Then your task will be ran in the floaterm instance. See
 https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner for more
 information.

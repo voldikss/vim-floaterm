@@ -1,14 +1,27 @@
 " vim:ft=vim
 
 Execute(test-silent):
-  Log '# FloatermNew --silent ls'
-    FloatermNew --silent ls
-    sleep 100m
-    AssertEqual 0, len(floaterm#buflist#gather())
-
-  Log '# FloatermNew! --silent ls'
-    FloatermNew! --silent
+  Log '# FloatermNew --silent --autoclose=0 ls'
+    FloatermNew --silent --autoclose=0 ls
     AssertEqual 1, len(floaterm#buflist#gather())
+    FloatermKill!
+
+  Log '# FloatermNew --silent --autoclose=1 ls'
+    FloatermNew --silent --autoclose=1 ls
+    sleep 200m " otherwise vim8 testing fails
+    AssertEqual 0, len(floaterm#buflist#gather())
+    FloatermKill!
+
+  Log '# FloatermNew --silent --autoclose=1 xxx'
+    FloatermNew --silent --autoclose=1 xxx
+    AssertEqual 1, len(floaterm#buflist#gather())
+    FloatermKill!
+
+  Log '# FloatermNew --silent --autoclose=2 ls'
+    FloatermNew --silent --autoclose=2 ls
+    sleep 200m " otherwise vim8 testing fails
+    AssertEqual 0, len(floaterm#buflist#gather())
+    FloatermKill!
 
   FloatermKill!
   stopinsert

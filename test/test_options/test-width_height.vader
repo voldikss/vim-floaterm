@@ -8,9 +8,9 @@ Execute(Set g:floaterm_width and g:floaterm_height):
 
   Log '# Basic'
     FloatermNew
-    AssertEqual b:floaterm_config.width, 0.6
+    AssertEqual b:floaterm_width, 0.6
     AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
-    AssertEqual b:floaterm_config.height, 0.6
+    AssertEqual b:floaterm_height, 0.6
     AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
   Log '# Change `&columns` and reopen'
@@ -18,9 +18,9 @@ Execute(Set g:floaterm_width and g:floaterm_height):
     let &columns = float2nr(&columns/2)
 
     FloatermShow
-    AssertEqual b:floaterm_config.width, 0.6
+    AssertEqual b:floaterm_width, 0.6
     AssertEqual float2nr(0.6*&columns)-2, winwidth(0)
-    AssertEqual b:floaterm_config.height, 0.6
+    AssertEqual b:floaterm_height, 0.6
     AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
     let &columns = columns_origin

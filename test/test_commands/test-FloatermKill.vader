@@ -27,6 +27,7 @@ Execute(test-FloatermKill):
     FloatermNew
     let bufnr2 = bufnr('%')
 
+    FloatermHide " otherwise vim8 testing fails
     execute bufnr1 . 'FloatermKill'
     AssertEqual 0, IsBufValid(bufnr1)
     AssertEqual 1, IsBufValid(bufnr2)

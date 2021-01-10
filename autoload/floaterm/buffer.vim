@@ -33,3 +33,33 @@ function! floaterm#buffer#create_border_buf(options) abort
   let content += [c_botleft . repeat(c_bottom, repeat_width) . c_botright]
   return floaterm#buffer#create_scratch_buf(content)
 endfunction
+
+function! floaterm#buffer#get_config(bufnr, key, ...) abort
+  let key = 'floaterm_' . a:key
+  let val = getbufvar(a:bufnr, key)
+  if val == '' && a:0 == 1
+    return a:1
+  endif
+  return val
+endfunction
+
+function! floaterm#buffer#get_config_dict(bufnr) abort
+  let config = {}
+  for [key, val] in items(getbufvar(a:bufnr, ''))
+    if key =~ 'floaterm_'
+      let config[key[9:]] = val
+    endif
+  endfor
+  return config
+endfunction
+
+function! floaterm#buffer#set_config(bufnr, key, val) abort
+  let key = 'floaterm_' . a:key
+  call setbufvar(a:bufnr, key, a:val)
+endfunction
+
+function! floaterm#buffer#set_config_dict(bufnr, config) abort
+  for [key, val] in items(a:config)
+    call floaterm#buffer#set_config(a:bufnr, key, val)
+  endfor
+endfunction

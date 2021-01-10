@@ -1,0 +1,23 @@
+" vim:ft=vim
+
+Execute(test-auto-close-border):
+  if !has('nvim') | finish | endif
+  function! BorderExists(bufnr) abort
+    let bd_winid = getbufvar(a:bufnr, 'floaterm_borderwinid', -1)
+    return !empty(getwininfo(bd_winid))
+  endfunction
+
+  Log '# FloatermToggle and execute `hide` only for floaterm window'
+    FloatermToggle
+    let bufnr = bufnr('%')
+    hide
+    AssertEqual 0,BorderExists(bufnr)
+
+    FloatermToggle
+    let bufnr = bufnr('%')
+    hide
+    AssertEqual 0,BorderExists(bufnr)
+
+  FloatermKill!
+  stopinsert
+

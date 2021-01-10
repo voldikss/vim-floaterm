@@ -8,15 +8,13 @@
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
 
-function! s:on_floaterm_open(bufnr, winid, config) abort
-  call setbufvar(a:bufnr, 'floaterm_winid', a:winid)
-  call setbufvar(a:bufnr, 'floaterm_config', a:config)
+function! s:on_floaterm_open(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
     " TODO: need to be reworked
     execute printf(
-          \ 'autocmd BufHidden <buffer=%s> ++once call floaterm#window#hide(%s)',
+          \ 'autocmd BufHidden,BufWipeout <buffer=%s> ++once call floaterm#window#hide(%s)',
           \ a:bufnr,
           \ a:bufnr
           \ )
@@ -25,15 +23,26 @@ endfunction
 
 function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   if a:bufnr == -1
-    let bufnr = bufnr('%')
+    " In vim, buffnr is not known before starting a job, therefore, it's
+    " impossible to pass the bufnr to a job's callback function. Also change
+    " callback after a job was spawned seem not feasible. Therefore, iterate s:
+    " channel_map and get the bufnr whose channel matches the channel of a:job
+    for [buf, chan] in items(s:channel_map)
+      if chan == job_getchannel(a:job)
+        let bufnr = str2nr(buf)
+        break
+      endif
+    endfor
   else
     let bufnr = a:bufnr
   endif
   call setbufvar(bufnr, '&bufhidden', 'wipe')
-  let config = getbufvar(bufnr, 'floaterm_config', {})
-  let autoclose = get(config, 'autoclose', 0)
+  call floaterm#buffer#set_config(bufnr, 'jobexists', v:false)
+  let autoclose = floaterm#buffer#get_config(bufnr, 'autoclose', 0)
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
     call floaterm#window#hide(bufnr)
+    " if the floaterm is created with --silent, delete the buffer explicitly
+    silent! execute bufnr . 'bdelete!'
     " update lightline
     doautocmd BufDelete
   endif
@@ -52,17 +61,15 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
 
   " just open if floaterm exists
   if a:bufnr > 0
-    let [winid, config] = floaterm#window#open(a:bufnr, a:config)
-    call s:on_floaterm_open(a:bufnr, winid, config)
+    call floaterm#window#open(a:bufnr, a:config)
+    call s:on_floaterm_open(a:bufnr)
     return a:bufnr
   endif
 
   " change cwd
   let savedcwd = getcwd()
-  let dest = ''
-  if has_key(a:config, 'cwd')
-    let dest = a:config.cwd
-  elseif !empty(g:floaterm_rootmarkers)
+  let dest = get(a:config, 'cwd', '')
+  if dest == '<root>'
     let dest = floaterm#path#get_root()
   endif
   if !empty(dest)
@@ -70,10 +77,10 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
   endif
 
   " spawn terminal
-  let [bufnr, config] = s:spawn_terminal(a:cmd, a:jobopts, a:config)
+  let bufnr = s:spawn_terminal(a:cmd, a:jobopts, a:config)
 
   " hide floaterm immediately if silent
-  if has_key(config, 'silent') && config.silent == 1
+  if floaterm#buffer#get_config(bufnr, 'silent', 0)
     call floaterm#window#hide(bufnr)
     stopinsert
   endif
@@ -93,7 +100,7 @@ function! floaterm#terminal#open_existing(bufnr) abort
   if winnr > -1
     execute winnr . 'hide'
   endif
-  let config = getbufvar(a:bufnr, 'floaterm_config', {})
+  let config = floaterm#buffer#get_config_dict(a:bufnr)
   call floaterm#terminal#open(a:bufnr, '', {}, config)
 endfunction
 
@@ -105,7 +112,7 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
           \ 's:on_floaterm_close',
           \ [bufnr, get(a:jobopts, 'on_exit', v:null)]
           \ )
-    let [winid, config] = floaterm#window#open(bufnr, a:config)
+    call floaterm#window#open(bufnr, a:config)
     let ch = termopen(a:cmd, a:jobopts)
     let s:channel_map[bufnr] = ch
   else
@@ -124,10 +131,11 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
-    let [winid, config] = floaterm#window#open(bufnr, a:config)
+    call floaterm#window#open(bufnr, a:config)
   endif
-  call s:on_floaterm_open(bufnr, winid, config)
-  return [bufnr, config]
+  call floaterm#buffer#set_config(bufnr, 'jobexists', v:true)
+  call s:on_floaterm_open(bufnr)
+  return bufnr
 endfunction
 
 function! floaterm#terminal#send(bufnr, cmds) abort
@@ -154,8 +162,7 @@ endfunction
 function! floaterm#terminal#get_bufnr(termname) abort
   let buflist = floaterm#buflist#gather()
   for bufnr in buflist
-    let config = getbufvar(bufnr, 'floaterm_config', {})
-    let name = get(config, 'name', '')
+    let name = floaterm#buffer#get_config(bufnr, 'name')
     if name ==# a:termname
       return bufnr
     endif

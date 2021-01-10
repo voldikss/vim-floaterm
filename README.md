@@ -64,25 +64,32 @@ Use `:FloatermNew` to open a terminal window, use `:FloatermToggle` to
 hide/reopen that. The filetype of the terminal buffer is `floaterm`.
 
 If you've opened multiple floaterm instances, they will be attached to a
-double-circular-linkedlist. Then you can use `:FloatermNext` or `: FloatermPrev` to switch between them.
+double-circular-linkedlist. Then you can use `:FloatermNext` or
+`: FloatermPrev` to switch between them.
 
 ### Commands
 
 #### `:FloatermNew[!] [options] [cmd]` Open a floaterm window.
 
-- If `!` is given, execute `cmd` in `$SHELL`. Try `:FloatermNew python` and `:FloatermNew! python` to learn about the difference.
-- If without `cmd`, open `$SHELL`.
-- The `options` is formed as `--key[=value]`, it is used to specify attributes of a specific floaterm instance.
-  - `cwd` working directory that floaterm will be opened at
+- If `!` is given, execute `cmd` in `$SHELL`. Try `:FloatermNew python` and
+  `: FloatermNew! python` to learn about the difference.
+- If execute without `cmd`, open `$SHELL`.
+- The `options` is formed as `--key[=value]`, it is used to specify local
+  attributes of a specific floaterm instance. Note that in order to input
+  space, you have to form it as `\` followed by space, and `\` must be typed
+  as `\\`
+  - `cwd` working directory that floaterm will be opened at, accept either a
+    path or literal `<root>` which represents the project root directory
   - `name` name of the floaterm
+  - `silent` If `--silent` is given, spawn a floaterm but not open the window,
+    you may toggle it afterwards
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
   - `title` see `g:floaterm_title`
-  - `silent` If `--silent` is given, spawn a floaterm instance but not open
-    the window, you may toggle it afterwards
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
-  - `autoclose` close the window after finishing job, see `g:floaterm_autoclose`
+  - `borderchars` see `g:floaterm_borderchars`
+  - `autoclose` see `g:floaterm_autoclose`
 - Use `<TAB>` to get completion.
 - This command basically shares the consistent behaviors with the builtin `:terminal` :
   - The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
@@ -218,17 +225,16 @@ position from above when (re)opening a floaterm window.
 
 #### **`g:floaterm_borderchars`**
 
-Type `List` of `String`. Characters of the floating window border.
+Type `String`. 8 characters of the floating window border (top, right, bottom,
+left, topleft, topright, botright, botleft).
 
-Default: `['─', '│', '─', '│', '┌', '┐', '┘', '└']`
+Default: `─│─│┌┐┘└`
 
 #### **`g:floaterm_rootmarkers`**
 
-Type `List` of `String`. If not empty, floaterm will be opened in the project root directory.
+Type `List` of `String`. Markers used to detect the project root directory for `--cwd=<root>`
 
-Example: `['.project', '.git', '.hg', '.svn', '.root', '.gitignore']`
-
-Default: `[]`, which means floaterm will be opened just at the current directory
+Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 #### **`g:floaterm_open_command`**
 
@@ -521,51 +527,62 @@ Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try
 #### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim) | [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)
 
 This plugin can be a runner for asynctasks.vim or asyncrun.vim.
-To use it, put the following code in your `vimrc`.
+To use it, try the following code in your `vimrc`.
 
 ```vim
-function! s:run_floaterm(opts)
-  let curr_bufnr = floaterm#curr()
-  if has_key(a:opts, 'silent') && a:opts.silent == 1
-    FloatermHide!
-  endif
-  let cmd = 'cd ' . shellescape(getcwd())
-  call floaterm#terminal#send(curr_bufnr, [cmd])
-  call floaterm#terminal#send(curr_bufnr, [a:opts.cmd])
-  " Back to the normal mode
-  stopinsert
+function! s:run_in_floaterm(opts)
+  execute 'FloatermNew --position=bottomright' .
+                   \ ' --wintype=float' .
+                   \ ' --height=0.4' .
+                   \ ' --width=0.4' .
+                   \ ' --title=floaterm_runner' .
+                   \ ' --autoclose=0' .
+                   \ ' --silent=' . get(a:opts, 'silent', 0)
+                   \ ' --cwd=' . a:opts.cwd
+                   \ ' ' . a:opts.cmd
+  " Do not focus on floaterm window, and close it once cursor moves
+  " If you want to jump to the floaterm window, use <C-w>p
+  " You can choose whether to use the following code or not
+  stopinsert | noa wincmd p
+  augroup close-floaterm-runner
+    autocmd!
+    autocmd CursorMoved,InsertEnter * ++nested
+          \ call timer_start(100, { -> s:close_floaterm_runner() })
+  augroup END
 endfunction
-
+function! s:close_floaterm_runner() abort
+  if &ft == 'floaterm' | return | endif
+  for b in tabpagebuflist()
+    if getbufvar(b, '&ft') == 'floaterm' &&
+          \ getbufvar(b, 'floaterm_jobexists') == v:false
+      execute b 'bwipeout!'
+      break
+    endif
+  endfor
+  autocmd! close-floaterm-runner
+endfunction
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
-let g:asyncrun_runner.floaterm = function('s:run_floaterm')
+let g:asyncrun_runner.floaterm = function('s:run_in_floaterm')
 let g:asynctasks_term_pos = 'floaterm'
-```
-
-Another version: run code in floaterm window, close it when cursor moves.
-
-```vim
-function! s:run_floaterm(opts)
-  let cwd = getcwd()
-  let cmd = 'cd ' . shellescape(cwd) . ' && ' . a:opts.cmd
-  execute 'FloatermNew --position=topright --height=0.4 --width=0.5 --title=floaterm_runner --autoclose=0 ' . cmd
-  " Back to the normal mode
-  " stopinsert
-endfunction
 ```
 
 Then your task will be run in the floaterm instance. See asynctasks.vim
 [Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
 
-You can also modify the code in `s: run_floaterm` by yourself to meet your tastes, which
-is the reason why this runner is not made builtin.
+You can also modify the code in `s: run_in_floaterm` by yourself to meet your
+tastes, which is the reason why this code is not made builtin.
+
+![](https://user-images.githubusercontent.com/20282795/104123344-b3f70c00-5385-11eb-9f61-0a5703ba78f5.gif)
 
 ### How to define more wrappers
 
-The wrapper script must be located in `autoload/floaterm/wrapper/` directory, e.g., `autoload/floaterm/wrapper/fzf.vim`.
+The wrapper script must be located in `autoload/floaterm/wrapper/` directory,
+e.g., `autoload/floaterm/wrapper/fzf.vim`.
 
 There are two ways for a command to be spawned:
 
-- To be executed after spawning `$SHELL`. Here is the old implementation of [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
+- To be executed after spawning `$SHELL`. Here is the old implementation of
+  [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
 
   ```vim
   function! floaterm#wrapper#fzf#() abort

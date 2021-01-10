@@ -10,11 +10,7 @@ Execute(test-FloatermNew):
     AssertEqual 'floaterm', &filetype
 
   Log '# FloatermNew with arguments'
-    if has('nvim')
-      FloatermNew --height=0.6 --width=0.4 --wintype=floating --name=test --position=topleft --autoclose=0 ls
-    else
-      FloatermNew --height=0.6 --width=0.4 --wintype=popup --name=test --position=topleft --autoclose=0 ls
-    endif
+    FloatermNew --height=0.6 --width=0.4 --wintype=float --name=test --position=topleft --autoclose=0 ls
     AssertEqual 'floaterm', &filetype
 
   FloatermKill!
