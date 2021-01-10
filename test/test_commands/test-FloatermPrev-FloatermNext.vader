@@ -32,11 +32,13 @@ Execute(test-FloatermPrev-FloatermNext):
 
   Log '# Kill the prev floaterm and execute `:FloatermPrev'
     execute bufnr3 . 'FloatermKill'
+    sleep 100m
     FloatermPrev
     AssertEqual bufnr2, bufnr('%')
 
   Log '# Kill the next floaterm and execute `:FloatermPrev'
     execute bufnr4 . 'FloatermKill'
+    sleep 100m
     FloatermNext
     AssertEqual bufnr1, bufnr('%')
 

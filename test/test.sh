@@ -1,7 +1,13 @@
 #! /usr/bin/env bash
 
+VIM_EXEC=/usr/bin/vim
+# VIM_EXEC=nvim
+
 for f in `find test/*/*.vader`
 do
-    /usr/bin/vim -u test/vimrc -c "Vader! $f"
-    # nvim -c "Vader $f"
+    $VIM_EXEC -u test/vimrc -c "Vader! $f"
+    if [ $? != 0 ]
+    then
+        break
+    fi
 done
