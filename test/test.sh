@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
-VIM_EXEC=/usr/bin/vim
-# VIM_EXEC=nvim
+# VIM_EXEC=/usr/bin/vim
+VIM_EXEC=nvim
 
 for f in `find test/*/*.vader`
 do
