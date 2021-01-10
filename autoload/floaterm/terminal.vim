@@ -29,14 +29,11 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   else
     let bufnr = a:bufnr
   endif
+  call setbufvar(bufnr, '&bufhidden', 'wipe')
   let config = getbufvar(bufnr, 'floaterm_config', {})
   let autoclose = get(config, 'autoclose', 0)
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
     call floaterm#window#hide(bufnr)
-    try
-      execute bufnr . 'bdelete!'
-    catch
-    endtry
     " update lightline
     doautocmd BufDelete
   endif
