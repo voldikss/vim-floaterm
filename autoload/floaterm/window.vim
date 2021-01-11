@@ -253,14 +253,14 @@ endfunction
 
 function! floaterm#window#open(bufnr, config) abort
   let config = s:parse_config(a:bufnr, a:config)
-  if config.wintype == 'float'
+  if config.wintype == 'normal'
+    call s:open_split(a:bufnr, config)
+  else " backward compatiblity: float|floating|popup -> float
     if s:has_float
       call s:open_float(a:bufnr, config)
     else
       call s:open_popup(a:bufnr, config)
     endif
-  else
-    call s:open_split(a:bufnr, config)
   endif
 endfunction
 
