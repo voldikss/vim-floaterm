@@ -12,7 +12,7 @@ jobs:
     name: Vader tests
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: ubuntu-latest
         neovim: [true] # only test on neovim currently
         version: [nightly, stable]
     runs-on: ${{ matrix.os }}
