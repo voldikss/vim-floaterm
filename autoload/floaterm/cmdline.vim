@@ -119,6 +119,9 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let candidates = options
   else
     if a:cmd_line =~ '^FloatermNew'
+      if !empty(a:arg_lead)
+        return sort(getcompletion(a:arg_lead, 'shellcmd'))
+      endif
       if empty(s:shellcmds)
         let s:shellcmds = sort(getcompletion('', 'shellcmd'))
       endif
