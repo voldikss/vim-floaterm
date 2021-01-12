@@ -127,7 +127,12 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
       let a:jobopts.term_api = 'floaterm#util#edit'
     endif
     let a:jobopts.hidden = 1
-    let bufnr = term_start(a:cmd, a:jobopts)
+    try
+      let bufnr = term_start(a:cmd, a:jobopts)
+    catch
+      call floaterm#util#show_msg('Failed to execute: ' . a:cmd, 'error')
+      return
+    endtry
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
