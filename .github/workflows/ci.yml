@@ -13,8 +13,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        neovim: [true] # only test on neovim currently
+        neovim: [true, false]
         version: [nightly, stable]
+        exclude:
+          - neovim: false
+            version: stable
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
