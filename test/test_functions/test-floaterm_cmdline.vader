@@ -3,14 +3,14 @@
 Before(Define universal function used to test command completion):
   function! CmdlineCompleteTestWrapperFunc(command, expected, handler) abort
     let commands = split(a:command)
-    let arg_lead = commands[0] == commands[-1] ? '' : commands[-1]
+    let arg_lead = a:command[-1:] == ' ' ? '' : commands[-1]
     let command = a:command
     let cursor_pos = len(a:command)
     let result = a:handler(arg_lead, command, cursor_pos)
     if a:expected != result
       Log printf('Command:  `:%s`', a:command)
-      Log printf('Expected: %s', string(a:expected))
       Log printf("Actual:   %s", result)
+      Log printf('Expected: %s', string(a:expected))
     endif
     AssertEqual a:expected, result
   endfunction
@@ -83,7 +83,6 @@ Execute(Test floaterm#cmdline#complete):
   function! Test__floaterm_cmdline_complete(command, expected)
     call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete'))
   endfunction
-  let shellcmds = sort(getcompletion('', 'shellcmd'))
   call Test__floaterm_cmdline_complete('FloatermNew ', [
     \'--cwd=',
     \'--name=',
@@ -95,8 +94,8 @@ Execute(Test floaterm#cmdline#complete):
     \'--position=',
     \'--autoclose=',
     \'--borderchars=',
-    \] + shellcmds)
-  call Test__floaterm_cmdline_complete('FloatermNew nv', filter(shellcmds, {_, val -> val =~ '^nv.*$'}))
+    \])
+  call Test__floaterm_cmdline_complete('FloatermNew nv', sort(getcompletion('nv', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermNew -', [
     \'--cwd=',
     \'--name=',
@@ -152,6 +151,17 @@ Execute(Test floaterm#cmdline#complete):
     \'--position=topleft',
     \'--position=topright'
     \])
+  call Test__floaterm_cmdline_complete('FloatermNew '.
+        \ '--title=1 '.
+        \ '--name=1 '.
+        \ '--cwd=1 '.
+        \ '--width=1 '.
+        \ '--height=1 '.
+        \ '--silent '.
+        \ '--wintype=1 '.
+        \ '--position=1 '.
+        \ '--autoclose=1 '.
+        \ '--borderchars=1 ', sort(getcompletion('', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermUpdate ', [
     \'--cwd=',
     \'--name=',
@@ -176,6 +186,18 @@ Execute(Test floaterm#cmdline#complete):
     \'--autoclose=',
     \'--borderchars=',
     \])
+  call Test__floaterm_cmdline_complete('FloatermUpdate nv', ['  '])
+  call Test__floaterm_cmdline_complete('FloatermUpdate '.
+        \ '--title=1 '.
+        \ '--name=1 '.
+        \ '--cwd=1 '.
+        \ '--width=1 '.
+        \ '--height=1 '.
+        \ '--silent '.
+        \ '--wintype=1 '.
+        \ '--position=1 '.
+        \ '--autoclose=1 '.
+        \ '--borderchars=1 ', [])
 
 Execute(Test floaterm#cmdline#complete_names1):
   FloatermNew --name=floaterm

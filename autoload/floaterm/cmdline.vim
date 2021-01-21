@@ -81,17 +81,17 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
     let vals = [
-      \ 'top',
-      \ 'right',
-      \ 'bottom',
-      \ 'left',
-      \ 'center',
-      \ 'topleft',
-      \ 'topright',
-      \ 'bottomleft',
-      \ 'bottomright',
-      \ 'auto',
-      \ ]
+          \ 'top',
+          \ 'right',
+          \ 'bottom',
+          \ 'left',
+          \ 'center',
+          \ 'topleft',
+          \ 'topright',
+          \ 'bottomleft',
+          \ 'bottomright',
+          \ 'auto',
+          \ ]
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
@@ -112,25 +112,25 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return []
   elseif match(a:arg_lead, '--borderchars=') > -1
     return []
-  " The dash absolutely belongs to the `options` instead of executable
-  " commands(e.g. `nvim-qt.exe`). So if `a:arg_lead` matches 1 or 2 dash, the
-  " user wants to complete options.
+    " The dash absolutely belongs to the `options` instead of executable
+    " commands(e.g. `nvim-qt.exe`). So if `a:arg_lead` matches 1 or 2 dash, the
+    " user wants to complete options.
   elseif match(a:arg_lead, '^--\=\S*$') > -1
     let candidates = options
-  else
-    if a:cmd_line =~ '^FloatermNew'
-      if !empty(a:arg_lead)
-        return sort(getcompletion(a:arg_lead, 'shellcmd'))
-      endif
-      if empty(s:shellcmds)
-        let s:shellcmds = sort(getcompletion('', 'shellcmd'))
-      endif
-      let candidates = options + s:shellcmds
-    elseif a:cmd_line =~ '^FloatermUpdate'
-      let candidates = options
+  elseif a:arg_lead == ''
+    if a:cmd_line =~ '^FloatermUpdate'
+      return options
+    elseif empty(options)
+      let s:shellcmds = sort(getcompletion('', 'shellcmd'))
+      return s:shellcmds
+    else
+      return options
     endif
-    if a:arg_lead == ''
-      return candidates
+  else
+    if a:cmd_line =~ '^FloatermUpdate'
+      return [repeat(' ', len(a:arg_lead))]
+    else
+      let candidates = sort(getcompletion(a:arg_lead, 'shellcmd'))
     endif
   endif
   return filter(candidates, 'v:val[:len(a:arg_lead) - 1] == a:arg_lead')
