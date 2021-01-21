@@ -123,6 +123,15 @@ function! s:parse_config(bufnr, config) abort
   let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)
   let a:config.borderchars = get(a:config, 'borderchars', g:floaterm_borderchars)
 
+  if type(a:config.height) == v:t_number && a:config.height < 3
+    call floaterm#util#show_msg('Floaterm height should be at least 3', 'warning')
+    let a:config.height = 3
+  endif
+  if type(a:config.width) == v:t_number && a:config.width < 3
+    call floaterm#util#show_msg('Floaterm width should be at least 3', 'warning')
+    let a:config.width = 3
+  endif
+
   " Dump these configs into buffer, they can be reused for reopening
   call floaterm#buffer#set_config_dict(a:bufnr, a:config)
 

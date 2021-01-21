@@ -1,6 +1,5 @@
 " vim:ft=vim
 
-# related: #115
 Execute(Set g:floaterm_width and g:floaterm_height):
   let g:floaterm_height = 0.6
   let g:floaterm_width = 0.6
@@ -13,6 +12,7 @@ Execute(Set g:floaterm_width and g:floaterm_height):
     AssertEqual b:floaterm_height, 0.6
     AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
+  " https://github.com/voldikss/vim-floaterm/issues/115
   Log '# Change `&columns` and reopen'
     FloatermHide
     let &columns = float2nr(&columns/2)
@@ -24,6 +24,15 @@ Execute(Set g:floaterm_width and g:floaterm_height):
     AssertEqual float2nr(0.6*(&lines - &cmdheight - 1))-2, winheight(0)
 
     let &columns = columns_origin
+
+  " https://github.com/voldikss/vim-floaterm/issues/235
+  Log '# Given the height or width less than 3'
+    FloatermNew --height=0
+    FloatermNew --height=1
+    FloatermNew --height=2
+    FloatermNew --width=0
+    FloatermNew --width=1
+    FloatermNew --width=2
 
   FloatermKill!
   stopinsert
