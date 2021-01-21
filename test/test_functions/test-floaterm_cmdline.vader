@@ -20,13 +20,13 @@ Execute(Test floaterm#cmdline#parse):
   let [cmd, config] = floaterm#cmdline#parse(split(argstr))
   AssertEqual 'ranger --cmd="cd ~"', cmd
   AssertEqual {
-    \'wintype': 'float',
-    \'name': 'floaterm1',
-    \'autoclose': 2,
-    \'width': 0.4,
-    \'height': 0.6,
-    \'position': 'topleft'
-    \}, config
+        \ 'wintype': 'float',
+        \ 'name': 'floaterm1',
+        \ 'autoclose': 2,
+        \ 'width': 0.4,
+        \ 'height': 0.6,
+        \ 'position': 'topleft'
+        \ }, config
 
 Execute(Test floaterm#cmdline#parse expand feature):
   silent !touch test.txt && echo first.line > test.txt
@@ -84,42 +84,42 @@ Execute(Test floaterm#cmdline#complete):
     call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete'))
   endfunction
   call Test__floaterm_cmdline_complete('FloatermNew ', [
-    \'--cwd=',
-    \'--name=',
-    \'--width=',
-    \'--height=',
-    \'--title=',
-    \'--silent',
-    \'--wintype=',
-    \'--position=',
-    \'--autoclose=',
-    \'--borderchars=',
-    \])
+        \ '--cwd=',
+        \ '--name=',
+        \ '--width=',
+        \ '--height=',
+        \ '--title=',
+        \ '--silent',
+        \ '--wintype=',
+        \ '--position=',
+        \ '--autoclose=',
+        \ '--borderchars=',
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew nv', sort(getcompletion('nv', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermNew -', [
-    \'--cwd=',
-    \'--name=',
-    \'--width=',
-    \'--height=',
-    \'--title=',
-    \'--silent',
-    \'--wintype=',
-    \'--position=',
-    \'--autoclose=',
-    \'--borderchars=',
-    \])
+        \ '--cwd=',
+        \ '--name=',
+        \ '--width=',
+        \ '--height=',
+        \ '--title=',
+        \ '--silent',
+        \ '--wintype=',
+        \ '--position=',
+        \ '--autoclose=',
+        \ '--borderchars=',
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --', [
-    \'--cwd=',
-    \'--name=',
-    \'--width=',
-    \'--height=',
-    \'--title=',
-    \'--silent',
-    \'--wintype=',
-    \'--position=',
-    \'--autoclose=',
-    \'--borderchars=',
-    \])
+        \ '--cwd=',
+        \ '--name=',
+        \ '--width=',
+        \ '--height=',
+        \ '--title=',
+        \ '--silent',
+        \ '--wintype=',
+        \ '--position=',
+        \ '--autoclose=',
+        \ '--borderchars=',
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --n', ['--name='])
   call Test__floaterm_cmdline_complete('FloatermNew --w', ['--width=', '--wintype='])
   call Test__floaterm_cmdline_complete('FloatermNew --name=', [])
@@ -128,29 +128,29 @@ Execute(Test floaterm#cmdline#complete):
   call Test__floaterm_cmdline_complete('FloatermNew --title=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --silent', [])
   call Test__floaterm_cmdline_complete('FloatermNew --wintype=', [
-    \'--wintype=normal',
-    \'--wintype=float'
-    \])
+        \ '--wintype=normal',
+        \ '--wintype=float'
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --wintype=n', [
-    \'--wintype=normal'
-    \])
+        \ '--wintype=normal'
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --position=', [
-    \'--position=top',
-    \'--position=right',
-    \'--position=bottom',
-    \'--position=left',
-    \'--position=center',
-    \'--position=topleft',
-    \'--position=topright',
-    \'--position=bottomleft',
-    \'--position=bottomright',
-    \'--position=auto'
-    \])
+        \ '--position=top',
+        \ '--position=right',
+        \ '--position=bottom',
+        \ '--position=left',
+        \ '--position=center',
+        \ '--position=topleft',
+        \ '--position=topright',
+        \ '--position=bottomleft',
+        \ '--position=bottomright',
+        \ '--position=auto'
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --position=t', [
-    \'--position=top',
-    \'--position=topleft',
-    \'--position=topright'
-    \])
+        \ '--position=top',
+        \ '--position=topleft',
+        \ '--position=topright'
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew '.
         \ '--title=1 '.
         \ '--name=1 '.
@@ -163,29 +163,29 @@ Execute(Test floaterm#cmdline#complete):
         \ '--autoclose=1 '.
         \ '--borderchars=1 ', sort(getcompletion('', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermUpdate ', [
-    \'--cwd=',
-    \'--name=',
-    \'--width=',
-    \'--height=',
-    \'--title=',
-    \ '--silent',
-    \'--wintype=',
-    \'--position=',
-    \'--autoclose=',
-    \'--borderchars=',
-    \])
+        \ '--cwd=',
+        \ '--name=',
+        \ '--width=',
+        \ '--height=',
+        \ '--title=',
+        \  '--silent',
+        \ '--wintype=',
+        \ '--position=',
+        \ '--autoclose=',
+        \ '--borderchars=',
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermUpdate -', [
-    \'--cwd=',
-    \'--name=',
-    \'--width=',
-    \'--height=',
-    \'--title=',
-    \ '--silent',
-    \'--wintype=',
-    \'--position=',
-    \'--autoclose=',
-    \'--borderchars=',
-    \])
+        \ '--cwd=',
+        \ '--name=',
+        \ '--width=',
+        \ '--height=',
+        \ '--title=',
+        \  '--silent',
+        \ '--wintype=',
+        \ '--position=',
+        \ '--autoclose=',
+        \ '--borderchars=',
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermUpdate nv', ['  '])
   call Test__floaterm_cmdline_complete('FloatermUpdate '.
         \ '--title=1 '.
