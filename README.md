@@ -12,6 +12,7 @@ Use (neo)vim terminal in the floating/popup window.
   - [Options](#options)
   - [Keymaps](#keymaps)
   - [Highlights](#highlights)
+  - [Autocmd](#autocmd)
 - [Advanced Topics](#advanced-topics)
   - [Use with command line tools](#use-with-command-line-tools)
   - [Use with other plugins](#use-with-other-plugins)
@@ -373,6 +374,12 @@ hi FloatermNC guibg=gray
 ```
 
 ![](https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif)
+
+### Autocmd
+
+```vim
+autocmd User FloatermOpen        " triggered after opening a floaterm
+```
 
 ## Advanced Topics
 
