@@ -88,8 +88,9 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or
   - `title` see `g:floaterm_title`
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
-  - `borderchars` see `g:floaterm_borderchars`
+  - `autohide` see `g:floaterm_autohide`
   - `autoclose` see `g:floaterm_autoclose`
+  - `borderchars` see `g:floaterm_borderchars`
 - Use `<TAB>` to get completion.
 - This command basically shares the consistent behaviors with the builtin `:terminal` :
   - The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
@@ -257,10 +258,23 @@ Default: `''`, which means this is disabled by default(use your own `$GIT_EDITOR
 Type `Number`. Whether to close floaterm window once the job gets finished.
 
 - `0`: Always do NOT close floaterm window
-- `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
+- `1`: Close window if the job exits normally, otherwise stay it with messages
+  like `[Process exited 101]`
 - `2`: Always close floaterm window
 
 Default: `0`.
+
+#### **`g:floaterm_autohide`**
+
+Type `Number`. Whether to hide previous floaterms before switching to or
+opening a another one.
+
+- `0`: Always do NOT hide previous floaterm windows
+- `1`: Only hide those whose position (`b:floaterm_position`) is identical to
+  that of the floaterm which will be opened
+- `2`: Always hide them
+
+Default: `2`.
 
 #### **`g:floaterm_autoinsert`**
 
@@ -268,15 +282,10 @@ Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
 
 Default: `v:true`
 
-#### **`g:floaterm_autohide`**
-
-Type `Boolean`. Decide whether to hide previous floaterms before switching to or opening a new one.
-
-Default: `v:true`.
-
 #### **`g:floaterm_complete_options`**
 
-Type `Dict`. Autocompletion options (The completion from floaterm is synchronous)
+Type `Dict`. Autocompletion options (Note that completion from floaterm is
+synchronous)
 
 Available options:
 

@@ -104,20 +104,24 @@ g:floaterm_gitcommit                             *g:floaterm_gitcommit*
 g:floaterm_autoclose                             *g:floaterm_autoclose*
 	Type |Number|.
 	Whether to close floaterm window once a job gets finished.
-	0 - Always do NOT close floaterm window.
-	1 - Close window only if the job exits normally
-	2 - Always close floaterm window.
+        0 - Always do NOT close floaterm window.
+        1 - Close window only if the job exits normally
+        2 - Always close floaterm window.
 	Default value is 0.
+
+g:floaterm_autohide                              *g:floaterm_autohide*
+	Type |Number|.
+    Whether to hide previous floaterms before switching to or opening a another
+    one.	
+        0 - Always do NOT hide previous floaterm windows
+        1 - Only hide those whose position (`b:floaterm_position`) is identical to
+            that of the floaterm which will be opened
+        2 - Always hide them
+	Default value is 2.
 
 g:floaterm_autoinsert                            *g:floaterm_autoinsert*
 	Type |Boolean|.
 	Whether to enter |Terminal-mode| after opening a floaterm.
-	Default value is |v:true|.
-
-g:floaterm_autohide                              *g:floaterm_autohide*
-	Type |Boolean|.
-	Decide whether to hide previous floaterms before switching to or opening
-	another one.
 	Default value is |v:true|.
 
 g:floaterm_complete_options                      *g:floaterm_complete_options*

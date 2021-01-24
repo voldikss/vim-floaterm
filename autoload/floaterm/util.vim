@@ -50,13 +50,6 @@ function! floaterm#util#startinsert() abort
   endif
 endfunction
 
-function! floaterm#util#autohide() abort
-  " hide all floaterms before opening a new floaterm
-  if g:floaterm_autohide
-    call floaterm#hide(1, 0, '')
-  endif
-endfunction
-
 function! floaterm#util#getbuflines(bufnr, length) abort
   let lines = []
   if a:bufnr == -1

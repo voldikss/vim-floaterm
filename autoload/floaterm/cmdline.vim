@@ -62,6 +62,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     \ '--silent',
     \ '--wintype=',
     \ '--position=',
+    \ '--autohide=',
     \ '--autoclose=',
     \ '--borderchars=',
     \ ]
@@ -97,6 +98,9 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
           \ 'rightinner',
           \ ]
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
+  elseif match(a:arg_lead, '--autohide=') > -1
+    let vals = [0, 1, 2]
+    let candidates = map(vals, {idx -> '--autohide=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})

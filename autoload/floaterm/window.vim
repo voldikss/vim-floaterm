@@ -120,6 +120,7 @@ function! s:parse_config(bufnr, config) abort
   let a:config.height      = get(a:config, 'height', g:floaterm_height)
   let a:config.wintype     = get(a:config, 'wintype', s:get_wintype())
   let a:config.position    = get(a:config, 'position', g:floaterm_position)
+  let a:config.autohide    = get(a:config, 'autohide', g:floaterm_autohide)
   let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)
   let a:config.borderchars = get(a:config, 'borderchars', g:floaterm_borderchars)
 
@@ -222,7 +223,7 @@ function! s:open_popup(bufnr, config) abort
 
   " vim will pad the end of title but not begin part
   " so we build the title as ' floaterm (idx/cnt)'
-  let title =s:make_title(a:bufnr, a:config.title) 
+  let title =s:make_title(a:bufnr, a:config.title)
   let options.title = empty(title) ? '' : ' ' . title
   let winid = popup_create(a:bufnr, options)
   call s:init_win(winid, v:false)
@@ -272,7 +273,24 @@ function! s:init_win(winid, is_border) abort
 endfunction
 
 function! floaterm#window#open(bufnr, config) abort
+  let winnr = bufwinnr(a:bufnr)
+  if winnr > -1
+    execute winnr . 'wincmd w'
+    return
+  endif
+
   let config = s:parse_config(a:bufnr, a:config)
+
+  if config.autohide == 1
+    for bufnr in floaterm#buflist#gather()
+      if getbufvar(bufnr, 'floaterm_position') == config.position
+        call floaterm#hide(0, bufnr, '')
+      endif
+    endfor
+  elseif config.autohide == 2
+    call floaterm#hide(1, 0, '')
+  endif
+
   if config.wintype == 'normal'
     call s:open_split(a:bufnr, config)
   else " backward compatiblity: float|floating|popup -> float
@@ -288,7 +306,7 @@ function! floaterm#window#hide(bufnr) abort
   let winid = floaterm#buffer#get_config(a:bufnr, 'winid', -1)
   let bd_winid = floaterm#buffer#get_config(a:bufnr, 'borderwinid', -1)
   if has('nvim')
-    if s:winexists(winid) 
+    if s:winexists(winid)
       call nvim_win_close(winid, v:true)
     endif
     if s:winexists(bd_winid)

@@ -92,6 +92,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent',
         \ '--wintype=',
         \ '--position=',
+        \ '--autohide=',
         \ '--autoclose=',
         \ '--borderchars=',
         \ ])
@@ -105,6 +106,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent',
         \ '--wintype=',
         \ '--position=',
+        \ '--autohide=',
         \ '--autoclose=',
         \ '--borderchars=',
         \ ])
@@ -117,6 +119,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent',
         \ '--wintype=',
         \ '--position=',
+        \ '--autohide=',
         \ '--autoclose=',
         \ '--borderchars=',
         \ ])
@@ -165,6 +168,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent '.
         \ '--wintype=1 '.
         \ '--position=1 '.
+        \ '--autohide=1'.
         \ '--autoclose=1 '.
         \ '--borderchars=1 ', sort(getcompletion('', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermUpdate ', [
@@ -176,6 +180,7 @@ Execute(Test floaterm#cmdline#complete):
         \  '--silent',
         \ '--wintype=',
         \ '--position=',
+        \ '--autohide=',
         \ '--autoclose=',
         \ '--borderchars=',
         \ ])
@@ -188,6 +193,7 @@ Execute(Test floaterm#cmdline#complete):
         \  '--silent',
         \ '--wintype=',
         \ '--position=',
+        \ '--autohide=',
         \ '--autoclose=',
         \ '--borderchars=',
         \ ])
@@ -201,6 +207,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent '.
         \ '--wintype=1 '.
         \ '--position=1 '.
+        \ '--autohide=1'.
         \ '--autoclose=1 '.
         \ '--borderchars=1 ', [])
 
