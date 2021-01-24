@@ -249,8 +249,7 @@ function! s:open_split(bufnr, config) abort
   elseif a:config.position == 'rightinner'
     execute 'belowright' . a:config.width . 'vsplit'
   else
-    call floaterm#util#show_msg('No position was given, fallback to `split`', 'warning')
-    execute 'split'
+    execute 'belowright' . a:config.height . 'split'
   endif
   execute 'buffer ' . a:bufnr
   let winid = win_getid()

@@ -61,6 +61,7 @@ hi def link FloatermBorder NormalFloat
 augroup floaterm_enter_insertmode
   autocmd!
   autocmd User FloatermOpen call floaterm#util#startinsert()
+  autocmd BufEnter * if &ft == 'floaterm' | call floaterm#util#startinsert() | endif
 augroup END
 
 function! s:install_keymap()
