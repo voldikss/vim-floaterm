@@ -135,19 +135,24 @@ Execute(Test floaterm#cmdline#complete):
         \ '--wintype=normal'
         \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --position=', [
-        \ '--position=top',
-        \ '--position=right',
-        \ '--position=bottom',
-        \ '--position=left',
+        \ '--position=auto',
         \ '--position=center',
+        \ '--position=top',
+        \ '--position=topinner',
         \ '--position=topleft',
         \ '--position=topright',
+        \ '--position=bottom',
+        \ '--position=bottominner',
         \ '--position=bottomleft',
         \ '--position=bottomright',
-        \ '--position=auto'
+        \ '--position=left',
+        \ '--position=leftinner',
+        \ '--position=right',
+        \ '--position=rightinner',
         \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --position=t', [
         \ '--position=top',
+        \ '--position=topinner',
         \ '--position=topleft',
         \ '--position=topright'
         \ ])
