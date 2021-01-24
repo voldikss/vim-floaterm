@@ -233,12 +233,23 @@ endfunction
 function! s:open_split(bufnr, config) abort
   if a:config.position == 'top'
     execute 'topleft' . a:config.height . 'split'
+  elseif a:config.position == 'topinner'
+    execute 'aboveleft' . a:config.height . 'split'
+  elseif a:config.position == 'bottom'
+    execute 'botright' . a:config.height . 'split'
+  elseif a:config.position == 'bottominner'
+    execute 'belowright' . a:config.height . 'split'
   elseif a:config.position == 'left'
     execute 'topleft' . a:config.width . 'vsplit'
+  elseif a:config.position == 'leftinner'
+    execute 'aboveleft' . a:config.width . 'vsplit'
   elseif a:config.position == 'right'
     execute 'botright' . a:config.width . 'vsplit'
-  else " default position: bottom
-    execute 'botright' . a:config.height . 'split'
+  elseif a:config.position == 'rightinner'
+    execute 'belowright' . a:config.width . 'vsplit'
+  else
+    call floaterm#util#show_msg('No position was given, fallback to `split`', 'warning')
+    execute 'split'
   endif
   execute 'buffer ' . a:bufnr
   let winid = win_getid()

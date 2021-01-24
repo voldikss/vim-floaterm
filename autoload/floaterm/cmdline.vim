@@ -81,16 +81,20 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
     let vals = [
-          \ 'top',
-          \ 'right',
-          \ 'bottom',
-          \ 'left',
+          \ 'auto',
           \ 'center',
+          \ 'top',
+          \ 'topinner',
           \ 'topleft',
           \ 'topright',
+          \ 'bottom',
+          \ 'bottominner',
           \ 'bottomleft',
           \ 'bottomright',
-          \ 'auto',
+          \ 'left',
+          \ 'leftinner',
+          \ 'right',
+          \ 'rightinner',
           \ ]
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1

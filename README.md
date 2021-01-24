@@ -215,9 +215,11 @@ Default: `0.6`
 
 Type `String`. The position of the floating window. Available values:
 
-- If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
-- If `wintype` is `float`: `'top'`, `'right'`, `'bottom'`, `'left'`,
-  `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`,
+- If `wintype` is `normal`: `'top'`, `'bottom'`, `'left'`, `'right'`,
+  `'topinner'`, `'bottominner'`, `'leftinner'`, `'rightinner'`. Default:
+  `'bottom'`
+- If `wintype` is `float`: `'top'`, `'bottom'`, `'left'`, `'right'`,
+  `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`,
   `'auto'(at the cursor place)`. Default: `'center'`
 
 In addition, there is another option `'random'` which allows to pick a random

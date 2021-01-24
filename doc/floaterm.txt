@@ -64,11 +64,13 @@ g:floaterm_height                                *g:floaterm_height*
 g:floaterm_position                              *g:floaterm_position*
 	Type |String|.
 	The position of the floaterm window.
-	If |g:floaterm_wintype| is 'normal', the value can be 'top', 'right',
-	'bottom', 'left'. Default value is 'bottom'.
-    If |g:floaterm_wintype| is 'popup', the value can be 'top', 'right', 'bottom',
-    'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright',
-    'auto'(at the cursor place). Default value is 'center'.
+    If |g:floaterm_wintype| is 'normal', the value can be 'top', 'bottom', 'left',
+    'right', 'topinner', 'bottominner', 'leftinner', 'rightinner'. Default:
+    'bottom'
+ 
+    If |g:floaterm_wintype| is 'float', the value can be 'top', 'bottom', 'left',
+    'right', 'topleft', 'topright', 'bottomleft', 'bottomright', 'center',
+    'auto'(at the cursor place). Default: 'center' 
 
 g:floaterm_borderchars                           *g:floaterm_borderchars*
 	Type |String|.
