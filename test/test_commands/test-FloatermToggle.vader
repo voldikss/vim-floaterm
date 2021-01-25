@@ -11,6 +11,10 @@ Execute(FloatermToggle):
     AssertEqual '', &filetype
 
   Log '# FloatermToggle!'
+    FloatermKill!
+    Assert empty(floaterm#buflist#gather())
+    FloatermToggle! " FloatermToggle! should open floaterm if there are no floaterms opened yet.
+    AssertEqual 'floaterm', &filetype
     " NOTE: the 2 floaterms must have different positions can `:FloatermShow!
     " ` take effect
     FloatermNew --position=left

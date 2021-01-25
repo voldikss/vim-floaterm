@@ -87,9 +87,14 @@ function! floaterm#toggle(bang, bufnr, name)  abort
         call floaterm#window#hide(bufnr)
       endfor
     else
-      for bufnr in floaterm#buflist#gather()
-        call floaterm#terminal#open_existing(bufnr)
-      endfor
+      let buffers = floaterm#buflist#gather()
+      if empty(buffers)
+        let curr_bufnr = floaterm#new(v:true, '', {}, {})
+      else
+        for bufnr in buffers
+          call floaterm#terminal#open_existing(bufnr)
+        endfor
+      endif
     endif
     return
   endif
