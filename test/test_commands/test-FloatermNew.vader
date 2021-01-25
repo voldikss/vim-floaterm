@@ -1,17 +1,20 @@
 " vim:ft=vim
 
+Execute(Include base):
+  source test/base_vader.vim
+
 Execute(test-FloatermNew):
   Log '# FloatermNew'
     FloatermNew
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
 
   Log '# FloatermNew!'
     FloatermNew!
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
 
   Log '# FloatermNew with arguments'
     FloatermNew --height=0.6 --width=0.4 --wintype=float --name=test --position=topleft --autoclose=0 ls
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
 
   FloatermKill!
   stopinsert

@@ -1,5 +1,8 @@
 " vim:ft=vim
 
+Execute(Include base):
+  source test/base_vader.vim
+
 Execute(FloatermNew git commit --amend):
   if has('nvim')
     let g:floaterm_gitcommit = 'split'
@@ -16,7 +19,7 @@ Execute(FloatermNew git commit --amend):
     "
     " Log expand('%')
     " Log &ft
-    AssertNotEqual 'floaterm',&filetype
+    Assert !IsInFloatermBuffer()
     silent execute printf('!cd %s && rm afile && git add afile', pwd)
   endif
 

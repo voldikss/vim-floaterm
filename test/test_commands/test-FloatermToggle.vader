@@ -6,7 +6,7 @@ Execute(Include base):
 Execute(FloatermToggle):
   Log '# FloatermToggle'
     FloatermToggle
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
     FloatermToggle
     AssertEqual '', &filetype
 
@@ -14,7 +14,7 @@ Execute(FloatermToggle):
     FloatermKill!
     Assert empty(floaterm#buflist#gather())
     FloatermToggle! " FloatermToggle! should open floaterm if there are no floaterms opened yet.
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
     " NOTE: the 2 floaterms must have different positions can `:FloatermShow!
     " ` take effect
     FloatermNew --position=left

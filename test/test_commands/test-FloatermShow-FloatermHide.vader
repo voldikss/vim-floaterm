@@ -11,7 +11,7 @@ Execute(FloatermShow/Hide):
   Log '# FloatermShow'
     FloatermNew
     FloatermShow
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
 
   Log '# FloatermHide!'
     FloatermNew

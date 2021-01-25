@@ -20,3 +20,6 @@ function! IsBufValid(bufnr) abort
   return bufexists(a:bufnr) && floaterm#terminal#jobexists(a:bufnr)
 endfunction
 
+function! IsInFloatermBuffer() abort
+  return &ft == 'floaterm'
+endfunction

@@ -6,7 +6,7 @@ Execute(Include base):
 Execute(test-FloatermKill):
   Log '# FloatermKill'
     FloatermNew
-    AssertEqual 'floaterm', &filetype
+    Assert IsInFloatermBuffer()
     FloatermKill
     AssertEqual '', &filetype
 

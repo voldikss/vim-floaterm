@@ -1,9 +1,12 @@
 " vim:ft=vim
 
+Execute(Include base):
+  source test/base_vader.vim
+
 Execute(test-autoinsert):
   Log '# Set autoinsert to 0'
     FloatermNew --autoinsert=0 ls
-    AssertEqual 'floaterm',&filetype
+    Assert IsInFloatermBuffer()
 
     if has('nvim')
       let g:floaterm_autoinsert = 0
@@ -13,7 +16,7 @@ Execute(test-autoinsert):
 
   Log '# Set autoinsert to 1'
     FloatermNew --autoinsert=1 ls
-    AssertEqual 'floaterm',&filetype
+    Assert IsInFloatermBuffer()
 
     let g:floaterm_autoinsert = 1
     FloatermNew! ls
