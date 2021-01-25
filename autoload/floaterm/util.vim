@@ -50,20 +50,6 @@ function! floaterm#util#startinsert() abort
   endif
 endfunction
 
-function! floaterm#util#getbuflines(bufnr, length) abort
-  let lines = []
-  if a:bufnr == -1
-    for bufnr in floaterm#buflist#gather()
-      let lnum = getbufinfo(bufnr)[0]['lnum']
-      let lines += getbufline(bufnr, max([lnum - a:length, 0]), '$')
-    endfor
-  else
-    let lnum = getbufinfo(a:bufnr)[0]['lnum']
-    let lines += getbufline(a:bufnr, max([lnum - a:length, 0]), '$')
-  endif
-  return lines
-endfunction
-
 function! floaterm#util#get_selected_text(visualmode, range, line1, line2) abort
   if a:range == 0
     let lines = [getline('.')]

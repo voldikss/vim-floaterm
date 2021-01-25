@@ -9,7 +9,7 @@ function! coc#source#floaterm#init() abort
 endfunction
 
 function! coc#source#floaterm#complete(opt, cb) abort
-  let lines = floaterm#util#getbuflines(-1, 100)
+  let lines = floaterm#buffer#getlines(-1, 100)
   let completion = []
   let [minlength, maxlength] = g:floaterm_complete_options['filter_length']
 

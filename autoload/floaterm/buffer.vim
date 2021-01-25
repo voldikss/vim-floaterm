@@ -34,6 +34,20 @@ function! floaterm#buffer#create_border_buf(options) abort
   return floaterm#buffer#create_scratch_buf(content)
 endfunction
 
+function! floaterm#buffer#getlines(bufnr, length) abort
+  let lines = []
+  if a:bufnr == -1
+    for bufnr in floaterm#buflist#gather()
+      let lnum = getbufinfo(bufnr)[0]['lnum']
+      let lines += getbufline(bufnr, max([lnum - a:length, 0]), '$')
+    endfor
+  else
+    let lnum = getbufinfo(a:bufnr)[0]['lnum']
+    let lines += getbufline(a:bufnr, max([lnum - a:length, 0]), '$')
+  endif
+  return lines
+endfunction
+
 function! floaterm#buffer#get_config(bufnr, key, ...) abort
   let key = 'floaterm_' . a:key
   let val = getbufvar(a:bufnr, key)
