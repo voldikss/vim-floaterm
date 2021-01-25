@@ -278,7 +278,7 @@ opening a another one.
   that of the floaterm which will be opened
 - `2`: Always hide them
 
-Default: `2`.
+Default: `1`.
 
 #### **`g:floaterm_autoinsert`**
 

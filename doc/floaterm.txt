@@ -121,7 +121,7 @@ g:floaterm_autohide                              *g:floaterm_autohide*
         1 - Only hide those whose position (`b:floaterm_position`) is identical to
             that of the floaterm which will be opened
         2 - Always hide them
-	Default value is 2.
+	Default value is 1.
 
 g:floaterm_autoinsert                            *g:floaterm_autoinsert*
 	Type |Boolean|.
