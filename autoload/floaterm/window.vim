@@ -165,7 +165,7 @@ function! s:parse_config(bufnr, config) abort
   if config.position == 'random'
     let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
     if config.wintype =~ 'split'
-      let config.position = ['top', 'right', 'bottom', 'left'][randnum % 4]
+      let config.position = ['leftabove', 'aboveleft', 'rightbelow', 'belowright', 'topleft', 'botright'][randnum % 4]
     else
       let config.position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto'][randnum % 10]
     endif
