@@ -81,22 +81,35 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let vals = ['normal', 'float']
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
-    let vals = [
-          \ 'auto',
-          \ 'center',
-          \ 'top',
-          \ 'topinner',
-          \ 'topleft',
-          \ 'topright',
-          \ 'bottom',
-          \ 'bottominner',
-          \ 'bottomleft',
-          \ 'bottomright',
-          \ 'left',
-          \ 'leftinner',
-          \ 'right',
-          \ 'rightinner',
-          \ ]
+    let wintype = matchstr(a:cmd_line, '--wintype=\zs\w\+\ze')
+    if empty(wintype)
+      let wintype = g:floaterm_wintype
+    endif
+    if wintype == 'float'
+      let vals = [
+            \ 'auto',
+            \ 'center',
+            \ 'top',
+            \ 'topleft',
+            \ 'topright',
+            \ 'bottom',
+            \ 'bottomleft',
+            \ 'bottomright',
+            \ 'left',
+            \ 'right',
+            \ ]
+    else
+      let vals = [
+            \ 'top',
+            \ 'topinner',
+            \ 'bottom',
+            \ 'bottominner',
+            \ 'left',
+            \ 'leftinner',
+            \ 'right',
+            \ 'rightinner',
+            \ ]
+    endif
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
   elseif match(a:arg_lead, '--autohide=') > -1
     let vals = [0, 1, 2]
