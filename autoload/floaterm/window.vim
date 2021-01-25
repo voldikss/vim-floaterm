@@ -13,16 +13,16 @@ function! s:get_wintype() abort
     if s:has_float || s:has_popup
       return 'float'
     else
-      return 'normal'
+      return 'split'
     endif
-  elseif g:floaterm_wintype == 'normal'
-    return 'normal'
+  elseif g:floaterm_wintype =~ 'split'
+    return g:floaterm_wintype
   else " backward compatiblity: float|floating|popup -> float
     if s:has_float || s:has_popup
       return 'float'
     else
       call floaterm#util#show_msg("floating or popup feature is not found, fall back to normal window", 'warning')
-      return 'normal'
+      return 'split'
     endif
   endif
 endfunction
@@ -131,6 +131,13 @@ function! s:parse_config(bufnr, config) abort
     call floaterm#util#show_msg('Floaterm width should be at least 3', 'warning')
     let a:config.width = 3
   endif
+  " backward compatiblity
+  if a:config.wintype == 'normal'
+    let a:config.wintype = 'split'
+  endif
+  if a:config.position == 'center' && a:config.wintype =~ 'split'
+    let a:config.position = 'botright'
+  endif
 
   " Dump these configs into buffer, they can be reused for reopening
   call floaterm#buffer#set_config_dict(a:bufnr, a:config)
@@ -157,7 +164,7 @@ function! s:parse_config(bufnr, config) abort
 
   if config.position == 'random'
     let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
-    if s:get_wintype() == 'normal'
+    if config.wintype =~ 'split'
       let config.position = ['top', 'right', 'bottom', 'left'][randnum % 4]
     else
       let config.position = ['top', 'right', 'bottom', 'left', 'center', 'topleft', 'topright', 'bottomleft', 'bottomright', 'auto'][randnum % 10]
@@ -231,24 +238,10 @@ function! s:open_popup(bufnr, config) abort
 endfunction
 
 function! s:open_split(bufnr, config) abort
-  if a:config.position == 'top'
-    execute 'topleft' . a:config.height . 'split'
-  elseif a:config.position == 'topinner'
-    execute 'aboveleft' . a:config.height . 'split'
-  elseif a:config.position == 'bottom'
-    execute 'botright' . a:config.height . 'split'
-  elseif a:config.position == 'bottominner'
-    execute 'belowright' . a:config.height . 'split'
-  elseif a:config.position == 'left'
-    execute 'topleft' . a:config.width . 'vsplit'
-  elseif a:config.position == 'leftinner'
-    execute 'aboveleft' . a:config.width . 'vsplit'
-  elseif a:config.position == 'right'
-    execute 'botright' . a:config.width . 'vsplit'
-  elseif a:config.position == 'rightinner'
-    execute 'belowright' . a:config.width . 'vsplit'
-  else
-    execute 'belowright' . a:config.height . 'split'
+  if a:config.wintype == 'split'
+    execute a:config.position . a:config.height . 'split'
+  elseif a:config.wintype == 'vsplit'
+    execute a:config.position . a:config.width . 'vsplit'
   endif
   execute 'buffer ' . a:bufnr
   let winid = win_getid()
@@ -283,7 +276,7 @@ function! floaterm#window#open(bufnr, config) abort
 
   call floaterm#util#autohide(config.position)
 
-  if config.wintype == 'normal'
+  if config.wintype =~ 'split'
     call s:open_split(a:bufnr, config)
   else " backward compatiblity: float|floating|popup -> float
     if s:has_float

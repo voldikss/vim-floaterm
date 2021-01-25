@@ -77,7 +77,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   endfor
 
   if match(a:arg_lead, '--wintype=') > -1
-    let vals = ['normal', 'float']
+    let vals = ['float', 'split', 'vsplit']
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
     let wintype = matchstr(a:cmd_line, '--wintype=\zs\w\+\ze')
@@ -88,6 +88,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
       let vals = [
             \ 'auto',
             \ 'center',
+            \ 'random',
             \ 'top',
             \ 'topleft',
             \ 'topright',
@@ -99,14 +100,13 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
             \ ]
     else
       let vals = [
-            \ 'top',
-            \ 'topinner',
-            \ 'bottom',
-            \ 'bottominner',
-            \ 'left',
-            \ 'leftinner',
-            \ 'right',
-            \ 'rightinner',
+            \ 'random',
+            \ 'leftabove',
+            \ 'aboveleft',
+            \ 'rightbelow',
+            \ 'belowright',
+            \ 'topleft',
+            \ 'botright',
             \ ]
     endif
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})

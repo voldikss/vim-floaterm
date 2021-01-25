@@ -197,7 +197,7 @@ Example: `'floaterm($1|$2)'`
 #### **`g:floaterm_wintype`**
 
 Type `String`. `'float'`(nvim's floating or vim's popup) by default. Set it to
-`'normal'` if your vim/nvim doesn't support `floatwin` or `popupwin` feature.
+`'split'` or `'vsplit'` if you don't want to use floating or popup window.
 
 #### **`g:floaterm_width`**
 
@@ -217,9 +217,12 @@ Default: `0.6`
 
 Type `String`. The position of the floating window. Available values:
 
-- If `wintype` is `normal`: `'top'`, `'bottom'`, `'left'`, `'right'`,
-  `'topinner'`, `'bottominner'`, `'leftinner'`, `'rightinner'`. Default:
-  `'bottom'`
+- If `wintype` is `split`/`vsplit`: `'leftabove'`, `'aboveleft'`,
+  `'rightbelow'`, `'belowright'`, `'topleft'`, `'botright'`. Default:
+  `'botright'`.
+
+  It's recommended to have a look at those options meanings, e.g. `:help :leftabove`.
+
 - If `wintype` is `float`: `'top'`, `'bottom'`, `'left'`, `'right'`,
   `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`,
   `'auto'(at the cursor place)`. Default: `'center'`

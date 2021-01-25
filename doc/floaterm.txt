@@ -48,8 +48,8 @@ g:floaterm_title                                 *g:floaterm_title*
 
 g:floaterm_wintype                               *g:floaterm_wintype*
     Type |String|.
-    'float'(nvim's floatwin or vim's popupwin) by default. Set it to 'normal'
-    if your vim/nvim doesn't support |api-floatwin| or |popup-window|.
+    'float'(nvim's floatwin or vim's popupwin) by default. Set it to
+    'split' or 'vsplit'if you don't want to use floating or popup window. 
 
 g:floaterm_width                                 *g:floaterm_width*
     Type: |Number| (number of columns) or |Float| (between 0 and 1).
@@ -64,13 +64,17 @@ g:floaterm_height                                *g:floaterm_height*
 g:floaterm_position                              *g:floaterm_position*
 	Type |String|.
 	The position of the floaterm window.
-    If |g:floaterm_wintype| is 'normal', the value can be 'top', 'bottom', 'left',
-    'right', 'topinner', 'bottominner', 'leftinner', 'rightinner'. Default:
-    'bottom'
- 
-    If |g:floaterm_wintype| is 'float', the value can be 'top', 'bottom', 'left',
-    'right', 'topleft', 'topright', 'bottomleft', 'bottomright', 'center',
-    'auto'(at the cursor place). Default: 'center' 
+    If |g:floaterm_wintype| is 'split' or 'vsplit': 'leftabove', 'aboveleft',
+    'rightbelow', 'belowright', 'topleft', 'botright'.
+    Default: 'botright'.
+    It's recommended to have a look at those options meanings, e.g.
+>
+        `:help :leftabove`.
+<
+    If |g:floaterm_wintype| is 'float': 'top', 'bottom', 'left', 'right',
+    'topleft', 'topright', 'bottomleft', 'bottomright', 'center', 'auto'(at the
+    cursor place).
+    Default: 'center'
 
 g:floaterm_borderchars                           *g:floaterm_borderchars*
 	Type |String|.
@@ -80,7 +84,7 @@ g:floaterm_borderchars                           *g:floaterm_borderchars*
 
 g:floaterm_rootmarkers                           *g:floaterm_rootmarkers*
     Type |List| of |String|.
-    Markers used to detect the project root directory when running 
+    Markers used to detect the project root directory when running
     >
         :FloatermNew --cwd=<root>
 <
@@ -112,7 +116,7 @@ g:floaterm_autoclose                             *g:floaterm_autoclose*
 g:floaterm_autohide                              *g:floaterm_autohide*
 	Type |Number|.
     Whether to hide previous floaterms before switching to or opening a another
-    one.	
+    one.
         0 - Always do NOT hide previous floaterm windows
         1 - Only hide those whose position (`b:floaterm_position`) is identical to
             that of the floaterm which will be opened
