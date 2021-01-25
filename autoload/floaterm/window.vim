@@ -135,8 +135,14 @@ function! s:parse_config(bufnr, config) abort
   if a:config.wintype == 'normal'
     let a:config.wintype = 'split'
   endif
-  if a:config.position == 'center' && a:config.wintype =~ 'split'
-    let a:config.position = 'botright'
+  if a:config.wintype =~ 'split'
+    if a:config.position == 'center'
+      let a:config.position = 'botright'
+    elseif a:config.position == 'top' || a:config.position == 'left'
+      let a:config.position = 'aboveleft'
+    elseif a:config.position == 'bottom' || a:config.position == 'right'
+      let a:config.position = 'belowright'
+    endif
   endif
 
   " Dump these configs into buffer, they can be reused for reopening
