@@ -281,6 +281,8 @@ function! floaterm#window#open(bufnr, config) abort
 
   let config = s:parse_config(a:bufnr, a:config)
 
+  call floaterm#util#autohide(config.position)
+
   if config.wintype == 'normal'
     call s:open_split(a:bufnr, config)
   else " backward compatiblity: float|floating|popup -> float

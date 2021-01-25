@@ -133,13 +133,14 @@ The following command allows you to compile and run your C code in the floaterm 
   attribute is `floaterm_name`. Otherwise create a new floaterm named
   `floaterm_name`.
 - Use `<TAB>` to get completion.
-- If `!` is given, toggle all floaterms
+- If `!` is given, toggle all floaterms (`:FloatermHide!` or `: FloatermShow!`)
 
 #### `:[N]FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
 - If `N` is given, show the floaterm whose buffer number is `N`
 - If `floaterm_name` is given, show the floaterm named `floaterm_name`.
-- If `!` is given, show all floaterms
+- If `!` is given, show all floaterms (If multiple floaterms have the same
+  position attribute, only one of them will be show)
 
 #### `:[N]FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
