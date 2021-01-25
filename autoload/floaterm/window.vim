@@ -120,7 +120,6 @@ function! s:parse_config(bufnr, config) abort
   let a:config.height      = get(a:config, 'height', g:floaterm_height)
   let a:config.wintype     = get(a:config, 'wintype', s:get_wintype())
   let a:config.position    = get(a:config, 'position', g:floaterm_position)
-  let a:config.autohide    = get(a:config, 'autohide', g:floaterm_autohide)
   let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)
   let a:config.borderchars = get(a:config, 'borderchars', g:floaterm_borderchars)
 
@@ -281,16 +280,6 @@ function! floaterm#window#open(bufnr, config) abort
   endif
 
   let config = s:parse_config(a:bufnr, a:config)
-
-  if config.autohide == 1
-    for bufnr in floaterm#buflist#gather()
-      if getbufvar(bufnr, 'floaterm_position') == config.position
-        call floaterm#hide(0, bufnr, '')
-      endif
-    endfor
-  elseif config.autohide == 2
-    call floaterm#hide(1, 0, '')
-  endif
 
   if config.wintype == 'normal'
     call s:open_split(a:bufnr, config)

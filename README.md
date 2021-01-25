@@ -89,7 +89,6 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or
   - `title` see `g:floaterm_title`
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
-  - `autohide` see `g:floaterm_autohide`
   - `autoclose` see `g:floaterm_autoclose`
   - `borderchars` see `g:floaterm_borderchars`
 - Use `<TAB>` to get completion.
