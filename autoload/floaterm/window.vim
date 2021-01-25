@@ -265,6 +265,23 @@ function! s:init_win(winid, is_border) abort
   call setwinvar(a:winid, '&winfixwidth', 1)
 endfunction
 
+" :currpos: the position of the floaterm which will be opened soon
+function! s:autohide(currpos) abort
+  if g:floaterm_autohide == 2
+    " hide all other floaterms
+    call floaterm#hide(1, 0, '')
+  elseif g:floaterm_autohide == 1
+    " hide all other floaterms that will be overlaied by this one
+    for bufnr in floaterm#buflist#gather()
+      if getbufvar(bufnr, 'floaterm_position') == a:currpos
+        call floaterm#hide(0, bufnr, '')
+      endif
+    endfor
+  elseif g:floaterm_autohide == 0
+    " nop
+  endif
+endfunction
+
 function! floaterm#window#open(bufnr, config) abort
   let winnr = bufwinnr(a:bufnr)
   if winnr > -1
@@ -274,7 +291,7 @@ function! floaterm#window#open(bufnr, config) abort
 
   let config = s:parse_config(a:bufnr, a:config)
 
-  call floaterm#util#autohide(config.position)
+  call s:autohide(config.position)
 
   if config.wintype =~ 'split'
     call s:open_split(a:bufnr, config)
