@@ -83,17 +83,13 @@ function! floaterm#toggle(bang, bufnr, name)  abort
   if a:bang
     let found_winnr = floaterm#window#find()
     if found_winnr > 0
-      for bufnr in floaterm#buflist#gather()
-        call floaterm#window#hide(bufnr)
-      endfor
+      call floaterm#hide(1, 0, '')
     else
       let buffers = floaterm#buflist#gather()
       if empty(buffers)
         let curr_bufnr = floaterm#new(v:true, '', {}, {})
       else
-        for bufnr in buffers
-          call floaterm#terminal#open_existing(bufnr)
-        endfor
+        call floaterm#show(1, 0, '')
       endif
     endif
     return
@@ -218,6 +214,7 @@ endfunction
 
 function! floaterm#show(bang, bufnr, name) abort
   if a:bang
+    call floaterm#hide(1, 0, '')
     for bufnr in floaterm#buflist#gather()
       call floaterm#terminal#open_existing(bufnr)
     endfor
