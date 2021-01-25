@@ -50,10 +50,20 @@ function! floaterm#util#startinsert() abort
   endif
 endfunction
 
-function! floaterm#util#autohide() abort
-  " hide all floaterms before opening a new floaterm
-  if g:floaterm_autohide
+" :currpos: the position of the floaterm which will be opened soon
+function! floaterm#util#autohide(currpos) abort
+  if g:floaterm_autohide == 2
+    " hide all other floaterms
     call floaterm#hide(1, 0, '')
+  elseif g:floaterm_autohide == 1
+    " hide all other floaterms that will be overlaied by this one
+    for bufnr in floaterm#buflist#gather()
+      if getbufvar(bufnr, 'floaterm_position') == a:currpos
+        call floaterm#hide(0, bufnr, '')
+      endif
+    endfor
+  elseif g:floaterm_autohide == 0
+    " nop
   endif
 endfunction
 

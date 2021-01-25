@@ -8,13 +8,13 @@
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
 
-function! s:on_floaterm_open(bufnr) abort
+function! s:on_floaterm_create(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
   if has('nvim')
     " TODO: need to be reworked
     execute printf(
-          \ 'autocmd BufHidden,BufWipeout <buffer=%s> ++once call floaterm#window#hide(%s)',
+          \ 'autocmd BufHidden,BufWipeout <buffer=%s> call floaterm#window#hide(%s)',
           \ a:bufnr,
           \ a:bufnr
           \ )
@@ -60,33 +60,33 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
   endif
 
   " just open if floaterm exists
-  if a:bufnr > 0
+  if !bufexists(a:bufnr)
+    " change cwd
+    let savedcwd = getcwd()
+    let dest = get(a:config, 'cwd', '')
+    if dest == '<root>'
+      let dest = floaterm#path#get_root()
+    endif
+    if !empty(dest)
+      call floaterm#path#chdir(dest)
+    endif
+
+    " spawn terminal
+    let bufnr = s:spawn_terminal(a:cmd, a:jobopts, a:config)
+
+    " hide floaterm immediately if silent
+    if floaterm#buffer#get_config(bufnr, 'silent', 0)
+      call floaterm#window#hide(bufnr)
+      stopinsert
+    endif
+
+    " restore cwd
+    call floaterm#path#chdir(savedcwd)
+  else
     call floaterm#window#open(a:bufnr, a:config)
-    call s:on_floaterm_open(a:bufnr)
-    return a:bufnr
+    let bufnr = a:bufnr
   endif
-
-  " change cwd
-  let savedcwd = getcwd()
-  let dest = get(a:config, 'cwd', '')
-  if dest == '<root>'
-    let dest = floaterm#path#get_root()
-  endif
-  if !empty(dest)
-    call floaterm#path#chdir(dest)
-  endif
-
-  " spawn terminal
-  let bufnr = s:spawn_terminal(a:cmd, a:jobopts, a:config)
-
-  " hide floaterm immediately if silent
-  if floaterm#buffer#get_config(bufnr, 'silent', 0)
-    call floaterm#window#hide(bufnr)
-    stopinsert
-  endif
-
-  " restore cwd
-  call floaterm#path#chdir(savedcwd)
+  doautocmd User FloatermOpen
 
   return bufnr
 endfunction
@@ -95,10 +95,6 @@ function! floaterm#terminal#open_existing(bufnr) abort
   if !bufexists(a:bufnr)
     call floaterm#util#show_msg(printf("Buffer %s doesn't exists", a:bufnr), 'error')
     return
-  endif
-  let winnr = bufwinnr(a:bufnr)
-  if winnr > -1
-    execute winnr . 'hide'
   endif
   let config = floaterm#buffer#get_config_dict(a:bufnr)
   call floaterm#terminal#open(a:bufnr, '', {}, config)
@@ -139,7 +135,7 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     call floaterm#window#open(bufnr, a:config)
   endif
   call floaterm#buffer#set_config(bufnr, 'jobexists', v:true)
-  call s:on_floaterm_open(bufnr)
+  call s:on_floaterm_create(bufnr)
   return bufnr
 endfunction
 

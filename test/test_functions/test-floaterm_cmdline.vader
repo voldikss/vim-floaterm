@@ -128,23 +128,34 @@ Execute(Test floaterm#cmdline#complete):
   call Test__floaterm_cmdline_complete('FloatermNew --title=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --silent', [])
   call Test__floaterm_cmdline_complete('FloatermNew --wintype=', [
-        \ '--wintype=normal',
+        \ '--wintype=float',
+        \ '--wintype=split',
+        \ '--wintype=vsplit',
+        \ ])
+  call Test__floaterm_cmdline_complete('FloatermNew --wintype=f', [
         \ '--wintype=float'
         \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --wintype=n', [
-        \ '--wintype=normal'
-        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --position=', [
-        \ '--position=top',
-        \ '--position=right',
-        \ '--position=bottom',
-        \ '--position=left',
+        \ '--position=auto',
         \ '--position=center',
+        \ '--position=random',
+        \ '--position=top',
         \ '--position=topleft',
         \ '--position=topright',
+        \ '--position=bottom',
         \ '--position=bottomleft',
         \ '--position=bottomright',
-        \ '--position=auto'
+        \ '--position=left',
+        \ '--position=right',
+        \ ])
+  call Test__floaterm_cmdline_complete('FloatermNew --wintype=split --position=', [
+        \ '--position=random',
+        \ '--position=leftabove',
+        \ '--position=aboveleft',
+        \ '--position=rightbelow',
+        \ '--position=belowright',
+        \ '--position=topleft',
+        \ '--position=botright',
         \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --position=t', [
         \ '--position=top',

@@ -77,21 +77,38 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   endfor
 
   if match(a:arg_lead, '--wintype=') > -1
-    let vals = ['normal', 'float']
+    let vals = ['float', 'split', 'vsplit']
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
-    let vals = [
-          \ 'top',
-          \ 'right',
-          \ 'bottom',
-          \ 'left',
-          \ 'center',
-          \ 'topleft',
-          \ 'topright',
-          \ 'bottomleft',
-          \ 'bottomright',
-          \ 'auto',
-          \ ]
+    let wintype = matchstr(a:cmd_line, '--wintype=\zs\w\+\ze')
+    if empty(wintype)
+      let wintype = g:floaterm_wintype
+    endif
+    if wintype == 'float'
+      let vals = [
+            \ 'auto',
+            \ 'center',
+            \ 'random',
+            \ 'top',
+            \ 'topleft',
+            \ 'topright',
+            \ 'bottom',
+            \ 'bottomleft',
+            \ 'bottomright',
+            \ 'left',
+            \ 'right',
+            \ ]
+    else
+      let vals = [
+            \ 'random',
+            \ 'leftabove',
+            \ 'aboveleft',
+            \ 'rightbelow',
+            \ 'belowright',
+            \ 'topleft',
+            \ 'botright',
+            \ ]
+    endif
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
@@ -100,7 +117,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     return []
   elseif match(a:arg_lead, '--cwd=') > -1
     let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
-    let dirs = getcompletion(prestr, 'dir') + ['<root>']
+    let dirs = ['<root>'] + getcompletion(prestr, 'dir')
     return map(dirs, { k,v -> '--cwd=' . v })
   elseif match(a:arg_lead, '--name=') > -1
     return []

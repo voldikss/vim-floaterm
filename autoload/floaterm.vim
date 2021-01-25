@@ -51,7 +51,6 @@ endfunction
 " create a floaterm. return bufnr of the terminal
 " argument `jobopts` is passed by user in the case using this function as API
 function! floaterm#new(bang, cmd, jobopts, config) abort
-  call floaterm#util#autohide()
   if a:cmd != ''
     let wrappers_path = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
     let wrappers = map(wrappers_path, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
@@ -147,7 +146,6 @@ function! floaterm#next()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(next_bufnr)
   endif
 endfunction
@@ -158,7 +156,6 @@ function! floaterm#prev()  abort
     let msg = 'No more floaterms'
     call floaterm#util#show_msg(msg, 'warning')
   else
-    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(prev_bufnr)
   endif
 endfunction
@@ -178,7 +175,6 @@ function! floaterm#first() abort
   if first_bufnr == -1
     call floaterm#util#show_msg('No more floaterms', 'warning')
   else
-    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(first_bufnr)
   endif
 endfunction
@@ -188,7 +184,6 @@ function! floaterm#last() abort
   if last_bufnr == -1
     call floaterm#util#show_msg('No more floaterms', 'warning')
   else
-    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(last_bufnr)
   endif
 endfunction
@@ -233,7 +228,6 @@ function! floaterm#show(bang, bufnr, name) abort
   endif
 
   if bufnr > 0
-    call floaterm#util#autohide()
     call floaterm#terminal#open_existing(bufnr)
   else
     call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')

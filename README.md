@@ -12,6 +12,7 @@ Use (neo)vim terminal in the floating/popup window.
   - [Options](#options)
   - [Keymaps](#keymaps)
   - [Highlights](#highlights)
+  - [Autocmd](#autocmd)
 - [Advanced Topics](#advanced-topics)
   - [Use with command line tools](#use-with-command-line-tools)
   - [Use with other plugins](#use-with-other-plugins)
@@ -88,8 +89,8 @@ double-circular-linkedlist. Then you can use `:FloatermNext` or
   - `title` see `g:floaterm_title`
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
-  - `borderchars` see `g:floaterm_borderchars`
   - `autoclose` see `g:floaterm_autoclose`
+  - `borderchars` see `g:floaterm_borderchars`
 - Use `<TAB>` to get completion.
 - This command basically shares the consistent behaviors with the builtin `:terminal` :
   - The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
@@ -132,13 +133,14 @@ The following command allows you to compile and run your C code in the floaterm 
   attribute is `floaterm_name`. Otherwise create a new floaterm named
   `floaterm_name`.
 - Use `<TAB>` to get completion.
-- If `!` is given, toggle all floaterms
+- If `!` is given, toggle all floaterms (`:FloatermHide!` or `: FloatermShow!`)
 
 #### `:[N]FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
 - If `N` is given, show the floaterm whose buffer number is `N`
 - If `floaterm_name` is given, show the floaterm named `floaterm_name`.
-- If `!` is given, show all floaterms
+- If `!` is given, show all floaterms (If multiple floaterms have the same
+  position attribute, only one of them will be show)
 
 #### `:[N]FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
@@ -195,7 +197,7 @@ Example: `'floaterm($1|$2)'`
 #### **`g:floaterm_wintype`**
 
 Type `String`. `'float'`(nvim's floating or vim's popup) by default. Set it to
-`'normal'` if your vim/nvim doesn't support `floatwin` or `popupwin` feature.
+`'split'` or `'vsplit'` if you don't want to use floating or popup window.
 
 #### **`g:floaterm_width`**
 
@@ -215,9 +217,14 @@ Default: `0.6`
 
 Type `String`. The position of the floating window. Available values:
 
-- If `wintype` is `normal`: `'top'`, `'right'`, `'bottom'`, `'left'`. Default: `'bottom'`
-- If `wintype` is `float`: `'top'`, `'right'`, `'bottom'`, `'left'`,
-  `'center'`, `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`,
+- If `wintype` is `split`/`vsplit`: `'leftabove'`, `'aboveleft'`,
+  `'rightbelow'`, `'belowright'`, `'topleft'`, `'botright'`. Default:
+  `'botright'`.
+
+  It's recommended to have a look at those options meanings, e.g. `:help :leftabove`.
+
+- If `wintype` is `float`: `'top'`, `'bottom'`, `'left'`, `'right'`,
+  `'topleft'`, `'topright'`, `'bottomleft'`, `'bottomright'`, `'center'`,
   `'auto'(at the cursor place)`. Default: `'center'`
 
 In addition, there is another option `'random'` which allows to pick a random
@@ -255,10 +262,23 @@ Default: `''`, which means this is disabled by default(use your own `$GIT_EDITOR
 Type `Number`. Whether to close floaterm window once the job gets finished.
 
 - `0`: Always do NOT close floaterm window
-- `1`: Close window if the job exits normally, otherwise stay it with messages like `[Process exited 101]`
+- `1`: Close window if the job exits normally, otherwise stay it with messages
+  like `[Process exited 101]`
 - `2`: Always close floaterm window
 
 Default: `0`.
+
+#### **`g:floaterm_autohide`**
+
+Type `Number`. Whether to hide previous floaterms before switching to or
+opening a another one.
+
+- `0`: Always do NOT hide previous floaterm windows
+- `1`: Only hide those whose position (`b:floaterm_position`) is identical to
+  that of the floaterm which will be opened
+- `2`: Always hide them
+
+Default: `2`.
 
 #### **`g:floaterm_autoinsert`**
 
@@ -266,15 +286,10 @@ Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
 
 Default: `v:true`
 
-#### **`g:floaterm_autohide`**
-
-Type `Boolean`. Decide whether to hide previous floaterms before switching to or opening a new one.
-
-Default: `v:true`.
-
 #### **`g:floaterm_complete_options`**
 
-Type `Dict`. Autocompletion options (The completion from floaterm is synchronous)
+Type `Dict`. Autocompletion options (Note that completion from floaterm is
+synchronous)
 
 Available options:
 
@@ -362,6 +377,12 @@ hi FloatermNC guibg=gray
 ```
 
 ![](https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif)
+
+### Autocmd
+
+```vim
+autocmd User FloatermOpen        " triggered after opening a floaterm
+```
 
 ## Advanced Topics
 

@@ -1,29 +1,33 @@
 " vim:ft=vim
 
+Execute(Include base):
+  source test/base_vader.vim
+
 Execute(FloatermToggle):
-  Log '# Basic'
+  Log '# FloatermToggle'
     FloatermToggle
     AssertEqual 'floaterm', &filetype
     FloatermToggle
     AssertEqual '', &filetype
 
-  Log '# Toggle between multiple floaterms'
-    FloatermNew
+  Log '# FloatermToggle!'
+    " NOTE: the 2 floaterms must have different positions can `:FloatermShow!
+    " ` take effect
+    FloatermNew --position=left
     let bufnr1 = bufnr('%')
-    FloatermToggle
-    FloatermNew
+    FloatermNew --position=right
     let bufnr2 = bufnr('%')
-    FloatermToggle
 
     if has('nvim')
-      Log '# FloatermToggle! to show and hide'
+      Log '  * FloatermToggle! to hide'
       FloatermToggle!
-      AssertNotEqual -1,bufwinnr(bufnr1)
-      AssertNotEqual -1,bufwinnr(bufnr2)
+      Assert !BufWinExists(bufnr1)
+      Assert !BufWinExists(bufnr2)
 
+      Log '  * FloatermToggle! to show'
       FloatermToggle!
-      AssertEqual -1,bufwinnr(bufnr1)
-      AssertEqual -1,bufwinnr(bufnr2)
+      Assert BufWinExists(bufnr1)
+      Assert BufWinExists(bufnr2)
     endif
 
   Log '# [N]FloatermToggle'
