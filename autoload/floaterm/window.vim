@@ -27,12 +27,12 @@ function! s:get_wintype() abort
   endif
 endfunction
 
-function! s:make_title(bufnr, text) abort
-  if empty(a:text) | return '' | endif
+function! s:make_title(bufnr, tmpl) abort
+  if empty(a:tmpl) | return '' | endif
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
   let idx = index(buffers, a:bufnr) + 1
-  let title = substitute(a:text, '$1', idx, 'gm')
+  let title = substitute(a:tmpl, '$1', idx, 'gm')
   let title = substitute(title, '$2', cnt, 'gm')
   return title
 endfunction
@@ -123,6 +123,7 @@ function! s:parse_config(bufnr, config) abort
   let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)
   let a:config.borderchars = get(a:config, 'borderchars', g:floaterm_borderchars)
 
+  " Edge cases
   if type(a:config.height) == v:t_number && a:config.height < 3
     call floaterm#util#show_msg('Floaterm height should be at least 3', 'warning')
     let a:config.height = 3
@@ -151,6 +152,8 @@ function! s:parse_config(bufnr, config) abort
   " The following configs (width, height, borderchars, position) should be
   " parsed and become static. After opening windows, the configs are discard
   let config = deepcopy(a:config)
+
+  let config.title = s:make_title(a:bufnr, a:config.title)
 
   let width = config.width
   if type(width) == v:t_float | let width = width * &columns | endif
@@ -208,7 +211,6 @@ function! s:open_float(bufnr, config) abort
         \ 'focusable': v:false,
         \ 'style':'minimal',
         \ }
-  let a:config.title = s:make_title(a:bufnr, a:config.title)
   let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
   let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
   call s:init_win(bd_winid, v:true)
@@ -225,6 +227,7 @@ function! s:open_popup(bufnr, config) abort
         \ 'minwidth': a:config.width - 2,
         \ 'maxheight': a:config.height - 2,
         \ 'minheight': a:config.height - 2,
+        \ 'title': a:config.title,
         \ 'border': [1, 1, 1, 1],
         \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
@@ -232,11 +235,6 @@ function! s:open_popup(bufnr, config) abort
         \ 'highlight': 'Floaterm',
         \ 'zindex': len(floaterm#buflist#gather()) + 1
         \ }
-
-  " vim will pad the end of title but not begin part
-  " so we build the title as ' floaterm (idx/cnt)'
-  let title =s:make_title(a:bufnr, a:config.title)
-  let options.title = empty(title) ? '' : ' ' . title
   let winid = popup_create(a:bufnr, options)
   call s:init_win(winid, v:false)
   call floaterm#buffer#set_config(a:bufnr, 'winid', winid)

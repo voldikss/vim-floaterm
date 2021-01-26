@@ -24,7 +24,6 @@ function! floaterm#buffer#create_border_buf(options) abort
   let repeat_width = a:options.width - 2
   let repeat_height = a:options.height - 2
   let title = a:options.title
-  let title = empty(title) ? title : (' ' . title . ' ')
   let title_width = strdisplaywidth(title)
   let borderchars = a:options.borderchars
   let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = borderchars
