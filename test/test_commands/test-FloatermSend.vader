@@ -4,14 +4,14 @@ Given(One line text):
   # text to be send
 
 Execute(test-FloatermSend):
-  Log '# FloatermNew'
-    FloatermNew
-    let bufnr1 = bufnr('%')
-    FloatermHide
+  FloatermNew
+  let bufnr1 = bufnr('%')
+  FloatermHide
 
   Log '# FloatermSend'
     FloatermSend
     sleep 500m
+    Log getline('.')
     let lines = join(getbufline(bufnr1, 0, '$'))
     Log lines
     Assert lines =~ '# text to be send'

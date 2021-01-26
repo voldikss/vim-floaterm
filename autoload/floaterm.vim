@@ -108,7 +108,7 @@ function! floaterm#toggle(bang, bufnr, name)  abort
     else
       let found_winnr = floaterm#window#find()
       if found_winnr > 0
-        noautocmd execute found_winnr . 'wincmd w'
+        execute found_winnr . 'wincmd w'
       else
         call floaterm#curr()
       endif
@@ -117,7 +117,7 @@ function! floaterm#toggle(bang, bufnr, name)  abort
     if bufnr == bufnr('%')
       call floaterm#window#hide(bufnr)
     elseif bufwinnr(bufnr) > -1
-      noautocmd execute bufwinnr(bufnr) . 'wincmd w'
+      execute bufwinnr(bufnr) . 'wincmd w'
     else
       call floaterm#terminal#open_existing(bufnr)
     endif

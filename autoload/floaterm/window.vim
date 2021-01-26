@@ -319,6 +319,9 @@ function! floaterm#window#hide(bufnr) abort
       call nvim_win_close(bd_winid, v:true)
     endif
   else
+    if !s:winexists(winid)
+      return
+    endif
     if exists('*win_gettype')
       if win_gettype() == 'popup'
         call popup_close(winid)
