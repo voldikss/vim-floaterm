@@ -11,14 +11,13 @@ let s:is_win = has('win32') || has('win64')
 function! s:on_floaterm_create(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
-  if has('nvim')
-    " TODO: need to be reworked
-    execute printf(
-          \ 'autocmd BufHidden,BufWipeout <buffer=%s> call floaterm#window#hide(%s)',
-          \ a:bufnr,
-          \ a:bufnr
-          \ )
-  endif
+  augroup floaterm_enter_insertmode
+    autocmd! * <buffer>
+    autocmd! User FloatermOpen
+    autocmd User FloatermOpen call floaterm#util#startinsert()
+    autocmd BufEnter <buffer> call floaterm#util#startinsert()
+    autocmd BufHidden,BufWipeout <buffer> call floaterm#window#hide(bufnr('%'))
+  augroup END
 endfunction
 
 function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort

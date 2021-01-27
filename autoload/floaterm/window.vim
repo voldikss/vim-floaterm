@@ -309,6 +309,9 @@ function! floaterm#window#open(bufnr, config) abort
 endfunction
 
 function! floaterm#window#hide(bufnr) abort
+  if getbufvar(a:bufnr, '&filetype') != 'floaterm'
+    return
+  endif
   let winid = floaterm#buffer#get_config(a:bufnr, 'winid', -1)
   let bd_winid = floaterm#buffer#get_config(a:bufnr, 'borderwinid', -1)
   if has('nvim')
@@ -319,16 +322,7 @@ function! floaterm#window#hide(bufnr) abort
       call nvim_win_close(bd_winid, v:true)
     endif
   else
-    if !s:winexists(winid)
-      return
-    endif
-    if exists('*win_gettype')
-      if win_gettype() == 'popup'
-        call popup_close(winid)
-      elseif bufwinnr(a:bufnr) > 0
-        silent! execute bufwinnr(a:bufnr) . 'hide'
-      endif
-    else
+    if s:winexists(winid)
       try
         call popup_close(winid)
       catch

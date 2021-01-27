@@ -25,4 +25,6 @@ endif
 filetype plugin indent on
 syntax enable
 
+let g:mapleader = ';'
 nnoremap <silent>       Q         :qa!<CR>
+nnoremap <silent> <Leader>m :messages<CR>
