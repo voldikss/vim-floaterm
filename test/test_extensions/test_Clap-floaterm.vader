@@ -1,0 +1,15 @@
+" vim:ft=vim
+
+Execute(test_Clap-floaterm):
+  if !g:run_in_ci | finish | endif
+
+  FloatermNew
+  FloatermHide
+
+  let candidates = g:clap#provider#floaterm#.source()
+  Log candidates
+  Assert !empty(candidates)
+
+  FloatermKill!
+  stopinsert
+

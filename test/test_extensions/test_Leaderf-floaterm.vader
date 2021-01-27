@@ -1,0 +1,14 @@
+" vim:ft=vim
+
+Execute(test_Leaderf-floaterm):
+  if !g:run_in_ci | finish | endif
+
+  FloatermNew
+  FloatermHide
+
+  let candidates = lf_floaterm#source()
+  Log candidates
+  Assert !empty(candidates)
+
+  FloatermKill!
+  stopinsert

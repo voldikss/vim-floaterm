@@ -1,0 +1,14 @@
+" vim:ft=vim
+
+Execute(test_Fzf-floaterm):
+  if !g:run_in_ci | finish | endif
+
+  FloatermNew
+  FloatermHide
+
+  let candidates = fzf_floaterm#feed()
+  Log candidates
+  Assert !empty(candidates)
+
+  FloatermKill!
+  stopinsert

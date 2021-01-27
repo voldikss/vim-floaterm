@@ -547,51 +547,9 @@ Install [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm) and try
 
 #### [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim) | [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)
 
-This plugin can be a runner for asynctasks.vim or asyncrun.vim.
-To use it, try the following code in your `vimrc`.
-
-```vim
-function! s:run_in_floaterm(opts)
-  execute 'FloatermNew --position=bottomright' .
-                   \ ' --wintype=float' .
-                   \ ' --height=0.4' .
-                   \ ' --width=0.4' .
-                   \ ' --title=floaterm_runner' .
-                   \ ' --autoclose=0' .
-                   \ ' --silent=' . get(a:opts, 'silent', 0)
-                   \ ' --cwd=' . a:opts.cwd
-                   \ ' ' . a:opts.cmd
-  " Do not focus on floaterm window, and close it once cursor moves
-  " If you want to jump to the floaterm window, use <C-w>p
-  " You can choose whether to use the following code or not
-  stopinsert | noa wincmd p
-  augroup close-floaterm-runner
-    autocmd!
-    autocmd CursorMoved,InsertEnter * ++nested
-          \ call timer_start(100, { -> s:close_floaterm_runner() })
-  augroup END
-endfunction
-function! s:close_floaterm_runner() abort
-  if &ft == 'floaterm' | return | endif
-  for b in tabpagebuflist()
-    if getbufvar(b, '&ft') == 'floaterm' &&
-          \ getbufvar(b, 'floaterm_jobexists') == v:false
-      execute b 'bwipeout!'
-      break
-    endif
-  endfor
-  autocmd! close-floaterm-runner
-endfunction
-let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
-let g:asyncrun_runner.floaterm = function('s:run_in_floaterm')
-let g:asynctasks_term_pos = 'floaterm'
-```
-
-Then your task will be run in the floaterm instance. See asynctasks.vim
-[Wiki](https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner) for more information.
-
-You can also modify the code in `s: run_in_floaterm` by yourself to meet your
-tastes, which is the reason why this code is not made builtin.
+This plugin can be a runner for asynctasks.vim or asyncrun.vim. See
+[asyncrun.extra](https://github.com/skywind3000/asyncrun.extra) for the
+installation and usage.
 
 ![](https://user-images.githubusercontent.com/20282795/104123344-b3f70c00-5385-11eb-9f61-0a5703ba78f5.gif)
 
