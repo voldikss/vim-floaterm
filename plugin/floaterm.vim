@@ -73,3 +73,9 @@ call s:bind_keymap(g:floaterm_keymap_hide,   'FloatermHide')
 call s:bind_keymap(g:floaterm_keymap_show,   'FloatermShow')
 call s:bind_keymap(g:floaterm_keymap_kill,   'FloatermKill')
 call s:bind_keymap(g:floaterm_keymap_toggle, 'FloatermToggle')
+
+"-----------------------------------------------------------------------------
+" options broken by breaking changes
+if g:floaterm_gitcommit == 'floaterm'
+  let g:floaterm_gitcommit = 'vsplit'
+endif

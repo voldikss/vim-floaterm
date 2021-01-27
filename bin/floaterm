@@ -29,13 +29,13 @@ absolute_path() {
 name="$(absolute_path """$1""")"
 
 if [ -z "$NVIM_LISTEN_ADDRESS" ]; then
-    printf '\033]51;["call", "floaterm#util#edit", "%s"]\007' "$name"
+    printf '\033]51;["call", "floaterm#util#edit_by_floaterm", "%s"]\007' "$name"
 else
     if [ -x "$(which nvr 2> /dev/null)" ]; then
         if [ -p /dev/stdin ]; then
             nvr -cc "FloatermHide!" --remote -
         else
-            nvr --servername "$NVIM_LISTEN_ADDRESS" --remote-expr "floaterm#util#edit(0, '$name')"
+            nvr --servername "$NVIM_LISTEN_ADDRESS" --remote-expr "floaterm#util#edit_by_floaterm(0, '$name')"
         fi
     else
         echo "Cannot find nvr executable, please install neovim-remote using pip3"

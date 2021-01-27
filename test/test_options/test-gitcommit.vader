@@ -4,24 +4,13 @@ Execute(Include base):
   source test/base_vader.vim
 
 Execute(FloatermNew git commit --amend):
-  if has('nvim')
-    let g:floaterm_gitcommit = 'split'
-    let pwd = $PWD
-    silent execute printf('!touch %s/afile && git add afile', pwd)
-    FloatermNew git commit
-    sleep 1000m
-
-    " Log $GIT_EDITOR
-    " Log nvim_win_get_config(win_getid())
-    " for l in range(1, line('$'))
-    "   Log getline(l)
-    " endfor
-    "
-    " Log expand('%')
-    " Log &ft
-    Assert !IsInFloatermBuffer()
-    silent execute printf('!cd %s && rm afile && git add afile', pwd)
-  endif
+  let g:floaterm_gitcommit = 'split'
+  let pwd = $PWD
+  silent execute printf('!touch %s/afile && git add afile', pwd)
+  FloatermNew git commit
+  sleep 500m
+  AssertEqual &ft, 'gitcommit' 
+  silent execute printf('!cd %s && rm afile && git add afile', pwd)
 
   FloatermKill!
   stopinsert

@@ -24,15 +24,7 @@ if stridx($PATH, s:script) < 0
 endif
 
 if !empty(g:floaterm_gitcommit)
-  autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
-  if g:floaterm_gitcommit == 'floaterm'
-    let $GIT_EDITOR = 'nvr --remote-wait'
-  else
-    let $GIT_EDITOR = printf(
-      \ 'nvr -cc "call floaterm#hide(1, 0, \"\") | %s" --remote-wait',
-      \ g:floaterm_gitcommit
-      \ )
-  endif
+  call floaterm#edita#setup#enable()
 endif
 
 " ----------------------------------------------------------------------------

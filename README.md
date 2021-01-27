@@ -255,11 +255,12 @@ Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'
 
 #### **`g:floaterm_gitcommit`**
 
-Type `String`. Opening strategy for `COMMIT_EDITMSG` window by running `git commit` in the floaterm window. Only works in neovim.
+Type `String`. Opening strategy for gitcommit window when running `git commit`
+in floaterm.
 
-Available: `'floaterm'`(open `gitcommit` in the floaterm window), `'split'`(recommended), `'vsplit'`, `'tabe'`.
+Available: `'split'`(recommended), `'vsplit'`, `'tabe'`, etc.
 
-Default: `''`, which means this is disabled by default(use your own `$GIT_EDITOR`).
+Default: `'vsplit'`. Set to `''` to disable this feature (use your own `$GIT_EDITOR`).
 
 #### **`g:floaterm_autoclose`**
 
@@ -647,6 +648,9 @@ https://github.com/voldikss/vim-floaterm/issues?q=label%3A%22breaking+change%22
   from [vim-terminal-help](https://github.com/skywind3000/vim-terminal-help/blob/master/tools/utils/drop)
 
 - Some features require [neovim-remote](https://github.com/mhinz/neovim-remote)
+
+- [edita.vim](https://github.com/lambdalisue/edita.vim) for pseudo `$EDITOR` in
+  floaterm
 
 ## License
 
