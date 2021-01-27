@@ -39,6 +39,9 @@ function! floaterm#util#edit(_bufnr, filename) abort
 endfunction
 
 function! floaterm#util#startinsert() abort
+  if &ft != 'floaterm'
+    return
+  endif
   if !g:floaterm_autoinsert 
     call feedkeys("\<C-\>\<C-n>", 'n')
   elseif mode() != 'i'

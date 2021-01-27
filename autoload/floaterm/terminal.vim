@@ -59,7 +59,6 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
     call floaterm#window#hide(bufnr('%'))
   endif
 
-  " just open if floaterm exists
   if !bufexists(a:bufnr)
     " change cwd
     let savedcwd = getcwd()
@@ -77,7 +76,6 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
     " hide floaterm immediately if silent
     if floaterm#buffer#get_config(bufnr, 'silent', 0)
       call floaterm#window#hide(bufnr)
-      stopinsert
     endif
 
     " restore cwd
