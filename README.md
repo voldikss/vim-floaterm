@@ -421,9 +421,7 @@ P.S. [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747
 
 See `g:floaterm_gitcommit` option.
 
-Execute `git commit` in the terminal window without starting a nested nvim.
-
-**❗️Note**: neovim only feature. Moreover, it also requires [neovim-remote](https://github.com/mhinz/neovim-remote), please install it using `pip3 install neovim-remote`.
+Execute `git commit` in the terminal window without starting a nested vim/nvim.
 
 ![](https://user-images.githubusercontent.com/20282795/91380268-2cd24d00-e857-11ea-8dbd-d39a0bbb105e.gif)
 
