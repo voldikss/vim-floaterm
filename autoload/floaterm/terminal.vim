@@ -117,7 +117,7 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
       unlet a:jobopts.on_exit
     endif
     if has('patch-8.1.2080')
-      let a:jobopts.term_api = 'floaterm#util#edit'
+      let a:jobopts.term_api = 'floaterm#util#edit_by_'
     endif
     let a:jobopts.hidden = 1
     try
@@ -186,7 +186,10 @@ function! floaterm#terminal#kill(bufnr) abort
       execute a:bufnr . 'bwipeout!'
     endif
   catch
-    call popup_close(win_getid())
+    try " life is so hard
+      call popup_close(win_getid())
+    catch
+    endtry
   endtry
 endfunction
 

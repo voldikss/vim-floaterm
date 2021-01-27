@@ -5,7 +5,7 @@ License: MIT license
 NOTE: This doc may be outdated, please refer to the README file instead,
     https://github.com/voldikss/vim-floaterm/blob/master/README.md
     or
-    ../README.md
+    ../README.md(put the cursor on this and type `gf`)
 ==============================================================================
 
 CONTENTS                                         *floaterm-contents*
@@ -18,6 +18,7 @@ Extensions                                       |floaterm-extensions|
 Integrations                                     |floaterm-integrations|
 FAQ                                              |floaterm-faq|
 Repository                                       |floaterm-repository|
+
 ==============================================================================
 INTRODUCTION                                     *floaterm-introduction*
 
@@ -32,6 +33,7 @@ Use (neo)vim terminal in the floating/popup window.
 - Integrate with other external command-line tools(ranger, lf, fzf, etc.)
 - Autocompletion from within floaterms(require |coc.nvim|)
 - Use as a custom task runner for |asynctasks.vim|
+
 ==============================================================================
 OPTIONS                                          *floaterm-options*
 
@@ -98,12 +100,10 @@ g:floaterm_open_command                          *g:floaterm_open_command*
 
 g:floaterm_gitcommit                             *g:floaterm_gitcommit*
 	Type |String|.
-	Opening strategy for `COMMIT_EDITMSG` window by running `git commit` in
-	the floaterm window. Only works in neovim. The value can be
-	'floaterm'(open gitcommit in the floaterm window), 'split'(recommended),
-	'vsplit', 'tabe'.
-	Default value is '', which means this feature is disabled by default(use
-	your own `$GIT_EDITOR`).
+    Opening strategy for gitcommit window when running `git commit`.
+    Available: 'split'(recommended), 'vsplit', 'tabe', etc.
+    Default: 'vsplit'. Set to `''` to disable this feature (use your own
+    `$GIT_EDITOR`).
 
 g:floaterm_autoclose                             *g:floaterm_autoclose*
 	Type |Number|.
@@ -325,48 +325,9 @@ Install voldikss/leaderf-floaterm and run:
 ------------------------------------------------------------------------------
 ASYNCTASKS.VIM                                   *asynctasks.vim*
 
-This plugin can be a runner for |asynctasks.vim|. To use it, copy the
-following code to your `vimrc` set |g:asynctasks_term_pos| to `'floaterm'` or
-add a `pos=floaterm` filed in your asynctasks configuration files.
- >
-    function! s:run_in_floaterm(opts)
-        execute 'FloatermNew --position=bottomright' .
-                        \ ' --wintype=float' .
-                        \ ' --height=0.4' .
-                        \ ' --width=0.4' .
-                        \ ' --title=floaterm_runner' .
-                        \ ' --autoclose=0' .
-                        \ ' --silent=' . get(a:opts, 'silent', 0)
-                        \ ' --cwd=' . a:opts.cwd
-                        \ ' ' . a:opts.cmd
-        " Do not focus on floaterm window, and close it once cursor moves
-        " If you want to jump to the floaterm window, use <C-w>p
-        " You can choose whether to use the following code or not
-        stopinsert | noa wincmd p
-        augroup close-floaterm-runner
-            autocmd!
-            autocmd CursorMoved,InsertEnter * ++nested
-                \ call timer_start(100, { -> s:close_floaterm_runner() })
-        augroup END
-    endfunction
-    function! s:close_floaterm_runner() abort
-        if &ft == 'floaterm' | return | endif
-        for b in tabpagebuflist()
-            if getbufvar(b, '&ft') == 'floaterm' &&
-                \ getbufvar(b, 'floaterm_jobexists') == v:false
-            execute b 'bwipeout!'
-            break
-            endif
-        endfor
-        autocmd! close-floaterm-runner
-    endfunction
-    let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
-    let g:asyncrun_runner.floaterm = function('s:run_in_floaterm')
-    let g:asynctasks_term_pos = 'floaterm'
-    <
-Then your task will be ran in the floaterm instance. See
-https://github.com/skywind3000/asynctasks.vim/wiki/Customize-Runner for more
-information.
+This plugin can be a runner for |asynctasks.vim| or |asyncrun.vim|. See
+[|asyncrun.extra|](https://github.com/skywind3000/asyncrun.extra) for the
+installation and usage.
 
 ==============================================================================
 INTEGRATIONS                                     *floaterm-integrations*
