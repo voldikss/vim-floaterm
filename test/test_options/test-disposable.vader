@@ -1,0 +1,14 @@
+" vim:ft=vim
+
+Execute(test-disposable):
+  Log '# FloatermNew --disposable'
+    FloatermNew --disposable
+    FloatermNew --disposable
+    FloatermNew --disposable
+    FloatermHide!
+    sleep 100m
+    Log floaterm#buflist#gather()
+    Assert empty(floaterm#buflist#gather())
+
+  FloatermKill!
+  stopinsert

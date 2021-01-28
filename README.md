@@ -68,7 +68,7 @@ If you've opened multiple floaterm instances, they will be attached to a
 double-circular-linkedlist. Then you can use `:FloatermNext` or
 `: FloatermPrev` to switch between them.
 
-**NOTE:** Long-running jobs (e.g. `yarn watch`) inside the builtin terminal
+**❗️Note**: Long-running jobs (e.g. `yarn watch`) inside the builtin terminal
 would probably slowdown your operation. It's recommended to put them into the
 external terminals.
 
@@ -88,6 +88,8 @@ external terminals.
   - `name` name of the floaterm
   - `silent` If `--silent` is given, spawn a floaterm but not open the window,
     you may toggle it afterwards
+  - `disposable` If `--disposable` is given, the floaterm will be destroyed
+    once it is hidden.
   - `height` see `g:floaterm_height`
   - `width` see `g:floaterm_width`
   - `title` see `g:floaterm_title`
@@ -386,7 +388,7 @@ hi FloatermNC guibg=gray
 ### Autocmd
 
 ```vim
-autocmd User FloatermOpen        " triggered after opening a floaterm
+autocmd User FloatermOpen        " triggered after opening a new/existed floaterm
 ```
 
 ## Advanced Topics

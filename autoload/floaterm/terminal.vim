@@ -5,6 +5,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+let s:timer_map = {}
 let s:channel_map = {}
 let s:is_win = has('win32') || has('win64')
 
@@ -16,7 +17,18 @@ function! s:on_floaterm_create(bufnr) abort
     autocmd! User FloatermOpen
     autocmd User FloatermOpen call floaterm#util#startinsert()
     autocmd BufEnter <buffer> call floaterm#util#startinsert()
-    autocmd BufHidden,BufWipeout <buffer> call floaterm#window#hide(bufnr('%'))
+    execute printf(
+          \ 'autocmd BufHidden,BufWipeout <buffer=%s> call floaterm#window#hide(%s)',
+          \ a:bufnr,
+          \ a:bufnr
+          \ )
+    if floaterm#buffer#get_config(a:bufnr, 'disposable')
+      execute printf(
+            \ 'autocmd BufHidden <buffer=%s> call floaterm#terminal#kill(%s)',
+            \ a:bufnr,
+            \ a:bufnr
+            \ )
+    endif
   augroup END
 endfunction
 
@@ -181,15 +193,24 @@ function! floaterm#terminal#kill(bufnr) abort
       call job_stop(job, 'kill')
     endif
   endif
+  call s:ensure_terminal_kill(a:bufnr)
+  let s:timer_map[a:bufnr] = timer_start(
+        \ 5,
+        \ { -> s:ensure_terminal_kill(a:bufnr) },
+        \ {'repeat': 3}
+        \ )
+endfunction
+
+function! s:ensure_terminal_kill(bufnr) abort
   try
     if bufexists(a:bufnr)
       execute a:bufnr . 'bwipeout!'
+    else
+      call timer_stop(s:timer_map[a:bufnr])
+      call remove(s:timer_map, a:bufnr)
     endif
   catch
-    try " life is so hard
-      call popup_close(win_getid())
-    catch
-    endtry
+    silent! call popup_close(win_getid())
   endtry
 endfunction
 

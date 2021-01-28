@@ -83,43 +83,23 @@ Execute(Test floaterm#cmdline#complete):
   function! Test__floaterm_cmdline_complete(command, expected)
     call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete'))
   endfunction
-  call Test__floaterm_cmdline_complete('FloatermNew ', [
+  let all_candidates = [
         \ '--cwd=',
         \ '--name=',
         \ '--width=',
         \ '--height=',
         \ '--title=',
-        \ '--silent',
         \ '--wintype=',
         \ '--position=',
         \ '--autoclose=',
         \ '--borderchars=',
-        \ ])
+        \ '--silent',
+        \ '--disposable',
+        \ ]
+  call Test__floaterm_cmdline_complete('FloatermNew ', all_candidates)
+  call Test__floaterm_cmdline_complete('FloatermNew -', all_candidates)
+  call Test__floaterm_cmdline_complete('FloatermNew --', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermNew nv', sort(getcompletion('nv', 'shellcmd')))
-  call Test__floaterm_cmdline_complete('FloatermNew -', [
-        \ '--cwd=',
-        \ '--name=',
-        \ '--width=',
-        \ '--height=',
-        \ '--title=',
-        \ '--silent',
-        \ '--wintype=',
-        \ '--position=',
-        \ '--autoclose=',
-        \ '--borderchars=',
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --', [
-        \ '--cwd=',
-        \ '--name=',
-        \ '--width=',
-        \ '--height=',
-        \ '--title=',
-        \ '--silent',
-        \ '--wintype=',
-        \ '--position=',
-        \ '--autoclose=',
-        \ '--borderchars=',
-        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --n', ['--name='])
   call Test__floaterm_cmdline_complete('FloatermNew --w', ['--width=', '--wintype='])
   call Test__floaterm_cmdline_complete('FloatermNew --name=', [])
@@ -169,34 +149,14 @@ Execute(Test floaterm#cmdline#complete):
         \ '--width=1 '.
         \ '--height=1 '.
         \ '--silent '.
+        \ '--disposable '.
         \ '--wintype=1 '.
         \ '--position=1 '.
         \ '--autoclose=1 '.
         \ '--borderchars=1 ', sort(getcompletion('', 'shellcmd')))
-  call Test__floaterm_cmdline_complete('FloatermUpdate ', [
-        \ '--cwd=',
-        \ '--name=',
-        \ '--width=',
-        \ '--height=',
-        \ '--title=',
-        \  '--silent',
-        \ '--wintype=',
-        \ '--position=',
-        \ '--autoclose=',
-        \ '--borderchars=',
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermUpdate -', [
-        \ '--cwd=',
-        \ '--name=',
-        \ '--width=',
-        \ '--height=',
-        \ '--title=',
-        \  '--silent',
-        \ '--wintype=',
-        \ '--position=',
-        \ '--autoclose=',
-        \ '--borderchars=',
-        \ ])
+  call Test__floaterm_cmdline_complete('FloatermUpdate ', all_candidates)
+  call Test__floaterm_cmdline_complete('FloatermUpdate -', all_candidates)
+  call Test__floaterm_cmdline_complete('FloatermUpdate --', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermUpdate nv', ['  '])
   call Test__floaterm_cmdline_complete('FloatermUpdate '.
         \ '--title=1 '.
@@ -205,6 +165,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--width=1 '.
         \ '--height=1 '.
         \ '--silent '.
+        \ '--disposable '.
         \ '--wintype=1 '.
         \ '--position=1 '.
         \ '--autoclose=1 '.

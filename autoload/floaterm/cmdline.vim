@@ -18,7 +18,7 @@ function! floaterm#cmdline#parse(arglist) abort
       if arg =~ '^--\S.*=\?.*$'
         let pair = split(arg, '=')
         if len(pair) != 2
-          if index(['--silent'], pair[0]) >= 0
+          if index(['--silent', '--disposable'], pair[0]) >= 0
             let [key, value] = [pair[0][2:], v:true]
           else
             call floaterm#util#show_msg('Argument Error: No value given to option: ' . pair[0], 'error')
@@ -59,11 +59,12 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     \ '--width=',
     \ '--height=',
     \ '--title=',
-    \ '--silent',
     \ '--wintype=',
     \ '--position=',
     \ '--autoclose=',
     \ '--borderchars=',
+    \ '--silent',
+    \ '--disposable',
     \ ]
 
   let cmd_line_before_cursor = a:cmd_line[:a:cursor_pos - 1]
