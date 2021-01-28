@@ -371,7 +371,10 @@ hi Floaterm guibg=black
 hi FloatermBorder guibg=orange guifg=cyan
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91368959-fee00f00-e83c-11ea-9002-cab992d30794.png)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91368959-fee00f00-e83c-11ea-9002-cab992d30794.png"/>
+</details>
 
 Besides, there is a neovim only highlight group which can be used to configure
 no-current-focused window(`:help NormalNC`).
@@ -383,7 +386,10 @@ no-current-focused window(`:help NormalNC`).
 hi FloatermNC guibg=gray
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif"/>
+</details>
 
 ### Autocmd
 
@@ -417,7 +423,10 @@ pip install neovim-remote
 
 P.S. [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311) describes how to use `gf` in the floating terminal window.
 
-![](https://user-images.githubusercontent.com/20282795/91380257-27750280-e857-11ea-8d49-d760c009fee0.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380257-27750280-e857-11ea-8d49-d760c009fee0.gif"/>
+</details>
 
 #### git
 
@@ -425,7 +434,10 @@ See `g:floaterm_gitcommit` option.
 
 Execute `git commit` in the terminal window without starting a nested vim/nvim.
 
-![](https://user-images.githubusercontent.com/20282795/91380268-2cd24d00-e857-11ea-8dbd-d39a0bbb105e.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380268-2cd24d00-e857-11ea-8dbd-d39a0bbb105e.gif"/>
+</details>
 
 #### fzf
 
@@ -438,7 +450,10 @@ Try `:FloatermNew fzf` or even wrap this to a new command like this:
 command! FZF FloatermNew fzf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91380264-2b088980-e857-11ea-80ff-062b3d3bbf12.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380264-2b088980-e857-11ea-80ff-062b3d3bbf12.gif"/>
+</details>
 
 #### fff
 
@@ -450,7 +465,10 @@ Try `:FloatermNew fff` or define a new command:
 command! FFF FloatermNew fff
 ```
 
-![](https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif"/>
+</details>
 
 #### nnn
 
@@ -462,7 +480,10 @@ Try `:FloatermNew nnn` or define a new command:
 command! NNN FloatermNew nnn
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif"/>
+</details>
 
 #### lf
 
@@ -474,7 +495,10 @@ Try `:FloatermNew lf` or define a new command:
 command! LF FloatermNew lf
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91380274-3065d400-e857-11ea-86df-981adddc04c6.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380274-3065d400-e857-11ea-86df-981adddc04c6.gif"/>
+</details>
 
 #### ranger
 
@@ -486,7 +510,10 @@ Try `:FloatermNew ranger` or define a new command:
 command! Ranger FloatermNew ranger
 ```
 
-![](https://user-images.githubusercontent.com/20282795/91380284-3360c480-e857-11ea-9966-34856592d487.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380284-3360c480-e857-11ea-9966-34856592d487.gif"/>
+</details>
 
 #### vifm
 
@@ -498,7 +525,10 @@ Try `:FloatermNew vifm` or define a new command:
 command! Vifm FloatermNew vifm
 ```
 
-![](https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif"/>
+</details>
 
 #### lazygit
 
@@ -506,7 +536,10 @@ Furthermore, you can also use other command-line programs, such as lazygit, htop
 
 Use `lazygit` for instance:
 
-![](https://user-images.githubusercontent.com/20282795/74755376-0f239a00-52ae-11ea-9261-44d94abe5924.png)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/74755376-0f239a00-52ae-11ea-9261-44d94abe5924.png"/>
+</details>
 
 #### python
 
@@ -514,7 +547,10 @@ Use `:FloatermNew python` to open a python shell. After that you can use `: Floa
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 
-![](https://user-images.githubusercontent.com/20282795/91380286-352a8800-e857-11ea-800c-ac54efa7dd72.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380286-352a8800-e857-11ea-800c-ac54efa7dd72.gif"/>
+</details>
 
 ### Use with other plugins
 
@@ -524,7 +560,10 @@ Use vim-clap to switch/preview floating terminal buffers.
 
 Try `:Clap floaterm`
 
-![](https://user-images.githubusercontent.com/20282795/91380243-217f2180-e857-11ea-9f64-46e8676adc11.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380243-217f2180-e857-11ea-9f64-46e8676adc11.gif"/>
+</details>
 
 #### [denite.nvim](https://github.com/Shougo/denite.nvim)
 
@@ -532,7 +571,10 @@ Use denite to switch/preview/open floating terminal buffers.
 
 Try `:Denite floaterm`
 
-![](https://user-images.githubusercontent.com/1239245/73604753-17ef4d00-45d9-11ea-967f-ef75927e2beb.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/1239245/73604753-17ef4d00-45d9-11ea-967f-ef75927e2beb.gif"/>
+</details>
 
 #### [coc.nvim](https://github.com/neoclide/coc.nvim)
 
@@ -540,7 +582,10 @@ Use CocList to switch/preview/open floating terminal buffers.
 
 Install [coc-floaterm](https://github.com/voldikss/coc-floaterm) and try `:CocList floaterm`
 
-![](https://user-images.githubusercontent.com/20282795/91380254-25ab3f00-e857-11ea-9733-d0ae5a954848.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/91380254-25ab3f00-e857-11ea-9733-d0ae5a954848.gif"/>
+</details>
 
 #### [fzf](https://github.com/junegunn/fzf)
 
@@ -556,7 +601,10 @@ This plugin can be a runner for asynctasks.vim or asyncrun.vim. See
 [asyncrun.extra](https://github.com/skywind3000/asyncrun.extra) for the
 installation and usage.
 
-![](https://user-images.githubusercontent.com/20282795/104123344-b3f70c00-5385-11eb-9f61-0a5703ba78f5.gif)
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/104123344-b3f70c00-5385-11eb-9f61-0a5703ba78f5.gif"/>
+</details>
 
 ### How to define more wrappers
 
