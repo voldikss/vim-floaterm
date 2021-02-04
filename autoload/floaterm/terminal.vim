@@ -164,7 +164,7 @@ function! floaterm#terminal#send(bufnr, cmds) abort
     endif
     noautocmd execute curr_winnr . 'wincmd w'
   else
-    let newline = s:is_win ? "\r\n" : "\n"
+    let newline = "\n"
     call ch_sendraw(ch, join(a:cmds, newline) . newline)
   endif
 endfunction
