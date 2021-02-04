@@ -414,14 +414,16 @@ a builtin script in this plugin, allows you to open files from within `: termina
 replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
 **❗️Note**: This should works both in neovim and vim, but if you are using
-neovim, make sure [neovim-remote](https://github.com/mhinz/neovim-remote) has been installed. You can install it via
-pip:
+neovim, make sure you have [neovim-remote](https://github.com/mhinz/neovim-remote) 
+installed. You can install it via pip:
 
 ```sh
 pip install neovim-remote
 ```
 
-P.S. [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311) describes how to use `gf` in the floating terminal window.
+P.S. 
+- [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311) describes how to use `gf` in the floating terminal window.
+- `floaterm` is too long to type? use alias e.g. `alias f=floaterm`
 
 <details>
 <summary>Demo</summary>
