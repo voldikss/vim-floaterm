@@ -19,6 +19,7 @@ function! floaterm#wrapper#vifm#(cmd) abort
   endif
 
   exe "lcd " . original_dir
+  let cmd = [&shell, &shellcmdflag, cmd]
   return [cmd, {'on_exit': funcref('s:vifm_callback')}, v:false]
 endfunction
 

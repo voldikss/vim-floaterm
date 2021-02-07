@@ -31,7 +31,7 @@ function! floaterm#wrapper#rg#(cmd) abort
         \ printf('--preview "%s {1}"', s:viewer)
         \ ]
   let cmd = printf('%s %s > %s', prog, join(arglist), s:rg_tmpfile)
-
+  let cmd = [&shell, &shellcmdflag, cmd]
   return [cmd, {'on_exit': funcref('s:rg_callback')}, v:false]
 endfunction
 

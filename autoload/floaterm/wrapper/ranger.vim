@@ -23,6 +23,7 @@ function! floaterm#wrapper#ranger#(cmd) abort
   endif
 
   exe "lcd " . original_dir
+  let cmd = [&shell, &shellcmdflag, cmd]
   return [cmd, {'on_exit': funcref('s:ranger_callback')}, v:false]
 endfunction
 

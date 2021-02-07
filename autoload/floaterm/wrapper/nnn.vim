@@ -19,6 +19,7 @@ function! floaterm#wrapper#nnn#(cmd) abort
   endif
 
   exe "lcd " . original_dir
+  let cmd = [&shell, &shellcmdflag, cmd]
   return [cmd, {'on_exit': funcref('s:nnn_callback')}, v:false]
 endfunction
 

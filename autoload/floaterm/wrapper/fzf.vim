@@ -16,6 +16,7 @@ function! floaterm#wrapper#fzf#(cmd) abort
     endif
   endif
   let cmd .= ' > ' . s:fzf_tmpfile
+  let cmd = [&shell, &shellcmdflag, cmd]
   return [cmd, {'on_exit': funcref('s:fzf_callback')}, v:false]
 endfunction
 
