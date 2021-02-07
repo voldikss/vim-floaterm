@@ -29,9 +29,12 @@ function! s:lf_callback(...) abort
       if has('nvim')
         call floaterm#window#hide(bufnr('%'))
       endif
+      let locations = []
       for filename in filenames
-        execute g:floaterm_open_command . ' ' . fnameescape(filename)
+        let dict = {'filename': fnamemodify(filename, ':p')}
+        call add(locations, dict)
       endfor
+      call floaterm#util#open(g:floaterm_open_command, locations)
     endif
   endif
 endfunction
