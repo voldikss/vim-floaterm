@@ -7,7 +7,15 @@
 
 function! floaterm#wrapper#fzf#(cmd) abort
   let s:fzf_tmpfile = tempname()
-  let cmd = a:cmd . ' > ' . s:fzf_tmpfile
+  let cmd = a:cmd
+  if cmd !~ '--preview'
+    if executable('bat')
+      let cmd .= " --preview 'bat --style=numbers --color=always {} | head -500'"
+    else
+      let cmd .= " --preview 'cat -n {} | head -500'"
+    endif
+  endif
+  let cmd .= ' > ' . s:fzf_tmpfile
   return [cmd, {'on_exit': funcref('s:fzf_callback')}, v:false]
 endfunction
 

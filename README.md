@@ -454,7 +454,7 @@ command! FZF FloatermNew fzf
 
 <details>
 <summary>Demo</summary>
-<img src="https://user-images.githubusercontent.com/20282795/91380264-2b088980-e857-11ea-80ff-062b3d3bbf12.gif"/>
+<img src="https://user-images.githubusercontent.com/20282795/107140144-10d0ec80-695b-11eb-8c2f-8bd42ae26e6d.gif"/>
 </details>
 
 #### fff
