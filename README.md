@@ -33,7 +33,7 @@ Use (neo)vim terminal in the floating/popup window.
 - Switch/preview floating terminal buffers using fuzzy-finder plugins such as
   [denite.nvim](https://github.com/Shougo/denite.nvim) or
   [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
-- Use with other external command-line tools(ranger, lf, fzf, etc.)
+- Use with other external command-line tools(ranger, fzf, ripgrep etc.)
 - Autocompletion from within floaterms(require [coc.nvim](https://github.com/neoclide/coc.nvim)
   or [deoplete.nvim](https://github.com/Shougo/deoplete.nvim))
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
@@ -414,14 +414,15 @@ a builtin script in this plugin, allows you to open files from within `: termina
 replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
 
 **❗️Note**: This should works both in neovim and vim, but if you are using
-neovim, make sure you have [neovim-remote](https://github.com/mhinz/neovim-remote) 
+neovim, make sure you have [neovim-remote](https://github.com/mhinz/neovim-remote)
 installed. You can install it via pip:
 
 ```sh
 pip install neovim-remote
 ```
 
-P.S. 
+P.S.
+
 - [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311) describes how to use `gf` in the floating terminal window.
 - `floaterm` is too long to type? use alias e.g. `alias f=floaterm`
 
@@ -455,6 +456,24 @@ command! FZF FloatermNew fzf
 <details>
 <summary>Demo</summary>
 <img src="https://user-images.githubusercontent.com/20282795/107140144-10d0ec80-695b-11eb-8c2f-8bd42ae26e6d.gif"/>
+</details>
+
+#### ripgrep
+
+This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/rg.vim)
+for `rg` command.
+
+Try `:FloatermNew rg` or create yourself a new command like this:
+
+```vim
+command! Rg FloatermNew --width=0.8 --height=0.8 rg
+```
+
+<details>
+<summary>Demo</summary>
+You can use <button>Alt-A</button> to select all files and <button>Alt-D</button> to deselect them.
+Use <button>Ctrl-/</button> to toggle preview.
+<img src="https://user-images.githubusercontent.com/20282795/107148083-4c37df00-698c-11eb-80fb-ccfd94fc4419.gif"/>
 </details>
 
 #### fff

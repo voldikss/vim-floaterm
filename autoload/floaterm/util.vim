@@ -44,6 +44,19 @@ function! floaterm#util#edit_by_editor(bufnr, filename) abort
   call floaterm#edita#vim#editor#open(a:filename, a:bufnr)
 endfunction
 
+function! floaterm#util#open(cmd, locations) abort
+  execute a:cmd a:locations[0].filename
+  for loc in a:locations
+    execute 'edit ' loc.filename
+    if has_key(loc, 'lnum')
+      execute loc.lnum
+    elseif has_key(loc, 'text')
+      execute '/' . loc.text
+    endif
+    normal! zz
+  endfor
+endfunction
+
 function! floaterm#util#startinsert() abort
   if &ft != 'floaterm'
     return

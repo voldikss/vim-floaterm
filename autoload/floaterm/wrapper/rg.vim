@@ -5,23 +5,57 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+let s:fzf_default_command = $FZF_DEFAULT_COMMAND
+
+if executable('bat')
+  let s:viewer = 'bat --style=numbers --color=always'
+elseif executable('batcat')
+  let s:viewer = 'batcat --style=numbers --color=always'
+else
+  let s:viewer = 'cat -n'
+endif
+
 function! floaterm#wrapper#rg#(cmd) abort
+  let $FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- ''"
+
   let s:rg_tmpfile = tempname()
-  let cmd = a:cmd . '| fzf > ' . s:rg_tmpfile
+  let prog = 'fzf'
+  let arglist = [
+        \ '--ansi',
+        \ '--multi',
+        \ '--no-height',
+        \ '--delimiter :',
+        \ '--bind ctrl-/:toggle-preview' ,
+        \ '--bind alt-a:select-all,alt-d:deselect-all ',
+        \ '--preview-window +{2}-/2 --preview-window right',
+        \ printf('--preview "%s {1}"', s:viewer)
+        \ ]
+  let cmd = printf('%s %s > %s', prog, join(arglist), s:rg_tmpfile)
+
   return [cmd, {'on_exit': funcref('s:rg_callback')}, v:false]
 endfunction
 
 function! s:rg_callback(...) abort
+  " restore $FZF_DEFAULT_COMMAND
+  let $FZF_DEFAULT_COMMAND = s:fzf_default_command
+
   if filereadable(s:rg_tmpfile)
     let filenames = readfile(s:rg_tmpfile)
     if !empty(filenames)
       if has('nvim')
         call floaterm#window#hide(bufnr('%'))
       endif
+      let locations = []
       for filename in filenames
-        let realfilename = matchlist(filename, '\(.\{-}\):.*$')[1]
-        execute g:floaterm_open_command . ' ' . fnameescape(realfilename)
+        let parts = matchlist(filename, '\(.\{-}\)\s*:\s*\(\d\+\)\%(\s*:\s*\(\d\+\)\)\?\%(\s*:\(.*\)\)\?')
+        let dict = {
+              \ 'filename': fnamemodify(parts[1], ':p'),
+              \ 'lnum': parts[2],
+              \ 'text': parts[4]
+              \ }
+        call add(locations, dict)
       endfor
+      call floaterm#util#open(g:floaterm_open_command, locations)
     endif
   endif
 endfunction
