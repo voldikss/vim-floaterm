@@ -1,7 +1,7 @@
+" Load plugin
+"=============================================================================
 set nocompatible
-
 filetype off
-
 let &runtimepath .= ',' . expand('<sfile>:p:h:h')
 if $USER == 'runner'
   let g:run_in_ci = v:true
@@ -25,6 +25,35 @@ endif
 filetype plugin indent on
 syntax enable
 
+
+" vim-floaterm configs
+"=============================================================================
+let g:floaterm_keymap_new    = '<F7>'
+let g:floaterm_keymap_prev   = '<F8>'
+let g:floaterm_keymap_next   = '<F9>'
+let g:floaterm_keymap_toggle = '<F12>'
+
+
+" common configs
+"=============================================================================
 let g:mapleader = ';'
 nnoremap <silent>       Q         :qa!<CR>
 nnoremap <silent> <Leader>m :messages<CR>
+
+
+" misc
+"=============================================================================
+if $USER == 'runner'
+  let g:run_in_ci = v:true
+else
+  let g:run_in_ci = v:false
+endif
+if has('nvim')
+  if split(matchstr(execute('silent version'),  'NVIM v\zs[^\n-]*'))[0] == '0.4.4'
+    let g:vim_version_info = ['nvim', 'stable']
+  else
+    let g:vim_version_info = ['nvim', 'nightly']
+  endif
+else
+  let g:vim_version_info = ['vim', 'nightly']
+endif

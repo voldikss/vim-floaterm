@@ -35,9 +35,13 @@ function! floaterm#run(action, bang, rangeargs, ...) abort
   let [cmd, config] = floaterm#cmdline#parse(a:000)
   if a:action == 'new'
     let [visualmode, range, line1, line2] = a:rangeargs
-    let lines = floaterm#util#get_selected_text(visualmode, range, line1, line2)
+    if range > 0
+      let lines = floaterm#util#get_selected_text(visualmode, range, line1, line2)
+    endif
     let bufnr = floaterm#new(a:bang, cmd, {}, config)
-    call floaterm#terminal#send(bufnr, lines)
+    if range > 0 && !empty(lines)
+      call floaterm#terminal#send(bufnr, lines)
+    endif
   elseif a:action == 'update'
     call floaterm#update(config)
   endif
