@@ -1,43 +1,54 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+### Before reporting
 
----
+- Please make sure you have searched through the [F.A.Q.](https://github.com/voldikss/vim-floaterm/issues?q=label%3AFAQ) first.
 
-- Please make sure you have looked through the [F.A.Q.](https://github.com/voldikss/vim-floaterm/#faq) first.
+- Please make sure you are using the latest version of this plugin.
 
-- Please make sure you are using the latest version of the plugin.
+- It's better to use English as it's more friendly to other non-Chinese native users.
 
-- Please use English as far as possible.
+### Environment
 
-### Describe the bug
+If you are using vim(not neovim), fill in the following blanks
 
+- Output of `vim --version` or `nvim --version`:
+- Platform: <!-- use [x] to select, note: no space in between brackets -->
 
-### To Reproduce
+  - [ ] Linux
+  - [ ] Mac OS X
+  - [ ] Windows
 
-- Use the minimal vimrc
+If you are using neovim, run `:checkhealth floaterm` and post the content
+below.
 
-  ```vim
-  set nocompatible
-  set hidden
-  set termguicolors
-  set runtimepath^=/path/to/vim-floaterm
-  filetype plugin indent on
-  syntax on
-  ```
+```markdown
 
-- Steps to reproduce the behavior:
-  1.
-  2.
-  3.
-  4.
+```
 
-### Enviroment
- - OS [e.g. Arch Linux]:
- - Version [e.g. NVIM v0.5.0-fa9b057]:
- - Checkhealth info [run `:checkhealth` and post the messages]:
+Configurations related to vim-floaterm in vimrc:
+
+```vim
+
+```
+
+### Describe your question, feature request, or bug.
+
+### Steps to reproduce
+
+Using the minimal vimrc
+
+```vim
+set nocompatible
+set hidden
+set termguicolors
+set runtimepath^=/path/to/vim-floaterm
+filetype plugin indent on
+syntax on
+```
+
+Steps to reproduce the behavior:
+
+### Actual behaviour
+
+### Expected behaviour
 
 ### Screenshots(Optional, GIF is better)
