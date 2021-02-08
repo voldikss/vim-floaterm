@@ -1,3 +1,12 @@
+---
+name: issue template
+about: Describe this issue template's purpose here.
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 ### Before reporting
 
 - Please make sure you have searched through the [F.A.Q.](https://github.com/voldikss/vim-floaterm/issues?q=label%3AFAQ) first.
