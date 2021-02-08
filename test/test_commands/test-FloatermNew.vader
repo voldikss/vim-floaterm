@@ -3,7 +3,24 @@
 Execute(Include base):
   source test/base_vader.vim
 
+Given(One line text):
+  # text to be send
+
 Execute(test-FloatermNew):
+  Log '# FloatermNew with range'
+    normal! G
+    AssertEqual getline('.'), '# text to be send'
+    execute "normal! V\<Esc>"
+    :'<,'>FloatermNew
+    sleep 500m
+    let bufnr = bufnr()
+    let lines = getbufline(bufnr, 0, '$')
+    for l in lines
+      Log '  ' . l
+    endfor
+    Assert IsInFloatermBuffer()
+    Assert join(lines) =~ '# text to be send'
+
   Log '# FloatermNew'
     FloatermNew
     Assert IsInFloatermBuffer()

@@ -97,13 +97,16 @@ external terminals.
   - `position` see `g:floaterm_position`
   - `autoclose` see `g:floaterm_autoclose`
   - `borderchars` see `g:floaterm_borderchars`
-- Use `<TAB>` to get completion.
-- This command basically shares the consistent behaviors with the builtin `:terminal` :
+- This command basically shares the consistent behaviors with the builtin `:terminal`:
   - The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
     will be auto-expanded, to get standalone characters, use `\` followed by
     the corresponding character(e.g., `\%`).
   - Note that `<bar>`(i.e., `|`) will be seen as an argument of the command,
     therefore it can not be followed by another Vim command.
+- If execute this command with a range, i.e., `'<,'>:FloatermNew ...`, the
+  selected lines will be sent to the created floaterm. For example, see
+  [python repl use case](#python) below.
+- Use `<TAB>` to get completion.
 
 For example, the command
 
@@ -564,7 +567,12 @@ Use `lazygit` for instance:
 
 #### python
 
-Use `:FloatermNew python` to open a python shell. After that you can use `: FloatermSend` to send lines to the Python interactive shell.
+Use `:FloatermNew python` to open a python shell. After that you can use
+`: FloatermSend` to send lines to the Python interactive shell.
+
+Or you can just select lines and execute `:'<,'>FloatermNew --wintype=split python`, then the
+selected lines will be sent and executed once a python repl floaterm window is
+opened.
 
 This can also work for other languages which have interactive shells, such as lua, node, etc.
 

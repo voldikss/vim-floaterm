@@ -31,10 +31,13 @@ endif
 " wrapper function for `floaterm#new()` and `floaterm#update()` since they
 " share the same argument: `config`
 " ----------------------------------------------------------------------------
-function! floaterm#run(action, bang, ...) abort
+function! floaterm#run(action, bang, rangeargs, ...) abort
   let [cmd, config] = floaterm#cmdline#parse(a:000)
   if a:action == 'new'
-    call floaterm#new(a:bang, cmd, {}, config)
+    let [visualmode, range, line1, line2] = a:rangeargs
+    let lines = floaterm#util#get_selected_text(visualmode, range, line1, line2)
+    let bufnr = floaterm#new(a:bang, cmd, {}, config)
+    call floaterm#terminal#send(bufnr, lines)
   elseif a:action == 'update'
     call floaterm#update(config)
   endif

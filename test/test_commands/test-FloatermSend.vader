@@ -12,9 +12,11 @@ Execute(test-FloatermSend):
     FloatermSend
     sleep 500m
     Log getline('.')
-    let lines = join(getbufline(bufnr1, 0, '$'))
-    Log lines
-    Assert lines =~ '# text to be send'
+    let lines = getbufline(bufnr1, 0, '$')
+    for l in lines
+      Log '  ' . l
+    endfor
+    Assert join(lines) =~ '# text to be send'
 
   Log '# FloatermSend with argument'
     FloatermNew
