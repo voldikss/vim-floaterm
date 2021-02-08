@@ -7,8 +7,9 @@
 
 function! s:check_common() abort
   call health#report_start('common')
-  call health#report_info('Nvim: ' . s:get_nvim_info())
   call health#report_info('Platform: ' . s:get_platform_info())
+  call health#report_info('Nvim: ' . s:get_nvim_info())
+  call health#report_info('Plugin: ' . s:get_plugin_info())
 endfunction
 
 function! s:check_terminal() abort
@@ -66,4 +67,8 @@ function! s:get_platform_info() abort
     return 'macos'
   endif
   return 'linux'
+endfunction
+
+function! s:get_plugin_info() abort
+  return system('git rev-parse --short HEAD')
 endfunction
