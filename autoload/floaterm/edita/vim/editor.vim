@@ -4,11 +4,15 @@ function! floaterm#edita#vim#editor#open(target, bufnr)
   call floaterm#window#hide(a:bufnr)
   execute printf('%s %s', g:floaterm_gitcommit, fnameescape(a:target))
   setlocal bufhidden=wipe
-  augroup edita_buffer
-    autocmd! * <buffer>
-    autocmd BufDelete <buffer> call s:BufDelete()
-  augroup END
   let b:edita = a:bufnr
+  if expand('%:t') == 'COMMIT_EDITMSG'
+    augroup edita_buffer
+      autocmd! * <buffer>
+      autocmd BufDelete <buffer> call s:BufDelete()
+    augroup END
+  else
+    call timer_start(100, {->s:BufDelete()})
+  endif
 endfunction
 
 function! s:BufDelete() abort

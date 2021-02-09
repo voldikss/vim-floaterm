@@ -3,7 +3,7 @@ let s:repo = fnamemodify(expand('<sfile>'), ':p:h:h:h:h:h')
 function! floaterm#edita#vim#client#open() abort
   bwipeout!
   let target = fnamemodify(argv()[-1], ':p')
-  call s:send(['call', 'floaterm#util#edit_by_editor', target])
+  call s:send(['call', 'Tapi_edita_open', [target]])
   enew | redraw
   " Disable mappings to prevent accidental edit
   for nr in range(256)
@@ -44,4 +44,9 @@ function! s:send(data) abort
   redraw!
   let &titlestring = ''
   set t_ts& t_fs&
+endfunction
+
+function! Tapi_edita_open(bufnr, arglist) abort
+  let target = a:arglist[0]
+  call floaterm#edita#vim#editor#open(target, a:bufnr)
 endfunction

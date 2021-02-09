@@ -128,9 +128,6 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     if has_key(a:jobopts, 'on_exit')
       unlet a:jobopts.on_exit
     endif
-    if has('patch-8.1.2080')
-      let a:jobopts.term_api = 'floaterm#util#edit_by_'
-    endif
     let a:jobopts.hidden = 1
     try
       let bufnr = term_start(a:cmd, a:jobopts)

@@ -39,11 +39,6 @@ function! floaterm#util#edit_by_floaterm(_bufnr, filename) abort
   silent execute g:floaterm_open_command . ' ' . a:filename
 endfunction
 
-" >>> $EDITOR test.txt
-function! floaterm#util#edit_by_editor(bufnr, filename) abort
-  call floaterm#edita#vim#editor#open(a:filename, a:bufnr)
-endfunction
-
 function! floaterm#util#open(cmd, locations) abort
   execute a:cmd a:locations[0].filename
   for loc in a:locations

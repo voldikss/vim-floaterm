@@ -3,12 +3,16 @@ function! floaterm#edita#neovim#editor#open(target, client)
   call floaterm#window#hide(bufnr)
   execute printf('%s %s', g:floaterm_gitcommit, fnameescape(a:target))
   setlocal bufhidden=wipe
-  augroup edita_buffer
-    autocmd! * <buffer>
-    autocmd BufDelete <buffer> call s:BufDelete()
-  augroup END
   let mode = floaterm#edita#neovim#util#mode(a:client)
   let b:edita = sockconnect(mode, a:client, { 'rpc': 1 })
+  if expand('%:t') == 'COMMIT_EDITMSG'
+    augroup edita_buffer
+      autocmd! * <buffer>
+      autocmd BufDelete <buffer> call s:BufDelete()
+    augroup END
+  else
+    call timer_start(100, {->s:BufDelete()})
+  endif
 endfunction
 
 function! s:BufDelete() abort
