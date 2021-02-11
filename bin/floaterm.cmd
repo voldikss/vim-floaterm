@@ -1,4 +1,3 @@
-
 @echo off
 setlocal EnableDelayedExpansion
 
@@ -13,15 +12,11 @@ if "%NVIM_LISTEN_ADDRESS%" == "" GOTO vim
 goto neovim
 
 :vim
-call "%VIM_EXE%" --servername "%VIM_SERVERNAME%" --remote-expr "floaterm#util#edit_by_floaterm(0, '%NAME%')"
+call "%VIM_EXE%" --servername "%VIM_SERVERNAME%" --remote-expr "Tapi_edita_open(bufnr(), ['%NAME%'])"
 goto end
 
 :neovim
-call "nvr" --servername "%NVIM_LISTEN_ADDRESS%" --remote-expr "floaterm#util#edit_by_floaterm(0, '%NAME%')"
-goto end
-
-:nonvr
-echo missing nvr, you need install neovim-remote
+%EDITOR% %NAME%
 goto end
 
 :help

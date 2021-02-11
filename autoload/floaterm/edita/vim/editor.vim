@@ -11,7 +11,9 @@ function! floaterm#edita#vim#editor#open(target, bufnr)
       autocmd BufDelete <buffer> call s:BufDelete()
     augroup END
   else
-    call timer_start(100, {->s:BufDelete()})
+    if !has('win32')
+      call timer_start(100, {->s:BufDelete()})
+    endif
   endif
 endfunction
 

@@ -33,12 +33,6 @@ function! floaterm#util#show_msg(message, ...) abort
   endif
 endfunction
 
-" >>> floaterm test.txt
-function! floaterm#util#edit_by_floaterm(_bufnr, filename) abort
-  call floaterm#hide(1, 0, '')
-  silent execute g:floaterm_open_command . ' ' . a:filename
-endfunction
-
 function! floaterm#util#open(cmd, locations) abort
   execute a:cmd a:locations[0].filename
   for loc in a:locations
@@ -56,7 +50,7 @@ function! floaterm#util#startinsert() abort
   if &ft != 'floaterm'
     return
   endif
-  if !g:floaterm_autoinsert 
+  if !g:floaterm_autoinsert
     call feedkeys("\<C-\>\<C-n>", 'n')
   elseif mode() != 'i'
     if has('nvim')
