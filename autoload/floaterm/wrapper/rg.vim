@@ -55,7 +55,7 @@ function! s:rg_callback(...) abort
               \ }
         call add(locations, dict)
       endfor
-      call floaterm#util#open(g:floaterm_open_command, locations)
+      call floaterm#util#open(locations)
     endif
   endif
 endfunction

@@ -33,19 +33,14 @@ function! floaterm#util#show_msg(message, ...) abort
   endif
 endfunction
 
-" >>> floaterm test.txt
-function! floaterm#util#edit_by_floaterm(_bufnr, filename) abort
-  call floaterm#hide(1, 0, '')
-  silent execute g:floaterm_open_command . ' ' . a:filename
-endfunction
-
-" >>> $EDITOR test.txt
-function! floaterm#util#edit_by_editor(bufnr, filename) abort
-  call floaterm#edita#vim#editor#open(a:filename, a:bufnr)
-endfunction
-
-function! floaterm#util#open(cmd, locations) abort
-  execute a:cmd a:locations[0].filename
+" - locations: List of location, which is a Dictionary:
+"   - filename: String
+"   - lnum[optional]: Number, used to locate
+"   - text[optional]: String, search `/` content, used to locate
+" - a:0: String, opening action, default `g:floaterm_opener`
+function! floaterm#util#open(locations, ...) abort
+  let opener = get(a:000, 0, g:floaterm_opener)
+  execute opener a:locations[0].filename
   for loc in a:locations
     execute 'edit ' loc.filename
     if has_key(loc, 'lnum')
@@ -61,7 +56,7 @@ function! floaterm#util#startinsert() abort
   if &ft != 'floaterm'
     return
   endif
-  if !g:floaterm_autoinsert 
+  if !g:floaterm_autoinsert
     call feedkeys("\<C-\>\<C-n>", 'n')
   elseif mode() != 'i'
     if has('nvim')

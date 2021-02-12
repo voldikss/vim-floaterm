@@ -1,5 +1,5 @@
 name: CI
-on: [push, pull_request]
+on: [push]
 
 jobs:
   vader-tests:
@@ -22,11 +22,7 @@ jobs:
           version: ${{ matrix.version }}
       - name: Install python
         uses: actions/setup-python@v1
-      - name: Install neovim-remote
-        run: |
-          pip install neovim-remote
-          nvr --version
-      - name: Config git # otherwise test_gitcommit will fail
+      - name: Config git
         run: |
           git config --global user.email "dyzplus@gmail.com"
           git config --global user.name "voldikss"

@@ -36,23 +36,10 @@ function! s:check_floating() abort
   endif
 endfunction
 
-function! s:check_nvr() abort
-  call health#report_start('neovim-remote')
-  if executable('nvr')
-    call health#report_ok('Version: ' . systemlist('nvr --version')[0])
-  else
-    call health#report_warn(
-          \ 'nvr executable is not found',
-          \ ['install it via `pip3 install neovim-remote`']
-          \ )
-  endif
-endfunction
-
 function! health#floaterm#check() abort
   call s:check_common()
   call s:check_terminal()
   call s:check_floating()
-  call s:check_nvr()
 endfunction
 
 

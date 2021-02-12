@@ -5,11 +5,12 @@ CGREEN='\033[0;32m'
 CCYAN='\033[0;36m'
 CEND='\033[0m' # No Color
 
-# USAGE: ./test/test.sh [vim]
-VIM_EXEC=nvim
-if [[ $1 = vim ]]
+# USAGE: ./test/test.sh [vim-bin]
+if [[ $1 = '' ]]
 then
-    VIM_EXEC=/usr/bin/vim
+    VIM_EXEC=nvim
+else
+    VIM_EXEC=$1
 fi
 
 passnum=0
