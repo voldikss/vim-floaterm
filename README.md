@@ -511,7 +511,8 @@ command! NNN FloatermNew nnn
 
 #### lf
 
-There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim)
+There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim).
+It is recommened to use [lf.vim](https://github.com/ptzz/lf.vim) which is an lf wrapper with more features (Overriding netrw, Lfcd, etc.).
 
 Try `:FloatermNew lf` or define a new command:
 
