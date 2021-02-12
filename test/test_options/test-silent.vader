@@ -1,6 +1,7 @@
 " vim:ft=vim
 
 Execute(test-silent):
+  if g:run_in_ci | finish | endif
   Log '# FloatermNew --silent --autoclose=0 ls'
     FloatermNew --silent --autoclose=0 ls
     AssertEqual 1, len(floaterm#buflist#gather())
