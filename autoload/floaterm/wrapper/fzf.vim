@@ -10,9 +10,9 @@ function! floaterm#wrapper#fzf#(cmd) abort
   let cmd = a:cmd
   if cmd !~ '--preview'
     if executable('bat')
-      let cmd .= " --preview 'bat --style=numbers --color=always {} | head -500'"
+      let cmd .= ' --preview ' . shellescape('bat --style=numbers --color=always {}')
     else
-      let cmd .= " --preview 'cat -n {} | head -500'"
+      let cmd .= ' --preview ' . shellescape('cat -n {}')
     endif
   endif
   let cmd .= ' > ' . s:fzf_tmpfile

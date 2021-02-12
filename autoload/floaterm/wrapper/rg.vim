@@ -16,7 +16,7 @@ else
 endif
 
 function! floaterm#wrapper#rg#(cmd) abort
-  let $FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- ''"
+  let $FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- " . shellescape('')
 
   let s:rg_tmpfile = tempname()
   let prog = 'fzf'
@@ -26,7 +26,7 @@ function! floaterm#wrapper#rg#(cmd) abort
         \ '--no-height',
         \ '--delimiter :',
         \ '--bind ctrl-/:toggle-preview' ,
-        \ '--bind alt-a:select-all,alt-d:deselect-all ',
+        \ '--bind alt-a:select-all,alt-d:deselect-all',
         \ '--preview-window +{2}-/2 --preview-window right',
         \ printf('--preview "%s {1}"', s:viewer)
         \ ]
