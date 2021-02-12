@@ -252,20 +252,15 @@ Type `List` of `String`. Markers used to detect the project root directory for `
 
 Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
-#### **`g:floaterm_open_command`**
+#### **`g:floaterm_opener`**
 
 Type `String`. Command used for opening a file in the outside nvim from within `:terminal`.
 
-Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`. Default: `'edit'`
+Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`.
 
-#### **`g:floaterm_gitcommit`**
+Set to `''` to disable [git commit](#git) and [floaterm](#floaterm) functionality in floaterm.
 
-Type `String`. Opening strategy for gitcommit window when running `git commit`
-in floaterm.
-
-Available: `'split'`(recommended), `'vsplit'`, `'tabe'`, etc.
-
-Default: `'vsplit'`. Set to `''` to disable this feature (use your own `$GIT_EDITOR`).
+Default: `'vsplit'`
 
 #### **`g:floaterm_autoclose`**
 
@@ -413,21 +408,16 @@ Normally if you run `vim/nvim somefile.txt` within the builtin terminal, you
 would get another nvim/vim instance running in the subprocess.
 
 [Floaterm](https://github.com/voldikss/vim-floaterm/tree/master/bin), which is
-a builtin script in this plugin, allows you to open files from within `: terminal` without starting a nested nvim. To archive that, just literally
-replace `vim/nvim` with `floaterm`, i.e., `floaterm somefile.txt`
-
-**❗️Note**: This should works both in neovim and vim, but if you are using
-neovim, make sure you have [neovim-remote](https://github.com/mhinz/neovim-remote)
-installed. You can install it via pip:
-
-```sh
-pip install neovim-remote
-```
+a builtin script in this plugin, allows you to open files from within `: terminal`
+without starting a nested nvim. To archive that, just literally replace
+`vim/nvim` with `floaterm`, e.g. `floaterm somefile.txt`
 
 P.S.
 
-- [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311) describes how to use `gf` in the floating terminal window.
+- [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311)
+  describes how to use `gf` in the floating terminal window.
 - `floaterm` is too long to type? use alias e.g. `alias f=floaterm`
+- For configurable open action, refer to [g:floaterm_opener](#gfloaterm_opener)
 
 <details>
 <summary>Demo</summary>
@@ -436,9 +426,9 @@ P.S.
 
 #### git
 
-See `g:floaterm_gitcommit` option.
-
 Execute `git commit` in the terminal window without starting a nested vim/nvim.
+
+Refer to [g:floaterm_opener](#gfloaterm_opener) for configurable open action
 
 <details>
 <summary>Demo</summary>
@@ -672,9 +662,12 @@ There are two ways for a command to be spawned:
         if has('nvim')
           call floaterm#window#hide(bufnr('%'))
         endif
+        let locations = []
         for filename in filenames
-          execute g:floaterm_open_command . ' ' . fnameescape(filename)
+          let dict = {'filename': fnamemodify(filename, ':p')}
+          call add(locations, dict)
         endfor
+        call floaterm#util#open(locations)
       endif
     endif
   endfunction
@@ -723,8 +716,6 @@ https://github.com/voldikss/vim-floaterm/issues?q=label%3A%22breaking+change%22
 
 - [floaterm executable](https://github.com/voldikss/vim-floaterm/blob/master/bin/floaterm) is modified
   from [vim-terminal-help](https://github.com/skywind3000/vim-terminal-help/blob/master/tools/utils/drop)
-
-- Some features require [neovim-remote](https://github.com/mhinz/neovim-remote)
 
 - [edita.vim](https://github.com/lambdalisue/edita.vim) for pseudo `$EDITOR` in
   floaterm

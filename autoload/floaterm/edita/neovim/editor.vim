@@ -1,7 +1,7 @@
 function! floaterm#edita#neovim#editor#open(target, client)
   let bufnr = floaterm#buflist#curr()
   call floaterm#window#hide(bufnr)
-  execute printf('%s %s', g:floaterm_gitcommit, fnameescape(a:target))
+  call floaterm#util#open([{'filename': fnameescape(a:target)}])
   let mode = floaterm#edita#neovim#util#mode(a:client)
   let b:edita = sockconnect(mode, a:client, { 'rpc': 1 })
   if expand('%:t') == 'COMMIT_EDITMSG'
@@ -21,6 +21,7 @@ function! s:BufDelete() abort
     return
   endif
   silent! call rpcrequest(ch, 'nvim_command', 'qall')
+  call setbufvar(expand('<afile>'), 'edita', v:null)
 endfunction
 
 function! s:VimLeave() abort
@@ -29,6 +30,10 @@ function! s:VimLeave() abort
   call map(editas, { -> getbufvar(v:val, 'edita', v:null) })
   call filter(editas, { -> !empty(v:val) })
   silent! call map(editas, { -> rpcrequest(v:val, 'nvim_command', expr) })
+  " If COMMIT_EDITMSG buffer exists, suspend for the git commiting
+  if len(editas) > 0
+    sleep 10m
+  endif
 endfunction
 
 augroup edita_internal

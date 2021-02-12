@@ -43,7 +43,7 @@ function! s:fff_callback(...) abort
         let dict = {'filename': fnamemodify(filename, ':p')}
         call add(locations, dict)
       endfor
-      call floaterm#util#open(g:floaterm_open_command, locations)
+      call floaterm#util#open(locations)
     endif
   endif
 endfunction

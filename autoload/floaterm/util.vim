@@ -33,8 +33,14 @@ function! floaterm#util#show_msg(message, ...) abort
   endif
 endfunction
 
-function! floaterm#util#open(cmd, locations) abort
-  execute a:cmd a:locations[0].filename
+" - locations: List of location, which is a Dictionary:
+"   - filename: String
+"   - lnum[optional]: Number, used to locate
+"   - text[optional]: String, search `/` content, used to locate
+" - a:0: String, opening action, default `g:floaterm_opener`
+function! floaterm#util#open(locations, ...) abort
+  let opener = get(a:000, 0, g:floaterm_opener)
+  execute opener a:locations[0].filename
   for loc in a:locations
     execute 'edit ' loc.filename
     if has_key(loc, 'lnum')
