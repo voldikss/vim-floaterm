@@ -55,14 +55,19 @@ function! floaterm#new(bang, cmd, jobopts, config) abort
     let wrappers = map(wrappers_path, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
     let maybe_wrapper = split(a:cmd, '\s')[0]
     if index(wrappers, maybe_wrapper) >= 0
-      let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
-      let [name, jobopts, send2shell] = WrapFunc(a:cmd)
-      if send2shell
-        let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, {}, a:config)
-        call floaterm#terminal#send(bufnr, [name])
-      else
-        let bufnr = floaterm#terminal#open(-1, name, jobopts, a:config)
-      endif
+      try
+        let [shell, shellslash, shellcmdflag, shellxquote] = floaterm#util#use_sh_or_cmd()
+        let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
+        let [name, jobopts, send2shell] = WrapFunc(a:cmd)
+        if send2shell
+          let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, {}, a:config)
+          call floaterm#terminal#send(bufnr, [name])
+        else
+          let bufnr = floaterm#terminal#open(-1, name, jobopts, a:config)
+        endif
+      finally
+        let [&shell, &shellslash, &shellcmdflag, &shellxquote] = [shell, shellslash, shellcmdflag, shellxquote]
+      endtry
     elseif a:bang
       let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:config)
       call floaterm#terminal#send(bufnr, [a:cmd])

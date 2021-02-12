@@ -115,3 +115,16 @@ function! floaterm#util#leftalign_lines(lines) abort
   endfor
   return linelist
 endfunction
+
+function! floaterm#util#use_sh_or_cmd() abort
+  let [shell, shellslash, shellcmdflag, shellxquote] = [&shell, &shellslash, &shellcmdflag, &shellxquote]
+  if has('win32')
+    set shell=cmd.exe
+    set noshellslash
+    let &shellcmdflag = has('nvim') ? '/s /c' : '/c'
+    let &shellxquote = has('nvim') ? '"' : '('
+  else
+    set shell=sh
+  endif
+  return [shell, shellslash, shellcmdflag, shellxquote]
+endfunction
