@@ -18,6 +18,7 @@ Use (neo)vim terminal in the floating/popup window.
   - [Use with other plugins](#use-with-other-plugins)
   - [How to define more wrappers](#how-to-define-more-wrappers)
   - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
+- [Contributing](#contributing)
 - [Wiki](#wiki)
 - [FAQ](#faq)
 - [Breaking changes](#breaking-changes)
@@ -114,7 +115,8 @@ For example, the command
 :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
 ```
 
-will open a new floating/popup floaterm instance named `floaterm1` running `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
+will open a new floating/popup floaterm instance named `floaterm1` running 
+`ranger --cmd="cd ~"` in the `topleft` corner of the main window.
 
 The following command allows you to compile and run your C code in the floaterm window:
 
@@ -168,9 +170,11 @@ The following command allows you to compile and run your C code in the floaterm 
 - If `--name=floaterm_name` is given, send lines to the floaterm instance
   whose `name` is `floaterm_name`. Otherwise use the current floaterm.
 - If `cmd` is given, it will be sent to floaterm and selected lines will be ignored.
-- This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]` to send selected lines to a floaterm.
+- This command can also be used with a range, i.e., `'<,'>:FloatermSend [--name=floaterm_name]`
+  to send selected lines to a floaterm.
   - If `cmd` is given, the selected lines will be ignored.
-  - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]` the common white spaces in the beginning of lines
+  - If use this command with a `!`, i.e., `'<,'>:FloatermSend! [--name=floaterm_name]`
+    the common white spaces in the beginning of lines
     will be trimmed while the relative indent between lines will still be
     kept.
 - Use `<TAB>` to get completion.
@@ -416,7 +420,7 @@ P.S.
 
 - [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311)
   describes how to use `gf` in the floating terminal window.
-- `floaterm` is too long to type? use alias e.g. `alias f=floaterm`
+- `floaterm` is too long to type? set alias in your `bashrc`, e.g. `alias f=floaterm`
 - For configurable open action, refer to [g:floaterm_opener](#gfloaterm_opener)
 
 <details>
@@ -689,6 +693,11 @@ Function `floaterm#buflist#gather()` returns a list contains all the floaterm bu
 Function `floaterm#terminal#open_existing({bufnr})` opens the floaterm whose buffer number is `{bufnr}`.
 
 For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
+
+## Contributing
+
+- Improve the documentation
+- Help resolve issues labeled as [help wanted](https://github.com/voldikss/vim-floaterm/issues?q=is%3Aissue+label%3A%22help+wanted%22)
 
 ## Wiki
 
