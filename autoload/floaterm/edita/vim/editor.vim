@@ -4,7 +4,7 @@ function! floaterm#edita#vim#editor#open(target, bufnr)
   call floaterm#window#hide(a:bufnr)
   call floaterm#util#open([{'filename': fnameescape(a:target)}])
   let b:edita = a:bufnr
-  if expand('%:t') == 'COMMIT_EDITMSG'
+  if index(['gitcommit', 'gitrebase'], &ft) > -1
     setlocal bufhidden=wipe
     augroup edita_buffer
       autocmd! * <buffer>
