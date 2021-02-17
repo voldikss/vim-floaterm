@@ -5,6 +5,8 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
+let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h:h:h')
+
 function! s:check_common() abort
   call health#report_start('common')
   call health#report_info('Platform: ' . s:get_platform_info())
@@ -57,5 +59,9 @@ function! s:get_platform_info() abort
 endfunction
 
 function! s:get_plugin_info() abort
-  return system('git rev-parse --short HEAD')
+  let save_cwd = getcwd()
+  silent! execute 'cd ' . s:home
+  let result = system('git rev-parse --short HEAD')
+  silent! execute 'cd ' . save_cwd
+  return result
 endfunction
