@@ -17,23 +17,23 @@ assignees: ''
 
 ### Environment
 
-If you are using vim(not neovim), fill in the following blanks
+#### If you are using vim(not neovim), fill in the following blanks
 
-- Output of `vim --version` or `nvim --version`:
+- Output of `vim --version`:
 - Platform: <!-- use [x] to select, note: no space in between brackets -->
 
   - [ ] Linux
   - [ ] Mac OS X
   - [ ] Windows
 
-If you are using neovim, run `:checkhealth floaterm` and post the content
+#### If you are using neovim, just run `:checkhealth floaterm` and post the content
 below.
 
 ```markdown
 
 ```
 
-Configurations related to vim-floaterm in vimrc:
+#### Configurations related to vim-floaterm in vimrc(i.e. `g:floaterm_xxx`):
 
 ```vim
 
