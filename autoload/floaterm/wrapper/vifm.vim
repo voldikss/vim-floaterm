@@ -23,7 +23,7 @@ function! floaterm#wrapper#vifm#(cmd) abort
   return [cmd, {'on_exit': funcref('s:vifm_callback')}, v:false]
 endfunction
 
-function! s:vifm_callback(...) abort
+function! s:vifm_callback(job, data, event, opener) abort
   if filereadable(s:vifm_tmpfile)
     let filenames = readfile(s:vifm_tmpfile)
     if !empty(filenames)
@@ -35,7 +35,7 @@ function! s:vifm_callback(...) abort
         let dict = {'filename': fnamemodify(filename, ':p')}
         call add(locations, dict)
       endfor
-      call floaterm#util#open(locations)
+      call floaterm#util#open(locations, a:opener)
     endif
   endif
 endfunction

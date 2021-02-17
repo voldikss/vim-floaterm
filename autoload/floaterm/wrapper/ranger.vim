@@ -27,7 +27,7 @@ function! floaterm#wrapper#ranger#(cmd) abort
   return [cmd, {'on_exit': funcref('s:ranger_callback')}, v:false]
 endfunction
 
-function! s:ranger_callback(...) abort
+function! s:ranger_callback(job, data, event, opener) abort
   if filereadable(s:ranger_tmpfile)
     let filenames = readfile(s:ranger_tmpfile)
     if !empty(filenames)
@@ -39,7 +39,7 @@ function! s:ranger_callback(...) abort
         let dict = {'filename': fnamemodify(filename, ':p')}
         call add(locations, dict)
       endfor
-      call floaterm#util#open(locations)
+      call floaterm#util#open(locations, a:opener)
     endif
   endif
 endfunction

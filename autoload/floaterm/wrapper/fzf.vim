@@ -20,7 +20,7 @@ function! floaterm#wrapper#fzf#(cmd) abort
   return [cmd, {'on_exit': funcref('s:fzf_callback')}, v:false]
 endfunction
 
-function! s:fzf_callback(...) abort
+function! s:fzf_callback(job, data, event, opener) abort
   if filereadable(s:fzf_tmpfile)
     let filenames = readfile(s:fzf_tmpfile)
     if !empty(filenames)
@@ -32,7 +32,7 @@ function! s:fzf_callback(...) abort
         let dict = {'filename': fnamemodify(filename, ':p')}
         call add(locations, dict)
       endfor
-      call floaterm#util#open(locations)
+      call floaterm#util#open(locations, a:opener)
     endif
   endif
 endfunction

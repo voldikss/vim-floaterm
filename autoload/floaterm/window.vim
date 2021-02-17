@@ -118,6 +118,7 @@ function! s:parse_config(bufnr, config) abort
   let a:config.title       = get(a:config, 'title', g:floaterm_title)
   let a:config.width       = get(a:config, 'width', g:floaterm_width)
   let a:config.height      = get(a:config, 'height', g:floaterm_height)
+  let a:config.opener      = get(a:config, 'opener', g:floaterm_opener)
   let a:config.wintype     = get(a:config, 'wintype', s:get_wintype())
   let a:config.position    = get(a:config, 'position', g:floaterm_position)
   let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)

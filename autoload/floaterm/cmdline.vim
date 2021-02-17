@@ -56,9 +56,10 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   let options = [
     \ '--cwd=',
     \ '--name=',
+    \ '--title=',
     \ '--width=',
     \ '--height=',
-    \ '--title=',
+    \ '--opener=',
     \ '--wintype=',
     \ '--position=',
     \ '--autoclose=',
@@ -80,6 +81,31 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   if match(a:arg_lead, '--wintype=') > -1
     let vals = ['float', 'split', 'vsplit']
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
+  elseif match(a:arg_lead, '--opener=') > -1
+    let vals = ['edit', 'split', 'vsplit', 'tabe', 'drop']
+    let candidates = map(vals, {idx -> '--opener=' . vals[idx]})
+  elseif match(a:arg_lead, '--autoclose=') > -1
+    let vals = [0, 1, 2]
+    let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
+  elseif match(a:arg_lead, '--silent') > -1
+    return []
+  elseif match(a:arg_lead, '--cwd=') > -1
+    let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
+    let dirs = getcompletion(prestr, 'dir')
+    if a:arg_lead == '--cwd='
+      let dirs = ['<root>'] + dirs
+    endif
+    return map(dirs, { k,v -> '--cwd=' . v })
+  elseif match(a:arg_lead, '--name=') > -1
+    return []
+  elseif match(a:arg_lead, '--width=') > -1
+    return []
+  elseif match(a:arg_lead, '--height=') > -1
+    return []
+  elseif match(a:arg_lead, '--title=') > -1
+    return []
+  elseif match(a:arg_lead, '--borderchars=') > -1
+    return []
   elseif match(a:arg_lead, '--position=') > -1
     let wintype = matchstr(a:cmd_line, '--wintype=\zs\w\+\ze')
     if empty(wintype)
@@ -111,28 +137,6 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
             \ ]
     endif
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
-  elseif match(a:arg_lead, '--autoclose=') > -1
-    let vals = [0, 1, 2]
-    let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
-  elseif match(a:arg_lead, '--silent') > -1
-    return []
-  elseif match(a:arg_lead, '--cwd=') > -1
-    let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
-    let dirs = getcompletion(prestr, 'dir')
-    if a:arg_lead == '--cwd='
-      let dirs = ['<root>'] + dirs
-    endif
-    return map(dirs, { k,v -> '--cwd=' . v })
-  elseif match(a:arg_lead, '--name=') > -1
-    return []
-  elseif match(a:arg_lead, '--width=') > -1
-    return []
-  elseif match(a:arg_lead, '--height=') > -1
-    return []
-  elseif match(a:arg_lead, '--title=') > -1
-    return []
-  elseif match(a:arg_lead, '--borderchars=') > -1
-    return []
     " The dash absolutely belongs to the `options` instead of executable
     " commands(e.g. `nvim-qt.exe`). So if `a:arg_lead` matches 1 or 2 dash, the
     " user wants to complete options.

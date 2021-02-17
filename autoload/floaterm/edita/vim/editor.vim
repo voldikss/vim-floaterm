@@ -2,7 +2,8 @@ let s:quit_expr = "\<C-\>\<C-n>iEditaquit"
 
 function! floaterm#edita#vim#editor#open(target, bufnr)
   call floaterm#window#hide(a:bufnr)
-  call floaterm#util#open([{'filename': fnameescape(a:target)}])
+  let opener = floaterm#buffer#get_config(a:bufnr, 'opener', g:floaterm_opener)
+  call floaterm#util#open([{'filename': fnameescape(a:target)}], opener)
   let b:edita = a:bufnr
   if index(['gitcommit', 'gitrebase'], &ft) > -1
     setlocal bufhidden=wipe

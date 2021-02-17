@@ -22,7 +22,7 @@ function! floaterm#wrapper#fff#(cmd) abort
   return [cmd, {'on_exit': funcref('s:fff_callback')}, v:false]
 endfunction
 
-function! s:fff_callback(...) abort
+function! s:fff_callback(job, data, event, opener) abort
   let s:fff_tmpfile = $XDG_CACHE_HOME
 
   if !isdirectory(s:fff_tmpfile)
@@ -43,7 +43,7 @@ function! s:fff_callback(...) abort
         let dict = {'filename': fnamemodify(filename, ':p')}
         call add(locations, dict)
       endfor
-      call floaterm#util#open(locations)
+      call floaterm#util#open(locations, a:opener)
     endif
   endif
 endfunction

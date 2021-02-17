@@ -86,9 +86,10 @@ Execute(Test floaterm#cmdline#complete):
   let all_candidates = [
         \ '--cwd=',
         \ '--name=',
+        \ '--title=',
         \ '--width=',
         \ '--height=',
-        \ '--title=',
+        \ '--opener=',
         \ '--wintype=',
         \ '--position=',
         \ '--autoclose=',
@@ -103,9 +104,9 @@ Execute(Test floaterm#cmdline#complete):
   call Test__floaterm_cmdline_complete('FloatermNew --n', ['--name='])
   call Test__floaterm_cmdline_complete('FloatermNew --w', ['--width=', '--wintype='])
   call Test__floaterm_cmdline_complete('FloatermNew --name=', [])
+  call Test__floaterm_cmdline_complete('FloatermNew --title=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --width=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --height=', [])
-  call Test__floaterm_cmdline_complete('FloatermNew --title=', [])
   call Test__floaterm_cmdline_complete('FloatermNew --silent', [])
   call Test__floaterm_cmdline_complete('FloatermNew --wintype=', [
         \ '--wintype=float',
@@ -142,12 +143,20 @@ Execute(Test floaterm#cmdline#complete):
         \ '--position=topleft',
         \ '--position=topright'
         \ ])
+  call Test__floaterm_cmdline_complete('FloatermNew --opener=', [
+        \ '--opener=edit',
+        \ '--opener=split',
+        \ '--opener=vsplit',
+        \ '--opener=tabe',
+        \ '--opener=drop'
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew '.
-        \ '--title=1 '.
-        \ '--name=1 '.
         \ '--cwd=1 '.
+        \ '--name=1 '.
+        \ '--title=1 '.
         \ '--width=1 '.
         \ '--height=1 '.
+        \ '--opener=edit '.
         \ '--silent '.
         \ '--disposable '.
         \ '--wintype=1 '.
@@ -159,11 +168,12 @@ Execute(Test floaterm#cmdline#complete):
   call Test__floaterm_cmdline_complete('FloatermUpdate --', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermUpdate nv', ['  '])
   call Test__floaterm_cmdline_complete('FloatermUpdate '.
-        \ '--title=1 '.
-        \ '--name=1 '.
         \ '--cwd=1 '.
+        \ '--name=1 '.
+        \ '--title=1 '.
         \ '--width=1 '.
         \ '--height=1 '.
+        \ '--opener=edit '.
         \ '--silent '.
         \ '--disposable '.
         \ '--wintype=1 '.

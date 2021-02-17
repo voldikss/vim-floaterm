@@ -91,9 +91,10 @@ external terminals.
     you may toggle it afterwards
   - `disposable` If `--disposable` is given, the floaterm will be destroyed
     once it is hidden.
-  - `height` see `g:floaterm_height`
-  - `width` see `g:floaterm_width`
   - `title` see `g:floaterm_title`
+  - `width` see `g:floaterm_width`
+  - `height` see `g:floaterm_height`
+  - `opener` see `g:floaterm_opener`
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
   - `autoclose` see `g:floaterm_autoclose`

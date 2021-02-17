@@ -32,6 +32,8 @@ function! s:on_floaterm_create(bufnr) abort
   augroup END
 endfunction
 
+" for vim8: a:000 is empty
+" for nvim: a:000 is ['exit'](event)
 function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   if a:bufnr == -1
     " In vim, buffnr is not known before starting a job, therefore, it's
@@ -47,9 +49,10 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   else
     let bufnr = a:bufnr
   endif
+  let opener = floaterm#buffer#get_config(bufnr, 'opener')
   call setbufvar(bufnr, '&bufhidden', 'wipe')
   call floaterm#buffer#set_config(bufnr, 'jobexists', v:false)
-  let autoclose = floaterm#buffer#get_config(bufnr, 'autoclose', 0)
+  let autoclose = floaterm#buffer#get_config(bufnr, 'autoclose')
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
     call floaterm#window#hide(bufnr)
     " if the floaterm is created with --silent, delete the buffer explicitly
@@ -58,7 +61,7 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
     doautocmd BufDelete
   endif
   if a:callback isnot v:null
-    call a:callback(a:job, a:data, 'exit')
+    call a:callback(a:job, a:data, 'exit', opener)
   endif
 endfunction
 

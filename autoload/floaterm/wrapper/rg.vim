@@ -35,7 +35,7 @@ function! floaterm#wrapper#rg#(cmd) abort
   return [cmd, {'on_exit': funcref('s:rg_callback')}, v:false]
 endfunction
 
-function! s:rg_callback(...) abort
+function! s:rg_callback(job, data, event, opener) abort
   " restore $FZF_DEFAULT_COMMAND
   let $FZF_DEFAULT_COMMAND = s:fzf_default_command
 
@@ -55,7 +55,7 @@ function! s:rg_callback(...) abort
               \ }
         call add(locations, dict)
       endfor
-      call floaterm#util#open(locations)
+      call floaterm#util#open(locations, a:opener)
     endif
   endif
 endfunction
