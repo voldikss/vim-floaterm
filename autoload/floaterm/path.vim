@@ -136,10 +136,5 @@ function! floaterm#path#get_root() abort
 endfunction
 
 function! floaterm#path#chdir(path) abort
-  if has('nvim')
-    let cmd = haslocaldir()? 'lcd' : (haslocaldir(-1, 0)? 'tcd' : 'cd')
-  else
-    let cmd = haslocaldir()? ((haslocaldir() == 1)? 'lcd' : 'tcd') : 'cd'
-  endif
-  silent execute cmd . ' '. fnameescape(a:path)
+  silent execute 'cd '. fnameescape(a:path)
 endfunction
