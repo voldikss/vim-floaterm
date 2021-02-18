@@ -28,7 +28,15 @@ endfunction
 " create a floaterm. return bufnr of the terminal
 " argument `jobopts` is passed by user in the case using this function as API
 function! floaterm#new(bang, cmd, jobopts, config) abort
-  call floaterm#util#deep_extend(a:jobopts, {'env': floaterm#util#setenv()})
+  let env = floaterm#util#setenv()
+  let vim_version = floaterm#util#vim_version()
+  if vim_version[0] == 'nvim' && vim_version[1] <= '0.4.4'
+    for [name, value] in items(env)
+      call setenv(name, value)
+    endfor
+  else
+    call floaterm#util#deep_extend(a:jobopts, {'env': env})
+  endif
   if !empty(a:cmd)
     let wrappers_path = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
     let wrappers = map(wrappers_path, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")

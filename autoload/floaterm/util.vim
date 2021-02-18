@@ -157,3 +157,12 @@ function! floaterm#util#setenv() abort
   let env.GIT_EDITOR = editor
   return env
 endfunction
+
+function! floaterm#util#vim_version() abort
+  if !has('nvim')
+    return ['vim', string(v:versionlong)]
+  endif
+  let c = execute('silent version')
+  let lines = split(matchstr(c,  'NVIM v\zs[^\n-]*'))
+  return ['nvim', lines[0]]
+endfunction
