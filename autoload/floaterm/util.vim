@@ -123,3 +123,37 @@ function! floaterm#util#use_sh_or_cmd() abort
   endif
   return [shell, shellslash, shellcmdflag, shellxquote]
 endfunction
+
+function! floaterm#util#deep_extend(dict1, dict2) abort
+  for key in keys(a:dict2)
+    if has_key(a:dict1, key)
+      if type(a:dict1[key]) == v:t_dict
+        call floaterm#util#deep_extend(a:dict1[key], a:dict2[key])
+      else
+        let a:dict1[key] = a:dict2[key]
+      endif
+    else
+      let a:dict1[key] = a:dict2[key]
+    endif
+  endfor
+endfunction
+
+let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+let s:binpath = fnamemodify(s:home . '/../bin', ':p')
+function! floaterm#util#setenv() abort
+  let env = {}
+  " bin/floaterm.cmd
+  if has('win32') && !has('nvim')
+    let env.VIM_SERVERNAME = v:servername
+    let env.VIM_EXE = v:progpath
+  endif
+  if has('win32') == 0
+    let env.PATH = $PATH . ':' . s:binpath
+  else
+    let env.PATH = $PATH . ';' . s:binpath
+  endif
+  let editor = floaterm#edita#setup#EDITOR()
+  let env.EDITOR = editor
+  let env.GIT_EDITOR = editor
+  return env
+endfunction

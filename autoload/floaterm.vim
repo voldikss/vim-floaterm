@@ -5,27 +5,6 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-"-----------------------------------------------------------------------------
-" script level variables and environment variables
-"-----------------------------------------------------------------------------
-" Used in bin/floaterm.cmd
-let $VIM_SERVERNAME = v:servername
-let $VIM_EXE = v:progpath
-
-if !empty(g:floaterm_opener)
-  " For `git commit`
-  call floaterm#edita#setup#enable()
-  " For `floaterm xxx`
-  let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-  let s:script = fnamemodify(s:home . '/../bin', ':p')
-  if has('win32') == 0
-    let $PATH .= ':' . s:script
-    let $PATH .= ':' . s:script
-  else
-    let $PATH .= ';' . s:script
-  endif
-endif
-
 " ----------------------------------------------------------------------------
 " wrapper function for `floaterm#new()` and `floaterm#update()` since they
 " share the same argument: `config`
@@ -49,7 +28,8 @@ endfunction
 " create a floaterm. return bufnr of the terminal
 " argument `jobopts` is passed by user in the case using this function as API
 function! floaterm#new(bang, cmd, jobopts, config) abort
-  if a:cmd != ''
+  call floaterm#util#deep_extend(a:jobopts, {'env': floaterm#util#setenv()})
+  if !empty(a:cmd)
     let wrappers_path = globpath(&runtimepath, 'autoload/floaterm/wrapper/*vim', 0, 1)
     let wrappers = map(wrappers_path, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")
     let maybe_wrapper = split(a:cmd, '\s')[0]
@@ -59,10 +39,11 @@ function! floaterm#new(bang, cmd, jobopts, config) abort
         let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
         let [name, jobopts, send2shell] = WrapFunc(a:cmd)
         if send2shell
-          let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, {}, a:config)
+          let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:config)
           call floaterm#terminal#send(bufnr, [name])
         else
-          let bufnr = floaterm#terminal#open(-1, name, jobopts, a:config)
+          call floaterm#util#deep_extend(a:jobopts, jobopts)
+          let bufnr = floaterm#terminal#open(-1, name, a:jobopts, a:config)
         endif
       finally
         let [&shell, &shellslash, &shellcmdflag, &shellxquote] = [shell, shellslash, shellcmdflag, shellxquote]

@@ -5,8 +5,6 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-let s:fzf_default_command = $FZF_DEFAULT_COMMAND
-
 if executable('bat')
   let s:viewer = 'bat --style=numbers --color=always'
 elseif executable('batcat')
@@ -16,7 +14,7 @@ else
 endif
 
 function! floaterm#wrapper#rg#(cmd) abort
-  let $FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- " . shellescape('')
+  let FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- " . shellescape('')
 
   let s:rg_tmpfile = tempname()
   let prog = 'fzf'
@@ -32,13 +30,14 @@ function! floaterm#wrapper#rg#(cmd) abort
         \ ]
   let cmd = printf('%s %s > %s', prog, join(arglist), s:rg_tmpfile)
   let cmd = [&shell, &shellcmdflag, cmd]
-  return [cmd, {'on_exit': funcref('s:rg_callback')}, v:false]
+  return [
+        \ cmd,
+        \ {'on_exit': funcref('s:rg_callback'), 'env': {'FZF_DEFAULT_COMMAND': FZF_DEFAULT_COMMAND}},
+        \ v:false
+        \ ]
 endfunction
 
 function! s:rg_callback(job, data, event, opener) abort
-  " restore $FZF_DEFAULT_COMMAND
-  let $FZF_DEFAULT_COMMAND = s:fzf_default_command
-
   if filereadable(s:rg_tmpfile)
     let filenames = readfile(s:rg_tmpfile)
     if !empty(filenames)

@@ -25,5 +25,9 @@ Execute(test-opener):
     AssertEqual &ft, 'gitcommit' 
     silent execute printf('!cd %s && rm afile && git add afile', pwd)
 
+  Log '# set g:floaterm_opener to empty'
+    let g:floaterm_opener = ''
+    FloatermNew
+
   FloatermKill!
   stopinsert
