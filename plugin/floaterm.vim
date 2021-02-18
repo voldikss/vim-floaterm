@@ -21,7 +21,7 @@ let g:floaterm_autohide         = get(g:, 'floaterm_autohide', 1)
 let g:floaterm_position         = get(g:, 'floaterm_position', 'center')
 let g:floaterm_borderchars      = get(g:, 'floaterm_borderchars', '─│─│┌┐┘└')
 let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', ['.project', '.git', '.hg', '.svn', '.root'])
-let g:floaterm_opener           = get(g:, 'floaterm_opener', 'vsplit')
+let g:floaterm_opener           = get(g:, 'floaterm_opener', 'split')
 let g:floaterm_complete_options = get(g:, 'floaterm_complete_options', {'shortcut': 'floaterm', 'priority': 5, 'filter_length': [5, 20]})
 
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang -range
