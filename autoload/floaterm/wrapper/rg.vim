@@ -13,7 +13,7 @@ else
   let s:viewer = 'cat -n'
 endif
 
-function! floaterm#wrapper#rg#(cmd) abort
+function! floaterm#wrapper#rg#(cmd, jobopts, config) abort
   let FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- " . shellescape('')
 
   let s:rg_tmpfile = tempname()
@@ -30,11 +30,12 @@ function! floaterm#wrapper#rg#(cmd) abort
         \ ]
   let cmd = printf('%s %s > %s', prog, join(arglist), s:rg_tmpfile)
   let cmd = [&shell, &shellcmdflag, cmd]
-  return [
-        \ cmd,
-        \ {'on_exit': funcref('s:rg_callback'), 'env': {'FZF_DEFAULT_COMMAND': FZF_DEFAULT_COMMAND}},
-        \ v:false
-        \ ]
+  let jobopts = {
+        \ 'on_exit': funcref('s:rg_callback'),
+        \ 'env': {'FZF_DEFAULT_COMMAND': FZF_DEFAULT_COMMAND}
+        \ } 
+  call floaterm#util#deep_extend(a:jobopts, jobopts)
+  return [v:false, cmd]
 endfunction
 
 function! s:rg_callback(job, data, event, opener) abort

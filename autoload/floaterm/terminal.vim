@@ -75,7 +75,7 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
   if !bufexists(a:bufnr)
     " change cwd
     let savedcwd = getcwd()
-    let dest = get(a:config, 'cwd', '')
+    let dest = fnamemodify(get(a:config, 'cwd', ''), ':p')
     if dest == '<root>'
       let dest = floaterm#path#get_root()
     endif

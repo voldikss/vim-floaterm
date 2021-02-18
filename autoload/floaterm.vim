@@ -45,13 +45,13 @@ function! floaterm#new(bang, cmd, jobopts, config) abort
       try
         let [shell, shellslash, shellcmdflag, shellxquote] = floaterm#util#use_sh_or_cmd()
         let WrapFunc = function(printf('floaterm#wrapper#%s#', maybe_wrapper))
-        let [name, jobopts, send2shell] = WrapFunc(a:cmd)
+        " NOTE: a:jobopts and a:config can be changed in WrapFunc
+        let [send2shell, newcmd] = WrapFunc(a:cmd, a:jobopts, a:config)
         if send2shell
           let bufnr = floaterm#terminal#open(-1, g:floaterm_shell, a:jobopts, a:config)
-          call floaterm#terminal#send(bufnr, [name])
+          call floaterm#terminal#send(bufnr, [newcmd])
         else
-          call floaterm#util#deep_extend(a:jobopts, jobopts)
-          let bufnr = floaterm#terminal#open(-1, name, a:jobopts, a:config)
+          let bufnr = floaterm#terminal#open(-1, newcmd, a:jobopts, a:config)
         endif
       finally
         let [&shell, &shellslash, &shellcmdflag, &shellxquote] = [shell, shellslash, shellcmdflag, shellxquote]

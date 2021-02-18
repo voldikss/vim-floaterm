@@ -5,7 +5,7 @@
 " GitHub: https://github.com/voldikss
 " ============================================================================
 
-function! floaterm#wrapper#ranger#(cmd) abort
+function! floaterm#wrapper#ranger#(cmd, jobopts, config) abort
   let s:ranger_tmpfile = tempname()
   let original_dir = getcwd()
   lcd %:p:h
@@ -15,16 +15,20 @@ function! floaterm#wrapper#ranger#(cmd) abort
   if len(cmdlist) > 1
     let cmd .= ' ' . join(cmdlist[1:], ' ')
   else
-    if expand('%:p') != ''
-      let cmd .= ' --selectfile="' . expand('%:p') . '"'
-    else
-    let cmd .= ' "' . getcwd() . '"'
+    if !has_key(a:config, 'cwd')
+      if expand('%:p') != ''
+        let cmd .= ' --selectfile="' . expand('%:p') . '"'
+      else
+        let cmd .= ' "' . getcwd() . '"'
+      endif
     endif
   endif
 
   exe "lcd " . original_dir
   let cmd = [&shell, &shellcmdflag, cmd]
-  return [cmd, {'on_exit': funcref('s:ranger_callback')}, v:false]
+  let jobopts = {'on_exit': funcref('s:ranger_callback')}
+  call floaterm#util#deep_extend(a:jobopts, jobopts)
+  return [v:false, cmd]
 endfunction
 
 function! s:ranger_callback(job, data, event, opener) abort

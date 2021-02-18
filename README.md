@@ -19,7 +19,6 @@ Use (neo)vim terminal in the floating/popup window.
   - [How to define more wrappers](#how-to-define-more-wrappers)
   - [How to write sources for fuzzy finder plugins](#how-to-write-sources-for-fuzzy-finder-plugins)
 - [Contributing](#contributing)
-- [Wiki](#wiki)
 - [FAQ](#faq)
 - [Breaking changes](#breaking-changes)
 - [Related projects](#related-projects)
@@ -116,7 +115,7 @@ For example, the command
 :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
 ```
 
-will open a new floating/popup floaterm instance named `floaterm1` running 
+will open a new floating/popup floaterm instance named `floaterm1` running
 `ranger --cmd="cd ~"` in the `topleft` corner of the main window.
 
 The following command allows you to compile and run your C code in the floaterm window:
@@ -642,23 +641,24 @@ There are two ways for a command to be spawned:
   [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
 
   ```vim
-  function! floaterm#wrapper#fzf#() abort
-    return ['floaterm $(fzf)', {}, v:true]
+  function! floaterm#wrapper#fzf#(cmd, jobopts, config) abort
+    return [v:true, 'floaterm $(fzf)']
   endfunction
   ```
 
   The code above returns a list. `floaterm $(fzf)` is the command to be
   executed. `v:true` means the command will be executed after the `&shell`
-  startup. In this way, the second element of the list must be `{}`.
+  startup.
 
 - To be executed through `termopen()`/`term_start()` function, in that case, a
   callback option can be provided. See [fzf wrapper](./autoload/floaterm/wrapper/fzf.vim)
 
   ```vim
-  function! floaterm#wrapper#fzf#(cmd) abort
+  function! floaterm#wrapper#fzf#(cmd, jobopts, config) abort
     let s:fzf_tmpfile = tempname()
     let cmd = a:cmd . ' > ' . s:fzf_tmpfile
-    return [cmd, {'on_exit': funcref('s:fzf_callback')}, v:false]
+    let a:jobopts.on_exit = funcref('s:fzf_callback')
+    return [v:false, cmd]
   endfunction
 
   function! s:fzf_callback(...) abort
@@ -680,13 +680,32 @@ There are two ways for a command to be spawned:
   ```
 
   In the example above, after executing `:FloatermNew fzf`, function
-  `floaterm#wrapper#fzf#` will return `['fzf > /tmp/atmpfilename', {'on_exit': funcref('s:fzf_callback')}, v:false]`.
+  `floaterm#wrapper#fzf#` will return
 
-  Here `v:false` means `cmd`(`fzf > /tmp/atmpfilename`) will be passed through
-  `termopen()`(neovim) or `term_start()`(vim). As a result, an fzf interactive
-  will be opened in a floaterm window. After choosing a file using `<CR>`, fzf
-  exits and the filepath will be written in `/tmp/atmpfilename`. Then the
-  function `s:fzf_callback()` will be invoked to open the file.
+  ```vim
+  [v:false, 'fzf > /tmp/atmpfilename'].
+  ```
+
+  Here `v:false` means `cmd`
+
+  ```vim
+  fzf > /tmp/atmpfilename
+  ```
+
+  will be passed through `termopen()`(neovim) or `term_start()`(vim). As the
+  result, an fzf interactive will be opened in a floaterm window.
+
+  When user picks a file using `ENTER`, fzf exits and the filepath will be
+  written in `/tmp/atmpfilename` and `s:fzf_callback()` will be invoked to
+  open the file. Note that the function `s: fzf_callback()` is registered by
+
+  ```vim
+  let a:jobopts.on_exit = funcref('s:fzf_callback')
+  ```
+
+  The variable `a:jobopts` in the above code will be eventually passed to
+  `termopen()`(neovim) or `term_start()`(vim). For more info, see
+  `:help jobstart-options`(neovim) or `:help job-options`(vim)
 
 ### How to write sources for fuzzy finder plugins
 
@@ -694,16 +713,12 @@ Function `floaterm#buflist#gather()` returns a list contains all the floaterm bu
 
 Function `floaterm#terminal#open_existing({bufnr})` opens the floaterm whose buffer number is `{bufnr}`.
 
-For reference, see [floaterm source for vim-clap](./autoload/clap/provider/floaterm.vim).
+For reference, see [floaterm source for LeaderF](https://github.com/voldikss/LeaderF-floaterm/blob/master/autoload/lf_floaterm.vim).
 
 ## Contributing
 
 - Improve the documentation
 - Help resolve issues labeled as [help wanted](https://github.com/voldikss/vim-floaterm/issues?q=is%3Aissue+label%3A%22help+wanted%22)
-
-## Wiki
-
-https://github.com/voldikss/vim-floaterm/wiki
 
 ## FAQ
 
