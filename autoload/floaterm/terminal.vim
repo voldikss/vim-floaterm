@@ -7,7 +7,6 @@
 
 let s:timer_map = {}
 let s:channel_map = {}
-let s:is_win = has('win32') || has('win64')
 
 function! s:on_floaterm_create(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
@@ -167,7 +166,10 @@ function! floaterm#terminal#send(bufnr, cmds) abort
     endif
     noautocmd execute curr_winnr . 'wincmd w'
   else
-    let newline = s:is_win ? "\r\n" : "\n"
+    let newline = "\n"
+    if has('win32') && bufname(a:bufnr) !~ 'ipython'
+      let newline = "\r\n"
+    endif
     call ch_sendraw(ch, join(a:cmds, newline) . newline)
   endif
 endfunction
