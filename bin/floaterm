@@ -28,4 +28,4 @@ absolute_path() {
 
 name="$(absolute_path """$1""")"
 
-eval $EDITOR $name
+eval $FLOATERM $name

@@ -153,7 +153,7 @@ function! floaterm#util#setenv() abort
     let env.PATH = $PATH . ';' . s:binpath
   endif
   let editor = floaterm#edita#setup#EDITOR()
-  let env.EDITOR = editor
+  let env.FLOATERM = editor
   let env.GIT_EDITOR = editor
   return env
 endfunction

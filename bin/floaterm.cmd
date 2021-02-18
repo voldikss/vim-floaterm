@@ -16,7 +16,7 @@ call "%VIM_EXE%" --servername "%VIM_SERVERNAME%" --remote-expr "Tapi_edita_open(
 goto end
 
 :neovim
-%EDITOR% %NAME%
+%FLOATERM% %NAME%
 goto end
 
 :help
