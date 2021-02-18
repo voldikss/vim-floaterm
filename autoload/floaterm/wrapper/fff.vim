@@ -5,7 +5,7 @@
 " GitHub: https://github.com/benwoodward
 " ============================================================================
 
-function! floaterm#wrapper#fff#(cmd) abort
+function! floaterm#wrapper#fff#(cmd, jobopts, config) abort
   let original_dir = getcwd()
   lcd %:p:h
 
@@ -19,7 +19,9 @@ function! floaterm#wrapper#fff#(cmd) abort
 
   exe "lcd " . original_dir
   let cmd = [&shell, &shellcmdflag, cmd]
-  return [cmd, {'on_exit': funcref('s:fff_callback')}, v:false]
+  let jobopts = {'on_exit': funcref('s:fff_callback')}
+  call floaterm#util#deep_extend(a:jobopts, jobopts)
+  return [v:false, cmd]
 endfunction
 
 function! s:fff_callback(job, data, event, opener) abort
