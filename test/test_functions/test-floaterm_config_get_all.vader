@@ -1,6 +1,6 @@
 " vim:ft=vim
 
-Execute(test-floaterm#buffer#get_config_dict):
+Execute(test-floaterm#config#get_all):
   function! MyFunc() abort
     " code
   endfunction
@@ -9,7 +9,7 @@ Execute(test-floaterm#buffer#get_config_dict):
   let bufnr = bufnr('%')
   call setbufvar(bufnr, 'Fn', function("MyFunc"))
   " https://github.com/voldikss/vim-floaterm/issues/233
-  call floaterm#buffer#get_config_dict(bufnr)
+  call floaterm#config#get_all(bufnr)
 
   FloatermKill!
   stopinsert

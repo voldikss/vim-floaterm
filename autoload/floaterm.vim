@@ -20,6 +20,7 @@ if !empty(g:floaterm_opener)
   let s:script = fnamemodify(s:home . '/../bin', ':p')
   if has('win32') == 0
     let $PATH .= ':' . s:script
+    let $PATH .= ':' . s:script
   else
     let $PATH .= ';' . s:script
   endif
@@ -139,7 +140,7 @@ function! floaterm#update(config) abort
 
   let bufnr = bufnr('%')
   call floaterm#window#hide(bufnr)
-  call floaterm#buffer#set_config_dict(bufnr, a:config)
+  call floaterm#config#set_all(bufnr, a:config)
   call floaterm#terminal#open_existing(bufnr)
 endfunction
 

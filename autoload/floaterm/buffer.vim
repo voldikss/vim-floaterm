@@ -46,33 +46,3 @@ function! floaterm#buffer#getlines(bufnr, length) abort
   endif
   return lines
 endfunction
-
-function! floaterm#buffer#get_config(bufnr, key, ...) abort
-  let key = 'floaterm_' . a:key
-  let val = getbufvar(a:bufnr, key)
-  if val == '' && a:0 == 1
-    return a:1
-  endif
-  return val
-endfunction
-
-function! floaterm#buffer#get_config_dict(bufnr) abort
-  let config = {}
-  for var in items(getbufvar(a:bufnr, ''))
-    if var[0] =~ '^floaterm_'
-      let config[var[0][9:]] = var[1]
-    endif
-  endfor
-  return config
-endfunction
-
-function! floaterm#buffer#set_config(bufnr, key, val) abort
-  let key = 'floaterm_' . a:key
-  call setbufvar(a:bufnr, key, a:val)
-endfunction
-
-function! floaterm#buffer#set_config_dict(bufnr, config) abort
-  for [key, val] in items(a:config)
-    call floaterm#buffer#set_config(a:bufnr, key, val)
-  endfor
-endfunction

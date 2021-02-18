@@ -1,7 +1,7 @@
 function! floaterm#edita#neovim#editor#open(target, client)
   let bufnr = floaterm#buflist#curr()
   call floaterm#window#hide(bufnr)
-  let opener = floaterm#buffer#get_config(bufnr, 'opener', g:floaterm_opener)
+  let opener = floaterm#config#get(bufnr, 'opener', g:floaterm_opener)
   call floaterm#util#open([{'filename': fnameescape(a:target)}], opener)
   let mode = floaterm#edita#neovim#util#mode(a:client)
   let b:edita = sockconnect(mode, a:client, { 'rpc': 1 })

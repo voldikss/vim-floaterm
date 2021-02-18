@@ -168,7 +168,7 @@ function! floaterm#cmdline#complete_names1(...) abort
   let buflist = floaterm#buflist#gather()
   let ret = []
   for bufnr in buflist
-    let termname = floaterm#buffer#get_config(bufnr, 'name', '')
+    let termname = floaterm#config#get(bufnr, 'name', '')
     if !empty(termname)
       call add(ret, termname)
     endif

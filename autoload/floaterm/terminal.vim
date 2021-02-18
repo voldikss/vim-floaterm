@@ -22,7 +22,7 @@ function! s:on_floaterm_create(bufnr) abort
           \ a:bufnr,
           \ a:bufnr
           \ )
-    if floaterm#buffer#get_config(a:bufnr, 'disposable')
+    if floaterm#config#get(a:bufnr, 'disposable')
       execute printf(
             \ 'autocmd BufHidden <buffer=%s> call floaterm#terminal#kill(%s)',
             \ a:bufnr,
@@ -49,10 +49,10 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   else
     let bufnr = a:bufnr
   endif
-  let opener = floaterm#buffer#get_config(bufnr, 'opener')
+  let opener = floaterm#config#get(bufnr, 'opener')
   call setbufvar(bufnr, '&bufhidden', 'wipe')
-  call floaterm#buffer#set_config(bufnr, 'jobexists', v:false)
-  let autoclose = floaterm#buffer#get_config(bufnr, 'autoclose')
+  call floaterm#config#set(bufnr, 'jobexists', v:false)
+  let autoclose = floaterm#config#get(bufnr, 'autoclose')
   if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
     call floaterm#window#hide(bufnr)
     " if the floaterm is created with --silent, delete the buffer explicitly
@@ -88,14 +88,15 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
     let bufnr = s:spawn_terminal(a:cmd, a:jobopts, a:config)
 
     " hide floaterm immediately if silent
-    if floaterm#buffer#get_config(bufnr, 'silent', 0)
+    if floaterm#config#get(bufnr, 'silent', 0)
       call floaterm#window#hide(bufnr)
     endif
 
     " restore cwd
     call floaterm#path#chdir(savedcwd)
   else
-    call floaterm#window#open(a:bufnr, a:config)
+    let config = floaterm#config#parse(a:bufnr, a:config)
+    call floaterm#window#open(a:bufnr, config)
     let bufnr = a:bufnr
   endif
   doautocmd User FloatermOpen
@@ -108,7 +109,7 @@ function! floaterm#terminal#open_existing(bufnr) abort
     call floaterm#util#show_msg(printf("Buffer %s doesn't exists", a:bufnr), 'error')
     return
   endif
-  let config = floaterm#buffer#get_config_dict(a:bufnr)
+  let config = floaterm#config#get_all(a:bufnr)
   call floaterm#terminal#open(a:bufnr, '', {}, config)
 endfunction
 
@@ -120,7 +121,8 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
           \ 's:on_floaterm_close',
           \ [bufnr, get(a:jobopts, 'on_exit', v:null)]
           \ )
-    call floaterm#window#open(bufnr, a:config)
+    let config = floaterm#config#parse(bufnr, a:config)
+    call floaterm#window#open(bufnr, config)
     let ch = termopen(a:cmd, a:jobopts)
     let s:channel_map[bufnr] = ch
   else
@@ -141,9 +143,10 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     call floaterm#buflist#add(bufnr)
     let job = term_getjob(bufnr)
     let s:channel_map[bufnr] = job_getchannel(job)
-    call floaterm#window#open(bufnr, a:config)
+    let config = floaterm#config#parse(bufnr, a:config)
+    call floaterm#window#open(bufnr, config)
   endif
-  call floaterm#buffer#set_config(bufnr, 'jobexists', v:true)
+  call floaterm#config#set(bufnr, 'jobexists', v:true)
   call s:on_floaterm_create(bufnr)
   return bufnr
 endfunction
@@ -172,7 +175,7 @@ endfunction
 function! floaterm#terminal#get_bufnr(termname) abort
   let buflist = floaterm#buflist#gather()
   for bufnr in buflist
-    let name = floaterm#buffer#get_config(bufnr, 'name')
+    let name = floaterm#config#get(bufnr, 'name')
     if name ==# a:termname
       return bufnr
     endif
