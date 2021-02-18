@@ -6,14 +6,16 @@ let &runtimepath .= ',' . expand('<sfile>:p:h:h')
 if $USER == 'runner'
   let g:run_in_ci = v:true
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/vader.vim'
-  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/Leaderf-floaterm'
+  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/LeaderF-floaterm'
+  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/clap-floaterm'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/fzf-floaterm'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/asyncrun.vim'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/asyncrun.extra'
 else
   let g:run_in_ci = v:false
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../vader.vim'
-  " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../Leaderf-floaterm'
+  " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../LeaderF-floaterm'
+  " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../clap-floaterm'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../fzf-floaterm'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../asyncrun.vim'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../asyncrun.extra'

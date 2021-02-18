@@ -1,6 +1,6 @@
 " vim:ft=vim
 
-Execute(test_Leaderf-floaterm):
+Execute(test_LeaderF-floaterm):
   if !g:run_in_ci | finish | endif
 
   FloatermNew
