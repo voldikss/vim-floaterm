@@ -1,7 +1,20 @@
 " vim:ft=vim
 
-Execute(Set cwd and open a floaterm):
-  " TODO
+Execute(test-cwd):
+  Log '# --cwd=/'
+    let cwd = getcwd()
+    FloatermNew --cwd=/
+    " cwd should be restored after opening floaterm
+    AssertEqual cwd, getcwd()
 
-Execute(Close floaterm and check cwd):
-  " TODO
+  Log '# --cwd=~'
+    FloatermNew --cwd=<root>
+
+  Log '# --cwd=..'
+    FloatermNew --cwd=<root>
+
+  Log '# --cwd=<root>'
+    FloatermNew --cwd=<root>
+
+  FloatermKill!
+  stopinsert
