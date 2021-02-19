@@ -41,7 +41,7 @@ endfunction
 function! floaterm#util#open(locations, ...) abort
   let opener = get(a:000, 0, g:floaterm_opener)
   execute opener a:locations[0].filename
-  for loc in a:locations
+  for loc in a:locations[1:]
     execute 'edit ' loc.filename
     if has_key(loc, 'lnum')
       execute loc.lnum
