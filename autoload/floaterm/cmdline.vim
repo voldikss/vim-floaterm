@@ -26,6 +26,13 @@ function! floaterm#cmdline#parse(arglist) abort
           endif
         else
           let [key, value] = [pair[0][2:], pair[1]]
+          if key == 'cwd'
+            if value == '<root>'
+              let value = floaterm#path#get_root()
+            else
+              let value = fnamemodify(value, ':p')
+            endif
+          endif
         endif
         if index(['height', 'width', 'autoclose'], key) > -1
           let value = eval(value)

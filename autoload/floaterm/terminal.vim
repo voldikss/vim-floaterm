@@ -75,14 +75,8 @@ function! floaterm#terminal#open(bufnr, cmd, jobopts, config) abort
   if !bufexists(a:bufnr)
     " change cwd
     let savedcwd = getcwd()
-    let dest = get(a:config, 'cwd', '')
-    if !empty(dest)
-      if dest == '<root>'
-        let dest = floaterm#path#get_root()
-      else
-        let dest = fnamemodify(dest, ':p')
-      endif
-      call floaterm#path#chdir(dest)
+    if has_key(a:config, 'cwd')
+      call floaterm#path#chdir(a:config.cwd)
     endif
 
     " spawn terminal
