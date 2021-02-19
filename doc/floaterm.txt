@@ -95,9 +95,8 @@ g:floaterm_rootmarkers                           *g:floaterm_rootmarkers*
 g:floaterm_opener
     Type |String|. 
     Command used for opening a file in the outside nvim from within `:terminal`.
-    Available: 'edit', 'split', 'vsplit', 'tabe', 'drop'.
-    Set to `''` to disable git commit and floaterm functionality in floaterm.
-    Default: 'vsplit'
+    Available: 'edit', 'split', 'vsplit', 'tabe', 'drop' or user-defined commands
+    Default: 'split'
 
 g:floaterm_autoclose                             *g:floaterm_autoclose*
 	Type |Number|.

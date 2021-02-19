@@ -260,11 +260,10 @@ Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 Type `String`. Command used for opening a file in the outside nvim from within `:terminal`.
 
-Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'`.
+Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'` or 
+[user-defined commands](https://github.com/voldikss/vim-floaterm/issues/259)
 
-Set to `''` to disable [git commit](#git) and [floaterm](#floaterm) functionality in floaterm.
-
-Default: `'vsplit'`
+Default: `'split'`
 
 #### **`g:floaterm_autoclose`**
 
