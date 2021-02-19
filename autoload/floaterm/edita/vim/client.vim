@@ -49,4 +49,5 @@ endfunction
 function! Tapi_edita_open(bufnr, arglist) abort
   let target = a:arglist[0]
   call floaterm#edita#vim#editor#open(target, a:bufnr)
+  return ''
 endfunction
