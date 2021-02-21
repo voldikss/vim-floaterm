@@ -142,6 +142,7 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     call floaterm#window#open(bufnr, config)
   endif
   call floaterm#config#set(bufnr, 'jobexists', v:true)
+  call floaterm#config#set(bufnr, 'cmd', a:cmd)
   call s:on_floaterm_create(bufnr)
   return bufnr
 endfunction
