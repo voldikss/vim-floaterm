@@ -28,16 +28,21 @@ jobs:
           git config --global user.name "voldikss"
       - name: Checkout vim-floaterm
         uses: actions/checkout@v2
+      - name: Checkout clap-floaterm
+        uses: actions/checkout@v2
+        with:
+          repository: voldikss/clap-floaterm
+          path: clap-floaterm
       - name: Checkout fzf-floaterm
         uses: actions/checkout@v2
         with:
           repository: voldikss/fzf-floaterm
           path: fzf-floaterm
-      - name: Checkout Leaderf-floaterm
+      - name: Checkout LeaderF-floaterm
         uses: actions/checkout@v2
         with:
-          repository: voldikss/Leaderf-floaterm
-          path: Leaderf-floaterm
+          repository: voldikss/LeaderF-floaterm
+          path: LeaderF-floaterm
       - name: Checkout asyncrun.vim
         uses: actions/checkout@v2
         with:

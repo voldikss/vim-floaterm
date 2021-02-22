@@ -32,18 +32,14 @@ Use (neo)vim terminal in the floating/popup window.
 - Customizable terminal window style
 - Switch/preview floating terminal buffers using fuzzy-finder plugins such as
   [denite.nvim](https://github.com/Shougo/denite.nvim) or
-  [coc.nvim](https://github.com/neoclide/coc.nvim), etc.
+  [fzf](https://github.com/junegunn/fzf), etc.
 - Use with other external command-line tools(ranger, fzf, ripgrep etc.)
-- Autocompletion from within floaterms(require [coc.nvim](https://github.com/neoclide/coc.nvim)
-  or [deoplete.nvim](https://github.com/Shougo/deoplete.nvim))
 - Use as a custom task runner for [asynctasks.vim](https://github.com/skywind3000/asynctasks.vim)
   or [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)
 
 ## Requirements
 
 - Vim or neovim with `terminal` feature
-
-Run `:checkhealth` for more info.
 
 ## Installation
 
@@ -293,22 +289,6 @@ Default: `1`.
 Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
 
 Default: `v:true`
-
-#### **`g:floaterm_complete_options`**
-
-Type `Dict`. Autocompletion options (Note that completion from floaterm is
-synchronous)
-
-Available options:
-
-- `shortcut`: A string.
-- `priority`: Number between 0-99.
-- `filetypes`: Array of filetype names this source should be triggered by.
-  Available for all filetypes when ommited and for no filetypes when empty
-- `filter_length`: Array of 2 numbers. Candidates whose length is not
-  in the range will be removed.
-
-Default value: `{'shortcut': 'floaterm', 'priority': 5, 'filter_length': [5, 20]}`
 
 ### Keymaps
 
@@ -581,7 +561,7 @@ This can also work for other languages which have interactive shells, such as lu
 
 Use vim-clap to switch/preview floating terminal buffers.
 
-Try `:Clap floaterm`
+Install [clap-floaterm](https://github.com/voldikss/clap-floaterm) and try `:Clap floaterm`
 
 <details>
 <summary>Demo</summary>
@@ -592,7 +572,7 @@ Try `:Clap floaterm`
 
 Use denite to switch/preview/open floating terminal buffers.
 
-Try `:Denite floaterm`
+Install [denite-floaterm](https://github.com/delphinus/denite-floaterm) and try `:Denial floaterm`
 
 <details>
 <summary>Demo</summary>
@@ -733,7 +713,7 @@ https://github.com/voldikss/vim-floaterm/issues?q=label%3A%22breaking+change%22
 - [coc-floaterm](https://github.com/voldikss/coc-floaterm)
 - [fzf-floaterm](https://github.com/voldikss/fzf-floaterm)
 - [popc-floaterm](https://github.com/yehuohan/popc-floaterm)
-- [Leaderf-floaterm](https://github.com/voldikss/LeaderF-floaterm)
+- [LeaderF-floaterm](https://github.com/voldikss/LeaderF-floaterm)
 
 ## Credits
 

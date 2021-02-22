@@ -121,20 +121,6 @@ g:floaterm_autoinsert                            *g:floaterm_autoinsert*
 	Whether to enter |Terminal-mode| after opening a floaterm.
 	Default value is |v:true|.
 
-g:floaterm_complete_options                      *g:floaterm_complete_options*
-    Type |Dict|.
-    Autocompletion options used for coc.nvim.
-    Available options:
-        - `shortcut`: a string
-        - `priority`: number between 0-99
-        - `filetypes`: array of filetype names this source should be triggered
-            by.  Available for all filetypes when ommited and for no filetypes
-            when empty
-        - `firstMatch`: if not falsy, only the completion item that has the
-            first letter matching the user input will be shown
-        - `triggerCharacters`: trigger characters for this source.
-    Default value: `{'shortcut': 'floaterm', 'priority': 5}`
-
 ==============================================================================
 MAPPINGS                                         *floaterm-mappings*
 
@@ -236,7 +222,9 @@ no-current-focused window(:help |hl-NormalNC|).
 EXTENSIONS                                       *floaterm-extensions*
 
 ------------------------------------------------------------------------------
-VIM-CLAP                                         *clap-floaterm*
+CLAP-FLOATERM                                         *clap-floaterm*
+
+Install voldikss/clap-floaterm.
 
 Start |vim-clap| to manage floaterms.
  >
@@ -244,6 +232,8 @@ Start |vim-clap| to manage floaterms.
 <
 ------------------------------------------------------------------------------
 DENITE-FLOATERM                                  *denite-floaterm*
+
+Install delphinus/denite-floaterm.
 
 							 *denite-source-floaterm*
 SOURCES~
@@ -283,7 +273,7 @@ Start with all features and preview automatically with moving the cursor.
 ------------------------------------------------------------------------------
 COC-FLOATERM                                     *coc-floaterm*
 
-Install coc-floaterm firstly.
+Install coc-floaterm using `:CocInstall coc-floaterm`
 
 COMMANDS~
  >
@@ -299,7 +289,7 @@ COMMANDS~
 <
 COCLIST~
  >
- 	CocList floaterm
+ 	:CocList floaterm
 <
 ------------------------------------------------------------------------------
 FZF-FLOATERM                                     *fzf-floaterm*
@@ -311,7 +301,7 @@ Install voldikss/fzf-floaterm and run:
 ------------------------------------------------------------------------------
 LEADERF-FLOATERM                                 *leaderf-floaterm*
 
-Install voldikss/leaderf-floaterm and run:
+Install voldikss/LeaderF-floaterm and run:
  >
 	:Leaderf floaterm
 <
