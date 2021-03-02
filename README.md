@@ -407,7 +407,7 @@ P.S.
 <img src="https://user-images.githubusercontent.com/20282795/91380257-27750280-e857-11ea-8d49-d760c009fee0.gif"/>
 </details>
 
-#### git
+#### [git](https://git-scm.com/)
 
 Execute `git commit` in the terminal window without starting a nested vim/nvim.
 
@@ -418,7 +418,7 @@ Refer to [g:floaterm_opener](#gfloaterm_opener) for configurable open action
 <img src="https://user-images.githubusercontent.com/20282795/91380268-2cd24d00-e857-11ea-8dbd-d39a0bbb105e.gif"/>
 </details>
 
-#### fzf
+#### [fzf](https://github.com/junegunn/fzf)
 
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/fzf.vim)
 for `fzf` command. So it can be used as a tiny fzf plugin.
@@ -434,7 +434,7 @@ command! FZF FloatermNew fzf
 <img src="https://user-images.githubusercontent.com/20282795/107140144-10d0ec80-695b-11eb-8c2f-8bd42ae26e6d.gif"/>
 </details>
 
-#### ripgrep
+#### [ripgrep](https://github.com/BurntSushi/ripgrep)
 
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/rg.vim)
 for `rg` command.
@@ -452,7 +452,22 @@ Use <button>Ctrl-/</button> to toggle preview.
 <img src="https://user-images.githubusercontent.com/20282795/107148083-4c37df00-698c-11eb-80fb-ccfd94fc4419.gif"/>
 </details>
 
-#### fff
+#### [broot](https://github.com/Canop/broot)
+
+This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/broot.vim) for `broot`.
+
+Try `:FloatermNew broot` or create yourself a new command like this:
+
+```vim
+command! Broot FloatermNew --width=0.8 --height=0.8 broot
+```
+
+<details>
+<summary>Demo</summary>
+<img src="https://user-images.githubusercontent.com/20282795/109648379-83696c80-7b95-11eb-8776-071b816cce2d.gif"/>
+</details>
+
+#### [fff](https://github.com/dylanaraps/fff)
 
 There is also an [fff wrapper](./autoload/floaterm/wrapper/fff.vim)
 
@@ -467,7 +482,7 @@ command! FFF FloatermNew fff
 <img src="https://user-images.githubusercontent.com/1472981/75105718-9f315d00-567b-11ea-82d1-6f9a6365391f.gif"/>
 </details>
 
-#### nnn
+#### [nnn](https://github.com/jarun/nnn)
 
 There is also an [nnn wrapper](./autoload/floaterm/wrapper/nnn.vim)
 
@@ -482,7 +497,7 @@ command! NNN FloatermNew nnn
 <img src="https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif"/>
 </details>
 
-#### lf
+#### [lf](https://github.com/gokcehan/lf)
 
 There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim).
 It is recommened to use [lf.vim](https://github.com/ptzz/lf.vim) which is an lf wrapper with more features (Overriding netrw, Lfcd, etc.).
@@ -498,7 +513,7 @@ command! LF FloatermNew lf
 <img src="https://user-images.githubusercontent.com/20282795/91380274-3065d400-e857-11ea-86df-981adddc04c6.gif"/>
 </details>
 
-#### ranger
+#### [ranger](https://github.com/ranger/ranger)
 
 This plugin can also be a handy ranger plugin since it also has a [ranger wrapper](./autoload/floaterm/wrapper/ranger.vim)
 
@@ -513,7 +528,7 @@ command! Ranger FloatermNew ranger
 <img src="https://user-images.githubusercontent.com/20282795/91380284-3360c480-e857-11ea-9966-34856592d487.gif"/>
 </details>
 
-#### vifm
+#### [vifm](https://github.com/vifm/vifm)
 
 There is also a [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
 
@@ -528,7 +543,7 @@ command! Vifm FloatermNew vifm
 <img src="https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif"/>
 </details>
 
-#### lazygit
+#### [lazygit](https://github.com/jesseduffield/lazygit)
 
 Furthermore, you can also use other command-line programs, such as lazygit, htop, ncdu, etc.
 
@@ -539,7 +554,7 @@ Use `lazygit` for instance:
 <img src="https://user-images.githubusercontent.com/20282795/74755376-0f239a00-52ae-11ea-9261-44d94abe5924.png"/>
 </details>
 
-#### python
+#### [python](https://www.python.org/)
 
 Use `:FloatermNew python` to open a python shell. After that you can use
 `: FloatermSend` to send lines to the Python interactive shell.
