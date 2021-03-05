@@ -1,8 +1,12 @@
-Use (neo)vim terminal in the floating/popup window.
+🌟 Terminal manager for (neo)vim
 
 [![CI](https://github.com/voldikss/vim-floaterm/workflows/CI/badge.svg)](https://github.com/voldikss/vim-floaterm/actions?query=workflow%3ACI) [![GitHub license](https://img.shields.io/github/license/voldikss/vim-floaterm.svg)](https://github.com/voldikss/vim-floaterm/blob/master/LICENSE) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/voldikss/vim-floaterm/graphs/commit-activity)
 
 ![](https://user-images.githubusercontent.com/20282795/91376670-2db3b080-e850-11ea-9991-efa4f4da6f44.png)
+
+<a name="toc"/>
+
+## Table of contents
 
 - [Features](#features)
 - [Requirements](#requirements)
@@ -175,6 +179,7 @@ The following command allows you to compile and run your C code in the floaterm 
     kept.
 - Use `<TAB>` to get completion.
 - Examples
+
   ```vim
   :FloatermSend                        " Send current line to the current floaterm (execute the line in the terminal)
   :FloatermSend --name=ft1             " Send current line to the floaterm named ft1
@@ -185,6 +190,8 @@ The following command allows you to compile and run your C code in the floaterm 
   :'<,'>FloatermSend ...               " Send lines selected to floaterm(visual block selection are supported)
   :%FloatermSend ...                   " Send the whole buffer to floaterm
   ```
+
+🔝 [Back to table of contents](#toc)
 
 ### Options
 
@@ -256,7 +263,7 @@ Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 Type `String`. Command used for opening a file in the outside nvim from within `:terminal`.
 
-Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'` or 
+Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'` or
 [user-defined commands](https://github.com/voldikss/vim-floaterm/issues/259)
 
 Default: `'split'`
@@ -289,6 +296,8 @@ Default: `1`.
 Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
 
 Default: `v:true`
+
+🔝 [Back to table of contents](#toc)
 
 ### Keymaps
 
@@ -336,6 +345,8 @@ nnoremap   <silent>   <F12>   :FloatermToggle<CR>
 tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 ```
 
+🔝 [Back to table of contents](#toc)
+
 ### Highlights
 
 There are two `highlight-groups` to specify the color of floaterm (also the
@@ -372,11 +383,15 @@ hi FloatermNC guibg=gray
 <img src="https://user-images.githubusercontent.com/20282795/91380259-28a62f80-e857-11ea-833f-11160d15647a.gif"/>
 </details>
 
+🔝 [Back to table of contents](#toc)
+
 ### Autocmd
 
 ```vim
 autocmd User FloatermOpen        " triggered after opening a new/existed floaterm
 ```
+
+🔝 [Back to table of contents](#toc)
 
 ## Advanced Topics
 
@@ -397,8 +412,9 @@ without starting a nested nvim. To archive that, just literally replace
 
 P.S.
 
-- `gf`/`gF` has been improved so that files can be opened in the normal window.
-- `floaterm` is too long to type? create an alias in your `bashrc`, e.g. `alias f=floaterm`
+- [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311)
+  describes how to use `gf` in the floating terminal window.
+- `floaterm` is too long to type? set alias in your `bashrc`, e.g. `alias f=floaterm`
 - For configurable open action, refer to [g:floaterm_opener](#gfloaterm_opener)
 
 <details>
@@ -569,6 +585,8 @@ This can also work for other languages which have interactive shells, such as lu
 <img src="https://user-images.githubusercontent.com/20282795/91380286-352a8800-e857-11ea-800c-ac54efa7dd72.gif"/>
 </details>
 
+🔝 [Back to table of contents](#toc)
+
 ### Use with other plugins
 
 #### [vim-clap](https://github.com/liuchengxu/vim-clap)
@@ -622,6 +640,8 @@ installation and usage.
 <summary>Demo</summary>
 <img src="https://user-images.githubusercontent.com/20282795/104123344-b3f70c00-5385-11eb-9f61-0a5703ba78f5.gif"/>
 </details>
+
+🔝 [Back to table of contents](#toc)
 
 ### How to define more wrappers
 
@@ -700,6 +720,8 @@ There are two ways for a command to be spawned:
   `termopen()`(neovim) or `term_start()`(vim). For more info, see
   `:help jobstart-options`(neovim) or `:help job-options`(vim)
 
+🔝 [Back to table of contents](#toc)
+
 ### How to write sources for fuzzy finder plugins
 
 Function `floaterm#buflist#gather()` returns a list contains all the floaterm buffers.
@@ -707,6 +729,8 @@ Function `floaterm#buflist#gather()` returns a list contains all the floaterm bu
 Function `floaterm#terminal#open_existing({bufnr})` opens the floaterm whose buffer number is `{bufnr}`.
 
 For reference, see [floaterm source for LeaderF](https://github.com/voldikss/LeaderF-floaterm/blob/master/autoload/lf_floaterm.vim).
+
+🔝 [Back to table of contents](#toc)
 
 ## Contributing
 
