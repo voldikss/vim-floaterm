@@ -397,9 +397,8 @@ without starting a nested nvim. To archive that, just literally replace
 
 P.S.
 
-- [#208](https://github.com/voldikss/vim-floaterm/issues/208#issuecomment-747829311)
-  describes how to use `gf` in the floating terminal window.
-- `floaterm` is too long to type? set alias in your `bashrc`, e.g. `alias f=floaterm`
+- `gf`/`gF` has been improved so that files can be opened in the normal window.
+- `floaterm` is too long to type? create an alias in your `bashrc`, e.g. `alias f=floaterm`
 - For configurable open action, refer to [g:floaterm_opener](#gfloaterm_opener)
 
 <details>

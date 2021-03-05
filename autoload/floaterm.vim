@@ -231,7 +231,9 @@ endfunction
 function! floaterm#hide(bang, bufnr, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()
-      call floaterm#window#hide(bufnr)
+      if bufwinnr(bufnr) > -1
+        call floaterm#window#hide(bufnr)
+      endif
     endfor
     return
   endif

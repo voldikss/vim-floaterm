@@ -196,12 +196,16 @@ endfunction
 function! s:autohide(currpos) abort
   if g:floaterm_autohide == 2
     " hide all other floaterms
-    call floaterm#hide(1, 0, '')
+    for bufnr in floaterm#buflist#gather()
+      if bufwinnr(bufnr) > -1
+        call floaterm#window#hide(bufnr)
+      endif
+    endfor
   elseif g:floaterm_autohide == 1
     " hide all other floaterms that will be overlaied by this one
     for bufnr in floaterm#buflist#gather()
-      if getbufvar(bufnr, 'floaterm_position') == a:currpos
-        call floaterm#hide(0, bufnr, '')
+      if bufwinnr(bufnr) > -1 && getbufvar(bufnr, 'floaterm_position') == a:currpos
+        call floaterm#window#hide(bufnr)
       endif
     endfor
   elseif g:floaterm_autohide == 0
