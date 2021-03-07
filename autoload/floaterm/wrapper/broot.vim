@@ -29,7 +29,12 @@ function! floaterm#wrapper#broot#(cmd, jobopts, config) abort
   lcd %:p:h
 
   let cmdlist = split(a:cmd)
-  let cmd = printf('broot --conf "%s" --out "%s"', s:broot_confpath, s:broot_tmpfile)
+  let cmd = printf(
+        \ '%s --conf "%s" --out "%s"',
+        \ a:cmd,
+        \ s:broot_confpath,
+        \ s:broot_tmpfile
+        \ )
 
   exe "lcd " . original_dir
   let cmd = [&shell, &shellcmdflag, cmd]
