@@ -14,6 +14,7 @@ function! floaterm#edita#neovim#editor#open(target, client)
     augroup edita_buffer
       autocmd! * <buffer>
       autocmd BufDelete <buffer> call s:BufDelete()
+      autocmd BufDelete <buffer> call timer_start(100, {->floaterm#curr()})
     augroup END
   else
     call timer_start(100, {->s:BufDelete()})
