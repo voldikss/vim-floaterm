@@ -252,12 +252,6 @@ function! floaterm#hide(bang, bufnr, name) abort
 endfunction
 
 function! floaterm#send(bang, visualmode, range, line1, line2, argstr) abort
-  if &filetype ==# 'floaterm'
-    let msg = "FloatermSend can't be used in the floaterm window"
-    call floaterm#util#show_msg(msg, 'warning')
-    return
-  endif
-
   let [cmd, config] = floaterm#cmdline#parse(split(a:argstr))
   let termname = get(config, 'termname', '')
   if !empty(termname)
