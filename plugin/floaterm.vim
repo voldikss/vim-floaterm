@@ -24,9 +24,9 @@ let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', ['.project', '
 let g:floaterm_opener           = get(g:, 'floaterm_opener', 'split')
 
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang -range
-                          \ FloatermNew    call floaterm#run('new', <bang>0, [visualmode(), <range>, <line1>, <line2>], <f-args>)
+                          \ FloatermNew    call floaterm#run('new', <bang>0, [visualmode(), <range>, <line1>, <line2>], <q-args>)
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete
-                          \ FloatermUpdate call floaterm#run('update', 0, [], <f-args>)
+                          \ FloatermUpdate call floaterm#run('update', 0, [], <q-args>)
 command! -nargs=? -count=0 -bang -complete=customlist,floaterm#cmdline#complete_names1
                           \ FloatermShow   call floaterm#show(<bang>0, <count>, <q-args>)
 command! -nargs=? -count=0 -bang -complete=customlist,floaterm#cmdline#complete_names1

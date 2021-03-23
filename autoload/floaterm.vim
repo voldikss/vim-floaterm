@@ -9,8 +9,8 @@
 " wrapper function for `floaterm#new()` and `floaterm#update()` since they
 " share the same argument: `config`
 " ----------------------------------------------------------------------------
-function! floaterm#run(action, bang, rangeargs, ...) abort
-  let [cmd, config] = floaterm#cmdline#parse(a:000)
+function! floaterm#run(action, bang, rangeargs, cmdargs) abort
+  let [cmd, config] = floaterm#cmdline#parse(a:cmdargs)
   if a:action == 'new'
     let [visualmode, range, line1, line2] = a:rangeargs
     if range > 0
@@ -252,7 +252,7 @@ function! floaterm#hide(bang, bufnr, name) abort
 endfunction
 
 function! floaterm#send(bang, visualmode, range, line1, line2, argstr) abort
-  let [cmd, config] = floaterm#cmdline#parse(split(a:argstr))
+  let [cmd, config] = floaterm#cmdline#parse(a:argstr)
   let termname = get(config, 'termname', '')
   if !empty(termname)
     let bufnr = floaterm#terminal#get_bufnr(termname)

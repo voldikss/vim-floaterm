@@ -9,12 +9,15 @@
 " used for `:FloatermNew` and `:FloatermUpdate`
 " parse argument list to `cmd`(string, default '') and `config`(dict)
 " ----------------------------------------------------------------------------
-function! floaterm#cmdline#parse(arglist) abort
+function! floaterm#cmdline#parse(argstr) abort
   let config = {}
   let cmd = ''
-  if a:arglist != []
+  let arglist = split(a:argstr, '\\\@<!\s')
+  if arglist != []
     let c = 0
-    for arg in a:arglist
+    for arg in arglist
+      let arg = substitute(arg, '\\\\', '\', 'g')
+      let arg = substitute(arg, '\\ ', ' ', 'g')
       if arg =~ '^--\S.*=\?.*$'
         let pair = split(arg, '=')
         if len(pair) != 2
@@ -39,7 +42,7 @@ function! floaterm#cmdline#parse(arglist) abort
         endif
         let config[key] = value
       else
-        let cmd = s:expand(join(a:arglist[c:]))
+        let cmd = s:expand(join(arglist[c:]))
         break
       endif
       let c += 1
