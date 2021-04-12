@@ -497,6 +497,22 @@ command! NNN FloatermNew nnn
 <img src="https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif"/>
 </details>
 
+
+#### [xplr](https://github.com/sayanarijit/xplr)
+
+There is also an [xplr wrapper](./autoload/floaterm/wrapper/xplr.vim)
+
+Try `:FloatermNew xplr` or define a new command:
+
+```vim
+command! XPLR FloatermNew xplr
+```
+
+<details>
+<summary>Demo</summary>
+<img src="https://s4.gifyu.com/images/ft-xplr9173d6a849e3f6b9.gif"/>
+</details>
+
 #### [lf](https://github.com/gokcehan/lf)
 
 There is also an [lf wrapper](./autoload/floaterm/wrapper/lf.vim).
