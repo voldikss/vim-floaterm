@@ -196,7 +196,7 @@ COMMANDS                                         *floaterm-commands*
 :[N]FloatermKill[!] [floaterm_name]              *FloatermKill*
 	Kill the current floaterm instance
 
-:FloatermSend [--name=floaterm_name] [cmd]       *FloatermSend*
+:FloatermSend[!] [--name=floaterm_name] [cmd]    *FloatermSend*
 	Send command to a job in floaterm.
 
 For the detailed information about the arguments, please refer to

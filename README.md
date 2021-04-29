@@ -161,7 +161,7 @@ The following command allows you to compile and run your C code in the floaterm 
 - If `floaterm_name` is given, kill the floaterm instance named `floaterm_name`.
 - If `!` is given, kill all floaterms
 
-#### `:FloatermSend [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
+#### `:FloatermSend[!] [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
 - If `--name=floaterm_name` is given, send lines to the floaterm instance
   whose `name` is `floaterm_name`. Otherwise use the current floaterm.
