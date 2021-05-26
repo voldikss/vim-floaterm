@@ -7,7 +7,7 @@
 
 let s:broot_default_confpath = fnamemodify('~/.config/broot/conf.hjson', ':p')
 let s:broot_wrapper_confpath = fnamemodify(expand('<sfile>'), ':h') . '/broot.hjson'
-let s:broot_confpath = s:broot_default_confpath . ';' . s:broot_wrapper_confpath
+let s:broot_confpath = s:broot_wrapper_confpath . ';' . s:broot_default_confpath
 
 let s:broot_wrapper_config = [
       \ '{',
