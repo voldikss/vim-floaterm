@@ -286,7 +286,11 @@ Default: `1`.
 
 #### **`g:floaterm_autoinsert`**
 
-Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
+Type `Number`. Whether to enter Terminal-mode after opening a floaterm.
+
+- `0`: Always do NOT insert mode
+- `1`: Only enter insert mode when firstly open floaterm
+- `2`: Always insert
 
 Default: `v:true`
 
