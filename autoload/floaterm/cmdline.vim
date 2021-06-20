@@ -93,6 +93,9 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--opener=') > -1
     let vals = ['edit', 'split', 'vsplit', 'tabe', 'drop']
+    if index(vals, g:floaterm_opener) == -1
+      call add(vals, g:floaterm_opener)
+    endif
     let candidates = map(vals, {idx -> '--opener=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
