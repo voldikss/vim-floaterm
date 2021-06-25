@@ -32,7 +32,7 @@ function! floaterm#cmdline#parse(argstr) abort
           if key == 'cwd'
             if value == '<root>'
               let value = floaterm#path#get_root()
-            elseif value == '<buff>'
+            elseif value == '<buffer>'
               let value = expand('%:p:h')
             else
               let value = fnamemodify(value, ':p')
