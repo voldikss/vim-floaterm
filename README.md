@@ -79,8 +79,9 @@ external terminals.
   attributes of a specific floaterm instance. Note that in order to input
   space, you have to form it as `\` followed by space, and `\` must be typed
   as `\\`
-  - `cwd` working directory that floaterm will be opened at, accept either a
-    path or literal `<root>` which represents the project root directory
+  - `cwd` working directory that floaterm will be opened at. Accepts a
+    path, the literal `<root>` which represents the project root directory, and
+    the literal `<buffer>` which specifies the directory of the active buffer
   - `name` name of the floaterm
   - `silent` If `--silent` is given, spawn a floaterm but not open the window,
     you may toggle it afterwards
