@@ -108,7 +108,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let prestr = matchstr(a:arg_lead, '--cwd=\zs.*\ze')
     let dirs = getcompletion(prestr, 'dir')
     if a:arg_lead == '--cwd='
-      let dirs = ['<root>'] + dirs
+      let dirs = ['<buffer>', '<root>'] + dirs
     endif
     return map(dirs, { k,v -> '--cwd=' . v })
   elseif match(a:arg_lead, '--name=') > -1
