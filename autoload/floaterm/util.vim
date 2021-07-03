@@ -160,7 +160,7 @@ endfunction
 
 function! floaterm#util#vim_version() abort
   if !has('nvim')
-    return ['vim', string(v:versionlong)]
+    return ['vim', string(v:version)]
   endif
   let c = execute('silent version')
   let lines = split(matchstr(c,  'NVIM v\zs[^\n-]*'))
