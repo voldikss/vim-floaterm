@@ -14,7 +14,15 @@ else
 endif
 
 function! floaterm#wrapper#rg#(cmd, jobopts, config) abort
-  let FZF_DEFAULT_COMMAND = "rg --column --line-number --no-heading --color=always --smart-case -- " . shellescape('')
+  let FZF_DEFAULT_COMMAND = join([
+        \ "rg",
+        \ "--column",
+        \ "--line-number",
+        \ "--no-heading",
+        \ "--color=always",
+        \ "--smart-case ''",
+        \ join(split(a:cmd)[1:])
+        \ ])
 
   let s:rg_tmpfile = tempname()
   let prog = 'fzf'
@@ -33,7 +41,7 @@ function! floaterm#wrapper#rg#(cmd, jobopts, config) abort
   let jobopts = {
         \ 'on_exit': funcref('s:rg_callback'),
         \ 'env': {'FZF_DEFAULT_COMMAND': FZF_DEFAULT_COMMAND}
-        \ } 
+        \ }
   call floaterm#util#deep_extend(a:jobopts, jobopts)
   return [v:false, cmd]
 endfunction
