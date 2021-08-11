@@ -34,10 +34,16 @@ function! s:vifm_callback(job, data, event, opener) abort
       endif
       let locations = []
       for filename in filenames
-        let dict = {'filename': fnamemodify(filename, ':p')}
-        call add(locations, dict)
+        if isdirectory(filename)
+          exe "cd " . filename
+        else
+          let dict = {'filename': fnamemodify(filename, ':p')}
+          call add(locations, dict)
+        endif
       endfor
-      call floaterm#util#open(locations, a:opener)
+      if len(locations) != 0
+        call floaterm#util#open(locations, a:opener)
+      endif
     endif
   endif
 endfunction
