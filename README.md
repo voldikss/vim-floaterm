@@ -43,6 +43,13 @@ Use (neo)vim terminal in the floating/popup window.
 
 ## Installation
 
+- packer.nvim
+
+```lua
+use 'voldikss/vim-floaterm'
+
+```
+
 - vim-plug
 
 ```vim
@@ -257,7 +264,7 @@ Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 Type `String`. Command used for opening a file in the outside nvim from within `:terminal`.
 
-Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'` or 
+Available: `'edit'`, `'split'`, `'vsplit'`, `'tabe'`, `'drop'` or
 [user-defined commands](https://github.com/voldikss/vim-floaterm/issues/259)
 
 Default: `'split'`
@@ -497,7 +504,6 @@ command! NNN FloatermNew nnn
 <summary>Demo</summary>
 <img src="https://user-images.githubusercontent.com/20282795/91380278-322f9780-e857-11ea-8b1c-d40fc91bb07d.gif"/>
 </details>
-
 
 #### [xplr](https://github.com/sayanarijit/xplr)
 
