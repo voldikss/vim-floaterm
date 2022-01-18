@@ -130,6 +130,10 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     endif
     let a:jobopts.hidden = 1
     try
+      " TODO: need refactor
+      let config = floaterm#config#parse(-1, a:config)
+      let a:jobopts['term_cols'] = config.width - 2
+      let a:jobopts['term_rows'] = config.height - 2
       let bufnr = term_start(a:cmd, a:jobopts)
     catch
       call floaterm#util#show_msg('Failed to execute: ' . a:cmd, 'error')
