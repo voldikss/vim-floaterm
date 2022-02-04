@@ -20,7 +20,7 @@ function! floaterm#wrapper#rg#(cmd, jobopts, config) abort
         \ "--line-number",
         \ "--no-heading",
         \ "--color=always",
-        \ "--smart-case \"\"",
+        \ "--smart-case",
         \ join(split(a:cmd)[1:])
         \ ])
 
