@@ -8,7 +8,7 @@
 if exists('g:loaded_floaterm')
   finish
 elseif !has('nvim') && !has('terminal')
-  floaterm#util#show_msg("floaterm requires vim to be compiled with 'terminal'", "error")
+  call floaterm#util#show_msg("floaterm requires vim to be compiled with 'terminal'", "error")
   finish
 endif
 let g:loaded_floaterm = 1
