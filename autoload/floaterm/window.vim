@@ -7,6 +7,7 @@
 
 let s:has_popup = has('textprop') && has('patch-8.2.0286')
 let s:has_float = has('nvim') && exists('*nvim_win_set_config')
+let s:has_float_border = has('nvim-0.5')
 
 function! floaterm#window#win_gettype() abort
   if empty(g:floaterm_wintype)
@@ -111,33 +112,58 @@ function! s:winexists(winid) abort
 endfunction
 
 function! s:open_float(bufnr, config) abort
-  let options = {
-        \ 'relative': 'editor',
-        \ 'anchor': a:config.anchor,
-        \ 'row': a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1),
-        \ 'col': a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1),
-        \ 'width': a:config.width - 2,
-        \ 'height': a:config.height - 2,
-        \ 'style':'minimal',
-        \ }
-  let winid = nvim_open_win(a:bufnr, v:true, options)
-  call s:init_win(winid, v:false)
-  call floaterm#config#set(a:bufnr, 'winid', winid)
+  if s:has_float_border
+    let options = {
+          \ 'relative': 'editor',
+          \ 'anchor': a:config.anchor,
+          \ 'row': a:config.row,
+          \ 'col': a:config.col,
+          \ 'width': a:config.width,
+          \ 'height': a:config.height,
+          \ 'style':'minimal',
+          \ 'border': [
+            \ a:config.borderchars[4],
+            \ a:config.borderchars[0],
+            \ a:config.borderchars[5],
+            \ a:config.borderchars[1],
+            \ a:config.borderchars[6],
+            \ a:config.borderchars[2],
+            \ a:config.borderchars[7],
+            \ a:config.borderchars[3],
+            \ ]
+          \ }
+    let winid = nvim_open_win(a:bufnr, v:true, options)
+    call s:init_win(winid, v:false)
+    call floaterm#config#set(a:bufnr, 'winid', winid)
+  else
+    let options = {
+          \ 'relative': 'editor',
+          \ 'anchor': a:config.anchor,
+          \ 'row': a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1),
+          \ 'col': a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1),
+          \ 'width': a:config.width - 2,
+          \ 'height': a:config.height - 2,
+          \ 'style':'minimal',
+          \ }
+    let winid = nvim_open_win(a:bufnr, v:true, options)
+    call s:init_win(winid, v:false)
+    call floaterm#config#set(a:bufnr, 'winid', winid)
 
-  let bd_options = {
-        \ 'relative': 'editor',
-        \ 'anchor': a:config.anchor,
-        \ 'row': a:config.row,
-        \ 'col': a:config.col,
-        \ 'width': a:config.width,
-        \ 'height': a:config.height,
-        \ 'focusable': v:false,
-        \ 'style':'minimal',
-        \ }
-  let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
-  let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
-  call s:init_win(bd_winid, v:true)
-  call floaterm#config#set(a:bufnr, 'borderwinid', bd_winid)
+    let bd_options = {
+          \ 'relative': 'editor',
+          \ 'anchor': a:config.anchor,
+          \ 'row': a:config.row,
+          \ 'col': a:config.col,
+          \ 'width': a:config.width,
+          \ 'height': a:config.height,
+          \ 'focusable': v:false,
+          \ 'style':'minimal',
+          \ }
+    let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
+    let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
+    call s:init_win(bd_winid, v:true)
+    call floaterm#config#set(a:bufnr, 'borderwinid', bd_winid)
+  endif
   return winid
 endfunction
 
@@ -179,9 +205,12 @@ endfunction
 
 function! s:init_win(winid, is_border) abort
   if has('nvim')
-    call setwinvar(a:winid, '&winhl', 'Normal:Floaterm,NormalNC:FloatermNC')
-    if a:is_border
+    if s:has_float_border
+      call setwinvar(a:winid, '&winhl', 'NormalFloat:Floaterm,FloatBorder:FloatermBorder')
+    elseif a:is_border
       call setwinvar(a:winid, '&winhl', 'Normal:FloatermBorder')
+    else
+      call setwinvar(a:winid, '&winhl', 'Normal:Floaterm,NormalNC:FloatermNC')
     endif
   else
     call setwinvar(a:winid, 'wincolor', 'Floaterm')
