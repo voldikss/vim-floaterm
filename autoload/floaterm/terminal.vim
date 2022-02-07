@@ -57,7 +57,7 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
     " if the floaterm is created with --silent, delete the buffer explicitly
     silent! execute bufnr . 'bdelete!'
     " update lightline
-    doautocmd BufDelete
+    silent doautocmd BufDelete
   endif
   if a:callback isnot v:null
     call a:callback(a:job, a:data, 'exit', opener)

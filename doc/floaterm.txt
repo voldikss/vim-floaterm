@@ -51,7 +51,7 @@ g:floaterm_title                                 *g:floaterm_title*
 g:floaterm_wintype                               *g:floaterm_wintype*
     Type |String|.
     'float'(nvim's floatwin or vim's popupwin) by default. Set it to
-    'split' or 'vsplit'if you don't want to use floating or popup window. 
+    'split' or 'vsplit'if you don't want to use floating or popup window.
 
 g:floaterm_width                                 *g:floaterm_width*
     Type: |Number| (number of columns) or |Float| (between 0 and 1).
@@ -93,7 +93,7 @@ g:floaterm_rootmarkers                           *g:floaterm_rootmarkers*
     Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 g:floaterm_opener
-    Type |String|. 
+    Type |String|.
     Command used for opening a file in the outside nvim from within `:terminal`.
     Available: 'edit', 'split', 'vsplit', 'tabe', 'drop' or user-defined commands
     Default: 'split'
@@ -104,7 +104,7 @@ g:floaterm_autoclose                             *g:floaterm_autoclose*
         0 - Always do NOT close floaterm window.
         1 - Close window only if the job exits normally
         2 - Always close floaterm window.
-	Default value is 0.
+	Default value is 1.
 
 g:floaterm_autohide                              *g:floaterm_autohide*
 	Type |Number|.

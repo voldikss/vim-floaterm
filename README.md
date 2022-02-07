@@ -278,7 +278,7 @@ Type `Number`. Whether to close floaterm window once the job gets finished.
   like `[Process exited 101]`
 - `2`: Always close floaterm window
 
-Default: `0`.
+Default: `1`.
 
 #### **`g:floaterm_autohide`**
 
