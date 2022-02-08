@@ -6,9 +6,9 @@
 " ============================================================================
 
 if executable('bat')
-  let s:viewer = 'bat --style=numbers --color=always'
+  let s:viewer = 'bat --style=numbers --color=always --highlight-line {2}'
 elseif executable('batcat')
-  let s:viewer = 'batcat --style=numbers --color=always'
+  let s:viewer = 'batcat --style=numbers --color=always --highlight-line {2}'
 else
   let s:viewer = 'cat -n'
 endif
