@@ -400,7 +400,7 @@ would get another nvim/vim instance running in the subprocess.
 
 [Floaterm](https://github.com/voldikss/vim-floaterm/tree/master/bin), which is
 a builtin script in this plugin, allows you to open files from within `: terminal`
-without starting a nested nvim. To archive that, just literally replace
+without starting a nested nvim. To achieve that, just literally replace
 `vim/nvim` with `floaterm`, e.g. `floaterm somefile.txt`
 
 P.S.
