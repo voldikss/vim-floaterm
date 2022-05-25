@@ -316,7 +316,7 @@ installation and usage.
 INTEGRATIONS                                     *floaterm-integrations*
 
 Please refer to
-https://github.com/voldikss/vim-floaterm#integrate-with-command-line-tools
+https://github.com/voldikss/vim-floaterm#use-with-command-line-tools
 
 ==============================================================================
 FAQ                                              *floaterm-faq*
