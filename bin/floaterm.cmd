@@ -7,9 +7,8 @@ REM Get absolute name
 for /f "delims=" %%i in ("%1") do set "NAME=%%~fi"
 REM echo fullpath: %NAME%
 
-IF "%NVIM_LISTEN_ADDRESS%" != "" GOTO neovim
-IF "%NVIM%" != "" GOTO neovim
-GOTO neovim
+IF NOT "%NVIM_LISTEN_ADDRESS%" == "" GOTO neovim
+IF NOT "%NVIM%" == "" GOTO neovim
 
 :vim
 if "%VIM_EXE%" == "" GOTO missing
