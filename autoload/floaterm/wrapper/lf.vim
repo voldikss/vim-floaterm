@@ -15,7 +15,13 @@ function! floaterm#wrapper#lf#(cmd, jobopts, config) abort
   if len(cmdlist) > 1
     let cmd .= ' ' . join(cmdlist[1:], ' ')
   else
-    let cmd .= ' "' . getcwd() . '"'
+    if !has_key(a:config, 'cwd')
+      if glob('%') != ''
+        let cmd .= ' "' . expand('%:p') . '"'
+      else
+        let cmd .= ' "' . getcwd() . '"'
+      endif
+    endif
   endif
 
   exe "lcd " . original_dir
