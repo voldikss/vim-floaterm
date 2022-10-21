@@ -253,7 +253,7 @@ endfunction
 
 function! floaterm#send(bang, visualmode, range, line1, line2, argstr) abort
   let [cmd, config] = floaterm#cmdline#parse(a:argstr)
-  let termname = get(config, 'termname', '')
+  let termname = get(config, 'name', '')
   if !empty(termname)
     let bufnr = floaterm#terminal#get_bufnr(termname)
     if bufnr == -1
