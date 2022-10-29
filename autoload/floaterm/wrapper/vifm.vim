@@ -35,9 +35,9 @@ function! s:vifm_callback(job, data, event, opener) abort
       let locations = []
       for filename in filenames
         if isdirectory(filename)
-          exe "cd " . filename
+          exe "cd " . fnameescape(filename)
         else
-          let dict = {'filename': fnamemodify(filename, ':p')}
+          let dict = {'filename': fnameescape(fnamemodify(filename, ':p'))}
           call add(locations, dict)
         endif
       endfor
