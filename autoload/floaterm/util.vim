@@ -154,7 +154,9 @@ function! floaterm#util#setenv() abort
   endif
   let editor = floaterm#edita#setup#EDITOR()
   let env.FLOATERM = editor
-  let env.GIT_EDITOR = editor
+  if g:floaterm_giteditor
+    let env.GIT_EDITOR = editor
+  endif
   return env
 endfunction
 
