@@ -30,7 +30,7 @@ function! floaterm#wrapper#broot#(cmd, jobopts, config) abort
 
   let cmdlist = split(a:cmd)
   let cmd = printf(
-        \ '%s --conf "%s" --out "%s"',
+        \ '%s --conf "%s" > "%s"',
         \ a:cmd,
         \ s:broot_confpath,
         \ s:broot_tmpfile
