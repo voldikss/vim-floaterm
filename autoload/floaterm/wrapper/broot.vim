@@ -15,7 +15,8 @@ let s:broot_wrapper_config = [
       \ '		{',
       \ '			invocation: terminal',
       \ '			key: enter',
-      \ '			execution: ":print_path"',
+      \ '			execution: "echo {line} {file}"',
+      \ '			leave_broot: true',
       \ '			apply_to: file',
       \ '		}',
       \ '	]',
@@ -52,7 +53,11 @@ function! s:broot_callback(job, data, event, opener) abort
       endif
       let locations = []
       for filename in filenames
-        let dict = {'filename': fnamemodify(filename, ':p')}
+        let lnum_file = split(filename)
+        let dict = {
+              \ 'filename': fnamemodify(lnum_file[1], ':p'),
+              \ 'lnum': lnum_file[0],
+              \ }
         call add(locations, dict)
       endfor
       call floaterm#util#open(locations, a:opener)
