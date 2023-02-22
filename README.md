@@ -453,6 +453,10 @@ command! FZF FloatermNew fzf
 
 #### [ripgrep](https://github.com/BurntSushi/ripgrep)
 
+_Requirements_:
+
+- [fzf](https://github.com/junegunn/fzf)
+
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/rg.vim)
 for `rg` command.
 
