@@ -456,6 +456,7 @@ command! FZF FloatermNew fzf
 _Requirements_:
 
 - [fzf](https://github.com/junegunn/fzf)
+- [vim-ripgrep](https://github.com/jremmen/vim-ripgrep)
 
 This plugin has implemented a [wrapper](./autoload/floaterm/wrapper/rg.vim)
 for `rg` command.
@@ -464,6 +465,13 @@ Try `:FloatermNew rg` or create yourself a new command like this:
 
 ```vim
 command! Rg FloatermNew --width=0.8 --height=0.8 rg
+```
+
+or map via `.vimrc`
+
+```vim
+" Hotkey: \ + rg
+nmap <leader>rg :Rg<CR>
 ```
 
 <details>
