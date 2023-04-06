@@ -136,5 +136,9 @@ function! floaterm#path#get_root() abort
 endfunction
 
 function! floaterm#path#chdir(path) abort
-  silent execute 'tcd '. fnameescape(a:path)
+  if exists(":tcd") == 2
+    silent execute 'tcd '. fnameescape(a:path)
+  else
+    silent execute 'cd '. fnameescape(a:path)
+  endif
 endfunction
