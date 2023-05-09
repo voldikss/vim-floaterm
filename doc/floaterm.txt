@@ -125,7 +125,7 @@ g:floaterm_titleposition                        *g:floaterm_titleposition*
     Type |String|.
     The position of the floaterm title.
     Available: 'left', 'center', 'right'
-    Default value is |left|.
+    Default value is 'left'.
 
 ==============================================================================
 MAPPINGS                                         *floaterm-mappings*

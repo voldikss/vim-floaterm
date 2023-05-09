@@ -312,7 +312,7 @@ Type `String`. The position of the floaterm title.
 
 Available: `'left'`, `'center'`, `'right'`.
 
-Default: `left`
+Default: `'left'`
 
 ### Keymaps
 
