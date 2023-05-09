@@ -76,6 +76,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     \ '--position=',
     \ '--autoclose=',
     \ '--borderchars=',
+    \ '--titleposition=',
     \ '--silent',
     \ '--disposable',
     \ ]
@@ -120,6 +121,8 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--title=') > -1
     return []
   elseif match(a:arg_lead, '--borderchars=') > -1
+    return []
+  elseif match(a:arg_lead, '--titleposition=') > -1
     return []
   elseif match(a:arg_lead, '--position=') > -1
     let wintype = matchstr(a:cmd_line, '--wintype=\zs\w\+\ze')

@@ -102,6 +102,7 @@ external terminals.
   - `position` see `g:floaterm_position`
   - `autoclose` see `g:floaterm_autoclose`
   - `borderchars` see `g:floaterm_borderchars`
+  - `titleposition` see `g:floaterm_titleposition`
 - This command basically shares the consistent behaviors with the builtin `:terminal`:
   - The special characters(`:help cmdline-special`) such as `%` and `<cfile>`
     will be auto-expanded, to get standalone characters, use `\` followed by
@@ -304,6 +305,14 @@ Default: `1`.
 Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
 
 Default: `v:true`
+
+#### **`g:floaterm_titleposition`**
+
+Type `String`. The position of the floaterm title.
+
+Available: `'left'`, `'center'`, `'right'`.
+
+Default: `left`
 
 ### Keymaps
 

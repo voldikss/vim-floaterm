@@ -27,7 +27,20 @@ function! floaterm#buffer#create_border_buf(options) abort
   let title_width = strdisplaywidth(title)
   let borderchars = a:options.borderchars
   let [c_top, c_right, c_bottom, c_left, c_topleft, c_topright, c_botright, c_botleft] = borderchars
-  let content = [c_topleft . title . repeat(c_top, repeat_width - title_width) . c_topright]
+  let content = []
+  if a:options.titleposition == 'center'
+    " Align title to center
+    " Shift left if the number of fill characters is odd
+    let nb_fill_char = repeat_width - title_width
+    let side_width = nb_fill_char / 2.0
+    let left_width = float2nr(floor(side_width))
+    let right_width = float2nr(ceil(side_width))
+    let content += [c_topleft . repeat(c_top, left_width) . title . repeat(c_top, right_width) . c_topright]
+  elseif a:options.titleposition == 'right'
+    let content += [c_topleft . repeat(c_top, repeat_width - title_width) . title . c_topright]
+  else " Default align to the left
+    let content += [c_topleft . title . repeat(c_top, repeat_width - title_width) . c_topright]
+  endif
   let content += repeat([c_left . repeat(' ', repeat_width) . c_right], repeat_height)
   let content += [c_botleft . repeat(c_bottom, repeat_width) . c_botright]
   return floaterm#buffer#create_scratch_buf(content)

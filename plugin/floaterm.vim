@@ -26,6 +26,7 @@ let g:floaterm_borderchars      = get(g:, 'floaterm_borderchars', '─│─│�
 let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', ['.project', '.git', '.hg', '.svn', '.root'])
 let g:floaterm_opener           = get(g:, 'floaterm_opener', 'split')
 let g:floaterm_giteditor        = get(g:, 'floaterm_giteditor', v:true)
+let g:floaterm_titleposition    = get(g:, 'floaterm_titleposition', 'left')
 
 
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang -range

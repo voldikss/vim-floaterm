@@ -151,6 +151,7 @@ function! s:open_popup(bufnr, config) abort
         \ 'maxheight': a:config.height - 2,
         \ 'minheight': a:config.height - 2,
         \ 'title': a:config.title,
+        \ 'titleposition': a:config.titleposition,
         \ 'border': [1, 1, 1, 1],
         \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
