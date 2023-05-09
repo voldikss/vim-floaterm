@@ -1,0 +1,31 @@
+" vim:ft=vim
+
+Execute(test-titleposition):
+  function! GetTitleTopline() abort
+    if has('nvim')
+      let bd_winid = getbufvar(bufnr('%'), 'floaterm_borderwinid')
+      return getbufline(winbufnr(bd_winid), 1)[0]
+    else
+      return popup_getoptions(win_getid()).title
+    endif
+  endfunction
+
+  Log 'left-align'
+    FloatermNew --title=title --titleposition=left
+    Assert GetTitleTopline() =~ '^.title'
+
+  Log 'right-align'
+    FloatermNew --title=title --titleposition=right
+    Assert GetTitleTopline() =~ 'title.$'
+
+  Log 'center - even width'
+    FloatermNew --width=8 --title=1234 --titleposition=center
+    Assert GetTitleTopline() =~ '..1234..'
+
+  Log 'center - odd width'
+    FloatermNew --width=8 --title=123 --titleposition=center
+    Assert GetTitleTopline() =~ '..123...'
+
+  FloatermKill!
+  stopinsert
+
