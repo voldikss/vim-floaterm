@@ -121,6 +121,12 @@ g:floaterm_autoinsert                            *g:floaterm_autoinsert*
 	Whether to enter |Terminal-mode| after opening a floaterm.
 	Default value is |v:true|.
 
+g:floaterm_titleposition                        *g:floaterm_titleposition*
+    Type |String|.
+    The position of the floaterm title.
+    Available: 'left', 'center', 'right'
+    Default value is 'left'.
+
 ==============================================================================
 MAPPINGS                                         *floaterm-mappings*
 

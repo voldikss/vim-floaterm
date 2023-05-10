@@ -94,6 +94,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--position=',
         \ '--autoclose=',
         \ '--borderchars=',
+        \ '--titleposition=',
         \ '--silent',
         \ '--disposable',
         \ ]
@@ -162,7 +163,8 @@ Execute(Test floaterm#cmdline#complete):
         \ '--wintype=1 '.
         \ '--position=1 '.
         \ '--autoclose=1 '.
-        \ '--borderchars=1 ', sort(getcompletion('', 'shellcmd')))
+        \ '--borderchars=1 '.
+        \ '--titleposition=1 ', sort(getcompletion('', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermUpdate ', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermUpdate -', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermUpdate --', all_candidates)
@@ -179,7 +181,8 @@ Execute(Test floaterm#cmdline#complete):
         \ '--wintype=1 '.
         \ '--position=1 '.
         \ '--autoclose=1 '.
-        \ '--borderchars=1 ', [])
+        \ '--borderchars=1 '.
+        \ '--titleposition=1 ', [])
 
 Execute(Test floaterm#cmdline#complete_names1):
   FloatermNew --name=floaterm
@@ -201,3 +204,5 @@ Execute(Test floaterm#cmdline#complete_names2):
 
   FloatermKill!
   stopinsert
+
+

@@ -39,14 +39,15 @@ endfunction
 " @return: config, generated from `a:config`, has more additional info, used to
 "   config the floaterm style
 function! floaterm#config#parse(bufnr, config) abort
-  let a:config.title       = get(a:config, 'title', g:floaterm_title)
-  let a:config.width       = get(a:config, 'width', g:floaterm_width)
-  let a:config.height      = get(a:config, 'height', g:floaterm_height)
-  let a:config.opener      = get(a:config, 'opener', g:floaterm_opener)
-  let a:config.wintype     = get(a:config, 'wintype', floaterm#window#win_gettype())
-  let a:config.position    = get(a:config, 'position', g:floaterm_position)
-  let a:config.autoclose   = get(a:config, 'autoclose', g:floaterm_autoclose)
-  let a:config.borderchars = get(a:config, 'borderchars', g:floaterm_borderchars)
+  let a:config.title          = get(a:config, 'title', g:floaterm_title)
+  let a:config.width          = get(a:config, 'width', g:floaterm_width)
+  let a:config.height         = get(a:config, 'height', g:floaterm_height)
+  let a:config.opener         = get(a:config, 'opener', g:floaterm_opener)
+  let a:config.wintype        = get(a:config, 'wintype', floaterm#window#win_gettype())
+  let a:config.position       = get(a:config, 'position', g:floaterm_position)
+  let a:config.autoclose      = get(a:config, 'autoclose', g:floaterm_autoclose)
+  let a:config.borderchars    = get(a:config, 'borderchars', g:floaterm_borderchars)
+  let a:config.titleposition  = get(a:config, 'titleposition', g:floaterm_titleposition)
 
   " Edge cases
   if type(a:config.height) == v:t_number && a:config.height < 3
