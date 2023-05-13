@@ -12,19 +12,35 @@ Execute(test-titleposition):
 
   Log 'left-align'
     FloatermNew --title=title --titleposition=left
-    Assert GetTitleTopline() =~ '^.title'
+    if has('nvim')
+      Assert GetTitleTopline() =~ '^.title'
+    else
+      Assert GetTitleTopline() =~ '^title'
+    endif
 
   Log 'right-align'
     FloatermNew --title=title --titleposition=right
-    Assert GetTitleTopline() =~ 'title.$'
+    if has('nvim')
+      Assert GetTitleTopline() =~ 'title.$'
+    else
+      Assert GetTitleTopline() =~ 'title$'
+    endif
 
   Log 'center - even width'
     FloatermNew --width=8 --title=1234 --titleposition=center
-    Assert GetTitleTopline() =~ '..1234..'
+    if has('nvim')
+      Assert GetTitleTopline() =~ '..1234..'
+    else
+      Assert GetTitleTopline() =~ '.1234.'
+    endif
 
   Log 'center - odd width'
     FloatermNew --width=8 --title=123 --titleposition=center
-    Assert GetTitleTopline() =~ '..123...'
+    if has('nvim')
+      Assert GetTitleTopline() =~ '..123...'
+    else
+      Assert GetTitleTopline() =~ '.123..'
+    endif
 
   FloatermKill!
   stopinsert
