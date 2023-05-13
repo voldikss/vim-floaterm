@@ -142,6 +142,10 @@ function! s:open_float(bufnr, config) abort
 endfunction
 
 function! s:open_popup(bufnr, config) abort
+  let title = a:config.title
+  if a:config.titleposition != 'left'
+    let title = floaterm#buffer#create_top_border(a:config, a:config.width)
+  endif
   let options = {
         \ 'pos': a:config.anchor,
         \ 'line': a:config.row,
@@ -150,7 +154,7 @@ function! s:open_popup(bufnr, config) abort
         \ 'minwidth': a:config.width - 2,
         \ 'maxheight': a:config.height - 2,
         \ 'minheight': a:config.height - 2,
-        \ 'title': a:config.title,
+        \ 'title': title,
         \ 'border': [1, 1, 1, 1],
         \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
