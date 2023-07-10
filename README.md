@@ -581,6 +581,16 @@ command! Ranger FloatermNew ranger
 <img src="https://user-images.githubusercontent.com/20282795/91380284-3360c480-e857-11ea-9966-34856592d487.gif"/>
 </details>
 
+#### [joshuto](https://github.com/kamiyaa/joshuto)
+
+This plugin can also be a handy joshuto plugin since it also has a [joshuto wrapper](./autoload/floaterm/wrapper/joshuto.vim)
+
+Try `:FloatermNew joshuto` or define a new command:
+
+```vim
+command! Joshuto FloatermNew joshuto
+```
+
 #### [vifm](https://github.com/vifm/vifm)
 
 There is also a [vifm wrapper](./autoload/floaterm/wrapper/vifm.vim)
