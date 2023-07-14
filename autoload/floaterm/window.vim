@@ -222,7 +222,11 @@ function! floaterm#window#open(bufnr, config) abort
 
   call s:autohide(a:config.position)
 
-  if a:config.wintype =~ 'split'
+  if exists('g:floaterm_openoverride') && type(g:floaterm_openoverride) == v:t_func
+    let winid = call(g:floaterm_openoverride, [a:bufnr, a:config])
+    call s:init_win(winid, v:false)
+    call floaterm#config#set(a:bufnr, 'winid', winid)
+  elseif a:config.wintype =~ 'split'
     call s:open_split(a:bufnr, a:config)
   else " backward compatiblity: float|floating|popup -> float
     if s:has_float
