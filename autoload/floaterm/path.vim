@@ -136,9 +136,6 @@ function! floaterm#path#get_root() abort
 endfunction
 
 function! floaterm#path#chdir(path) abort
-  if exists(":tcd") == 2
-    silent execute 'tcd '. fnameescape(a:path)
-  else
-    silent execute 'cd '. fnameescape(a:path)
-  endif
+  let l:cd = { 0: 'cd', 1: 'lcd', 2: 'tcd' }[haslocaldir()]
+  silent execute l:cd . fnameescape(a:path)
 endfunction
