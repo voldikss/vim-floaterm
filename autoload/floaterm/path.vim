@@ -137,5 +137,5 @@ endfunction
 
 function! floaterm#path#chdir(path) abort
   let l:cd = { 0: 'cd', 1: 'lcd', 2: 'tcd' }[haslocaldir()]
-  silent execute l:cd . fnameescape(a:path)
+  silent execute l:cd . ' ' . fnameescape(a:path)
 endfunction
