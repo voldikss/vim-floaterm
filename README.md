@@ -606,6 +606,16 @@ command! Vifm FloatermNew vifm
 <img src="https://user-images.githubusercontent.com/43941510/77137476-3c888100-6ac2-11ea-90f2-2345c881aa8f.gif"/>
 </details>
 
+#### [yazi](https://github.com/sxyazi/yazi)
+
+There is also a [yazi wrapper](./autoload/floaterm/wrapper/yazi.vim)
+
+Try `:FloatermNew yazi` or define a new command:
+
+```vim
+command! Yazi FloatermNew yazi
+```
+
 #### [lazygit](https://github.com/jesseduffield/lazygit)
 
 Furthermore, you can also use other command-line programs, such as lazygit, htop, ncdu, etc.
