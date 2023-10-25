@@ -87,8 +87,10 @@ external terminals.
   space, you have to form it as `\` followed by space, and `\` must be typed
   as `\\`
   - `cwd` working directory that floaterm will be opened at. Accepts a
-    path, the literal `<root>` which represents the project root directory, and
-    the literal `<buffer>` which specifies the directory of the active buffer
+    path, the literal `<root>` which represents the project root directory,
+    the literal `<buffer>` which specifies the directory of the active buffer,
+    or the literal `<buffer-root>` which corresponds to the project root
+    directory of the active buffer.
   - `name` name of the floaterm
   - `silent` If `--silent` is given, spawn a floaterm but not open the window,
     you may toggle it afterwards
@@ -258,6 +260,7 @@ Default: `─│─│┌┐┘└`
 #### **`g:floaterm_rootmarkers`**
 
 Type `List` of `String`. Markers used to detect the project root directory for `--cwd=<root>`
+or `--cwd=<buffer-root>`.
 
 Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
