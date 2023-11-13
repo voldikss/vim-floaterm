@@ -8,6 +8,7 @@ function! floaterm#edita#neovim#editor#open(target, client)
   if index([
         \ 'COMMIT_EDITMSG',
         \ 'git-rebase-todo',
+        \ 'git-revise-todo',
         \ 'addp-hunk-edit.diff'
         \ ], expand('%:t')) > -1
     setlocal bufhidden=wipe
