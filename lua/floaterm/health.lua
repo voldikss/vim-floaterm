@@ -22,7 +22,7 @@ end
 
 local check_common = function()
   vim.health.start('common')
-  vim.health.info('Platform: ' .. vim.uv.os_uname().sysname)
+  vim.health.info('Platform: ' .. vim.loop.os_uname().sysname)
   vim.health.info('Nvim: ' .. get_nvim_info())
   vim.health.info('Plugin: ' .. get_plugin_info())
 end
