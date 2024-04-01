@@ -7,6 +7,7 @@ function! floaterm#edita#neovim#editor#open(target, client)
   let b:edita = sockconnect(mode, a:client, { 'rpc': 1 })
   if index([
         \ 'COMMIT_EDITMSG',
+        \ 'MERGE_MSG',
         \ 'git-rebase-todo',
         \ 'git-revise-todo',
         \ 'addp-hunk-edit.diff'

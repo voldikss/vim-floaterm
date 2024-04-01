@@ -7,6 +7,7 @@ function! floaterm#edita#vim#editor#open(target, bufnr)
   let b:edita = a:bufnr
   if index([
         \ 'COMMIT_EDITMSG',
+        \ 'MERGE_MSG',
         \ 'git-rebase-todo',
         \ 'git-revise-todo',
         \ 'addp-hunk-edit.diff'
