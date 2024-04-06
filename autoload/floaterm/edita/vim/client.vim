@@ -22,7 +22,8 @@ endfunction
 
 function! floaterm#edita#vim#client#EDITOR() abort
   let args = [
-        \ shellescape(v:progpath),
+        \ shellescape(fnamemodify(v:progpath, ':t') ==# v:progname ?
+        \             v:progpath : exepath(v:progname)),
         \ '--not-a-term',
         \ '--clean',
         \ '--noplugin',
