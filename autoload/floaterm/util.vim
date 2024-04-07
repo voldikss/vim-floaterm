@@ -162,6 +162,7 @@ function! floaterm#util#setenv() abort
   let env.FLOATERM = editor
   if g:floaterm_giteditor
     let env.GIT_EDITOR = editor
+    let env.HGEDITOR = editor
   endif
   return env
 endfunction

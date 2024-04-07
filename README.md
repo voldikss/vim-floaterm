@@ -268,6 +268,7 @@ Default: `['.project', '.git', '.hg', '.svn', '.root']`
 
 Type `Boolean`. Whether to override `$GIT_EDITOR` in floaterm terminals so git commands can
 open open an editor in the same neovim instance. See [git](#git) for details.
+This flag also overrides `$HGEDITOR` for Mercurial.
 
 Default: `v:true`
 
