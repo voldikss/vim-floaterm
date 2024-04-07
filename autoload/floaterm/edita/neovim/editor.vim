@@ -5,13 +5,14 @@ function! floaterm#edita#neovim#editor#open(target, client)
   call floaterm#util#open([{'filename': fnameescape(a:target)}], opener)
   let mode = floaterm#edita#neovim#util#mode(a:client)
   let b:edita = sockconnect(mode, a:client, { 'rpc': 1 })
-  if index([
+  let filename = expand('%:t')
+  if (index([
         \ 'COMMIT_EDITMSG',
         \ 'MERGE_MSG',
         \ 'git-rebase-todo',
         \ 'git-revise-todo',
-        \ 'addp-hunk-edit.diff'
-        \ ], expand('%:t')) > -1
+        \ 'addp-hunk-edit.diff',
+        \ ], filename) > -1) || (stridx(filename, 'commit.hg.txt') > -1)
     setlocal bufhidden=wipe
     augroup edita_buffer
       autocmd! * <buffer>
