@@ -136,6 +136,10 @@ function! floaterm#path#get_root(path=getcwd()) abort
 endfunction
 
 function! floaterm#path#chdir(path) abort
-  let l:cd = { 0: 'cd', 1: 'lcd', 2: 'tcd' }[haslocaldir()]
+  if has('nvim')
+    let l:cd = haslocaldir()? 'lcd' : (haslocaldir(-1, 0)? 'tcd' : 'cd')
+  else
+    let l:cd = { 0: 'cd', 1: 'lcd', 2: 'tcd' }[haslocaldir()]
+  endif
   silent execute l:cd . ' ' . fnameescape(a:path)
 endfunction
