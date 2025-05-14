@@ -111,11 +111,18 @@ function! s:winexists(winid) abort
 endfunction
 
 function! s:open_float(bufnr, config) abort
+  let row = a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1)
+  let col = a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1)
+  if exists('&winborder') && &winborder !=# '' && &winborder !=# 'none'
+    let row = a:config.row
+    let col = a:config.col
+  end
+
   let options = {
         \ 'relative': 'editor',
         \ 'anchor': a:config.anchor,
-        \ 'row': a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1),
-        \ 'col': a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1),
+        \ 'row': row,
+        \ 'col': col,
         \ 'width': a:config.width - 2,
         \ 'height': a:config.height - 2,
         \ 'style':'minimal',
@@ -124,20 +131,22 @@ function! s:open_float(bufnr, config) abort
   call s:init_win(winid, v:false)
   call floaterm#config#set(a:bufnr, 'winid', winid)
 
-  let bd_options = {
-        \ 'relative': 'editor',
-        \ 'anchor': a:config.anchor,
-        \ 'row': a:config.row,
-        \ 'col': a:config.col,
-        \ 'width': a:config.width,
-        \ 'height': a:config.height,
-        \ 'focusable': v:false,
-        \ 'style':'minimal',
-        \ }
-  let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
-  let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
-  call s:init_win(bd_winid, v:true)
-  call floaterm#config#set(a:bufnr, 'borderwinid', bd_winid)
+  if !(exists('&winborder') && &winborder !=# '' && &winborder !=# 'none')
+    let bd_options = {
+          \ 'relative': 'editor',
+          \ 'anchor': a:config.anchor,
+          \ 'row': a:config.row,
+          \ 'col': a:config.col,
+          \ 'width': a:config.width,
+          \ 'height': a:config.height,
+          \ 'focusable': v:false,
+          \ 'style':'minimal',
+          \ }
+    let bd_bufnr = floaterm#buffer#create_border_buf(a:config)
+    let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
+    call s:init_win(bd_winid, v:true)
+    call floaterm#config#set(a:bufnr, 'borderwinid', bd_winid)
+  end
   return winid
 endfunction
 
