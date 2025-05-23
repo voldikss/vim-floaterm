@@ -266,7 +266,7 @@ function! floaterm#window#hide(bufnr) abort
       endtry
     endif
   endif
-  silent checktime
+  checktime
 endfunction
 
 " find **one** visible floaterm window
