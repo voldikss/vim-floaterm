@@ -155,19 +155,34 @@ function! s:open_popup(bufnr, config) abort
   if a:config.titleposition != 'left'
     let title = floaterm#buffer#create_top_border(a:config, a:config.width)
   endif
+  let width = a:config.width
+  let height = a:config.height
+  let fullscreen = has_key(a:config, 'fullscreen') ? a:config.fullscreen : v:false
+  let show_title = has_key(a:config, 'show_title') ? a:config.show_title : v:true
+  let show_border = has_key(a:config, 'show_border') ?  a:config.show_border : v:true
+  if show_border
+    let width -= 2
+    let height -= 2
+  else
+    let height -= 1    " the title line
+    if fullscreen
+      let width = &columns
+      let height = &lines - &cmdheight - 1
+    endif
+  endif
   let options = {
         \ 'pos': a:config.anchor,
         \ 'line': a:config.row,
         \ 'col': a:config.col,
-        \ 'maxwidth': a:config.width - 2,
-        \ 'minwidth': a:config.width - 2,
-        \ 'maxheight': a:config.height - 2,
-        \ 'minheight': a:config.height - 2,
+        \ 'maxwidth': width,
+        \ 'minwidth': width,
+        \ 'maxheight': height,
+        \ 'minheight': height,
         \ 'title': title,
-        \ 'border': [1, 1, 1, 1],
+        \ 'border': show_border ?  [1, 1, 1, 1] : show_title ?  [ 1, 0, 0, 0 ] : [0, 0, 0, 0],
         \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
-        \ 'padding': [0,1,0,1],
+        \ 'padding': show_border ?  [0, 1, 0, 1] : [0, 0, 0, 0],
         \ 'highlight': 'Floaterm',
         \ 'zindex': len(floaterm#buflist#gather()) + 1
         \ }
