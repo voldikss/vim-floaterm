@@ -164,10 +164,11 @@ function! s:open_popup(bufnr, config) abort
     let width -= 2
     let height -= 2
   else
-    let height -= 1    " the title line
     if fullscreen
       let width = &columns
       let height = &lines - &cmdheight - 1
+    else
+      let height -= 1
     endif
   endif
   let options = {
