@@ -155,7 +155,7 @@ function! s:open_popup(bufnr, config) abort
   if a:config.titleposition != 'left'
     let title = floaterm#buffer#create_top_border(a:config, a:config.width)
   endif
-  let fullscreen = has_key(a:config, 'fullscreen') ? a:config.fullscreen : v:false
+  let fullscreen = has_key(a:config, 'fullscreen') ?  a:config.fullscreen : v:false
   if fullscreen
     let col = 0
     let line = 0
@@ -172,7 +172,9 @@ function! s:open_popup(bufnr, config) abort
     let width -= 2 + a:config.padding[1] + a:config.padding[3]
     let height -= 2 + a:config.padding[0] + a:config.padding[2]
   endif
-  let show_title = has_key(a:config, 'show_title') ? a:config.show_title : v:true
+  let show_title = (has_key(a:config, 'show_title') ?
+    \ (a:config.show_title == 'with-border' ?
+      \ show_border : a:config.show_title) : v:true) || show_border
   let options = {
         \ 'pos': a:config.anchor,
         \ 'line': line,
@@ -181,7 +183,7 @@ function! s:open_popup(bufnr, config) abort
         \ 'minwidth': width,
         \ 'maxheight': height,
         \ 'minheight': height,
-        \ 'title': title,
+        \ 'title': show_title ?  title : '',
         \ 'border': show_border ?  [1, 1, 1, 1] : show_title ?  [ 1, 0, 0, 0 ] : [0, 0, 0, 0],
         \ 'borderchars': a:config.borderchars,
         \ 'borderhighlight': ['FloatermBorder'],
