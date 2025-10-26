@@ -119,6 +119,30 @@ function! floaterm#toggle(bang, bufnr, name)  abort
 endfunction
 
 " ----------------------------------------------------------------------------
+" toggle fullscreen on/off the floaterm
+" ----------------------------------------------------------------------------
+function! floaterm#toggle_fullscreen()  abort
+  let bufnr = bufnr('%')
+  call floaterm#update({'fullscreen': !getbufvar(bufnr, 'floaterm_fullscreen', v:false)})
+endfunction
+
+" ----------------------------------------------------------------------------
+" toggle border on/off the floaterm
+" ----------------------------------------------------------------------------
+function! floaterm#toggle_border()  abort
+  let bufnr = bufnr('%')
+  call floaterm#update({'show_border': !getbufvar(bufnr, 'floaterm_show_border', v:false)})
+endfunction
+
+" ----------------------------------------------------------------------------
+" toggle title on/off the floaterm
+" ----------------------------------------------------------------------------
+function! floaterm#toggle_title()  abort
+  let bufnr = bufnr('%')
+  call floaterm#update({'show_title': !getbufvar(bufnr, 'floaterm_show_title', v:false)})
+endfunction
+
+" ----------------------------------------------------------------------------
 " update the attributes of a floaterm
 " ----------------------------------------------------------------------------
 function! floaterm#update(config) abort
