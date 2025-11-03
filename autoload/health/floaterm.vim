@@ -8,18 +8,18 @@
 let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h:h:h')
 
 function! s:check_common() abort
-  call health#start('common')
-  call health#info('Platform: ' . s:get_platform_info())
-  call health#info('Nvim: ' . s:get_nvim_info())
-  call health#info('Plugin: ' . s:get_plugin_info())
+  call vim.health.start('common')
+  call vim.health.info('Platform: ' . s:get_platform_info())
+  call vim.health.info('Nvim: ' . s:get_nvim_info())
+  call vim.health.info('Plugin: ' . s:get_plugin_info())
 endfunction
 
 function! s:check_terminal() abort
-  call health#start('terminal')
+  call vim.health.start('terminal')
   if exists(':terminal') > 0
-    call health#ok('Terminal emulator is available')
+    call vim.health.ok('Terminal emulator is available')
   else
-    call health#error(
+    call vim.health.error(
           \ 'Terminal emulator is missing',
           \ ['Install the latest version neovim']
           \ )
@@ -27,11 +27,11 @@ function! s:check_terminal() abort
 endfunction
 
 function! s:check_floating() abort
-  call health#start('floating')
+  call vim.health.start('floating')
   if exists('*nvim_win_set_config')
-    call health#ok('Floating window is available')
+    call vim.health.ok('Floating window is available')
   else
-    call health#warn(
+    call vim.health.warn(
           \ 'Floating window is missing, will fallback to use normal window',
           \ ['Install the latest version neovim']
           \ )
