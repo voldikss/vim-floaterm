@@ -378,6 +378,28 @@ nnoremap   <silent>   <F12>   :FloatermToggle<CR>
 tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
 ```
 
+To toggle a term in the current buffer directory :
+
+```vim
+function! s:get_dir(path) abort
+    if isdirectory(a:path)
+      let dir = fnamemodify(a:path, ':p')
+    elseif filereadable(a:path)
+      let dir = fnamemodify(a:path, ':p:h')
+    else
+      let dir = fnamemodify(getcwd(), ':p')
+    endif
+    let dir = fnamemodify(dir, ':~')
+    let dir = escape(dir, ' %#|"')
+    return dir
+endfunction
+
+nnoremap <silent><expr> <F6> g:floaterm#buflist#curr() == -1 ?
+      \   ':<c-u>FloatermNew --cwd=<C-R>=<sid>get_dir(expand("%"))<CR><CR>'
+      \ : ':<c-u>FloatermToggle<CR>'
+tnoremap <silent> <F6>  <C-\><C-n>:<c-u>FloatermToggle<cr>
+```
+
 ### Highlights
 
 There are two `highlight-groups` to specify the color of floaterm (also the
