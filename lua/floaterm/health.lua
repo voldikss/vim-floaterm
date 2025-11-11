@@ -12,11 +12,8 @@ local get_nvim_info = function()
 end
 
 local get_plugin_info = function()
-  local home = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.expand('<sfile>:p')), ':h:h:h')
-  local save_cwd = vim.fn.getcwd()
-  vim.fn.execute('cd ' .. home, 'silent!')
-  local result = vim.fn.system('git rev-parse --short HEAD')
-  vim.fn.execute('cd ' .. save_cwd, 'silent!')
+  local home = string.sub(debug.getinfo(1).source, 2, string.len('/health.lua') * -1)
+  local result = vim.fn.system('cd ' .. home .. ' ; git rev-parse --short HEAD')
   return result
 end
 
