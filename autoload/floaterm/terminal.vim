@@ -151,13 +151,16 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
   return bufnr
 endfunction
 
-function! floaterm#terminal#send(bufnr, cmds) abort
+function! floaterm#terminal#send(bufnr, cmds, ...) abort
   let ch = get(s:channel_map, a:bufnr, v:null)
   if empty(ch) || empty(a:cmds)
     return
   endif
+  let add_newline = !a:0 || a:1 ? 1:0
   if has('nvim')
-    call add(a:cmds, '')
+    if add_newline
+      call add(a:cmds, '')
+    endif
     call chansend(ch, a:cmds)
     let curr_winnr = winnr()
     let ch_winnr = bufwinnr(a:bufnr)
@@ -171,7 +174,11 @@ function! floaterm#terminal#send(bufnr, cmds) abort
     if has('win32') && bufname(a:bufnr) !~ 'ipython'
       let newline = "\r\n"
     endif
-    call ch_sendraw(ch, join(a:cmds, newline) . newline)
+    if add_newline
+      call ch_sendraw(ch, join(a:cmds, newline) . newline)
+    else
+      call ch_sendraw(ch, join(a:cmds, newline))
+    endif
   endif
 endfunction
 
