@@ -27,6 +27,10 @@ let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', ['.project', '
 let g:floaterm_opener           = get(g:, 'floaterm_opener', 'split')
 let g:floaterm_giteditor        = get(g:, 'floaterm_giteditor', v:true)
 let g:floaterm_titleposition    = get(g:, 'floaterm_titleposition', 'left')
+let g:floaterm_padding          = get(g:, 'floaterm_padding', [0, 1, 0, 1])
+let g:floaterm_fullscreen       = get(g:, 'floaterm_fullscreen', v:false)
+let g:floaterm_show_border      = get(g:, 'floaterm_show_border', v:true)
+let g:floaterm_show_title       = get(g:, 'floaterm_show_title', 'with-border')
 
 
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang -range
@@ -47,6 +51,10 @@ command! -nargs=0           FloatermPrev   call floaterm#prev()
 command! -nargs=0           FloatermNext   call floaterm#next()
 command! -nargs=0           FloatermFirst  call floaterm#first()
 command! -nargs=0           FloatermLast   call floaterm#last()
+
+command! -nargs=0           FloatermToggleFullScreen   call floaterm#toggle_fullscreen()
+command! -nargs=0           FloatermToggleBorder   call floaterm#toggle_border()
+command! -nargs=0           FloatermToggleTitle   call floaterm#toggle_title()
 
 hi def link Floaterm       Normal
 hi def link FloatermNC     NormalNC

@@ -48,6 +48,10 @@ function! floaterm#config#parse(bufnr, config) abort
   let a:config.autoclose      = get(a:config, 'autoclose', g:floaterm_autoclose)
   let a:config.borderchars    = get(a:config, 'borderchars', g:floaterm_borderchars)
   let a:config.titleposition  = get(a:config, 'titleposition', g:floaterm_titleposition)
+  let a:config.padding        = get(a:config, 'padding', g:floaterm_padding)
+  let a:config.fullscreen     = get(a:config, 'fullscreen', g:floaterm_fullscreen)
+  let a:config.show_border    = get(a:config, 'show_border', g:floaterm_show_border)
+  let a:config.show_title     = get(a:config, 'show_title', g:floaterm_show_title)
 
   " Edge cases
   if type(a:config.height) == v:t_number && a:config.height < 3
