@@ -15,7 +15,6 @@ function! s:on_floaterm_create(bufnr) abort
     autocmd! * <buffer>
     autocmd! User FloatermOpen
     autocmd User FloatermOpen call floaterm#util#startinsert()
-    autocmd BufEnter <buffer> call floaterm#util#startinsert()
     execute printf(
           \ 'autocmd BufHidden,BufWipeout <buffer=%s> call floaterm#window#hide(%s)',
           \ a:bufnr,
