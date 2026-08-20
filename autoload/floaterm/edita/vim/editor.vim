@@ -12,7 +12,9 @@ function! floaterm#edita#vim#editor#open(target, bufnr)
         \ 'git-rebase-todo',
         \ 'git-revise-todo',
         \ 'addp-hunk-edit.diff',
-        \ ], filename) > -1) || (stridx(filename, 'commit.hg.txt') > -1)
+        \ ], filename) > -1) ||
+    \ (stridx(filename, 'commit.hg.txt') > -1) ||
+    \ (stridx(filename, '.jjdescription') > -1)
     setlocal bufhidden=wipe
     augroup edita_buffer
       autocmd! * <buffer>
