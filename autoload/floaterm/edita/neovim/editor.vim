@@ -6,15 +6,7 @@ function! floaterm#edita#neovim#editor#open(target, client)
   let mode = floaterm#edita#neovim#util#mode(a:client)
   let b:edita = sockconnect(mode, a:client, { 'rpc': 1 })
   let filename = expand('%:t')
-  if (index([
-        \ 'COMMIT_EDITMSG',
-        \ 'MERGE_MSG',
-        \ 'git-rebase-todo',
-        \ 'git-revise-todo',
-        \ 'addp-hunk-edit.diff',
-        \ ], filename) > -1) ||
-    \ (stridx(filename, 'commit.hg.txt') > -1) ||
-    \ (stridx(filename, '.jjdescription') > -1)
+  if floaterm#edita#util#should_wait(filename)
     setlocal bufhidden=wipe
     augroup edita_buffer
       autocmd! * <buffer>

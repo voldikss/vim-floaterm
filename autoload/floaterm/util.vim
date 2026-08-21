@@ -146,6 +146,10 @@ endfunction
 
 let s:home = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let s:binpath = fnamemodify(s:home . '/../bin', ':p')
+
+" Environment variables set to the floaterm editor when
+" `g:floaterm_giteditor` is enabled.
+let s:editor_env_names = ['GIT_EDITOR', 'HGEDITOR', 'JJ_EDITOR']
 function! floaterm#util#setenv() abort
   let env = {}
   " bin/floaterm.cmd
@@ -161,9 +165,9 @@ function! floaterm#util#setenv() abort
   let editor = floaterm#edita#setup#EDITOR()
   let env.FLOATERM = editor
   if g:floaterm_giteditor
-    let env.GIT_EDITOR = editor
-    let env.HGEDITOR = editor
-    let env.JJ_EDITOR = editor
+    for name in s:editor_env_names
+      let env[name] = editor
+    endfor
   endif
   return env
 endfunction

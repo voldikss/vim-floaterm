@@ -6,15 +6,7 @@ function! floaterm#edita#vim#editor#open(target, bufnr)
   call floaterm#util#open([{'filename': fnameescape(a:target)}], opener)
   let b:edita = a:bufnr
   let filename = expand('%:t')
-  if (index([
-        \ 'COMMIT_EDITMSG',
-        \ 'MERGE_MSG',
-        \ 'git-rebase-todo',
-        \ 'git-revise-todo',
-        \ 'addp-hunk-edit.diff',
-        \ ], filename) > -1) ||
-    \ (stridx(filename, 'commit.hg.txt') > -1) ||
-    \ (stridx(filename, '.jjdescription') > -1)
+  if floaterm#edita#util#should_wait(filename)
     setlocal bufhidden=wipe
     augroup edita_buffer
       autocmd! * <buffer>

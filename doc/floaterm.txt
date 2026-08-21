@@ -127,6 +127,14 @@ g:floaterm_titleposition                        *g:floaterm_titleposition*
     Available: 'left', 'center', 'right'
     Default value is 'left'.
 
+g:floaterm_giteditor                             *g:floaterm_giteditor*
+    Type |Boolean|.
+    Whether to override `$GIT_EDITOR` in floaterm terminals so git commands
+    can open an editor in the same neovim instance.
+    This flag also overrides `$HGEDITOR` for Mercurial and `$JJ_EDITOR` for
+    Jujutsu.
+    Default value is |v:true|.
+
 ==============================================================================
 MAPPINGS                                         *floaterm-mappings*
 
