@@ -298,15 +298,18 @@ Default: `'smart'`.
 
 #### **`g:floaterm_autohide`**
 
-Type `Number`. Whether to hide previous floaterms before switching to or
+Type `String`. Whether to hide previous floaterms before switching to or
 opening a another one.
 
-- `0`: Always do NOT hide previous floaterm windows
-- `1`: Only hide those whose position (`b:floaterm_position`) is identical to
-  that of the floaterm which will be opened
-- `2`: Always hide them
+- `'never'`: Always do NOT hide previous floaterm windows
+- `'smart'`: Only hide those whose position (`b:floaterm_position`) is identical
+  to that of the floaterm which will be opened
+- `'always'`: Always hide them
 
-Default: `1`.
+For backward compatibility, `0` is treated as `'never'`, `1` as `'smart'` and
+`2` as `'always'`.
+
+Default: `'smart'`.
 
 #### **`g:floaterm_autoinsert`**
 

@@ -35,7 +35,17 @@ let g:floaterm_autoinsert       = get(g:, 'floaterm_autoinsert', 'smart')
 if type(g:floaterm_autoinsert) == v:t_bool
   let g:floaterm_autoinsert     = g:floaterm_autoinsert == v:false ? 'never' : 'smart'
 endif
-let g:floaterm_autohide         = get(g:, 'floaterm_autohide', 1)
+" Whether to hide previous floaterms before switching to or opening another
+" one.
+" Available: 'always', 'never', 'smart' (see g:floaterm_autohide in the doc)
+" Backward compatibility: 0 is converted to 'never', 1 to 'smart' and 2 to
+" 'always'
+let g:floaterm_autohide         = get(g:, 'floaterm_autohide', 'smart')
+if type(g:floaterm_autohide) == v:t_number
+  " out-of-range numbers fall back to 'never', which was their old behavior
+  let g:floaterm_autohide       = get(['never', 'smart', 'always'],
+        \ g:floaterm_autohide >= 0 ? g:floaterm_autohide : 0, 'never')
+endif
 let g:floaterm_position         = get(g:, 'floaterm_position', 'center')
 let g:floaterm_borderchars      = get(g:, 'floaterm_borderchars', '─│─│┌┐┘└')
 let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', ['.project', '.git', '.hg', '.svn', '.root'])

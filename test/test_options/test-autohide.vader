@@ -3,10 +3,10 @@
 Execute(Include base):
   source test/base_vader.vim
 
-Execute(let g:floaterm_autohide = 0):
+Execute(let g:floaterm_autohide = 'never'):
   " NOTE: Vim does not support multiple popup terminals
   if !has('nvim') | finish | endif
-  let g:floaterm_autohide = 0
+  let g:floaterm_autohide = 'never'
   Log '# FloatermNew'
     FloatermNew
     let buffer1 = bufnr('%')
@@ -28,9 +28,9 @@ Execute(let g:floaterm_autohide = 0):
   FloatermKill!
 
 
-Execute(let g:floaterm_autohide = 1):
+Execute(let g:floaterm_autohide = 'smart'):
   if !has('nvim') | finish | endif
-  let g:floaterm_autohide = 1
+  let g:floaterm_autohide = 'smart'
   Log '# Overlaied: true'
     Log '  * FloatermNew'
       FloatermNew
@@ -72,9 +72,9 @@ Execute(let g:floaterm_autohide = 1):
   FloatermKill!
 
 
-Execute(let g:floaterm_autohide = 2):
+Execute(let g:floaterm_autohide = 'always'):
   if !has('nvim') | finish | endif
-  let g:floaterm_autohide = 2
+  let g:floaterm_autohide = 'always'
   Log '# FloatermNew'
     FloatermNew --position=left
     let buffer1 = bufnr('%')
@@ -95,3 +95,24 @@ Execute(let g:floaterm_autohide = 2):
 
   FloatermKill!
   stopinsert
+
+Execute(Backward compatibility with numbers):
+  let g:floaterm_autohide = 0
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'never', g:floaterm_autohide
+
+  let g:floaterm_autohide = 1
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'smart', g:floaterm_autohide
+
+  let g:floaterm_autohide = 2
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'always', g:floaterm_autohide
+
+  let g:floaterm_autohide = 'always'
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'always', g:floaterm_autohide
