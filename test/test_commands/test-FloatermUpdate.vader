@@ -37,15 +37,24 @@ Execute(FloatermUpdate dynamic title):
     FloatermShow hidden-term
     Assert GetTitleTopline() =~ 'hidden-title'
 
-  Log '# updating a floaterm that is currently visible in another window'
-  Log '# refreshes the title immediately'
-    FloatermNew --name=other-term
-    FloatermUpdate --title=other-title hidden-term
+  Log '# updating a floaterm that is already visible refreshes its title'
+  Log '# immediately, without needing to hide/show it manually first'
     FloatermShow hidden-term
+    Assert floaterm#window#is_open(floaterm#terminal#get_bufnr('hidden-term'))
+    FloatermUpdate --title=other-title hidden-term
     Assert GetTitleTopline() =~ 'other-title'
 
   Log '# unknown floaterm name reports an error instead of throwing'
+    let v:errmsg = ''
+    redir => messages_before
+    silent messages
+    redir END
     FloatermUpdate --title=nope no-such-term
+    redir => messages_after
+    silent messages
+    redir END
+    Assert messages_after !=# messages_before
+    Assert messages_after =~ 'No floaterm found with name: no-such-term'
 
   FloatermKill!
   stopinsert
