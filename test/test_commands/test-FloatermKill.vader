@@ -47,5 +47,17 @@ Execute(test-FloatermKill):
     AssertEqual 0, IsBufValid(bufnr1)
     AssertEqual 0, IsBufValid(bufnr2)
 
+  Log '# FloatermKill unknown name'
+    FloatermNew --name=ft1
+    let bufnr1 = bufnr('%')
+    FloatermNew --name=ft2
+    let bufnr2 = bufnr('%')
+    let curr_bufnr = floaterm#buflist#curr()
+
+    FloatermKill missing
+    AssertEqual 1, IsBufValid(bufnr1)
+    AssertEqual 1, IsBufValid(bufnr2)
+    AssertEqual curr_bufnr, floaterm#buflist#curr()
+
   FloatermKill!
   stopinsert

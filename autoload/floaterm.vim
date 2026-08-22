@@ -181,6 +181,13 @@ function! floaterm#last() abort
   endif
 endfunction
 
+function! s:no_floaterm_target(name) abort
+  if !empty(a:name)
+    return 'No floaterm found with name: ' . a:name
+  endif
+  return 'No floaterms with the bufnr or name'
+endfunction
+
 function! floaterm#kill(bang, bufnr, name) abort
   if a:bang
     for bufnr in floaterm#buflist#gather()
@@ -194,13 +201,17 @@ function! floaterm#kill(bang, bufnr, name) abort
     let bufnr = floaterm#terminal#get_bufnr(a:name)
   endif
   if bufnr == 0 || bufnr == -1
+    if !empty(a:name)
+      call floaterm#util#show_msg(s:no_floaterm_target(a:name), 'error')
+      return
+    endif
     let bufnr = floaterm#buflist#curr()
   endif
 
   if bufnr > 0
     call floaterm#terminal#kill(bufnr)
   else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
+    call floaterm#util#show_msg(s:no_floaterm_target(a:name), 'error')
   endif
 endfunction
 
@@ -218,13 +229,17 @@ function! floaterm#show(bang, bufnr, name) abort
     let bufnr = floaterm#terminal#get_bufnr(a:name)
   endif
   if bufnr == 0 || bufnr == -1
+    if !empty(a:name)
+      call floaterm#util#show_msg(s:no_floaterm_target(a:name), 'error')
+      return
+    endif
     let bufnr = floaterm#buflist#curr()
   endif
 
   if bufnr > 0
     call floaterm#terminal#open_existing(bufnr)
   else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
+    call floaterm#util#show_msg(s:no_floaterm_target(a:name), 'error')
   endif
 endfunction
 
@@ -241,13 +256,17 @@ function! floaterm#hide(bang, bufnr, name) abort
     let bufnr = floaterm#terminal#get_bufnr(a:name)
   endif
   if bufnr == 0 || bufnr == -1
+    if !empty(a:name)
+      call floaterm#util#show_msg(s:no_floaterm_target(a:name), 'error')
+      return
+    endif
     let bufnr = bufnr('%')
   endif
 
   if bufnr > 0
     call floaterm#window#hide(bufnr)
   else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
+    call floaterm#util#show_msg(s:no_floaterm_target(a:name), 'error')
   endif
 endfunction
 
