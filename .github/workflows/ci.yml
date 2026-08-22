@@ -55,6 +55,7 @@ jobs:
           path: asyncrun.extra
       - name: Run tests
         env:
+          TERM: xterm
           VIM_EXEC: ${{ steps.vim.outputs.executable }}
         run: |
           $VIM_EXEC --version
@@ -64,11 +65,10 @@ jobs:
           else
               HEADLESS=
           fi
-          for f in `find test/*/*.vim`
+          for f in `find test/*/*.vim | sort`
           do
-              FLOATERM_TEST_FILE="$f" $VIM_EXEC $HEADLESS -u test/vimrc \
+              if ! FLOATERM_TEST_FILE="$f" $VIM_EXEC $HEADLESS -u test/vimrc \
                   -c 'source test/run.vim' -c 'qa!' > /dev/null 2>&1
-              if [[ $? != 0 ]]
               then
                   echo "Failed at $f"
                   FLOATERM_TEST_FILE="$f" $VIM_EXEC $HEADLESS -u test/vimrc \
