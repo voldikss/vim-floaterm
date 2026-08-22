@@ -1,9 +1,6 @@
-" vim:ft=vim
+" tests for :FloatermToggle
 
-Execute(Include base):
-  source test/base_vader.vim
-
-Execute(FloatermToggle):
+function! Test_01_toggle() abort
   Log '# FloatermToggle'
     FloatermToggle
     Assert IsInFloatermBuffer()
@@ -61,3 +58,6 @@ Execute(FloatermToggle):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

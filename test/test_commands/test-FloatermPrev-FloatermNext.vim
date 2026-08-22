@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for :FloatermPrev and :FloatermNext
 
-Execute(test-FloatermPrev-FloatermNext):
+function! Test_01_prev_next() abort
   FloatermNew
   let bufnr1 = bufnr('%')
   FloatermNew
@@ -46,3 +46,6 @@ Execute(test-FloatermPrev-FloatermNext):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

@@ -1,9 +1,6 @@
-" vim:ft=vim
+" tests for :FloatermShow and :FloatermHide
 
-Execute(Include base):
-  source test/base_vader.vim
-
-Execute(FloatermShow/Hide):
+function! Test_01_show_hide() abort
   Log '# FloatermHide'
     FloatermNew
     FloatermHide
@@ -66,3 +63,6 @@ Execute(FloatermShow/Hide):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

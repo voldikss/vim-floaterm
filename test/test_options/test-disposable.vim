@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for the --disposable option
 
-Execute(test-disposable):
+function! Test_01_disposable() abort
   Log '# FloatermNew --disposable'
     FloatermNew --disposable
     FloatermNew --disposable
@@ -12,3 +12,6 @@ Execute(test-disposable):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

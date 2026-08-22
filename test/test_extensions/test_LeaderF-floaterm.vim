@@ -1,7 +1,7 @@
-" vim:ft=vim
+" tests for the LeaderF-floaterm integration
 
-Execute(test_LeaderF-floaterm):
-  if !g:run_in_ci | finish | endif
+function! Test_01_lf_floaterm() abort
+  if !g:run_in_ci | return | endif
 
   FloatermNew
   FloatermHide
@@ -12,3 +12,6 @@ Execute(test_LeaderF-floaterm):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

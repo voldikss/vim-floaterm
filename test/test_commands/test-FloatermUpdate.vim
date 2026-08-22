@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for :FloatermUpdate
 
-Execute(FloatermUpdate):
+function! Test_01_update() abort
   Log '# Basic'
     FloatermNew
     FloatermUpdate --name=ft
@@ -8,3 +8,6 @@ Execute(FloatermUpdate):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

@@ -5,7 +5,6 @@ filetype off
 let &runtimepath .= ',' . expand('<sfile>:p:h:h')
 if $USER == 'runner'
   let g:run_in_ci = v:true
-  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/vader.vim'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/LeaderF-floaterm'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/clap-floaterm'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/fzf-floaterm'
@@ -13,16 +12,12 @@ if $USER == 'runner'
   let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/asyncrun.extra'
 else
   let g:run_in_ci = v:false
-  let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../vader.vim'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../LeaderF-floaterm'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../clap-floaterm'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../fzf-floaterm'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../asyncrun.vim'
   " let &runtimepath .= ',' . expand('<sfile>:p:h:h') . '/../asyncrun.extra'
 endif
-
-" NOTE: echom will frozen vim8 in GitHub Action
-" echom &runtimepath
 
 filetype plugin indent on
 syntax enable
@@ -41,21 +36,3 @@ let g:floaterm_keymap_toggle = '<F12>'
 let g:mapleader = ';'
 nnoremap <silent>       Q         :qa!<CR>
 nnoremap <silent> <Leader>m :messages<CR>
-
-
-" misc
-"=============================================================================
-if $USER == 'runner'
-  let g:run_in_ci = v:true
-else
-  let g:run_in_ci = v:false
-endif
-if has('nvim')
-  if split(matchstr(execute('silent version'),  'NVIM v\zs[^\n-]*'))[0] == '0.4.4'
-    let g:vim_version_info = ['nvim', 'stable']
-  else
-    let g:vim_version_info = ['nvim', 'nightly']
-  endif
-else
-  let g:vim_version_info = ['vim', 'nightly']
-endif

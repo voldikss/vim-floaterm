@@ -1,12 +1,8 @@
-" vim:ft=vim
+" tests for :FloatermNew
 
-Execute(Include base):
-  source test/base_vader.vim
+call setline(1, '# text to be send')
 
-Given(One line text):
-  # text to be send
-
-Execute(test-FloatermNew):
+function! Test_01_new() abort
   Log '# FloatermNew with range'
     normal! G
     AssertEqual getline('.'), '# text to be send'
@@ -35,3 +31,6 @@ Execute(test-FloatermNew):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for the --cwd option
 
-Execute(test-cwd):
+function! Test_01_cwd() abort
   Log '# --cwd=/'
     let cwd = getcwd()
     FloatermNew --cwd=/
@@ -18,3 +18,6 @@ Execute(test-cwd):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

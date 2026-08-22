@@ -1,21 +1,20 @@
-" vim:ft=vim
+" tests for floaterm#cmdline#parse and floaterm#cmdline#complete
 
-Before(Define universal function used to test command completion):
-  function! CmdlineCompleteTestWrapperFunc(command, expected, handler) abort
-    let commands = split(a:command)
-    let arg_lead = a:command[-1:] == ' ' ? '' : commands[-1]
-    let command = a:command
-    let cursor_pos = len(a:command)
-    let result = a:handler(arg_lead, command, cursor_pos)
-    if a:expected != result
-      Log printf('Command:  `:%s`', a:command)
-      Log printf("Actual:   %s", result)
-      Log printf('Expected: %s', string(a:expected))
-    endif
-    AssertEqual a:expected, result
-  endfunction
+function! s:check_complete(command, expected, handler) abort
+  let commands = split(a:command)
+  let arg_lead = a:command[-1:] == ' ' ? '' : commands[-1]
+  let command = a:command
+  let cursor_pos = len(a:command)
+  let result = a:handler(arg_lead, command, cursor_pos)
+  if a:expected != result
+    Log printf('Command:  `:%s`', a:command)
+    Log printf("Actual:   %s", result)
+    Log printf('Expected: %s', string(a:expected))
+  endif
+  AssertEqual a:expected, result
+endfunction
 
-Execute(Test floaterm#cmdline#parse):
+function! Test_01_parse() abort
   let argstr ='--height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=always ranger --cmd="cd ~"'
   let [cmd, config] = floaterm#cmdline#parse(argstr)
   AssertEqual 'ranger --cmd="cd ~"', cmd
@@ -27,8 +26,9 @@ Execute(Test floaterm#cmdline#parse):
         \ 'height': 0.6,
         \ 'position': 'topleft'
         \ }, config
+endfunction
 
-Execute(Test floaterm#cmdline#parse expand feature):
+function! Test_02_parse_expand_feature() abort
   silent !touch test.txt && echo first.line > test.txt
   edit ./test.txt
   normal! gg0
@@ -78,11 +78,10 @@ Execute(Test floaterm#cmdline#parse expand feature):
   AssertEqual expand('<cfile>:p:s?test?main?'), floaterm#cmdline#parse('<cfile>:p:s?test?main?')[0]
 
   silent !rm test.txt
+endfunction
 
-Execute(Test floaterm#cmdline#complete):
-  function! Test__floaterm_cmdline_complete(command, expected)
-    call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete'))
-  endfunction
+function! Test_03_complete() abort
+  let F = function('floaterm#cmdline#complete')
   let all_candidates = [
         \ '--cwd=',
         \ '--name=',
@@ -99,26 +98,26 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent',
         \ '--disposable',
         \ ]
-  call Test__floaterm_cmdline_complete('FloatermNew ', all_candidates)
-  call Test__floaterm_cmdline_complete('FloatermNew -', all_candidates)
-  call Test__floaterm_cmdline_complete('FloatermNew --', all_candidates)
-  call Test__floaterm_cmdline_complete('FloatermNew nv', sort(getcompletion('nv', 'shellcmd')))
-  call Test__floaterm_cmdline_complete('FloatermNew --n', ['--name='])
-  call Test__floaterm_cmdline_complete('FloatermNew --w', ['--width=', '--wintype='])
-  call Test__floaterm_cmdline_complete('FloatermNew --name=', [])
-  call Test__floaterm_cmdline_complete('FloatermNew --title=', [])
-  call Test__floaterm_cmdline_complete('FloatermNew --width=', [])
-  call Test__floaterm_cmdline_complete('FloatermNew --height=', [])
-  call Test__floaterm_cmdline_complete('FloatermNew --silent', [])
-  call Test__floaterm_cmdline_complete('FloatermNew --wintype=', [
+  call s:check_complete('FloatermNew ', all_candidates, F)
+  call s:check_complete('FloatermNew -', all_candidates, F)
+  call s:check_complete('FloatermNew --', all_candidates, F)
+  call s:check_complete('FloatermNew nv', sort(getcompletion('nv', 'shellcmd')), F)
+  call s:check_complete('FloatermNew --n', ['--name='], F)
+  call s:check_complete('FloatermNew --w', ['--width=', '--wintype='], F)
+  call s:check_complete('FloatermNew --name=', [], F)
+  call s:check_complete('FloatermNew --title=', [], F)
+  call s:check_complete('FloatermNew --width=', [], F)
+  call s:check_complete('FloatermNew --height=', [], F)
+  call s:check_complete('FloatermNew --silent', [], F)
+  call s:check_complete('FloatermNew --wintype=', [
         \ '--wintype=float',
         \ '--wintype=split',
         \ '--wintype=vsplit',
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --wintype=f', [
+        \ ], F)
+  call s:check_complete('FloatermNew --wintype=f', [
         \ '--wintype=float'
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --position=', [
+        \ ], F)
+  call s:check_complete('FloatermNew --position=', [
         \ '--position=auto',
         \ '--position=center',
         \ '--position=random',
@@ -130,8 +129,8 @@ Execute(Test floaterm#cmdline#complete):
         \ '--position=bottomright',
         \ '--position=left',
         \ '--position=right',
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --wintype=split --position=', [
+        \ ], F)
+  call s:check_complete('FloatermNew --wintype=split --position=', [
         \ '--position=random',
         \ '--position=leftabove',
         \ '--position=aboveleft',
@@ -139,28 +138,28 @@ Execute(Test floaterm#cmdline#complete):
         \ '--position=belowright',
         \ '--position=topleft',
         \ '--position=botright',
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --position=t', [
+        \ ], F)
+  call s:check_complete('FloatermNew --position=t', [
         \ '--position=top',
         \ '--position=topleft',
         \ '--position=topright'
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --autoclose=', [
+        \ ], F)
+  call s:check_complete('FloatermNew --autoclose=', [
         \ '--autoclose=always',
         \ '--autoclose=never',
         \ '--autoclose=smart'
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --autoclose=s', [
+        \ ], F)
+  call s:check_complete('FloatermNew --autoclose=s', [
         \ '--autoclose=smart'
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew --opener=', [
+        \ ], F)
+  call s:check_complete('FloatermNew --opener=', [
         \ '--opener=edit',
         \ '--opener=split',
         \ '--opener=vsplit',
         \ '--opener=tabe',
         \ '--opener=drop'
-        \ ])
-  call Test__floaterm_cmdline_complete('FloatermNew '.
+        \ ], F)
+  call s:check_complete('FloatermNew '.
         \ '--cwd=1 '.
         \ '--name=1 '.
         \ '--title=1 '.
@@ -170,16 +169,16 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent '.
         \ '--disposable '.
         \ '--wintype=1 '.
-         \ '--position=1 '.
-         \ '--autoclose=always '.
-         \ '--autoinsert=1 '.
-         \ '--borderchars=1 '.
-         \ '--titleposition=1 ', sort(getcompletion('', 'shellcmd')))
-  call Test__floaterm_cmdline_complete('FloatermUpdate ', all_candidates)
-  call Test__floaterm_cmdline_complete('FloatermUpdate -', all_candidates)
-  call Test__floaterm_cmdline_complete('FloatermUpdate --', all_candidates)
-  call Test__floaterm_cmdline_complete('FloatermUpdate nv', ['  '])
-  call Test__floaterm_cmdline_complete('FloatermUpdate '.
+        \ '--position=1 '.
+        \ '--autoclose=always '.
+        \ '--autoinsert=1 '.
+        \ '--borderchars=1 '.
+        \ '--titleposition=1 ', sort(getcompletion('', 'shellcmd')), F)
+  call s:check_complete('FloatermUpdate ', all_candidates, F)
+  call s:check_complete('FloatermUpdate -', all_candidates, F)
+  call s:check_complete('FloatermUpdate --', all_candidates, F)
+  call s:check_complete('FloatermUpdate nv', ['  '], F)
+  call s:check_complete('FloatermUpdate '.
         \ '--cwd=1 '.
         \ '--name=1 '.
         \ '--title=1 '.
@@ -189,31 +188,30 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent '.
         \ '--disposable '.
         \ '--wintype=1 '.
-         \ '--position=1 '.
-         \ '--autoclose=never '.
-         \ '--autoinsert=1 '.
-         \ '--borderchars=1 '.
-         \ '--titleposition=1 ', [])
+        \ '--position=1 '.
+        \ '--autoclose=never '.
+        \ '--autoinsert=1 '.
+        \ '--borderchars=1 '.
+        \ '--titleposition=1 ', [], F)
+endfunction
 
-Execute(Test floaterm#cmdline#complete_names1):
+function! Test_04_complete_names1() abort
   FloatermNew --name=floaterm
-  function! Test__floaterm_cmdline_complete_names1(command, expected)
-    call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete_names1'))
-  endfunction
-  call Test__floaterm_cmdline_complete_names1('abc', ['floaterm'])
+  let F = function('floaterm#cmdline#complete_names1')
+  call s:check_complete('abc', ['floaterm'], F)
   FloatermKill!
+endfunction
 
-Execute(Test floaterm#cmdline#complete_names2):
+function! Test_05_complete_names2() abort
   FloatermNew --name=floaterm1
   FloatermNew --name=floaterm2
-  function! Test__floaterm_cmdline_complete_names2(command, expected)
-    call CmdlineCompleteTestWrapperFunc(a:command, a:expected, function('floaterm#cmdline#complete_names2'))
-  endfunction
-  call Test__floaterm_cmdline_complete_names2('FloatermUpdate -', ['--name='])
-  call Test__floaterm_cmdline_complete_names2('FloatermSend ', ['--name='])
-  call Test__floaterm_cmdline_complete_names2('FloatermSend --name=', ['--name=floaterm1', '--name=floaterm2'])
+  let F = function('floaterm#cmdline#complete_names2')
+  call s:check_complete('FloatermUpdate -', ['--name='], F)
+  call s:check_complete('FloatermSend ', ['--name='], F)
+  call s:check_complete('FloatermSend --name=', ['--name=floaterm1', '--name=floaterm2'], F)
 
   FloatermKill!
   stopinsert
+endfunction
 
-
+call RunTests()
