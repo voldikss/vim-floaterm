@@ -83,5 +83,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
-      - run: pip install vim-vint
+      - run: pip install 'setuptools<81' vim-vint
       - run: vint --error --verbose --enable-neovim --color --style ./autoload ./plugin
