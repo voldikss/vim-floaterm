@@ -198,8 +198,11 @@ function! floaterm#terminal#get_bufnr(termname) abort
   return -1
 endfunction
 
-function! floaterm#terminal#kill(bufnr) abort
-  call floaterm#window#hide(a:bufnr)
+function! floaterm#terminal#kill(bufnr, ...) abort
+  " The optional argument skips hiding when called from window#hide().
+  if !a:0 || !a:1
+    call floaterm#window#hide(a:bufnr)
+  endif
   if has('nvim')
     let job = getbufvar(a:bufnr, '&channel')
     if jobwait([job], 0)[0] == -1
@@ -222,7 +225,12 @@ endfunction
 function! s:ensure_terminal_kill(bufnr) abort
   try
     if bufexists(a:bufnr)
-      execute a:bufnr . 'bwipeout!'
+      let cmd = a:bufnr . 'bwipeout!'
+      if win_gettype() ==# 'popup'
+        call win_execute(win_getid(1), cmd)
+      else
+        execute cmd
+      endif
     else
       call timer_stop(s:timer_map[a:bufnr])
       call remove(s:timer_map, a:bufnr)
