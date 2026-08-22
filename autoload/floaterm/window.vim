@@ -287,8 +287,8 @@ function! floaterm#window#hide(bufnr) abort
     endif
   endif
   if was_visible && bufexists(a:bufnr)
-        \ && floaterm#config#get(a:bufnr, 'disposable')
-        \ && floaterm#terminal#jobexists(a:bufnr)
+  \ && floaterm#config#get(a:bufnr, 'disposable')
+  \ && floaterm#terminal#jobexists(a:bufnr)
     call floaterm#terminal#kill(a:bufnr)
   endif
   checktime
