@@ -1,7 +1,7 @@
-" vim:ft=vim
+" tests for the fzf-floaterm integration
 
-Execute(test_Fzf-floaterm):
-  if !g:run_in_ci | finish | endif
+function! Test_01_fzf_floaterm() abort
+  if !g:run_in_ci | return | endif
 
   FloatermNew
   FloatermHide
@@ -12,3 +12,6 @@ Execute(test_Fzf-floaterm):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

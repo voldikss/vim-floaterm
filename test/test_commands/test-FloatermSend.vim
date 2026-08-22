@@ -1,9 +1,8 @@
-" vim:ft=vim
+" tests for :FloatermSend
 
-Given(One line text):
-  # text to be send
+call setline(1, '# text to be send')
 
-Execute(test-FloatermSend):
+function! Test_01_send() abort
   FloatermNew
   let bufnr1 = bufnr('%')
   FloatermHide
@@ -29,3 +28,6 @@ Execute(test-FloatermSend):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

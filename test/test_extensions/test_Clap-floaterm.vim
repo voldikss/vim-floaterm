@@ -1,7 +1,7 @@
-" vim:ft=vim
+" tests for the clap-floaterm integration
 
-Execute(test_Clap-floaterm):
-  if !g:run_in_ci | finish | endif
+function! Test_01_clap_floaterm() abort
+  if !g:run_in_ci | return | endif
 
   FloatermNew
   FloatermHide
@@ -12,4 +12,6 @@ Execute(test_Clap-floaterm):
 
   FloatermKill!
   stopinsert
+endfunction
 
+call RunTests()

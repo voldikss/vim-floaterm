@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for g:floaterm_title
 
-Execute(test-title):
+function! Test_01_title() abort
   function! GetTitleTopline() abort
     if has('nvim')
       let bd_winid = getbufvar(bufnr('%'), 'floaterm_borderwinid')
@@ -31,3 +31,6 @@ Execute(test-title):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

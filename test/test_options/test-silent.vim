@@ -1,7 +1,7 @@
-" vim:ft=vim
+" tests for the --silent option
 
-Execute(test-silent):
-  if g:run_in_ci | finish | endif
+function! Test_01_silent() abort
+  if g:run_in_ci | return | endif
   Log '# FloatermNew --silent --autoclose=never ls'
     FloatermNew --silent --autoclose=never ls
     AssertEqual 1, len(floaterm#buflist#gather())
@@ -26,3 +26,6 @@ Execute(test-silent):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

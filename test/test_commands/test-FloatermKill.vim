@@ -1,9 +1,6 @@
-" vim:ft=vim
+" tests for :FloatermKill
 
-Execute(Include base):
-  source test/base_vader.vim
-
-Execute(test-FloatermKill):
+function! Test_01_kill() abort
   Log '# FloatermKill'
     FloatermNew
     Assert IsInFloatermBuffer()
@@ -49,3 +46,6 @@ Execute(test-FloatermKill):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

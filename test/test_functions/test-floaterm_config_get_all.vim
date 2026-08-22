@@ -1,6 +1,7 @@
-" vim:ft=vim
+" tests for floaterm#config#get_all
+" https://github.com/voldikss/vim-floaterm/issues/233
 
-Execute(test-floaterm#config#get_all):
+function! Test_01_get_all() abort
   function! MyFunc() abort
     " code
   endfunction
@@ -8,8 +9,10 @@ Execute(test-floaterm#config#get_all):
   FloatermNew
   let bufnr = bufnr('%')
   call setbufvar(bufnr, 'Fn', function("MyFunc"))
-  " https://github.com/voldikss/vim-floaterm/issues/233
   call floaterm#config#get_all(bufnr)
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

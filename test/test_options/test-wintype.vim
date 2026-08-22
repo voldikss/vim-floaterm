@@ -1,9 +1,6 @@
-" vim:ft=vim
+" tests for g:floaterm_wintype
 
-Execute(Include base):
-  source test/base_vader.vim
-
-Execute(test-wintype):
+function! Test_01_wintype() abort
   Log '# Set wintype to split/vsplit'
     let g:floaterm_wintype = 'split'
     FloatermNew
@@ -28,3 +25,6 @@ Execute(test-wintype):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

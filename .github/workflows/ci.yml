@@ -2,8 +2,8 @@ name: CI
 on: [push]
 
 jobs:
-  vader-tests:
-    name: Vader tests
+  tests:
+    name: Tests
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -53,19 +53,28 @@ jobs:
         with:
           repository: skywind3000/asyncrun.extra
           path: asyncrun.extra
-      - name: Checkout vader.vim
-        uses: actions/checkout@v2
-        with:
-          repository: junegunn/vader.vim
-          path: vader.vim
-      - name: Run vader tests
+      - name: Run tests
         env:
           VIM_EXEC: ${{ steps.vim.outputs.executable }}
         run: |
           $VIM_EXEC --version
-          for f in `find test/*/*.vader`
+          if [[ $VIM_EXEC == *nvim* ]]
+          then
+              HEADLESS=--headless
+          else
+              HEADLESS=
+          fi
+          for f in `find test/*/*.vim`
           do
-              $VIM_EXEC -u test/vimrc -c "Vader! $f"
+              FLOATERM_TEST_FILE="$f" $VIM_EXEC $HEADLESS -u test/vimrc \
+                  -c 'source test/run.vim' -c 'qa!' > /dev/null 2>&1
+              if [[ $? != 0 ]]
+              then
+                  echo "Failed at $f"
+                  FLOATERM_TEST_FILE="$f" $VIM_EXEC $HEADLESS -u test/vimrc \
+                      -c 'source test/run.vim' -c 'qa!' 2>&1
+                  exit 1
+              fi
           done
 
   vint:
@@ -74,5 +83,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
-      - run: pip install vim-vint
+      - run: pip install 'setuptools<81' vim-vint
       - run: vint --error --verbose --enable-neovim --color --style ./autoload ./plugin

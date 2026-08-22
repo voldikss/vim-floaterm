@@ -1,7 +1,7 @@
-" vim:ft=vim
+" tests that the border window is closed along with the floaterm window
 
-Execute(test-auto-close-border):
-  if !has('nvim') | finish | endif
+function! Test_01_auto_close_border() abort
+  if !has('nvim') | return | endif
   function! BorderExists(bufnr) abort
     let bd_winid = getbufvar(a:bufnr, 'floaterm_borderwinid', -1)
     return !empty(getwininfo(bd_winid))
@@ -20,4 +20,6 @@ Execute(test-auto-close-border):
 
   FloatermKill!
   stopinsert
+endfunction
 
+call RunTests()

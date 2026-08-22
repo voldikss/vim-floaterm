@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for :FloatermUpdate
 
-Execute(FloatermUpdate):
+function! Test_01_update() abort
   Log '# Basic'
     FloatermNew
     FloatermUpdate --name=ft
@@ -8,8 +8,9 @@ Execute(FloatermUpdate):
 
   FloatermKill!
   stopinsert
+endfunction
 
-Execute(FloatermUpdate dynamic title):
+function! Test_02_dynamic_title() abort
   function! GetTitleTopline() abort
     if has('nvim')
       let bd_winid = getbufvar(bufnr('%'), 'floaterm_borderwinid')
@@ -58,3 +59,6 @@ Execute(FloatermUpdate dynamic title):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()

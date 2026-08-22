@@ -1,6 +1,6 @@
-" vim:ft=vim
+" tests for g:floaterm_width and g:floaterm_height
 
-Execute(Set g:floaterm_width and g:floaterm_height):
+function! Test_01_width_height() abort
   let g:floaterm_height = 0.6
   let g:floaterm_width = 0.6
   let columns_origin = &columns
@@ -36,3 +36,6 @@ Execute(Set g:floaterm_width and g:floaterm_height):
 
   FloatermKill!
   stopinsert
+endfunction
+
+call RunTests()
