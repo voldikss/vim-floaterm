@@ -110,6 +110,17 @@ function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
+" whether the floaterm `bufnr` currently has a visible window (covers
+" split/vsplit windows as well as floating/popup windows, the latter of
+" which aren't reflected by `bufwinnr()`)
+function! floaterm#window#is_open(bufnr) abort
+  if bufwinnr(a:bufnr) > -1
+    return v:true
+  endif
+  let winid = floaterm#config#get(a:bufnr, 'winid', -1)
+  return winid != -1 && s:winexists(winid)
+endfunction
+
 function! s:open_float(bufnr, config) abort
   let row = a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1)
   let col = a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1)

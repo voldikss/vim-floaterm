@@ -168,6 +168,11 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     let candidates = options
   elseif a:arg_lead == ''
     if a:cmd_line =~ '^FloatermUpdate'
+      if empty(options)
+        " no options left to complete: suggest existing floaterm names,
+        " which can be used to target a specific (possibly hidden) floaterm
+        return floaterm#cmdline#complete_names1()
+      endif
       return options
     elseif empty(options)
       let s:shellcmds = sort(getcompletion('', 'shellcmd'))
@@ -177,7 +182,11 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     endif
   else
     if a:cmd_line =~ '^FloatermUpdate'
-      return [repeat(' ', len(a:arg_lead))]
+      if empty(options)
+        let candidates = floaterm#cmdline#complete_names1()
+      else
+        return [repeat(' ', len(a:arg_lead))]
+      endif
     else
       let candidates = sort(getcompletion(a:arg_lead, 'shellcmd'))
     endif

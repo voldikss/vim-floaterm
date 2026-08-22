@@ -21,7 +21,10 @@ function! floaterm#run(action, bang, rangeargs, cmdargs) abort
       call floaterm#terminal#send(bufnr, lines)
     endif
   elseif a:action == 'update'
-    call floaterm#update(config)
+    " `cmd` is the trailing bare word (if any), used as the name of the
+    " target floaterm, e.g. `:FloatermUpdate --title=foo myterm`. When
+    " omitted, the current floaterm window is updated (backward compatible).
+    call floaterm#update(config, cmd)
   endif
 endfunction
 
@@ -119,18 +122,34 @@ function! floaterm#toggle(bang, bufnr, name)  abort
 endfunction
 
 " ----------------------------------------------------------------------------
-" update the attributes of a floaterm
+" update the attributes (e.g. title) of a floaterm, optionally identified by
+" `name`. This allows attributes like the title to be changed dynamically,
+" even for hidden floaterms: the new config is stored and takes effect the
+" next time the floaterm is shown, and immediately if it's currently visible.
 " ----------------------------------------------------------------------------
-function! floaterm#update(config) abort
-  if &filetype !=# 'floaterm'
+function! floaterm#update(config, ...) abort
+  let name = a:0 > 0 ? a:1 : ''
+  if !empty(name)
+    let bufnr = floaterm#terminal#get_bufnr(name)
+    if bufnr == -1
+      call floaterm#util#show_msg('No floaterm found with name: ' . name, 'error')
+      return
+    endif
+  elseif &filetype ==# 'floaterm'
+    let bufnr = bufnr('%')
+  else
     call floaterm#util#show_msg('You have to be in a floaterm window to change window config.', 'error')
     return
   endif
 
-  let bufnr = bufnr('%')
-  call floaterm#window#hide(bufnr)
+  let visible = floaterm#window#is_open(bufnr)
+  if visible
+    call floaterm#window#hide(bufnr)
+  endif
   call floaterm#config#set_all(bufnr, a:config)
-  call floaterm#terminal#open_existing(bufnr)
+  if visible
+    call floaterm#terminal#open_existing(bufnr)
+  endif
 endfunction
 
 function! floaterm#next()  abort

@@ -140,10 +140,22 @@ The following command allows you to compile and run your C code in the floaterm 
 
 #### `:FloatermLast` Switch to the last floaterm instance
 
-#### `:FloatermUpdate [options]` Update floaterm window attributes(`height`, `width`, etc.).
+#### `:FloatermUpdate [options] [floaterm_name]` Update floaterm window attributes(`height`, `width`, `title`, etc.) dynamically.
 
 - The `options` is the same as in `:FloatermNew` (except `--silent`).
 - Use `<TAB>` to get completion.
+- Without `floaterm_name`, updates the floaterm in the current window (must
+  be a floaterm window).
+- With `floaterm_name`, updates the named floaterm even if it's currently
+  hidden; the new attributes apply the next time it's shown, or immediately
+  if it's already visible. This allows changing the title (or other
+  attributes) dynamically after startup instead of only through
+  `g:floaterm_title`, e.g.:
+
+  ```vim
+  :FloatermUpdate --title=building...
+  :FloatermUpdate --title=building... myterm
+  ```
 
 #### `:[N]FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.
 
@@ -214,6 +226,10 @@ Default: `'floaterm: $1/$2'`(`$1` and `$2` will be substituted by 'the index of
 the current floaterm' and 'the count of all floaterms' respectively)
 
 Example: `'floaterm($1|$2)'`
+
+This option only sets the default title used when a floaterm is created. To
+change the title of a floaterm dynamically after startup, use
+`:FloatermUpdate --title=<new title>`, see `:FloatermUpdate`.
 
 #### **`g:floaterm_wintype`**
 

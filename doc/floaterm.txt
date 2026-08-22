@@ -47,6 +47,10 @@ g:floaterm_title                                 *g:floaterm_title*
 	Title format in the floating/popup terminal window.
 	If empty, the title won't be show.
 	Default value is 'floaterm: $1/$2'
+	This only sets the default title. To change the title of a
+	specific floaterm dynamically after it's created, use
+	|FloatermUpdate| with the `--title` option, e.g.
+	`:FloatermUpdate --title=new-title`.
 
 g:floaterm_wintype                               *g:floaterm_wintype*
     Type |String|.
@@ -208,8 +212,18 @@ COMMANDS                                         *floaterm-commands*
 :FloatermLast                                    *FloatermLast*
 	Switch to the last floaterm instance
 
-:FloatermUpdate [options]                        *FloatermUpdate*
-	Update floaterm window attributes(`height`, `width`, etc.).
+:FloatermUpdate [options] [floaterm_name]        *FloatermUpdate*
+	Update floaterm window attributes(`height`, `width`, `title`,
+	etc.) dynamically.
+	Without `floaterm_name`, updates the floaterm in the current
+	window (the cursor must be in a floaterm window).
+	With `floaterm_name`, updates the named floaterm even if it's
+	currently hidden; the new attributes take effect the next time
+	it's shown, or immediately if it's already visible.
+	Example: >
+		:FloatermUpdate --title=new-title
+		:FloatermUpdate --title=new-title myterm
+<
 
 :[N]FloatermToggle[!] [floaterm_name]            *FloatermToggle*
 	Open or hide the floaterm window.
