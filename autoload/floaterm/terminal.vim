@@ -8,6 +8,16 @@
 let s:timer_map = {}
 let s:channel_map = {}
 
+function! s:cleanup_terminal_state(bufnr) abort
+  if has_key(s:channel_map, a:bufnr)
+    call remove(s:channel_map, a:bufnr)
+  endif
+  if has_key(s:timer_map, a:bufnr)
+    call timer_stop(s:timer_map[a:bufnr])
+    call remove(s:timer_map, a:bufnr)
+  endif
+endfunction
+
 function! s:on_floaterm_create(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&filetype', 'floaterm')
@@ -39,6 +49,7 @@ endfunction
 " for vim8: a:000 is empty
 " for nvim: a:000 is ['exit'](event)
 function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
+  let bufnr = -1
   if a:bufnr == -1
     " In vim, buffnr is not known before starting a job, therefore, it's
     " impossible to pass the bufnr to a job's callback function. Also change
@@ -52,6 +63,16 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
     endfor
   else
     let bufnr = a:bufnr
+  endif
+  if bufnr <= 0
+    " Vim callbacks may arrive after forced cleanup (e.g. :FloatermKill already
+    " wiped the buffer and removed channel mappings), in which case there is no
+    " floaterm state left to update.
+    return
+  endif
+  call s:cleanup_terminal_state(bufnr)
+  if !bufexists(bufnr)
+    return
   endif
   let opener = floaterm#config#get(bufnr, 'opener')
   call setbufvar(bufnr, '&bufhidden', 'wipe')
@@ -224,8 +245,7 @@ function! s:ensure_terminal_kill(bufnr) abort
     if bufexists(a:bufnr)
       execute a:bufnr . 'bwipeout!'
     else
-      call timer_stop(s:timer_map[a:bufnr])
-      call remove(s:timer_map, a:bufnr)
+      call s:cleanup_terminal_state(a:bufnr)
     endif
   catch
     silent! call popup_close(win_getid())

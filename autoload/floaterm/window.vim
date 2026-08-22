@@ -130,6 +130,7 @@ function! s:open_float(bufnr, config) abort
   let winid = nvim_open_win(a:bufnr, v:true, options)
   call s:init_win(winid, v:false)
   call floaterm#config#set(a:bufnr, 'winid', winid)
+  call floaterm#config#set(a:bufnr, 'borderwinid', -1)
 
   if !(exists('&winborder') && &winborder !=# '' && &winborder !=# 'none')
     let bd_options = {
@@ -174,6 +175,7 @@ function! s:open_popup(bufnr, config) abort
   let winid = popup_create(a:bufnr, options)
   call s:init_win(winid, v:false)
   call floaterm#config#set(a:bufnr, 'winid', winid)
+  call floaterm#config#set(a:bufnr, 'borderwinid', -1)
   return winid
 endfunction
 
@@ -187,6 +189,7 @@ function! s:open_split(bufnr, config) abort
   let winid = win_getid()
   call s:init_win(winid, v:false)
   call floaterm#config#set(a:bufnr, 'winid', winid)
+  call floaterm#config#set(a:bufnr, 'borderwinid', -1)
   return winid
 endfunction
 
@@ -284,6 +287,10 @@ function! floaterm#window#hide(bufnr) abort
         endif
       endtry
     endif
+  endif
+  if bufexists(a:bufnr)
+    call floaterm#config#set(a:bufnr, 'winid', -1)
+    call floaterm#config#set(a:bufnr, 'borderwinid', -1)
   endif
   checktime
 endfunction

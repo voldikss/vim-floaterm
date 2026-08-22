@@ -1,0 +1,50 @@
+" vim:ft=vim
+
+Execute(Include base):
+  source test/base_vader.vim
+
+Execute(test-lifecycle-cleanup):
+  Log '# hide cleans win metadata and [N]FloatermToggle reopens'
+    FloatermNew
+    let bufnr1 = bufnr('%')
+    Assert getbufvar(bufnr1, 'floaterm_winid', -1) > 0
+    FloatermToggle
+    AssertEqual -1, getbufvar(bufnr1, 'floaterm_winid', -1)
+    AssertEqual -1, getbufvar(bufnr1, 'floaterm_borderwinid', -1)
+    execute bufnr1 . 'FloatermToggle'
+    AssertEqual bufnr1, bufnr('%')
+    Assert getbufvar(bufnr1, 'floaterm_winid', -1) > 0
+
+  Log '# reopen exited terminal keeps metadata consistent'
+    FloatermToggle
+    FloatermNew --autoclose=never ls
+    let bufnr2 = bufnr('%')
+    let retries = 0
+    while floaterm#terminal#jobexists(bufnr2) && retries < 200
+      sleep 50m
+      let retries += 1
+    endwhile
+    AssertEqual 0, floaterm#terminal#jobexists(bufnr2)
+    FloatermToggle
+    AssertEqual -1, getbufvar(bufnr2, 'floaterm_winid', -1)
+    AssertEqual -1, getbufvar(bufnr2, 'floaterm_borderwinid', -1)
+    execute bufnr2 . 'FloatermToggle'
+    AssertEqual bufnr2, bufnr('%')
+    Assert getbufvar(bufnr2, 'floaterm_winid', -1) > 0
+
+  Log '# FloatermToggle! hide/show keeps windows reopenable'
+    if has('nvim')
+      FloatermNew --position=left
+      let bufnr3 = bufnr('%')
+      FloatermNew --position=right
+      let bufnr4 = bufnr('%')
+      FloatermToggle!
+      AssertEqual -1, getbufvar(bufnr3, 'floaterm_winid', -1)
+      AssertEqual -1, getbufvar(bufnr4, 'floaterm_winid', -1)
+      FloatermToggle!
+      Assert BufWinExists(bufnr3)
+      Assert BufWinExists(bufnr4)
+    endif
+
+  FloatermKill!
+  stopinsert

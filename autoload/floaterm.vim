@@ -105,7 +105,7 @@ function! floaterm#toggle(bang, bufnr, name)  abort
         call floaterm#curr()
       endif
     endif
-  elseif getbufvar(bufnr, 'floaterm_winid', -1) != -1
+  elseif getbufvar(bufnr, '&filetype') ==# 'floaterm'
     if bufnr == bufnr('%')
       call floaterm#window#hide(bufnr)
     elseif bufwinnr(bufnr) > -1
