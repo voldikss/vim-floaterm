@@ -242,10 +242,31 @@ function! floaterm#window#open(bufnr, config) abort
   endif
 endfunction
 
+" Record the cursor position of the floaterm `bufnr`, used by the smart mode
+" of `g:floaterm_autoinsert` (see floaterm#util#startinsert())
+function! floaterm#window#record_cursor(bufnr) abort
+  if bufnr('%') == a:bufnr
+    " the common case: leaving or hiding the focused floaterm
+    call floaterm#config#set(a:bufnr, 'cursorline', line('.'))
+  else
+    " hiding the floaterm from another window, read the position via its
+    " window id; `line()` with a winid is not supported on older Vim, in
+    " which case keep the last recorded position
+    let winnr = bufwinnr(a:bufnr)
+    if winnr > 0
+      try
+        call floaterm#config#set(a:bufnr, 'cursorline', line('.', win_getid(winnr)))
+      catch
+      endtry
+    endif
+  endif
+endfunction
+
 function! floaterm#window#hide(bufnr) abort
   if getbufvar(a:bufnr, '&filetype') != 'floaterm'
     return
   endif
+  call floaterm#window#record_cursor(a:bufnr)
   let winid = floaterm#config#get(a:bufnr, 'winid', -1)
   let bd_winid = floaterm#config#get(a:bufnr, 'borderwinid', -1)
   if has('nvim')

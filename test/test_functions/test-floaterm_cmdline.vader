@@ -93,6 +93,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--wintype=',
         \ '--position=',
         \ '--autoclose=',
+        \ '--autoinsert=',
         \ '--borderchars=',
         \ '--titleposition=',
         \ '--silent',
@@ -163,6 +164,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--wintype=1 '.
         \ '--position=1 '.
         \ '--autoclose=1 '.
+        \ '--autoinsert=1 '.
         \ '--borderchars=1 '.
         \ '--titleposition=1 ', sort(getcompletion('', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermUpdate ', all_candidates)
@@ -181,6 +183,7 @@ Execute(Test floaterm#cmdline#complete):
         \ '--wintype=1 '.
         \ '--position=1 '.
         \ '--autoclose=1 '.
+        \ '--autoinsert=1 '.
         \ '--borderchars=1 '.
         \ '--titleposition=1 ', [])
 

@@ -16,6 +16,11 @@ function! s:on_floaterm_create(bufnr) abort
     autocmd! User FloatermOpen
     autocmd User FloatermOpen call floaterm#util#startinsert()
     autocmd BufEnter <buffer> call floaterm#util#startinsert()
+    " record the cursor position when leaving the floaterm window without
+    " hiding it (e.g. `<C-w>w`), used by the smart mode of
+    " `g:floaterm_autoinsert`. `BufLeave` alone suffices: switching windows
+    " always changes the current buffer as well
+    autocmd BufLeave <buffer> call floaterm#window#record_cursor(bufnr())
     execute printf(
           \ 'autocmd BufHidden,BufWipeout <buffer=%s> call floaterm#window#hide(%s)',
           \ a:bufnr,

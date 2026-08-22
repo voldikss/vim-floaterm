@@ -103,6 +103,7 @@ external terminals.
   - `wintype` see `g:floaterm_wintype`
   - `position` see `g:floaterm_position`
   - `autoclose` see `g:floaterm_autoclose`
+  - `autoinsert` see `g:floaterm_autoinsert`
   - `borderchars` see `g:floaterm_borderchars`
   - `titleposition` see `g:floaterm_titleposition`
 - This command basically shares the consistent behaviors with the builtin `:terminal`:
@@ -306,9 +307,19 @@ Default: `1`.
 
 #### **`g:floaterm_autoinsert`**
 
-Type `Boolean`. Whether to enter Terminal-mode after opening a floaterm.
+Type `String`. Whether to enter Terminal-mode after opening a floaterm.
 
-Default: `v:true`
+- `'never'`: Always do NOT enter Terminal-mode (stay in normal mode)
+- `'always'`: Always enter Terminal-mode
+- `'smart'`: enter Terminal-mode the first time a floaterm is opened; when
+  the floaterm is hidden and reopened, enter Terminal-mode only if the cursor
+  is at or beyond the last non-blank line (i.e., you were at the shell prompt),
+  otherwise stay in normal mode
+
+For backward compatibility, `v:false` is treated as `'never'` and `v:true` is
+treated as `'smart'`.
+
+Default: `'smart'`.
 
 #### **`g:floaterm_titleposition`**
 

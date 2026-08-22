@@ -58,18 +58,40 @@ function! floaterm#util#open(locations, ...) abort
   endfor
 endfunction
 
-function! floaterm#util#startinsert() abort
-  if &ft != 'floaterm'
-    return
-  endif
-  if !g:floaterm_autoinsert
-    call feedkeys("\<C-\>\<C-n>", 'n')
-  elseif mode() != 'i'
+function! s:enter_insert() abort
+  if mode() !~# '[it]'
     if has('nvim')
       startinsert
     else
       silent! execute 'normal! i'
     endif
+  endif
+endfunction
+
+" The value of `g:floaterm_autoinsert` (or the per-floaterm `autoinsert`
+" config) is guaranteed to be one of 'always', 'never' and 'smart' since it
+" is normalized in plugin/floaterm.vim
+function! floaterm#util#startinsert() abort
+  if &ft != 'floaterm'
+    return
+  endif
+  let bufnr = bufnr('%')
+  let autoinsert = floaterm#config#get(bufnr, 'autoinsert', g:floaterm_autoinsert)
+  if autoinsert ==# 'always'
+    let enter_insert = 1
+  elseif autoinsert ==# 'never'
+    let enter_insert = 0
+  else " smart: `cursorline` is unset on the first open; afterwards it is the
+    " position recorded when the floaterm was left or hidden (see
+    " floaterm#window#record_cursor()) — if the cursor was at or beyond the
+    " last non-blank line, the user was probably at the shell prompt
+    let curlnum = floaterm#config#get(bufnr, 'cursorline', -1)
+    let enter_insert = curlnum < 0 || curlnum >= prevnonblank(line('$'))
+  endif
+  if enter_insert
+    call s:enter_insert()
+  else
+    call feedkeys("\<C-\>\<C-n>", 'n')
   endif
 endfunction
 

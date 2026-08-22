@@ -19,7 +19,13 @@ let g:floaterm_width            = get(g:, 'floaterm_width', 0.6)
 let g:floaterm_height           = get(g:, 'floaterm_height', 0.6)
 let g:floaterm_wintype          = get(g:, 'floaterm_wintype', 'float')
 let g:floaterm_autoclose        = get(g:, 'floaterm_autoclose', 1)
-let g:floaterm_autoinsert       = get(g:, 'floaterm_autoinsert', v:true)
+" Whether to enter Terminal-mode after opening a floaterm.
+" Available: 'always', 'never', 'smart' (see g:floaterm_autoinsert in the doc)
+" Backward compatibility: v:false is converted to 'never', v:true to 'smart'
+let g:floaterm_autoinsert       = get(g:, 'floaterm_autoinsert', 'smart')
+if type(g:floaterm_autoinsert) == v:t_bool
+  let g:floaterm_autoinsert     = g:floaterm_autoinsert == v:false ? 'never' : 'smart'
+endif
 let g:floaterm_autohide         = get(g:, 'floaterm_autohide', 1)
 let g:floaterm_position         = get(g:, 'floaterm_position', 'center')
 let g:floaterm_borderchars      = get(g:, 'floaterm_borderchars', '─│─│┌┐┘└')

@@ -117,9 +117,18 @@ g:floaterm_autohide                              *g:floaterm_autohide*
 	Default value is 1.
 
 g:floaterm_autoinsert                            *g:floaterm_autoinsert*
-	Type |Boolean|.
+	Type |String|.
 	Whether to enter |Terminal-mode| after opening a floaterm.
-	Default value is |v:true|.
+        'never' - Always do NOT enter Terminal-mode (stay in normal mode)
+        'always' - Always enter Terminal-mode
+        'smart' - Enter Terminal-mode the first time a floaterm is opened;
+            when the floaterm is hidden and reopened, enter Terminal-mode
+            only if the cursor is at or beyond the last non-blank line
+            (i.e., the user was at the shell prompt), otherwise stay in
+            normal mode
+	For backward compatibility, |v:false| is treated as 'never' and
+	|v:true| is treated as 'smart'.
+	Default value is 'smart'.
 
 g:floaterm_titleposition                        *g:floaterm_titleposition*
     Type |String|.

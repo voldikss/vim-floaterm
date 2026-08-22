@@ -4,24 +4,109 @@ Execute(Include base):
   source test/base_vader.vim
 
 Execute(test-autoinsert):
-  Log '# Set autoinsert to 0'
-    FloatermNew --autoinsert=0 ls
+  " NOTE: `:startinsert` takes effect only after the current command or
+  " script finishes, therefore `mode()` can not be asserted right after
+  " `FloatermNew!` within the same Execute block. The insert-mode assertions
+  " are covered by the headless timer-driven tests instead. Here we assert
+  " the normal-mode cases (which are synchronous) and the recorded state.
+  if !has('nvim') | finish | endif
+
+  Log '# Set autoinsert to never'
+    let g:floaterm_autoinsert = 'never'
+    FloatermNew! --autoclose=0 sh -c 'sleep 30'
+    Assert IsInFloatermBuffer()
+    AssertEqual 'n', mode()
+
+    Log '  * hide and reopen'
+      FloatermHide
+      Assert !IsInFloatermBuffer()
+      FloatermShow
+      Assert IsInFloatermBuffer()
+      AssertEqual 'n', mode()
+    FloatermKill!
+
+  Log '# Set autoinsert to smart'
+    let g:floaterm_autoinsert = 'smart'
+    FloatermNew! --autoclose=0 sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
 
-    if has('nvim')
-      let g:floaterm_autoinsert = 0
-      FloatermNew! ls
-      AssertEqual 'n',mode()
-    endif
+    Log '  * reopen with the cursor in the scrollback stays in normal mode'
+      stopinsert
+      call nvim_win_set_cursor(bufwinid(bufnr('%')), [1, 0])
+      FloatermHide
+      Assert !IsInFloatermBuffer()
+      FloatermShow
+      Assert IsInFloatermBuffer()
+      AssertEqual 'n', mode()
+    FloatermKill!
 
-  Log '# Set autoinsert to 1'
-    FloatermNew --autoinsert=1 ls
+  Log '# Per-floaterm autoinsert via the cmdline option'
+    let g:floaterm_autoinsert = 'always'
+    FloatermNew! --autoinsert=never --autoclose=0 sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
+    AssertEqual 'n', mode()
 
-    let g:floaterm_autoinsert = 1
-    FloatermNew! ls
-    " FIXME
-    " AssertEqual 'i',mode()
+    Log '  * the local config survives hide/reopen'
+      FloatermHide
+      FloatermShow
+      Assert IsInFloatermBuffer()
+      AssertEqual 'n', mode()
+    FloatermKill!
 
-  FloatermKill!
+    let g:floaterm_autoinsert = 'never'
+    FloatermNew! --autoinsert=smart --autoclose=0 sh -c 'sleep 30'
+    Assert IsInFloatermBuffer()
+    AssertEqual 'smart', floaterm#config#get(bufnr('%'), 'autoinsert')
+    stopinsert
+    FloatermKill!
+
+    let g:floaterm_autoinsert = 'always'
+    FloatermNew! --autoinsert=never --autoclose=0 sh -c 'sleep 30'
+    Assert IsInFloatermBuffer()
+    AssertEqual 'never', floaterm#config#get(bufnr('%'), 'autoinsert')
+    FloatermKill!
+
+  Log '# Backward compatibility with booleans'
+    let g:floaterm_autoinsert = v:false
+    let g:loaded_floaterm = 0
+    source plugin/floaterm.vim
+    AssertEqual 'never', g:floaterm_autoinsert
+
+    let g:floaterm_autoinsert = v:true
+    let g:loaded_floaterm = 0
+    source plugin/floaterm.vim
+    AssertEqual 'smart', g:floaterm_autoinsert
+
+    unlet! g:floaterm_autoinsert
+    let g:loaded_floaterm = 0
+    source plugin/floaterm.vim
+    AssertEqual 'smart', g:floaterm_autoinsert
+
+    let g:floaterm_autoinsert = 'always'
+    let g:loaded_floaterm = 0
+    source plugin/floaterm.vim
+    AssertEqual 'always', g:floaterm_autoinsert
+
+    let g:floaterm_autoinsert = 'smart'
+    let g:loaded_floaterm = 0
+    source plugin/floaterm.vim
+    AssertEqual 'smart', g:floaterm_autoinsert
+
+  Log '# Cursor position is recorded when hiding the floaterm'
+    let g:floaterm_autoinsert = 'smart'
+    FloatermNew! --autoclose=0 sh -c 'sleep 30'
+    let bufnr1 = bufnr('%')
+    stopinsert
+    call nvim_win_set_cursor(bufwinid(bufnr1), [1, 0])
+    FloatermHide
+    AssertEqual 1, floaterm#config#get(bufnr1, 'cursorline', -1)
+    FloatermShow
+    let lastline = line('$')
+    call nvim_win_set_cursor(bufwinid(bufnr1), [lastline, 0])
+    FloatermHide
+    AssertEqual lastline, floaterm#config#get(bufnr1, 'cursorline', -1)
+    FloatermShow
+    stopinsert
+    FloatermKill!
+
   stopinsert

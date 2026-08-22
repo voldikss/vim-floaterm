@@ -77,6 +77,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     \ '--wintype=',
     \ '--position=',
     \ '--autoclose=',
+    \ '--autoinsert=',
     \ '--borderchars=',
     \ '--titleposition=',
     \ '--silent',
@@ -105,6 +106,9 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--autoclose=') > -1
     let vals = [0, 1, 2]
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
+  elseif match(a:arg_lead, '--autoinsert=') > -1
+    let vals = ['always', 'never', 'smart']
+    let candidates = map(vals, {idx -> '--autoinsert=' . vals[idx]})
   elseif match(a:arg_lead, '--silent') > -1
     return []
   elseif match(a:arg_lead, '--cwd=') > -1

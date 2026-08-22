@@ -46,6 +46,7 @@ function! floaterm#config#parse(bufnr, config) abort
   let a:config.wintype        = get(a:config, 'wintype', floaterm#window#win_gettype())
   let a:config.position       = get(a:config, 'position', g:floaterm_position)
   let a:config.autoclose      = get(a:config, 'autoclose', g:floaterm_autoclose)
+  let a:config.autoinsert     = get(a:config, 'autoinsert', g:floaterm_autoinsert)
   let a:config.borderchars    = get(a:config, 'borderchars', g:floaterm_borderchars)
   let a:config.titleposition  = get(a:config, 'titleposition', g:floaterm_titleposition)
 
