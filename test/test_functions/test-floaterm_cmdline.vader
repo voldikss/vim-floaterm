@@ -16,13 +16,13 @@ Before(Define universal function used to test command completion):
   endfunction
 
 Execute(Test floaterm#cmdline#parse):
-  let argstr ='--height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"'
+  let argstr ='--height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=always ranger --cmd="cd ~"'
   let [cmd, config] = floaterm#cmdline#parse(argstr)
   AssertEqual 'ranger --cmd="cd ~"', cmd
   AssertEqual {
         \ 'wintype': 'float',
         \ 'name': 'floaterm1',
-        \ 'autoclose': 2,
+        \ 'autoclose': 'always',
         \ 'width': 0.4,
         \ 'height': 0.6,
         \ 'position': 'topleft'
@@ -145,6 +145,14 @@ Execute(Test floaterm#cmdline#complete):
         \ '--position=topleft',
         \ '--position=topright'
         \ ])
+  call Test__floaterm_cmdline_complete('FloatermNew --autoclose=', [
+        \ '--autoclose=always',
+        \ '--autoclose=never',
+        \ '--autoclose=smart'
+        \ ])
+  call Test__floaterm_cmdline_complete('FloatermNew --autoclose=s', [
+        \ '--autoclose=smart'
+        \ ])
   call Test__floaterm_cmdline_complete('FloatermNew --opener=', [
         \ '--opener=edit',
         \ '--opener=split',
@@ -162,11 +170,11 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent '.
         \ '--disposable '.
         \ '--wintype=1 '.
-        \ '--position=1 '.
-        \ '--autoclose=1 '.
-        \ '--autoinsert=1 '.
-        \ '--borderchars=1 '.
-        \ '--titleposition=1 ', sort(getcompletion('', 'shellcmd')))
+         \ '--position=1 '.
+         \ '--autoclose=always '.
+         \ '--autoinsert=1 '.
+         \ '--borderchars=1 '.
+         \ '--titleposition=1 ', sort(getcompletion('', 'shellcmd')))
   call Test__floaterm_cmdline_complete('FloatermUpdate ', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermUpdate -', all_candidates)
   call Test__floaterm_cmdline_complete('FloatermUpdate --', all_candidates)
@@ -181,11 +189,11 @@ Execute(Test floaterm#cmdline#complete):
         \ '--silent '.
         \ '--disposable '.
         \ '--wintype=1 '.
-        \ '--position=1 '.
-        \ '--autoclose=1 '.
-        \ '--autoinsert=1 '.
-        \ '--borderchars=1 '.
-        \ '--titleposition=1 ', [])
+         \ '--position=1 '.
+         \ '--autoclose=never '.
+         \ '--autoinsert=1 '.
+         \ '--borderchars=1 '.
+         \ '--titleposition=1 ', [])
 
 Execute(Test floaterm#cmdline#complete_names1):
   FloatermNew --name=floaterm

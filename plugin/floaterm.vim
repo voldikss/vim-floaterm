@@ -18,7 +18,16 @@ let g:floaterm_title            = get(g:, 'floaterm_title', 'floaterm($1/$2)')
 let g:floaterm_width            = get(g:, 'floaterm_width', 0.6)
 let g:floaterm_height           = get(g:, 'floaterm_height', 0.6)
 let g:floaterm_wintype          = get(g:, 'floaterm_wintype', 'float')
-let g:floaterm_autoclose        = get(g:, 'floaterm_autoclose', 1)
+" Whether to close the floaterm window once the job gets finished.
+" Available: 'always', 'never', 'smart' (see g:floaterm_autoclose in the doc)
+" Backward compatibility: 0 is converted to 'never', 1 to 'smart' and 2 to
+" 'always'
+let g:floaterm_autoclose         = get(g:, 'floaterm_autoclose', 'smart')
+if type(g:floaterm_autoclose) == v:t_number
+  " out-of-range numbers fall back to 'never', which was their old behavior
+  let g:floaterm_autoclose       = get(['never', 'smart', 'always'],
+        \ g:floaterm_autoclose >= 0 ? g:floaterm_autoclose : 0, 'never')
+endif
 " Whether to enter Terminal-mode after opening a floaterm.
 " Available: 'always', 'never', 'smart' (see g:floaterm_autoinsert in the doc)
 " Backward compatibility: v:false is converted to 'never', v:true to 'smart'

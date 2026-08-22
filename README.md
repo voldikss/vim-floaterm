@@ -120,7 +120,7 @@ external terminals.
 For example, the command
 
 ```vim
-:FloatermNew --height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=2 ranger --cmd="cd ~"
+:FloatermNew --height=0.6 --width=0.4 --wintype=float --name=floaterm1 --position=topleft --autoclose=always ranger --cmd="cd ~"
 ```
 
 will open a new floating/popup floaterm instance named `floaterm1` running
@@ -129,7 +129,7 @@ will open a new floating/popup floaterm instance named `floaterm1` running
 The following command allows you to compile and run your C code in the floaterm window:
 
 ```vim
-:FloatermNew --autoclose=0 gcc % -o %< && ./%<
+:FloatermNew --autoclose=never gcc % -o %< && ./%<
 ```
 
 #### `:FloatermPrev` Switch to the previous floaterm instance
@@ -284,14 +284,17 @@ Default: `'split'`
 
 #### **`g:floaterm_autoclose`**
 
-Type `Number`. Whether to close floaterm window once the job gets finished.
+Type `String`. Whether to close floaterm window once the job gets finished.
 
-- `0`: Always do NOT close floaterm window
-- `1`: Close window if the job exits normally, otherwise stay it with messages
-  like `[Process exited 101]`
-- `2`: Always close floaterm window
+- `'never'`: Always do NOT close floaterm window
+- `'smart'`: Close window if the job exits normally, otherwise stay it with
+  messages like `[Process exited 101]`
+- `'always'`: Always close floaterm window
 
-Default: `1`.
+For backward compatibility, `0` is treated as `'never'`, `1` as `'smart'` and
+`2` as `'always'`.
+
+Default: `'smart'`.
 
 #### **`g:floaterm_autohide`**
 

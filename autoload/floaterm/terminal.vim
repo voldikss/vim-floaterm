@@ -57,7 +57,7 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
   call setbufvar(bufnr, '&bufhidden', 'wipe')
   call floaterm#config#set(bufnr, 'jobexists', v:false)
   let autoclose = floaterm#config#get(bufnr, 'autoclose')
-  if (autoclose == 1 && a:data == 0) || (autoclose == 2) || (a:callback isnot v:null)
+  if (autoclose ==# 'smart' && a:data == 0) || autoclose ==# 'always' || (a:callback isnot v:null)
     call floaterm#window#hide(bufnr)
     " if the floaterm is created with --silent, delete the buffer explicitly
     silent! execute bufnr . 'bdelete!'

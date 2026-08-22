@@ -41,7 +41,7 @@ function! floaterm#cmdline#parse(argstr) abort
             endif
           endif
         endif
-        if index(['height', 'width', 'autoclose'], key) > -1
+        if index(['height', 'width'], key) > -1
           let value = eval(value)
         endif
         let config[key] = value
@@ -104,7 +104,7 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
     endif
     let candidates = map(vals, {idx -> '--opener=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1
-    let vals = [0, 1, 2]
+    let vals = ['always', 'never', 'smart']
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
   elseif match(a:arg_lead, '--autoinsert=') > -1
     let vals = ['always', 'never', 'smart']

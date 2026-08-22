@@ -2,24 +2,24 @@
 
 Execute(test-silent):
   if g:run_in_ci | finish | endif
-  Log '# FloatermNew --silent --autoclose=0 ls'
-    FloatermNew --silent --autoclose=0 ls
+  Log '# FloatermNew --silent --autoclose=never ls'
+    FloatermNew --silent --autoclose=never ls
     AssertEqual 1, len(floaterm#buflist#gather())
     FloatermKill!
 
-  Log '# FloatermNew --silent --autoclose=1 ls'
-    FloatermNew --silent --autoclose=1 ls
+  Log '# FloatermNew --silent --autoclose=smart ls'
+    FloatermNew --silent --autoclose=smart ls
     sleep 200m " otherwise vim8 testing fails
     AssertEqual 0, len(floaterm#buflist#gather())
     FloatermKill!
 
-  Log '# FloatermNew --silent --autoclose=1 xxx'
-    FloatermNew --silent --autoclose=1 xxx
+  Log '# FloatermNew --silent --autoclose=smart xxx'
+    FloatermNew --silent --autoclose=smart xxx
     AssertEqual 1, len(floaterm#buflist#gather())
     FloatermKill!
 
-  Log '# FloatermNew --silent --autoclose=2 ls'
-    FloatermNew --silent --autoclose=2 ls
+  Log '# FloatermNew --silent --autoclose=always ls'
+    FloatermNew --silent --autoclose=always ls
     sleep 200m " otherwise vim8 testing fails
     AssertEqual 0, len(floaterm#buflist#gather())
     FloatermKill!

@@ -30,7 +30,7 @@ Execute(test-FloatermNew):
     Assert IsInFloatermBuffer()
 
   Log '# FloatermNew with arguments'
-    FloatermNew --height=0.6 --width=0.4 --wintype=float --name=test --position=topleft --autoclose=0 ls
+    FloatermNew --height=0.6 --width=0.4 --wintype=float --name=test --position=topleft --autoclose=never ls
     Assert IsInFloatermBuffer()
 
   FloatermKill!

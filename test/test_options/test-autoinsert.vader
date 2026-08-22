@@ -13,7 +13,7 @@ Execute(test-autoinsert):
 
   Log '# Set autoinsert to never'
     let g:floaterm_autoinsert = 'never'
-    FloatermNew! --autoclose=0 sh -c 'sleep 30'
+    FloatermNew! --autoclose=never sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
     AssertEqual 'n', mode()
 
@@ -27,7 +27,7 @@ Execute(test-autoinsert):
 
   Log '# Set autoinsert to smart'
     let g:floaterm_autoinsert = 'smart'
-    FloatermNew! --autoclose=0 sh -c 'sleep 30'
+    FloatermNew! --autoclose=never sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
 
     Log '  * reopen with the cursor in the scrollback stays in normal mode'
@@ -42,7 +42,7 @@ Execute(test-autoinsert):
 
   Log '# Per-floaterm autoinsert via the cmdline option'
     let g:floaterm_autoinsert = 'always'
-    FloatermNew! --autoinsert=never --autoclose=0 sh -c 'sleep 30'
+    FloatermNew! --autoinsert=never --autoclose=never sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
     AssertEqual 'n', mode()
 
@@ -54,47 +54,47 @@ Execute(test-autoinsert):
     FloatermKill!
 
     let g:floaterm_autoinsert = 'never'
-    FloatermNew! --autoinsert=smart --autoclose=0 sh -c 'sleep 30'
+    FloatermNew! --autoinsert=smart --autoclose=never sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
     AssertEqual 'smart', floaterm#config#get(bufnr('%'), 'autoinsert')
     stopinsert
     FloatermKill!
 
     let g:floaterm_autoinsert = 'always'
-    FloatermNew! --autoinsert=never --autoclose=0 sh -c 'sleep 30'
+    FloatermNew! --autoinsert=never --autoclose=never sh -c 'sleep 30'
     Assert IsInFloatermBuffer()
     AssertEqual 'never', floaterm#config#get(bufnr('%'), 'autoinsert')
     FloatermKill!
 
   Log '# Backward compatibility with booleans'
     let g:floaterm_autoinsert = v:false
-    let g:loaded_floaterm = 0
+    unlet! g:loaded_floaterm
     source plugin/floaterm.vim
     AssertEqual 'never', g:floaterm_autoinsert
 
     let g:floaterm_autoinsert = v:true
-    let g:loaded_floaterm = 0
+    unlet! g:loaded_floaterm
     source plugin/floaterm.vim
     AssertEqual 'smart', g:floaterm_autoinsert
 
     unlet! g:floaterm_autoinsert
-    let g:loaded_floaterm = 0
+    unlet! g:loaded_floaterm
     source plugin/floaterm.vim
     AssertEqual 'smart', g:floaterm_autoinsert
 
     let g:floaterm_autoinsert = 'always'
-    let g:loaded_floaterm = 0
+    unlet! g:loaded_floaterm
     source plugin/floaterm.vim
     AssertEqual 'always', g:floaterm_autoinsert
 
     let g:floaterm_autoinsert = 'smart'
-    let g:loaded_floaterm = 0
+    unlet! g:loaded_floaterm
     source plugin/floaterm.vim
     AssertEqual 'smart', g:floaterm_autoinsert
 
   Log '# Cursor position is recorded when hiding the floaterm'
     let g:floaterm_autoinsert = 'smart'
-    FloatermNew! --autoclose=0 sh -c 'sleep 30'
+    FloatermNew! --autoclose=never sh -c 'sleep 30'
     let bufnr1 = bufnr('%')
     stopinsert
     call nvim_win_set_cursor(bufwinid(bufnr1), [1, 0])
