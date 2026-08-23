@@ -199,6 +199,7 @@ function! floaterm#terminal#get_bufnr(termname) abort
 endfunction
 
 function! floaterm#terminal#kill(bufnr, ...) abort
+  " The optional argument skips hiding when called from window#hide().
   if !a:0 || !a:1
     call floaterm#window#hide(a:bufnr)
   endif
