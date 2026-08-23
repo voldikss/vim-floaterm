@@ -198,8 +198,10 @@ function! floaterm#terminal#get_bufnr(termname) abort
   return -1
 endfunction
 
-function! floaterm#terminal#kill(bufnr) abort
-  call floaterm#window#hide(a:bufnr)
+function! floaterm#terminal#kill(bufnr, ...) abort
+  if !a:0 || !a:1
+    call floaterm#window#hide(a:bufnr)
+  endif
   if has('nvim')
     let job = getbufvar(a:bufnr, '&channel')
     if jobwait([job], 0)[0] == -1

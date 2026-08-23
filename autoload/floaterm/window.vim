@@ -267,6 +267,7 @@ function! floaterm#window#hide(bufnr) abort
   call floaterm#window#record_cursor(a:bufnr)
   let winid = floaterm#config#get(a:bufnr, 'winid', -1)
   let bd_winid = floaterm#config#get(a:bufnr, 'borderwinid', -1)
+  let was_visible = s:winexists(winid)
   if has('nvim')
     if s:winexists(winid)
       call nvim_win_close(winid, v:true)
@@ -284,6 +285,11 @@ function! floaterm#window#hide(bufnr) abort
         endif
       endtry
     endif
+  endif
+  if was_visible && bufexists(a:bufnr)
+  \ && floaterm#config#get(a:bufnr, 'disposable')
+  \ && floaterm#terminal#jobexists(a:bufnr)
+    call floaterm#terminal#kill(a:bufnr, v:true)
   endif
   checktime
 endfunction
