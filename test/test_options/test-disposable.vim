@@ -6,7 +6,7 @@ function! Test_01_disposable() abort
     FloatermNew --disposable
     FloatermNew --disposable
     FloatermHide!
-    sleep 100m
+    sleep 200m " otherwise Vim cleanup can still be pending
     Log floaterm#buflist#gather()
     Assert empty(floaterm#buflist#gather())
 
