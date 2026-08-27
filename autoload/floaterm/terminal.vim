@@ -44,13 +44,13 @@ function! s:on_floaterm_close(bufnr, callback, job, data, ...) abort
     " impossible to pass the bufnr to a job's callback function. Also change
     " callback after a job was spawned seem not feasible. Therefore, iterate s:
     " channel_map and get the bufnr whose channel matches the channel of a:job
+    let bufnr = a:bufnr
     for [buf, chan] in items(s:channel_map)
       if chan == job_getchannel(a:job)
         let bufnr = str2nr(buf)
         break
       endif
     endfor
-    let bufnr = a:bufnr
   else
     let bufnr = a:bufnr
   endif
