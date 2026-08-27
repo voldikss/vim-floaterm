@@ -31,14 +31,16 @@ function! Test_01_prev_next() abort
     AssertEqual bufnr4, bufnr('%')
 
   Log '# Kill the prev floaterm and execute `:FloatermPrev'
-    FloatermHide " otherwise vim8 testing fails
+    " otherwise vim8 testing fails
+    FloatermHide
     execute bufnr3 . 'FloatermKill'
     sleep 100m
     FloatermPrev
     AssertEqual bufnr2, bufnr('%')
 
   Log '# Kill the next floaterm and execute `:FloatermPrev'
-    FloatermHide " otherwise vim8 testing fails
+    " otherwise vim8 testing fails
+    FloatermHide
     execute bufnr4 . 'FloatermKill'
     sleep 100m
     FloatermNext

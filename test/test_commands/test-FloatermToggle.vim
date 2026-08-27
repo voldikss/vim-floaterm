@@ -10,7 +10,8 @@ function! Test_01_toggle() abort
   Log '# FloatermToggle!'
     FloatermKill!
     Assert empty(floaterm#buflist#gather())
-    FloatermToggle! " FloatermToggle! should open floaterm if there are no floaterms opened yet.
+    " FloatermToggle! should open floaterm if there are no floaterms opened yet.
+    FloatermToggle!
     Assert IsInFloatermBuffer()
     " NOTE: the 2 floaterms must have different positions can `:FloatermShow!
     " ` take effect

@@ -19,13 +19,15 @@ function! Test_01_first_last() abort
     AssertEqual bufnr4, bufnr('%')
 
   Log '# Kill the first floaterm and execute `:FloatermFirst`'
-    FloatermHide " otherwise vim8 testing fails
+    " otherwise vim8 testing fails
+    FloatermHide
     execute bufnr1 . 'FloatermKill'
     FloatermFirst
     AssertEqual bufnr2, bufnr('%')
 
   Log '# Kill the last floaterm and execute `:FloatermLast`'
-    FloatermHide " otherwise vim8 testing fails
+    " otherwise vim8 testing fails
+    FloatermHide
     execute bufnr4 . 'FloatermKill'
     FloatermLast
     AssertEqual bufnr3, bufnr('%')

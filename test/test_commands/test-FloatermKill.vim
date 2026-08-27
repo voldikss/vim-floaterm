@@ -23,7 +23,8 @@ function! Test_01_kill() abort
     FloatermNew
     let bufnr2 = bufnr('%')
 
-    FloatermHide " otherwise vim8 testing fails
+    " otherwise vim8 testing fails
+    FloatermHide
     execute bufnr1 . 'FloatermKill'
     AssertEqual 0, IsBufValid(bufnr1)
     AssertEqual 1, IsBufValid(bufnr2)
@@ -62,7 +63,8 @@ function! Test_01_kill() abort
     let bufnr1 = bufnr('%')
     FloatermNew --name=ft2
     let bufnr2 = bufnr('%')
-    FloatermHide " otherwise vim8 testing fails
+    " otherwise vim8 testing fails
+    FloatermHide
 
     FloatermKill nonexistent
     AssertEqual 1, IsBufValid(bufnr1)
@@ -70,6 +72,14 @@ function! Test_01_kill() abort
     FloatermKill --name=nonexistent
     AssertEqual 1, IsBufValid(bufnr1)
     AssertEqual 1, IsBufValid(bufnr2)
+
+  Log '# [N]FloatermKill with a non-floaterm buffer'
+    new
+    let filebufnr = bufnr('%')
+    execute filebufnr . 'FloatermKill'
+    AssertEqual 1, IsBufValid(bufnr1)
+    AssertEqual 1, IsBufValid(bufnr2)
+    execute filebufnr . 'bwipeout'
 
   FloatermKill!
   stopinsert

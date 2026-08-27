@@ -78,9 +78,15 @@ function! s:parse_name(name) abort
 endfunction
 
 " Returns the bufnr for `a:bufnr`/`a:name`: 0 if no target was given, or -1
-" if a name was given but no floaterm matches it.
+" if the given count doesn't refer to a floaterm buffer or no floaterm
+" matches the name.
 function! s:resolve_bufnr(bufnr, name) abort
   if a:bufnr != 0
+    " the buffer being created is registered in the buflist before its
+    " filetype is set, so use the buflist rather than the filetype here
+    if index(floaterm#buflist#gather(), a:bufnr) == -1
+      return -1
+    endif
     return a:bufnr
   endif
   let name = s:parse_name(a:name)
@@ -88,6 +94,17 @@ function! s:resolve_bufnr(bufnr, name) abort
     return 0
   endif
   return floaterm#terminal#get_bufnr(name)
+endfunction
+
+function! s:not_found_msg(bufnr, name) abort
+  if a:bufnr != 0
+    return printf('No floaterm with bufnr %d', a:bufnr)
+  endif
+  let name = s:parse_name(a:name)
+  if empty(name)
+    return 'No more floaterms'
+  endif
+  return 'No floaterm found with name: ' . name
 endfunction
 
 " ----------------------------------------------------------------------------
@@ -112,7 +129,12 @@ function! floaterm#toggle(bang, bufnr, name)  abort
   let bufnr = s:resolve_bufnr(a:bufnr, a:name)
 
   if bufnr == -1
-    call floaterm#new(a:bang, '', {}, {'name': s:parse_name(a:name)})
+    let name = s:parse_name(a:name)
+    if empty(name)
+      call floaterm#util#show_msg(s:not_found_msg(a:bufnr, a:name), 'error')
+    else
+      call floaterm#new(a:bang, '', {}, {'name': name})
+    endif
   elseif bufnr == 0
     if &filetype == 'floaterm'
       call floaterm#window#hide(bufnr('%'))
@@ -124,7 +146,7 @@ function! floaterm#toggle(bang, bufnr, name)  abort
         call floaterm#curr()
       endif
     endif
-  elseif getbufvar(bufnr, 'floaterm_winid', -1) != -1
+  else
     if bufnr == bufnr('%')
       call floaterm#window#hide(bufnr)
     elseif bufwinnr(bufnr) > -1
@@ -132,8 +154,6 @@ function! floaterm#toggle(bang, bufnr, name)  abort
     else
       call floaterm#terminal#open_existing(bufnr)
     endif
-  else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
   endif
 endfunction
 
@@ -216,7 +236,7 @@ function! floaterm#kill(bang, bufnr, name) abort
   if bufnr > 0
     call floaterm#terminal#kill(bufnr)
   else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
+    call floaterm#util#show_msg(s:not_found_msg(a:bufnr, a:name), 'error')
   endif
 endfunction
 
@@ -237,7 +257,7 @@ function! floaterm#show(bang, bufnr, name) abort
   if bufnr > 0
     call floaterm#terminal#open_existing(bufnr)
   else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
+    call floaterm#util#show_msg(s:not_found_msg(a:bufnr, a:name), 'error')
   endif
 endfunction
 
@@ -251,13 +271,19 @@ function! floaterm#hide(bang, bufnr, name) abort
 
   let bufnr = s:resolve_bufnr(a:bufnr, a:name)
   if bufnr == 0
-    let bufnr = bufnr('%')
+    " hide the floaterm in the current window if there is one, otherwise
+    " act on the current floaterm, like :FloatermShow and :FloatermKill do
+    if &filetype ==# 'floaterm'
+      let bufnr = bufnr('%')
+    else
+      let bufnr = floaterm#buflist#curr()
+    endif
   endif
 
   if bufnr > 0
     call floaterm#window#hide(bufnr)
   else
-    call floaterm#util#show_msg('No floaterms with the bufnr or name', 'error')
+    call floaterm#util#show_msg(s:not_found_msg(a:bufnr, a:name), 'error')
   endif
 endfunction
 

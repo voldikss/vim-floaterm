@@ -149,10 +149,10 @@ The following command allows you to compile and run your C code in the floaterm 
 
 - If `N` is given, toggle the floaterm whose buffer number is `N`
 - If `floaterm_name` is given, toggle the floaterm instance whose `name`
-  attribute is `floaterm_name`. Otherwise create a new floaterm named
-  `floaterm_name`.
+  attribute is `floaterm_name`. If no floaterm with that name exists, create
+  a new floaterm named `floaterm_name`.
 - Use `<TAB>` to get completion.
-- If `!` is given, toggle all floaterms (`:FloatermHide!` or `: FloatermShow!`)
+- If `!` is given, toggle all floaterms (`:FloatermHide!` or `:FloatermShow!`)
 
 #### `:[N]FloatermShow[!] [floaterm_name]` Show the current floaterm window.
 
@@ -164,7 +164,7 @@ The following command allows you to compile and run your C code in the floaterm 
 #### `:[N]FloatermHide[!] [floaterm_name]` Hide the current floaterms window.
 
 - If `N` is given, hide the floaterm whose buffer number is `N`
-- If `floaterm_name` is given, show the floaterm named `floaterm_name`.
+- If `floaterm_name` is given, hide the floaterm named `floaterm_name`.
 - If `!` is given, hide all floaterms
 
 #### `:[N]FloatermKill[!] [floaterm_name]` Kill the current floaterm instance
@@ -172,6 +172,10 @@ The following command allows you to compile and run your C code in the floaterm 
 - If `N` is given, kill the floaterm whose buffer number is `N`
 - If `floaterm_name` is given, kill the floaterm instance named `floaterm_name`.
 - If `!` is given, kill all floaterms
+
+Note that the `floaterm_name` argument of `:FloatermToggle`, `:FloatermShow`,
+`:FloatermHide` and `:FloatermKill` can also be given in the form
+`--name=floaterm_name`.
 
 #### `:FloatermSend[!] [--name=floaterm_name] [cmd]` Send command to a job in floaterm.
 
