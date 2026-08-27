@@ -69,6 +69,28 @@ function! floaterm#new(bang, cmd, jobopts, config) abort
 endfunction
 
 " ----------------------------------------------------------------------------
+" resolve bufnr from a [count] or a name argument
+" ----------------------------------------------------------------------------
+" Strip the `--name=` prefix so that both `FloatermKill ft1` and
+" `FloatermKill --name=ft1` are accepted.
+function! s:parse_name(name) abort
+  return a:name =~# '^--name=' ? a:name[len('--name='):] : a:name
+endfunction
+
+" Returns the bufnr for `a:bufnr`/`a:name`: 0 if no target was given, or -1
+" if a name was given but no floaterm matches it.
+function! s:resolve_bufnr(bufnr, name) abort
+  if a:bufnr != 0
+    return a:bufnr
+  endif
+  let name = s:parse_name(a:name)
+  if empty(name)
+    return 0
+  endif
+  return floaterm#terminal#get_bufnr(name)
+endfunction
+
+" ----------------------------------------------------------------------------
 " toggle on/off the floaterm named `name`
 " ----------------------------------------------------------------------------
 function! floaterm#toggle(bang, bufnr, name)  abort
@@ -87,13 +109,10 @@ function! floaterm#toggle(bang, bufnr, name)  abort
     return
   endif
 
-  let bufnr = a:bufnr
-  if bufnr == 0 && !empty(a:name)
-    let bufnr = floaterm#terminal#get_bufnr(a:name)
-  endif
+  let bufnr = s:resolve_bufnr(a:bufnr, a:name)
 
   if bufnr == -1
-    call floaterm#new(a:bang, '', {}, {'name': a:name})
+    call floaterm#new(a:bang, '', {}, {'name': s:parse_name(a:name)})
   elseif bufnr == 0
     if &filetype == 'floaterm'
       call floaterm#window#hide(bufnr('%'))
@@ -189,11 +208,8 @@ function! floaterm#kill(bang, bufnr, name) abort
     return
   endif
 
-  let bufnr = a:bufnr
-  if bufnr == 0 && !empty(a:name)
-    let bufnr = floaterm#terminal#get_bufnr(a:name)
-  endif
-  if bufnr == 0 || bufnr == -1
+  let bufnr = s:resolve_bufnr(a:bufnr, a:name)
+  if bufnr == 0
     let bufnr = floaterm#buflist#curr()
   endif
 
@@ -213,11 +229,8 @@ function! floaterm#show(bang, bufnr, name) abort
     return
   endif
 
-  let bufnr = a:bufnr
-  if bufnr == 0 && !empty(a:name)
-    let bufnr = floaterm#terminal#get_bufnr(a:name)
-  endif
-  if bufnr == 0 || bufnr == -1
+  let bufnr = s:resolve_bufnr(a:bufnr, a:name)
+  if bufnr == 0
     let bufnr = floaterm#buflist#curr()
   endif
 
@@ -236,11 +249,8 @@ function! floaterm#hide(bang, bufnr, name) abort
     return
   endif
 
-  let bufnr = a:bufnr
-  if bufnr == 0 && !empty(a:name)
-    let bufnr = floaterm#terminal#get_bufnr(a:name)
-  endif
-  if bufnr == 0 || bufnr == -1
+  let bufnr = s:resolve_bufnr(a:bufnr, a:name)
+  if bufnr == 0
     let bufnr = bufnr('%')
   endif
 

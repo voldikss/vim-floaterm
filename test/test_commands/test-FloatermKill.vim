@@ -44,6 +44,33 @@ function! Test_01_kill() abort
     AssertEqual 0, IsBufValid(bufnr1)
     AssertEqual 0, IsBufValid(bufnr2)
 
+  Log '# FloatermKill --name=xxx'
+    FloatermNew --name=ft1
+    let bufnr1 = bufnr('%')
+    FloatermNew --name=ft2
+    let bufnr2 = bufnr('%')
+
+    FloatermKill --name=ft1
+    AssertEqual 0, IsBufValid(bufnr1)
+    AssertEqual 1, IsBufValid(bufnr2)
+    FloatermKill --name=ft2
+    AssertEqual 0, IsBufValid(bufnr1)
+    AssertEqual 0, IsBufValid(bufnr2)
+
+  Log '# FloatermKill nonexistent-name'
+    FloatermNew --name=ft1
+    let bufnr1 = bufnr('%')
+    FloatermNew --name=ft2
+    let bufnr2 = bufnr('%')
+    FloatermHide " otherwise vim8 testing fails
+
+    FloatermKill nonexistent
+    AssertEqual 1, IsBufValid(bufnr1)
+    AssertEqual 1, IsBufValid(bufnr2)
+    FloatermKill --name=nonexistent
+    AssertEqual 1, IsBufValid(bufnr1)
+    AssertEqual 1, IsBufValid(bufnr2)
+
   FloatermKill!
   stopinsert
 endfunction

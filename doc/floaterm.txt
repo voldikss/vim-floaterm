@@ -212,7 +212,8 @@ COMMANDS                                         *floaterm-commands*
 	Update floaterm window attributes(`height`, `width`, etc.).
 
 :[N]FloatermToggle[!] [floaterm_name]            *FloatermToggle*
-	Open or hide the floaterm window.
+	Open or hide the floaterm window. If the name doesn't match any
+	floaterm, a new floaterm with that name is created.
 
 :[N]FloatermShow[!] [floaterm_name]              *FloatermShow*
 	Show the current floaterm window.
@@ -222,6 +223,10 @@ COMMANDS                                         *floaterm-commands*
 
 :[N]FloatermKill[!] [floaterm_name]              *FloatermKill*
 	Kill the current floaterm instance
+
+The floaterm_name argument of |FloatermToggle|, |FloatermShow|,
+|FloatermHide| and |FloatermKill| can also be given in the form
+`--name=floaterm_name`.
 
 :FloatermSend[!] [--name=floaterm_name] [cmd]    *FloatermSend*
 	Send command to a job in floaterm.
