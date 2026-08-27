@@ -6,6 +6,8 @@
 " ============================================================================
 
 function! floaterm#wrapper#fzf#(cmd, jobopts, config) abort
+  " pickers are expected to be closed once they exit
+  let a:config.autoclose = get(a:config, 'autoclose', 'always')
   let s:fzf_tmpfile = tempname()
   let cmd = a:cmd
   if cmd !~ '--preview'

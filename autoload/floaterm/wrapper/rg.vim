@@ -14,6 +14,8 @@ else
 endif
 
 function! floaterm#wrapper#rg#(cmd, jobopts, config) abort
+  " pickers are expected to be closed once they exit
+  let a:config.autoclose = get(a:config, 'autoclose', 'always')
   let FZF_DEFAULT_COMMAND = join([
         \ "rg",
         \ "--column",

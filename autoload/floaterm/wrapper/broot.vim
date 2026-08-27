@@ -25,6 +25,8 @@ let s:broot_wrapper_config = [
 call writefile(s:broot_wrapper_config, s:broot_wrapper_confpath)
 
 function! floaterm#wrapper#broot#(cmd, jobopts, config) abort
+  " pickers are expected to be closed once they exit
+  let a:config.autoclose = get(a:config, 'autoclose', 'always')
   let s:broot_tmpfile = tempname()
   let original_dir = getcwd()
   lcd %:p:h

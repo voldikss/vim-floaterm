@@ -6,6 +6,8 @@
 " ============================================================================
 
 function! floaterm#wrapper#ranger#(cmd, jobopts, config) abort
+  " pickers are expected to be closed once they exit
+  let a:config.autoclose = get(a:config, 'autoclose', 'always')
   let s:ranger_tmpfile = tempname()
   let original_dir = getcwd()
   lcd %:p:h
