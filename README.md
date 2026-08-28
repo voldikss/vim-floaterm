@@ -140,9 +140,10 @@ The following command allows you to compile and run your C code in the floaterm 
 
 #### `:FloatermLast` Switch to the last floaterm instance
 
-#### `:FloatermUpdate [options]` Update floaterm window attributes(`height`, `width`, etc.).
+#### `:FloatermUpdate[!] [options]` Update floaterm window attributes(`height`, `width`, etc.).
 
 - The `options` is the same as in `:FloatermNew` (except `--silent`).
+- With `!`, apply the update to every floaterm instance.
 - Use `<TAB>` to get completion.
 
 #### `:[N]FloatermToggle[!] [floaterm_name]` Open or hide the floaterm window.

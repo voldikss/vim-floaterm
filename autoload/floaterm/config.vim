@@ -7,7 +7,10 @@
 function! floaterm#config#get(bufnr, key, ...) abort
   let key = 'floaterm_' . a:key
   let val = getbufvar(a:bufnr, key)
-  if val == '' && a:0 == 1
+  " only fall back to the default for an unset (empty-string) value; compare
+  " by type first so that a stored Float or Number is not compared to a String
+  " (which raises E892) and is returned as-is
+  if type(val) == v:t_string && val ==# '' && a:0 == 1
     return a:1
   endif
   return val

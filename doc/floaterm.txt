@@ -218,8 +218,9 @@ COMMANDS                                         *floaterm-commands*
 :FloatermLast                                    *FloatermLast*
 	Switch to the last floaterm instance
 
-:FloatermUpdate [options]                        *FloatermUpdate*
+:FloatermUpdate[!] [options]                       *FloatermUpdate*
 	Update floaterm window attributes(`height`, `width`, etc.).
+	With [!] the attributes are applied to every floaterm.
 
 :[N]FloatermToggle[!] [floaterm_name]            *FloatermToggle*
 	Open or hide the floaterm window. If the name doesn't match any

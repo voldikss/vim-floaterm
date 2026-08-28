@@ -21,7 +21,7 @@ function! floaterm#run(action, bang, rangeargs, cmdargs) abort
       call floaterm#terminal#send(bufnr, lines)
     endif
   elseif a:action == 'update'
-    call floaterm#update(config)
+    call floaterm#update(a:bang, config)
   endif
 endfunction
 
@@ -159,17 +159,40 @@ endfunction
 
 " ----------------------------------------------------------------------------
 " update the attributes of a floaterm
+" bang: apply the update to every floaterm
 " ----------------------------------------------------------------------------
-function! floaterm#update(config) abort
+function! floaterm#update(bang, config) abort
+  if a:bang
+    let buffers = floaterm#buflist#gather()
+    if empty(buffers)
+      call floaterm#util#show_msg('No more floaterms', 'warning')
+      return
+    endif
+    " remember the current floaterm so it can be restored at the end
+    let current = bufnr('%')
+    let current_winnr = winnr()
+    let cur_bufnr = &filetype ==# 'floaterm' ? current : floaterm#buflist#curr()
+    for bufnr in buffers
+      call s:update_one(bufnr, a:config)
+    endfor
+    " reopen the floaterm that was current before the update, if any
+    if cur_bufnr > 0 && bufwinnr(cur_bufnr) == -1
+      call floaterm#terminal#open_existing(cur_bufnr)
+    endif
+    return
+  endif
+
   if &filetype !=# 'floaterm'
     call floaterm#util#show_msg('You have to be in a floaterm window to change window config.', 'error')
     return
   endif
+  call s:update_one(bufnr('%'), a:config)
+endfunction
 
-  let bufnr = bufnr('%')
-  call floaterm#window#hide(bufnr)
-  call floaterm#config#set_all(bufnr, a:config)
-  call floaterm#terminal#open_existing(bufnr)
+function! s:update_one(bufnr, config) abort
+  call floaterm#window#hide(a:bufnr)
+  call floaterm#config#set_all(a:bufnr, a:config)
+  call floaterm#terminal#open_existing(a:bufnr)
 endfunction
 
 function! floaterm#next()  abort
