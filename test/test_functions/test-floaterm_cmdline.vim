@@ -77,7 +77,20 @@ function! Test_02_parse_expand_feature() abort
   AssertEqual expand('<cfile>:p:h'), floaterm#cmdline#parse('<cfile>:p:h')[0]
   AssertEqual expand('<cfile>:p:s?test?main?'), floaterm#cmdline#parse('<cfile>:p:s?test?main?')[0]
 
+  " #, #N, ## and their modifiers (#443)
+  silent !echo another.line > another.txt
+  edit ./another.txt
+  AssertEqual expand('#'), floaterm#cmdline#parse('#')[0]
+  AssertEqual expand('#:t'), floaterm#cmdline#parse('#:t')[0]
+  AssertEqual expand('#:p:h'), floaterm#cmdline#parse('#:p:h')[0]
+  AssertEqual expand('#2'), floaterm#cmdline#parse('#2')[0]
+  execute 'argadd ' . expand('%:p') . ' ' . expand('#:p')
+  AssertEqual expand('##'), floaterm#cmdline#parse('##')[0]
+  AssertEqual 'less ' . expand('##'), floaterm#cmdline#parse('less ##')[0]
+  AssertEqual '#', floaterm#cmdline#parse('\#')[0]
+
   silent !rm test.txt
+  silent !rm another.txt
 endfunction
 
 function! Test_03_complete() abort

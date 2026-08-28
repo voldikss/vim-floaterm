@@ -56,8 +56,12 @@ function! floaterm#cmdline#parse(argstr) abort
 endfunction
 
 function! s:expand(cmd) abort
-  let wildchars = '\(%\|#\|#\d\|<cfile>\|<afile>\|<abuf>\|<amatch>\|<cexpr>\|<sfile>\|<slnum>\|<sflnum>\|<SID>\|<stack>\|<cword>\|<cWORD>\|<client>\)'
-  let cmd = substitute(a:cmd, '\([^\\]\|^\)\zs' . wildchars . '\(<\|\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*\)\ze', '\=expand(submatch(0))', 'g')
+  " NOTE: '##' and '#N' must come before '#' in the alternation, otherwise
+  " they would never be tried and expand('#') would match instead. Likewise,
+  " '^' must come before '[^\\]' so that '##' at the beginning of the string
+  " is not treated as the '#' wildcard preceded by a '#' character
+  let wildchars = '\(%\|##\|#\d\|#\|<cfile>\|<afile>\|<abuf>\|<amatch>\|<cexpr>\|<sfile>\|<slnum>\|<sflnum>\|<SID>\|<stack>\|<cword>\|<cWORD>\|<client>\)'
+  let cmd = substitute(a:cmd, '\(^\|[^\\]\)\zs' . wildchars . '\(<\|\(\(:g\=s?.*?.*?\)\|\(:[phtreS8\~\.]\)\)*\)\ze', '\=expand(submatch(0))', 'g')
   let cmd = substitute(cmd, '\zs\\' . wildchars, '\=submatch(0)[1:]', 'g')
   return cmd
 endfunction
