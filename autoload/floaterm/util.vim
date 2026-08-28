@@ -103,7 +103,12 @@ function! floaterm#util#get_selected_text(visualmode, range, line1, line2) abort
   else
     let [lnum1, col1] = getpos("'<")[1:2]
     let [lnum2, col2] = getpos("'>")[1:2]
+    " The visual marks are only meaningful when they match the range given on
+    " the command line; otherwise the range was typed explicitly (e.g.
+    " `:2,3FloatermSend`) and the stale marks of an earlier selection must be
+    " ignored
     if lnum1 == 0 || col1 == 0 || lnum2 == 0 || col2 == 0
+          \ || a:line1 != lnum1 || a:line2 != lnum2
       let lines = getline(a:line1, a:line2)
     else
       let lines = getline(lnum1, lnum2)
