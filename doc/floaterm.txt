@@ -205,6 +205,9 @@ COMMANDS                                         *floaterm-commands*
 
 :FloatermNew[!] [options] [cmd]                  *FloatermNew*
 	Open a floaterm window.
+	Invalid values for enumerated options (`--wintype`, `--position`,
+	`--autoclose`, `--autoinsert`, `--titleposition`, `--opener`) are
+	reported and rejected.
 
 :FloatermPrev                                    *FloatermPrev*
 	Switch to the previous floaterm instance

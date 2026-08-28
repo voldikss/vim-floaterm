@@ -93,6 +93,50 @@ function! Test_02_parse_expand_feature() abort
   silent !rm another.txt
 endfunction
 
+function! Test_02b_parse_validation() abort
+  Log '# invalid wintype is rejected'
+    let [cmd, config] = floaterm#cmdline#parse('--wintype=bogus')
+    AssertEqual '', cmd
+    AssertEqual {}, config
+
+  Log '# invalid position is rejected'
+    let [cmd, config] = floaterm#cmdline#parse('--position=nowhere')
+    AssertEqual '', cmd
+    AssertEqual {}, config
+
+  Log '# invalid autoclose is rejected'
+    let [cmd, config] = floaterm#cmdline#parse('--autoclose=maybe')
+    AssertEqual '', cmd
+    AssertEqual {}, config
+
+  Log '# invalid autoinsert is rejected'
+    let [cmd, config] = floaterm#cmdline#parse('--autoinsert=sometimes')
+    AssertEqual '', cmd
+    AssertEqual {}, config
+
+  Log '# invalid titleposition is rejected'
+    let [cmd, config] = floaterm#cmdline#parse('--titleposition=middle')
+    AssertEqual '', cmd
+    AssertEqual {}, config
+
+  Log '# invalid opener is rejected'
+    let [cmd, config] = floaterm#cmdline#parse('--opener=bogus')
+    AssertEqual '', cmd
+    AssertEqual {}, config
+
+  Log '# empty title value is accepted (#324)'
+    let [cmd, config] = floaterm#cmdline#parse('--title=')
+    AssertEqual '', cmd
+    Assert has_key(config, 'title')
+    AssertEqual '', config.title
+
+  Log '# valid values still parse'
+    let [cmd, config] = floaterm#cmdline#parse('--wintype=split --position=aboveleft --autoclose=always')
+    AssertEqual 'split', config.wintype
+    AssertEqual 'aboveleft', config.position
+    AssertEqual 'always', config.autoclose
+endfunction
+
 function! Test_03_complete() abort
   let F = function('floaterm#cmdline#complete')
   let all_candidates = [

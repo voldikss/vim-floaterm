@@ -6,6 +6,24 @@
 " ============================================================================
 
 " ----------------------------------------------------------------------------
+" valid values for the enumerated options; used both for validation in
+" floaterm#cmdline#parse and for completion in floaterm#cmdline#complete (#324)
+" ----------------------------------------------------------------------------
+let s:valid_wintype = ['float', 'split', 'vsplit']
+let s:valid_opener = ['edit', 'split', 'vsplit', 'tabe', 'drop']
+let s:valid_autoclose = ['always', 'never', 'smart']
+let s:valid_autoinsert = ['always', 'never', 'smart']
+let s:valid_titleposition = ['left', 'center', 'right']
+let s:valid_position_float = [
+      \ 'auto', 'center', 'random', 'top', 'topleft', 'topright',
+      \ 'bottom', 'bottomleft', 'bottomright', 'left', 'right',
+      \ ]
+let s:valid_position_split = [
+      \ 'random', 'leftabove', 'aboveleft', 'rightbelow', 'belowright',
+      \ 'topleft', 'botright',
+      \ ]
+
+" ----------------------------------------------------------------------------
 " used for `:FloatermNew` and `:FloatermUpdate`
 " parse argument list to `cmd`(string, default '') and `config`(dict)
 " ----------------------------------------------------------------------------
@@ -19,30 +37,38 @@ function! floaterm#cmdline#parse(argstr) abort
       let arg = substitute(arg, '\\\\', '\', 'g')
       let arg = substitute(arg, '\\ ', ' ', 'g')
       if arg =~ '^--\S.*=\?.*$'
-        let pair = split(arg, '=')
-        if len(pair) != 2
-          if index(['--silent', '--disposable'], pair[0]) >= 0
-            let [key, value] = [pair[0][2:], v:true]
-          else
-            call floaterm#util#show_msg('Argument Error: No value given to option: ' . pair[0], 'error')
-            return [cmd, config]
-          endif
-        else
-          let [key, value] = [pair[0][2:], pair[1]]
-          if key == 'cwd'
-            if value == '<root>'
+        " split on the first '=' only, keeping an empty value (e.g. --title=)
+        let m = matchlist(arg, '^--\([^=]*\)=\(.*\)$')
+        if !empty(m)
+          let key = m[1]
+          let value = m[2]
+          if key ==# 'cwd'
+            if value ==# '<root>'
               let value = floaterm#path#get_root(getcwd())
-            elseif value == '<buffer>'
+            elseif value ==# '<buffer>'
               let value = expand('%:p:h')
-            elseif value == '<buffer-root>'
+            elseif value ==# '<buffer-root>'
               let value = floaterm#path#get_root(expand('%:p:h'))
             else
               let value = fnamemodify(value, ':p')
             endif
           endif
+        else
+          " no '=' at all: flag options (silent, disposable) or error
+          if index(['--silent', '--disposable'], arg) >= 0
+            let [key, value] = [arg[2:], v:true]
+          else
+            call floaterm#util#show_msg('Argument Error: No value given to option: ' . arg, 'error')
+            return [cmd, config]
+          endif
         endif
         if index(['height', 'width'], key) > -1
           let value = eval(value)
+        endif
+        let err = s:validate(key, value, config)
+        if !empty(err)
+          call floaterm#util#show_msg(err, 'error')
+          return [cmd, config]
         endif
         let config[key] = value
       else
@@ -53,6 +79,41 @@ function! floaterm#cmdline#parse(argstr) abort
     endfor
   endif
   return [cmd, config]
+endfunction
+
+" returns an error message string for an invalid option value, or '' if valid
+function! s:validate(key, value, config) abort
+  if a:key ==# 'wintype' && index(s:valid_wintype, a:value) < 0
+    return printf('Argument Error: Invalid value "%s" for --wintype, valid: %s',
+          \ a:value, join(s:valid_wintype, ', '))
+  endif
+  if a:key ==# 'opener' && index(s:valid_opener, a:value) < 0
+    return printf('Argument Error: Invalid value "%s" for --opener, valid: %s',
+          \ a:value, join(s:valid_opener, ', '))
+  endif
+  if a:key ==# 'autoclose' && index(s:valid_autoclose, a:value) < 0
+    return printf('Argument Error: Invalid value "%s" for --autoclose, valid: %s',
+          \ a:value, join(s:valid_autoclose, ', '))
+  endif
+  if a:key ==# 'autoinsert' && index(s:valid_autoinsert, a:value) < 0
+    return printf('Argument Error: Invalid value "%s" for --autoinsert, valid: %s',
+          \ a:value, join(s:valid_autoinsert, ', '))
+  endif
+  if a:key ==# 'titleposition' && index(s:valid_titleposition, a:value) < 0
+    return printf('Argument Error: Invalid value "%s" for --titleposition, valid: %s',
+          \ a:value, join(s:valid_titleposition, ', '))
+  endif
+  if a:key ==# 'position'
+    " the valid set depends on wintype; the float set also includes the values
+    " that config#parse maps to split equivalents (top, left, bottom, right,
+    " center), so accept the union of both
+    let valid = s:valid_position_float + s:valid_position_split
+    if index(valid, a:value) < 0
+      return printf('Argument Error: Invalid value "%s" for --position, valid: %s',
+            \ a:value, join(uniq(sort(copy(valid))), ', '))
+    endif
+  endif
+  return ''
 endfunction
 
 function! s:expand(cmd) abort
@@ -99,19 +160,19 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   endfor
 
   if match(a:arg_lead, '--wintype=') > -1
-    let vals = ['float', 'split', 'vsplit']
+    let vals = copy(s:valid_wintype)
     let candidates = map(vals, {idx -> '--wintype=' . vals[idx]})
   elseif match(a:arg_lead, '--opener=') > -1
-    let vals = ['edit', 'split', 'vsplit', 'tabe', 'drop']
+    let vals = copy(s:valid_opener)
     if index(vals, g:floaterm_opener) == -1
       call add(vals, g:floaterm_opener)
     endif
     let candidates = map(vals, {idx -> '--opener=' . vals[idx]})
   elseif match(a:arg_lead, '--autoclose=') > -1
-    let vals = ['always', 'never', 'smart']
+    let vals = copy(s:valid_autoclose)
     let candidates = map(vals, {idx -> '--autoclose=' . vals[idx]})
   elseif match(a:arg_lead, '--autoinsert=') > -1
-    let vals = ['always', 'never', 'smart']
+    let vals = copy(s:valid_autoinsert)
     let candidates = map(vals, {idx -> '--autoinsert=' . vals[idx]})
   elseif match(a:arg_lead, '--silent') > -1
     return []
@@ -133,36 +194,17 @@ function! floaterm#cmdline#complete(arg_lead, cmd_line, cursor_pos) abort
   elseif match(a:arg_lead, '--borderchars=') > -1
     return []
   elseif match(a:arg_lead, '--titleposition=') > -1
-    return []
+    let vals = copy(s:valid_titleposition)
+    let candidates = map(vals, {idx -> '--titleposition=' . vals[idx]})
   elseif match(a:arg_lead, '--position=') > -1
     let wintype = matchstr(a:cmd_line, '--wintype=\zs\w\+\ze')
     if empty(wintype)
       let wintype = g:floaterm_wintype
     endif
-    if wintype == 'float'
-      let vals = [
-            \ 'auto',
-            \ 'center',
-            \ 'random',
-            \ 'top',
-            \ 'topleft',
-            \ 'topright',
-            \ 'bottom',
-            \ 'bottomleft',
-            \ 'bottomright',
-            \ 'left',
-            \ 'right',
-            \ ]
+    if wintype ==# 'float'
+      let vals = copy(s:valid_position_float)
     else
-      let vals = [
-            \ 'random',
-            \ 'leftabove',
-            \ 'aboveleft',
-            \ 'rightbelow',
-            \ 'belowright',
-            \ 'topleft',
-            \ 'botright',
-            \ ]
+      let vals = copy(s:valid_position_split)
     endif
     let candidates = map(vals, {idx -> '--position=' . vals[idx]})
     " The dash absolutely belongs to the `options` instead of executable
