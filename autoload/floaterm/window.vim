@@ -110,10 +110,17 @@ function! s:winexists(winid) abort
   return !empty(getwininfo(a:winid))
 endfunction
 
+function! s:use_winborder() abort
+  " neovim 0.11+ can draw the border itself via the 'winborder' option
+  return exists('&winborder') && &winborder !=# '' && &winborder !=# 'none'
+endfunction
+
 function! s:open_float(bufnr, config) abort
+  let native_border = s:use_winborder()
   let row = a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1)
   let col = a:config.col + (a:config.anchor[1] == 'W' ? 1 : -1)
-  if exists('&winborder') && &winborder !=# '' && &winborder !=# 'none'
+  if native_border
+    " the border drawn by neovim extends outwards from the window
     let row = a:config.row
     let col = a:config.col
   end
@@ -127,11 +134,22 @@ function! s:open_float(bufnr, config) abort
         \ 'height': a:config.height - 2,
         \ 'style':'minimal',
         \ }
+  if native_border && !empty(a:config.title)
+    let options.title = a:config.title
+    let options.title_pos = index(['left', 'center', 'right'], a:config.titleposition) >= 0
+          \ ? a:config.titleposition : 'left'
+  endif
   let winid = nvim_open_win(a:bufnr, v:true, options)
   call s:init_win(winid, v:false)
+  if native_border
+    " the border and its title are drawn by neovim itself; route them to
+    " FloatermBorder, the highlight group used by the hand-drawn border
+    call setwinvar(winid, '&winhl',
+          \ 'Normal:Floaterm,NormalNC:FloatermNC,FloatBorder:FloatermBorder,FloatTitle:FloatermBorder')
+  endif
   call floaterm#config#set(a:bufnr, 'winid', winid)
 
-  if !(exists('&winborder') && &winborder !=# '' && &winborder !=# 'none')
+  if !native_border
     let bd_options = {
           \ 'relative': 'editor',
           \ 'anchor': a:config.anchor,

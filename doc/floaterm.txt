@@ -250,6 +250,12 @@ To customize, use |hi| command together with the colors you prefer.  For example
 Besides, there is a neovim only |hi-group| which can be used to configure
 no-current-focused window(:help |hl-NormalNC|).
 
+On neovim 0.11+, if the 'winborder' option is set to a value other than
+"none", the border is drawn by neovim itself instead of this plugin: no
+border window is created and |g:floaterm_borderchars| is ignored. The
+title (see |g:floaterm_title|) is rendered inside that border, still
+colored by the FloatermBorder highlight group.
+
 ==============================================================================
 EXTENSIONS                                       *floaterm-extensions*
 
