@@ -323,3 +323,72 @@ function! floaterm#window#find() abort
   endfor
   return found_winnr
 endfunction
+
+" ----------------------------------------------------------------------------
+" recompute the geometry of every visible floaterm, called on |VimResized| so
+" that floaterms sized proportionally (e.g. g:floaterm_width = 0.6) follow the
+" new editor size (#296). Hidden floaterms are repositioned when they are
+" opened again, so only visible ones need to be updated here.
+" ----------------------------------------------------------------------------
+function! floaterm#window#on_vimresized() abort
+  for bufnr in floaterm#buflist#gather()
+    let winid = floaterm#config#get(bufnr, 'winid', -1)
+    if !s:winexists(winid)
+      continue
+    endif
+    let config = floaterm#config#parse(bufnr, floaterm#config#get_all(bufnr))
+    if config.wintype =~ 'split'
+      let winnr = bufwinnr(bufnr)
+      if winnr > 0
+        if config.wintype == 'vsplit'
+          execute 'vertical ' . winnr . 'resize ' . config.width
+        else
+          execute winnr . 'resize ' . config.height
+        endif
+      endif
+    elseif s:has_float
+      let native_border = s:use_winborder()
+      let row = config.row + (config.anchor[0] == 'N' ? 1 : -1)
+      let col = config.col + (config.anchor[1] == 'W' ? 1 : -1)
+      if native_border
+        let row = config.row
+        let col = config.col
+      endif
+      call nvim_win_set_config(winid, {
+            \ 'relative': 'editor',
+            \ 'anchor': config.anchor,
+            \ 'row': row,
+            \ 'col': col,
+            \ 'width': config.width - 2,
+            \ 'height': config.height - 2,
+            \ })
+      let bd_winid = get(config, 'borderwinid', -1)
+      if s:winexists(bd_winid)
+        " the border buffer is a static frame, rebuild it for the new size
+        call nvim_win_set_buf(bd_winid, floaterm#buffer#create_border_buf(config))
+        call nvim_win_set_config(bd_winid, {
+              \ 'relative': 'editor',
+              \ 'anchor': config.anchor,
+              \ 'row': config.row,
+              \ 'col': config.col,
+              \ 'width': config.width,
+              \ 'height': config.height,
+              \ })
+      endif
+    else
+      let title = config.title
+      if config.titleposition != 'left'
+        let title = floaterm#buffer#create_top_border(config, config.width - 2)
+      endif
+      call popup_setoptions(winid, {'title': title})
+      call popup_move(winid, {
+            \ 'line': config.row,
+            \ 'col': config.col,
+            \ 'maxwidth': config.width - 2,
+            \ 'minwidth': config.width - 2,
+            \ 'maxheight': config.height - 2,
+            \ 'minheight': config.height - 2,
+            \ })
+    endif
+  endfor
+endfunction

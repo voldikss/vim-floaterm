@@ -63,6 +63,9 @@ g:floaterm_height                                *g:floaterm_height*
     If |Float|, the height is relative to 'lines'.
     Default value is 0.6.
 
+Visible floaterms are automatically resized and repositioned after
+|VimResized|, so windows sized with a |Float| follow the new editor size.
+
 g:floaterm_position                              *g:floaterm_position*
 	Type |String|.
 	The position of the floaterm window.

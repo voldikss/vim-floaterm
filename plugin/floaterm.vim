@@ -102,3 +102,9 @@ call s:bind_keymap(g:floaterm_keymap_hide,   'FloatermHide')
 call s:bind_keymap(g:floaterm_keymap_show,   'FloatermShow')
 call s:bind_keymap(g:floaterm_keymap_kill,   'FloatermKill')
 call s:bind_keymap(g:floaterm_keymap_toggle, 'FloatermToggle')
+
+" keep visible floaterms in sync with the editor size
+augroup floaterm_vimresized
+  autocmd!
+  autocmd VimResized * call floaterm#window#on_vimresized()
+augroup END
