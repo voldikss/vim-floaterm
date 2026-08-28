@@ -10,7 +10,7 @@ function! floaterm#wrapper#vifm#(cmd, jobopts, config) abort
   let a:config.autoclose = get(a:config, 'autoclose', 'always')
   let s:vifm_tmpfile = tempname()
   let original_dir = getcwd()
-  lcd %:p:h
+  execute 'lcd' fnameescape(floaterm#util#bufdir())
 
   let cmdlist = split(a:cmd)
   let cmd = 'vifm --choose-files "' . s:vifm_tmpfile . '"'

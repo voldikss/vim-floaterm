@@ -144,6 +144,18 @@ function! floaterm#util#leftalign_lines(lines) abort
   return linelist
 endfunction
 
+" Return the directory of the current buffer for use by the file-manager
+" wrappers. Falls back to the current working directory when the buffer has no
+" file name (e.g. an unnamed scratch buffer) or its parent is not accessible,
+" so that `lcd %:p:h` never throws and aborts the wrapper (#293, #383).
+function! floaterm#util#bufdir() abort
+  let path = expand('%:p:h')
+  if empty(path) || !isdirectory(path)
+    return getcwd()
+  endif
+  return path
+endfunction
+
 function! floaterm#util#use_sh_or_cmd() abort
   let [shell, shellslash, shellcmdflag, shellxquote] = [&shell, &shellslash, &shellcmdflag, &shellxquote]
   if has('win32')
