@@ -409,7 +409,7 @@ tnoremap <silent> <F6>  <C-\><C-n>:<c-u>FloatermToggle<cr>
 
 ### Highlights
 
-There are two `highlight-groups` to specify the color of floaterm (also the
+There are some `highlight-groups` to specify the color of floaterm (also the
 border color if `g: floaterm_wintype` is `'float'`) window.
 
 To customize, use `hi` command together with the colors you prefer.
@@ -421,7 +421,12 @@ To customize, use `hi` command together with the colors you prefer.
 hi Floaterm guibg=black
 " Set floating window border line color to cyan, and background to orange
 hi FloatermBorder guibg=orange guifg=cyan
+" Set the title of floaterm window to red (defaults to FloatermBorder)
+hi FloatermTitle guifg=red
 ```
+
+Note: on vim the title is drawn by the popup window itself and always uses
+the color of the border; `FloatermTitle` has no effect there.
 
 <details>
 <summary>Demo</summary>

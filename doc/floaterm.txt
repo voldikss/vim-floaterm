@@ -240,8 +240,8 @@ https://github.com/voldikss/vim-floaterm#commands
 ==============================================================================
 HIGHLIGHT                                        *floaterm-highlight*
 
-This plugin provides two |highlight-groups| to specify the bg/fg color of
-floaterm (also the border color if |g:floaterm_wintype| is 'float')window.
+This plugin provides these |highlight-groups| to specify the bg/fg color of
+floaterm (also the border color if |g:floaterm_wintype| is 'float') window.
 
 To customize, use |hi| command together with the colors you prefer.  For example,
  >
@@ -249,15 +249,24 @@ To customize, use |hi| command together with the colors you prefer.  For example
 	hi Floaterm guibg=black
 	" Set floating window border line color to cyan, and background to orange
 	hi FloatermBorder guibg=orange guifg=cyan
+	" Set the title (see |g:floaterm_title|) to red
+	hi FloatermTitle guifg=red
 <
+
+The title of the floaterm window is colored by the FloatermTitle highlight
+group, which defaults to FloatermBorder.
+
 Besides, there is a neovim only |hi-group| which can be used to configure
 no-current-focused window(:help |hl-NormalNC|).
 
 On neovim 0.11+, if the 'winborder' option is set to a value other than
 "none", the border is drawn by neovim itself instead of this plugin: no
 border window is created and |g:floaterm_borderchars| is ignored. The
-title (see |g:floaterm_title|) is rendered inside that border, still
-colored by the FloatermBorder highlight group.
+title (see |g:floaterm_title|) is rendered inside that border, colored by
+the FloatermTitle highlight group.
+
+Note: on vim the title is drawn by the popup window itself and always uses
+the color of the border (FloatermBorder); FloatermTitle has no effect there.
 
 ==============================================================================
 EXTENSIONS                                       *floaterm-extensions*

@@ -7,6 +7,8 @@
 
 let s:has_popup = has('textprop') && has('patch-8.2.0286')
 let s:has_float = has('nvim') && exists('*nvim_win_set_config')
+" namespace of the title highlight inside the hand-drawn border buffer (#366)
+let s:title_ns = has('nvim') ? nvim_create_namespace('floaterm.title') : -1
 
 function! floaterm#window#win_gettype() abort
   if empty(g:floaterm_wintype)
@@ -115,6 +117,19 @@ function! s:use_winborder() abort
   return exists('&winborder') && &winborder !=# '' && &winborder !=# 'none'
 endfunction
 
+" Highlight the title drawn inside the hand-drawn border buffer with
+" FloatermTitle instead of the FloatermBorder used by the border itself (#366)
+function! s:highlight_border_title(bd_bufnr, config) abort
+  if empty(a:config.title)
+    return
+  endif
+  let [start, end] = floaterm#buffer#title_range(a:config, a:config.width - 2)
+  " the top border line starts with the topleft corner character
+  let offset = strlen(a:config.borderchars[4])
+  call nvim_buf_add_highlight(a:bd_bufnr, s:title_ns, 'FloatermTitle',
+        \ 0, offset + start, offset + end)
+endfunction
+
 function! s:open_float(bufnr, config) abort
   let native_border = s:use_winborder()
   let row = a:config.row + (a:config.anchor[0] == 'N' ? 1 : -1)
@@ -142,10 +157,11 @@ function! s:open_float(bufnr, config) abort
   let winid = nvim_open_win(a:bufnr, v:true, options)
   call s:init_win(winid, v:false)
   if native_border
-    " the border and its title are drawn by neovim itself; route them to
-    " FloatermBorder, the highlight group used by the hand-drawn border
+    " the border and its title are drawn by neovim itself; route them to the
+    " FloatermBorder and FloatermTitle highlight groups used by the hand-drawn
+    " border
     call setwinvar(winid, '&winhl',
-          \ 'Normal:Floaterm,NormalNC:FloatermNC,FloatBorder:FloatermBorder,FloatTitle:FloatermBorder')
+          \ 'Normal:Floaterm,NormalNC:FloatermNC,FloatBorder:FloatermBorder,FloatTitle:FloatermTitle')
   endif
   call floaterm#config#set(a:bufnr, 'winid', winid)
 
@@ -164,6 +180,7 @@ function! s:open_float(bufnr, config) abort
     let bd_winid = nvim_open_win(bd_bufnr, v:false, bd_options)
     call s:init_win(bd_winid, v:true)
     call floaterm#config#set(a:bufnr, 'borderwinid', bd_winid)
+    call s:highlight_border_title(bd_bufnr, a:config)
   end
   return winid
 endfunction
@@ -365,7 +382,9 @@ function! floaterm#window#on_vimresized() abort
       let bd_winid = get(config, 'borderwinid', -1)
       if s:winexists(bd_winid)
         " the border buffer is a static frame, rebuild it for the new size
-        call nvim_win_set_buf(bd_winid, floaterm#buffer#create_border_buf(config))
+        let bd_bufnr = floaterm#buffer#create_border_buf(config)
+        call nvim_win_set_buf(bd_winid, bd_bufnr)
+        call s:highlight_border_title(bd_bufnr, config)
         call nvim_win_set_config(bd_winid, {
               \ 'relative': 'editor',
               \ 'anchor': config.anchor,

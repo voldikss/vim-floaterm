@@ -53,6 +53,26 @@ function! floaterm#buffer#create_border_buf(options) abort
   return floaterm#buffer#create_scratch_buf(content)
 endfunction
 
+" Return the [start, end) byte range of the title inside the top border line
+" built by floaterm#buffer#create_top_border() for the same {options} and
+" {width}, so that the title can be highlighted with its own highlight group
+function! floaterm#buffer#title_range(options, width) abort
+  let c_top = a:options.borderchars[0]
+  let title = a:options.title
+  let nb_fill_char = a:width - strdisplaywidth(title)
+  if a:options.titleposition ==# 'center'
+    " same alignment as in floaterm#buffer#create_top_border()
+    let fill = float2nr(floor(nb_fill_char / 2.0))
+  elseif a:options.titleposition ==# 'right'
+    let fill = nb_fill_char
+  else " Default align to the left
+    let fill = 0
+  endif
+  " `fill` is a count of border characters, convert it to a byte offset
+  let start = strlen(repeat(c_top, fill))
+  return [start, start + strlen(title)]
+endfunction
+
 function! floaterm#buffer#getlines(bufnr, length) abort
   let lines = []
   if a:bufnr == -1

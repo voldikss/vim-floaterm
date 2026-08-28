@@ -15,10 +15,10 @@ function! Test_01_winborder_title() abort
     AssertEqual 'floaterm(1/1)', config.title[0][0]
     AssertEqual 'left', config.title_pos
 
-    " FloatermBorder highlights the native border and its title
+    " FloatermBorder highlights the native border, FloatermTitle its title
     let winhl = getwinvar(winid, '&winhl')
     Assert winhl =~# 'FloatBorder:FloatermBorder'
-    Assert winhl =~# 'FloatTitle:FloatermBorder'
+    Assert winhl =~# 'FloatTitle:FloatermTitle'
 
     Log '# custom title and title position'
     FloatermNew --title=thistitle --titleposition=center
