@@ -52,6 +52,11 @@ let g:floaterm_rootmarkers      = get(g:, 'floaterm_rootmarkers', ['.project', '
 let g:floaterm_opener           = get(g:, 'floaterm_opener', 'split')
 let g:floaterm_giteditor        = get(g:, 'floaterm_giteditor', v:true)
 let g:floaterm_titleposition    = get(g:, 'floaterm_titleposition', 'left')
+" Whether to run `:checktime` after hiding a floaterm, to refresh buffers that
+" may have changed on disk while the floaterm was visible. The scan walks every
+" buffer and can be slow on large buffer counts; set this to v:false to skip it
+" (#424). Errors from renamed/removed files are already suppressed (#365).
+let g:floaterm_checktime        = get(g:, 'floaterm_checktime', v:true)
 
 
 command! -nargs=* -complete=customlist,floaterm#cmdline#complete -bang -range

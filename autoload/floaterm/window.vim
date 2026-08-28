@@ -329,7 +329,13 @@ function! floaterm#window#hide(bufnr) abort
   \ && floaterm#terminal#jobexists(a:bufnr)
     call floaterm#terminal#kill(a:bufnr, v:true)
   endif
-  checktime
+  " Refresh buffers that may have changed on disk while the floaterm was
+  " visible. `silent!` avoids E211 when a buffer's file was renamed/removed
+  " (#365); the check is gated by g:floaterm_checktime so users for whom the
+  " full-buffer scan is too slow can disable it (#424).
+  if get(g:, 'floaterm_checktime', v:true)
+    silent! checktime
+  endif
 endfunction
 
 " find **one** visible floaterm window

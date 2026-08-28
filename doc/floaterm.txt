@@ -158,6 +158,15 @@ g:floaterm_giteditor                             *g:floaterm_giteditor*
     Jujutsu.
     Default value is |v:true|.
 
+g:floaterm_checktime                             *g:floaterm_checktime*
+    Type |Boolean|.
+    Whether to run `:checktime` after hiding a floaterm, so that buffers
+    modified on disk while the floaterm was visible are refreshed. The scan
+    walks every listed buffer and can be slow with many buffers; set this to
+    |v:false| to skip it. Errors caused by buffers whose files were renamed or
+    removed are always suppressed.
+    Default value is |v:true|.
+
 ==============================================================================
 MAPPINGS                                         *floaterm-mappings*
 
