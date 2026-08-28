@@ -215,7 +215,11 @@ floaterms in total and the current is the first one) at the top left corner of
 floaterm window.
 
 Default: `'floaterm: $1/$2'`(`$1` and `$2` will be substituted by 'the index of
-the current floaterm' and 'the count of all floaterms' respectively)
+the current floaterm' and 'the count of all floaterms' respectively, and `$3`
+by the floaterm name given via `--name`, empty when no name was set).
+
+When `--title` is not passed to `:FloatermNew`, `g:floaterm_title` is left at
+its default, and `--name` is provided, the name is used as the title directly.
 
 Example: `'floaterm($1|$2)'`
 

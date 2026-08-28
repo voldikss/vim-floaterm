@@ -46,7 +46,14 @@ g:floaterm_title                                 *g:floaterm_title*
 	Type |String|.
 	Title format in the floating/popup terminal window.
 	If empty, the title won't be show.
-	Default value is 'floaterm: $1/$2'
+	`$1` is substituted with the index of the current floaterm, `$2`
+	with the total count of floaterms, and `$3` with the floaterm name
+	(see the `--name` option of |FloatermNew|), empty when no name was
+	set.
+	When `--title` is not given to |FloatermNew|, |g:floaterm_title| is
+	left at its default and `--name` is provided, the name is used as
+	the title directly.
+	Default value is 'floaterm($1/$2)'
 
 g:floaterm_wintype                               *g:floaterm_wintype*
     Type |String|.

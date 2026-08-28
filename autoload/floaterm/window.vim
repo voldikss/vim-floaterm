@@ -103,8 +103,11 @@ function! floaterm#window#make_title(bufnr, tmpl) abort
   let buffers = floaterm#buflist#gather()
   let cnt = len(buffers)
   let idx = index(buffers, a:bufnr) + 1
+  " $3 expands to the floaterm name (the --name option), empty when unset
+  let name = floaterm#config#get(a:bufnr, 'name', '')
   let title = substitute(a:tmpl, '$1', idx, 'gm')
   let title = substitute(title, '$2', cnt, 'gm')
+  let title = substitute(title, '$3', name, 'gm')
   return title
 endfunction
 

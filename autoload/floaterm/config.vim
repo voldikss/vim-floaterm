@@ -39,7 +39,18 @@ endfunction
 " @return: config, generated from `a:config`, has more additional info, used to
 "   config the floaterm style
 function! floaterm#config#parse(bufnr, config) abort
-  let a:config.title          = get(a:config, 'title', g:floaterm_title)
+  " title defaults to g:floaterm_title; when the user did not pass --title,
+  " did not customize g:floaterm_title, but gave --name, use the name as the
+  " title so named floaterms are shown with a meaningful title out of the box
+  " (#369). A custom g:floaterm_title (possibly containing $3) is always
+  " honored
+  if !has_key(a:config, 'title')
+        \ && g:floaterm_title ==# 'floaterm($1/$2)'
+        \ && !empty(get(a:config, 'name', ''))
+    let a:config.title = get(a:config, 'name', '')
+  else
+    let a:config.title = get(a:config, 'title', g:floaterm_title)
+  endif
   let a:config.width          = get(a:config, 'width', g:floaterm_width)
   let a:config.height         = get(a:config, 'height', g:floaterm_height)
   let a:config.opener         = get(a:config, 'opener', g:floaterm_opener)
