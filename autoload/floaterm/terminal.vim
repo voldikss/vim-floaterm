@@ -10,7 +10,10 @@ let s:channel_map = {}
 
 function! s:on_floaterm_create(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
-  call setbufvar(a:bufnr, '&filetype', 'floaterm')
+  " already set before termopen() on nvim (#438)
+  if getbufvar(a:bufnr, '&filetype') !=# 'floaterm'
+    call setbufvar(a:bufnr, '&filetype', 'floaterm')
+  endif
   augroup floaterm_enter_insertmode
     autocmd! * <buffer>
     autocmd! User FloatermOpen
@@ -123,7 +126,13 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
           \ [bufnr, get(a:jobopts, 'on_exit', v:null)]
           \ )
     let config = floaterm#config#parse(bufnr, a:config)
+    call floaterm#config#set(bufnr, 'cmd', a:cmd)
     call floaterm#window#open(bufnr, config)
+    " the filetype must be set before termopen() so that the TermOpen and
+    " FileType events already see 'floaterm' and the b:floaterm_ variables
+    " (#438); in vim the buffer isn't known before term_start(), so this only
+    " works on nvim
+    call setbufvar(bufnr, '&filetype', 'floaterm')
     let ch = termopen(a:cmd, a:jobopts)
     let s:channel_map[bufnr] = ch
   else
@@ -150,9 +159,9 @@ function! s:spawn_terminal(cmd, jobopts, config) abort
     let s:channel_map[bufnr] = job_getchannel(job)
     let config = floaterm#config#parse(bufnr, a:config)
     call floaterm#window#open(bufnr, config)
+    call floaterm#config#set(bufnr, 'cmd', a:cmd)
   endif
   call floaterm#config#set(bufnr, 'jobexists', v:true)
-  call floaterm#config#set(bufnr, 'cmd', a:cmd)
   call s:on_floaterm_create(bufnr)
   return bufnr
 endfunction
