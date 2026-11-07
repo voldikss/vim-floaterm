@@ -30,10 +30,10 @@ if type(g:floaterm_autoclose) == v:t_number
 endif
 " Whether to enter Terminal-mode after opening a floaterm.
 " Available: 'always', 'never', 'smart' (see g:floaterm_autoinsert in the doc)
-" Backward compatibility: v:false is converted to 'never', v:true to 'smart'
-let g:floaterm_autoinsert       = get(g:, 'floaterm_autoinsert', 'smart')
-if type(g:floaterm_autoinsert) == v:t_bool
-  let g:floaterm_autoinsert     = g:floaterm_autoinsert == v:false ? 'never' : 'smart'
+" Backward compatibility: false/zero is 'never', true/nonzero is 'always'
+let g:floaterm_autoinsert       = get(g:, 'floaterm_autoinsert', 'always')
+if type(g:floaterm_autoinsert) == v:t_bool || type(g:floaterm_autoinsert) == v:t_number
+  let g:floaterm_autoinsert     = g:floaterm_autoinsert ? 'always' : 'never'
 endif
 " Whether to hide previous floaterms before switching to or opening another
 " one.

@@ -331,10 +331,10 @@ Type `String`. Whether to enter Terminal-mode after opening a floaterm.
   is at or beyond the last non-blank line (i.e., you were at the shell prompt),
   otherwise stay in normal mode
 
-For backward compatibility, `v:false` is treated as `'never'` and `v:true` is
-treated as `'smart'`.
+For backward compatibility, `v:false` or `0` is treated as `'never'` and
+`v:true` or a nonzero number is treated as `'always'`.
 
-Default: `'smart'`.
+Default: `'always'`.
 
 #### **`g:floaterm_titleposition`**
 
