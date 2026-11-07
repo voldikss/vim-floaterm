@@ -140,9 +140,9 @@ g:floaterm_autoinsert                            *g:floaterm_autoinsert*
             only if the cursor is at or beyond the last non-blank line
             (i.e., the user was at the shell prompt), otherwise stay in
             normal mode
-	For backward compatibility, |v:false| is treated as 'never' and
-	|v:true| is treated as 'smart'.
-	Default value is 'smart'.
+	For backward compatibility, |v:false| or 0 is treated as 'never' and
+	|v:true| or a nonzero number is treated as 'always'.
+	Default value is 'always'.
 
 g:floaterm_titleposition                        *g:floaterm_titleposition*
     Type |String|.

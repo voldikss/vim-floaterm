@@ -59,7 +59,7 @@ function! floaterm#util#open(locations, ...) abort
 endfunction
 
 function! s:enter_insert() abort
-  if mode() !~# '[it]'
+  if mode() !=# 'i'
     if has('nvim')
       startinsert
     else
