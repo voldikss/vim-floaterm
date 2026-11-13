@@ -29,8 +29,7 @@ endfunction
 " argument `jobopts` is passed by user in the case using this function as API
 function! floaterm#new(bang, cmd, jobopts, config) abort
   let env = floaterm#util#setenv()
-  let vim_version = floaterm#util#vim_version()
-  if vim_version[0] == 'nvim' && vim_version[1] <= '0.4.4'
+  if has('nvim') && !has('nvim-0.5')
     for [name, value] in items(env)
       call setenv(name, value)
     endfor
