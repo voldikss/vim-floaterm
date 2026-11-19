@@ -9,6 +9,7 @@ let s:has_popup = has('textprop') && has('patch-8.2.0286')
 let s:has_float = has('nvim') && exists('*nvim_win_set_config')
 " namespace of the title highlight inside the hand-drawn border buffer (#366)
 let s:title_ns = has('nvim') ? nvim_create_namespace('floaterm.title') : -1
+let s:resize_timer = -1
 
 function! floaterm#window#win_gettype() abort
   if empty(g:floaterm_wintype)
@@ -276,6 +277,11 @@ function! floaterm#window#open(bufnr, config) abort
       call s:open_popup(a:bufnr, a:config)
     endif
   endif
+
+  augroup floaterm_vimresized
+    autocmd!
+    autocmd VimResized * call floaterm#window#schedule_resize()
+  augroup END
 endfunction
 
 " Record the cursor position of the floaterm `bufnr`, used by the smart mode
@@ -324,6 +330,22 @@ function! floaterm#window#hide(bufnr) abort
       endtry
     endif
   endif
+  let visible = v:false
+  for bufnr in floaterm#buflist#gather()
+    if bufnr != a:bufnr && s:winexists(floaterm#config#get(bufnr, 'winid', -1))
+      let visible = v:true
+      break
+    endif
+  endfor
+  if !visible
+    augroup floaterm_vimresized
+      autocmd!
+    augroup END
+    if s:resize_timer != -1
+      call timer_stop(s:resize_timer)
+      let s:resize_timer = -1
+    endif
+  endif
   if was_visible && bufexists(a:bufnr)
   \ && floaterm#config#get(a:bufnr, 'disposable')
   \ && floaterm#terminal#jobexists(a:bufnr)
@@ -356,6 +378,19 @@ endfunction
 " new editor size (#296). Hidden floaterms are repositioned when they are
 " opened again, so only visible ones need to be updated here.
 " ----------------------------------------------------------------------------
+function! floaterm#window#schedule_resize() abort
+  " Window changes must run after the editor finishes processing VimResized.
+  if s:resize_timer != -1
+    call timer_stop(s:resize_timer)
+  endif
+  let s:resize_timer = timer_start(0, function('s:resize_after_event'))
+endfunction
+
+function! s:resize_after_event(timer) abort
+  let s:resize_timer = -1
+  call floaterm#window#on_vimresized()
+endfunction
+
 function! floaterm#window#on_vimresized() abort
   for bufnr in floaterm#buflist#gather()
     let winid = floaterm#config#get(bufnr, 'winid', -1)
