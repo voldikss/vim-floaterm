@@ -1,9 +1,8 @@
 " tests for g:floaterm_autoinsert
 " NOTE: `:startinsert` takes effect only after the current command or script
 " finishes, therefore `mode()` can not be asserted right after `FloatermNew!`
-" within the same function. The insert-mode assertions are covered by the
-" headless timer-driven tests instead. Here we assert the normal-mode cases
-" (which are synchronous) and the recorded state.
+" within the same function. Here we assert the normal-mode cases (which are
+" synchronous), the recorded state, and option normalization.
 
 function! Test_01_autoinsert_never() abort
   if !has('nvim') | return | endif
@@ -66,7 +65,7 @@ function! Test_03_autoinsert_cmdline_option() abort
   FloatermKill!
 endfunction
 
-function! Test_04_autoinsert_backward_compatibility_with_booleans() abort
+function! Test_04_autoinsert_backward_compatibility() abort
   let g:floaterm_autoinsert = v:false
   unlet! g:loaded_floaterm
   source plugin/floaterm.vim
@@ -75,12 +74,27 @@ function! Test_04_autoinsert_backward_compatibility_with_booleans() abort
   let g:floaterm_autoinsert = v:true
   unlet! g:loaded_floaterm
   source plugin/floaterm.vim
-  AssertEqual 'smart', g:floaterm_autoinsert
+  AssertEqual 'always', g:floaterm_autoinsert
+
+  let g:floaterm_autoinsert = 0
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'never', g:floaterm_autoinsert
+
+  let g:floaterm_autoinsert = 1
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'always', g:floaterm_autoinsert
+
+  let g:floaterm_autoinsert = 2
+  unlet! g:loaded_floaterm
+  source plugin/floaterm.vim
+  AssertEqual 'always', g:floaterm_autoinsert
 
   unlet! g:floaterm_autoinsert
   unlet! g:loaded_floaterm
   source plugin/floaterm.vim
-  AssertEqual 'smart', g:floaterm_autoinsert
+  AssertEqual 'always', g:floaterm_autoinsert
 
   let g:floaterm_autoinsert = 'always'
   unlet! g:loaded_floaterm
