@@ -224,6 +224,11 @@ function! s:open_split(bufnr, config) abort
   execute 'buffer ' . a:bufnr
   let winid = win_getid()
   call s:init_win(winid, v:false)
+  " A split is an ordinary window: 'winfixheight'/'winfixwidth' are meant for
+  " floating windows and would stop layout commands such as :wincmd = from
+  " resizing the split.
+  call setwinvar(winid, '&winfixheight', 0)
+  call setwinvar(winid, '&winfixwidth', 0)
   call floaterm#config#set(a:bufnr, 'winid', winid)
   return winid
 endfunction
